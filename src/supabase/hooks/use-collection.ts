@@ -7,6 +7,7 @@ export interface UseSupabaseCollectionResult<T> {
   data: T[] | null;
   isLoading: boolean;
   error: Error | null;
+  refetch: () => void;
 }
 
 export function useSupabaseCollection<T = any>(
@@ -22,6 +23,11 @@ export function useSupabaseCollection<T = any>(
   const [data, setData] = useState<T[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+  const refetch = () => {
+    setRefetchTrigger(prev => prev + 1);
+  };
 
   // Granular serialization to guarantee reference stability of input parameters
   const serializedFilters = queryConfig?.filters ? JSON.stringify(queryConfig.filters) : '';
@@ -115,7 +121,7 @@ export function useSupabaseCollection<T = any>(
       active = false;
       supabase.removeChannel(channel);
     };
-  }, [supabase, table, serializedFilters, serializedWhere, serializedOrderBy, limit]);
+  }, [supabase, table, serializedFilters, serializedWhere, serializedOrderBy, limit, refetchTrigger]);
 
-  return { data, isLoading, error };
+  return { data, isLoading, error, refetch };
 }

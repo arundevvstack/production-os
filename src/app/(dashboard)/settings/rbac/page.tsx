@@ -63,10 +63,9 @@ export default function RBACPage() {
   const [selectedRole, setSelectedRole] = useState("EMPLOYEE");
   const [selectedDepartment, setSelectedDepartment] = useState("Production");
 
-  const { data: members, isLoading: isUsersLoading } = useSupabaseCollection('User', {
+  const { data: members, isLoading: isUsersLoading, refetch: reloadMembers } = useSupabaseCollection('User', {
     where: { company_id: companyId }
   });
-  const reloadMembers = () => {};
 
   const handleUpdateMemberCredentials = async (memberId: string, newRoleId: string, newDept: string) => {
     if (!memberId) return;

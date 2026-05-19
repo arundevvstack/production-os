@@ -88,12 +88,16 @@ export default function OnboardingPage() {
         // Route user into the single preconfigured agency pool
         const { error: userError } = await supabase
           .from("User")
-          .update({ 
+          .upsert({ 
+            id: user.id,
+            email: user.email,
+            fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Unknown User',
             company_id: singleCompany.id,
             role_id: "EMPLOYEE",
-            status: "pending" 
-          })
-          .eq('id', user.id);
+            status: "pending",
+            onboarding_status: "awaiting_approval",
+            department: "Production"
+          });
 
         if (userError) throw userError;
 
@@ -133,12 +137,16 @@ export default function OnboardingPage() {
       // 3. Update the matching public User profile with company ID and SUPER_ADMIN role
       const { error: userError } = await supabase
         .from("User")
-        .update({ 
+        .upsert({ 
+          id: user.id,
+          email: user.email,
+          fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Unknown User',
           company_id: company.id,
           role_id: "SUPER_ADMIN",
-          status: "approved"
-        })
-        .eq('id', user.id);
+          status: "approved",
+          onboarding_status: "completed",
+          department: "Administration"
+        });
 
       if (userError) throw userError;
 
