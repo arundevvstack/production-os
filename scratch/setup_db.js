@@ -24,8 +24,11 @@ async function main() {
         assigned_dept := 'Production';
       END IF;
 
-      -- Look up the ID of the single active agency company (Single Agency Intranet Mode)
-      SELECT id::text INTO first_company_id FROM public."Company" LIMIT 1;
+      -- Look up the CORRECT active company — order by created to get the real one
+      SELECT id::text INTO first_company_id 
+      FROM public."Company" 
+      ORDER BY "createdAt" DESC 
+      LIMIT 1;
       
       -- If no company exists, bootstrap one immediately to prevent NULL constraint errors
       IF first_company_id IS NULL THEN
