@@ -123,7 +123,7 @@ const PUBLIC_TALENT_POOL = [
 
 export default function PublicCreatorsNetwork() {
   const { toast } = useToast();
-  
+
   // View mode switcher: 'thumbnail' (Grid) | 'list'
   const [viewMode, setViewMode] = useState<'thumbnail' | 'list'>('thumbnail');
 
@@ -141,9 +141,77 @@ export default function PublicCreatorsNetwork() {
   const [aiRecommendedIds, setAiRecommendedIds] = useState<string[]>([]);
   const [isAiApplied, setIsAiApplied] = useState(false);
 
+  // AI Auto-Correct Dictionary
+  const AI_CORRECTION_DICT: Record<string, string> = {
+    "stnt": "stunt",
+    "stnts": "stunts",
+    "malyalam": "Malayalam",
+    "malaylam": "Malayalam",
+    "actr": "actor",
+    "actrs": "actors",
+    "commecial": "commercial",
+    "automtive": "automotive",
+    "autmotive": "automotive",
+    "emotinal": "emotional",
+    "directr": "director",
+    "directrs": "directors",
+    "avialable": "available",
+    "keral": "Kerala",
+    "kochin": "Kochi",
+  };
+
+  // AI Auto-Correct for search keyword query
+  const aiCorrection = useMemo(() => {
+    if (!searchQuery) return null;
+    const words = searchQuery.split(/\s+/);
+    let corrected = false;
+    const newWords = words.map(w => {
+      const cleanW = w.toLowerCase().replace(/[^a-z]/g, "");
+      if (AI_CORRECTION_DICT[cleanW]) {
+        corrected = true;
+        return AI_CORRECTION_DICT[cleanW];
+      }
+      return w;
+    });
+    return corrected ? newWords.join(" ") : null;
+  }, [searchQuery]);
+
+  // AI Auto-Correct for AI castings brief text
+  const aiBriefCorrection = useMemo(() => {
+    if (!aiBriefText) return null;
+    const words = aiBriefText.split(/\s+/);
+    let corrected = false;
+    const newWords = words.map(w => {
+      const cleanW = w.toLowerCase().replace(/[^a-z]/g, "");
+      if (AI_CORRECTION_DICT[cleanW]) {
+        corrected = true;
+        return AI_CORRECTION_DICT[cleanW];
+      }
+      return w;
+    });
+    return corrected ? newWords.join(" ") : null;
+  }, [aiBriefText]);
+
   // Category and location listings
   const categories = ["All", "Actor", "Director / Actor", "Anchor / Actor"];
-  const locations = ["All", "Kochi, Kerala", "Kozhikode, Kerala", "Thrissur, Kerala", "Trivandrum, Kerala"];
+  const locations = [
+    "All",
+    "Alappuzha, Kerala",
+    "Ernakulam, Kerala",
+    "Idukki, Kerala",
+    "Kannur, Kerala",
+    "Kasaragod, Kerala",
+    "Kochi, Kerala",
+    "Kollam, Kerala",
+    "Kottayam, Kerala",
+    "Kozhikode, Kerala",
+    "Malappuram, Kerala",
+    "Palakkad, Kerala",
+    "Pathanamthitta, Kerala",
+    "Thiruvananthapuram, Kerala",
+    "Thrissur, Kerala",
+    "Wayanad, Kerala"
+  ];
 
   // Filter logic
   const filteredTalent = useMemo(() => {
@@ -242,38 +310,90 @@ export default function PublicCreatorsNetwork() {
           </div>
 
           {/* AI Castings Briefing Assistant */}
-          <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm relative">
+          <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm relative hover:shadow-md transition-shadow duration-300">
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
-                  <Sparkles className="h-4.5 w-4.5 text-red-600" /> AI Filter Tool
-                </h3>
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-red-50 rounded-xl">
+                    <Sparkles className="h-4.5 w-4.5 text-red-650" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-xs text-slate-900">Find with AI</h3>
+                    <p className="text-[9px] text-slate-400 font-medium">Type what you need in simple English</p>
+                  </div>
+                </div>
                 {isAiApplied && (
-                  <Badge onClick={handleClearAI} className="bg-red-500/10 text-red-650 border-none text-[9px] font-bold cursor-pointer hover:bg-red-500/25 rounded-full px-2.5 py-0.5">
-                    Clear Search
+                  <Badge 
+                    onClick={handleClearAI} 
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 border-none text-[9px] font-bold cursor-pointer rounded-full px-2.5 py-0.5 transition"
+                  >
+                    Clear Filter
                   </Badge>
                 )}
               </div>
 
-              <form onSubmit={handleAIAnalyze} className="space-y-4">
-                <Textarea 
-                  placeholder="e.g. Need a high-action lead actor with stunt capabilities for a Malayalam automotive commercial campaign..."
-                  value={aiBriefText}
-                  onChange={(e) => setAiBriefText(e.target.value)}
-                  className="bg-slate-50 border-slate-200 h-20 text-xs rounded-xl focus:border-red-500 resize-none text-slate-800 font-bold"
-                  required
-                />
+              <form onSubmit={handleAIAnalyze} className="space-y-3">
+                <div className="relative pb-3">
+                  <Textarea 
+                    placeholder="Need a high-action lead actor with stunt capabilities for a Malayalam automotive commercial campaign..."
+                    value={aiBriefText}
+                    onChange={(e) => setAiBriefText(e.target.value)}
+                    className="bg-slate-50 border-slate-250 h-20 text-xs rounded-xl focus:border-red-500 resize-none text-slate-800 font-bold p-3 outline-none w-full"
+                    required
+                  />
+                  {aiBriefCorrection && (
+                    <div className="absolute left-2.5 bottom-[-8px] flex items-center gap-1 text-[9px] text-slate-500 font-bold bg-white px-2 py-0.5 rounded-lg border border-slate-200 shadow-sm animate-fade-in z-10">
+                      <Sparkles className="h-2.5 w-2.5 text-red-650 animate-pulse" />
+                      <span>Did you mean:</span>
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          setAiBriefText(aiBriefCorrection);
+                          toast({ title: "AI Corrected", description: "Updated castings brief." });
+                        }} 
+                        className="text-red-650 hover:underline italic font-extrabold"
+                      >
+                        "{aiBriefCorrection}"
+                      </button>
+                      <span>?</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* AI Prompt suggestions tags */}
+                <div className="space-y-1.5">
+                  <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wider block">Or select an example prompt:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      { emoji: "🔥", text: "Malayalam lead with stunt skills", prompt: "Need a high-action lead actor with stunt capabilities for a Malayalam automotive commercial campaign..." },
+                      { emoji: "🎭", text: "Emotional actor for drama", prompt: "Need a highly expressive emotional lead actress for a Malayalam realistic cinematic drama..." },
+                      { emoji: "⚡", text: "Comedy actor for youthful spot", prompt: "Need a highly expressive youth comedy actor with Malayalam fluency for a digital commercial spot..." }
+                    ].map((tag, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setAiBriefText(tag.prompt)}
+                        className="text-[9px] font-bold px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-150 rounded-xl text-slate-650 transition flex items-center gap-1 shadow-sm"
+                      >
+                        <span>{tag.emoji}</span> {tag.text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 
                 <Button 
                   type="submit" 
                   disabled={isAnalyzing}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm shadow-red-500/10 transition"
+                  className="w-full bg-slate-900 hover:bg-slate-850 text-white font-bold h-10 rounded-full text-xs flex items-center justify-center gap-1.5 shadow transition-all duration-300"
                 >
                   {isAnalyzing ? (
-                    <>Searching creators pool...</>
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-3 w-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Matching creators...
+                    </span>
                   ) : (
                     <>
-                      <Sparkles className="h-4 w-4" /> Filter with AI
+                      <Sparkles className="h-4 w-4 text-red-500 animate-pulse" /> Find Creators
                     </>
                   )}
                 </Button>
@@ -387,7 +507,7 @@ export default function PublicCreatorsNetwork() {
           
           {/* Header search bar & View Toggle */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="relative flex-grow w-full">
+            <div className="relative flex-grow w-full pb-4">
               <Search className="absolute left-3.5 top-3.5 h-4.5 w-4.5 text-slate-400" />
               <Input 
                 placeholder="Search skills, experience, tags..." 
@@ -395,6 +515,23 @@ export default function PublicCreatorsNetwork() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-white border-slate-200 h-12 pl-11 text-xs rounded-xl focus:border-red-500 text-slate-800 w-full font-bold shadow-sm"
               />
+              {aiCorrection && (
+                <div className="absolute left-3.5 bottom-[-10px] flex items-center gap-1 text-[9px] text-slate-500 font-bold bg-white px-2 py-0.5 rounded-lg border border-slate-200 shadow-sm animate-fade-in z-10">
+                  <Sparkles className="h-2.5 w-2.5 text-red-650 animate-pulse" />
+                  <span>Did you mean:</span>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setSearchQuery(aiCorrection);
+                      toast({ title: "AI Corrected", description: `Updated search query to: "${aiCorrection}"` });
+                    }} 
+                    className="text-red-650 hover:underline italic font-extrabold"
+                  >
+                    "{aiCorrection}"
+                  </button>
+                  <span>?</span>
+                </div>
+              )}
             </div>
 
             {/* Premium Grid/List View switcher */}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, use } from "react";
+import React, { useState, use, useEffect } from "react";
 import { 
   ArrowLeft, Star, MapPin, Instagram, Youtube, Linkedin, Globe, 
   Video, Calendar, AlertCircle, ArrowRight, ShieldCheck, Mail, 
@@ -168,13 +168,208 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
   const resolvedParams = params instanceof Promise ? use(params) : params;
   const id = resolvedParams.id;
   
-  const creator = PUBLIC_TALENTS_DB[id] || PUBLIC_TALENTS_DB["public_t1"];
+  const initialCreator = PUBLIC_TALENTS_DB[id] || PUBLIC_TALENTS_DB["public_t1"];
+  const [currentCreator, setCurrentCreator] = useState(initialCreator);
+  const creator = currentCreator;
+
+  // Form & Interaction states
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storageKey = id === "public_t1" || !PUBLIC_TALENTS_DB[id] ? "talent_profile_public_t1" : `talent_profile_${id}`;
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          const mapped = {
+            ...initialCreator,
+            fullName: parsed.fullName || initialCreator.fullName,
+            stageName: parsed.stageName || initialCreator.stageName,
+            category: parsed.category || initialCreator.category,
+            location: parsed.location || initialCreator.location,
+            dayRate: Number(parsed.dayRate) || initialCreator.dayRate,
+            followers: Number(parsed.reach) || initialCreator.followers,
+            languages: typeof parsed.languages === "string" ? parsed.languages.split(",").map((s: string) => s.trim()) : parsed.languages || initialCreator.languages,
+            availability: parsed.availability || initialCreator.availability,
+            bio: parsed.bio || initialCreator.bio,
+            instagram: parsed.instagram || initialCreator.instagram,
+            youtube: parsed.youtube || initialCreator.youtube,
+            linkedin: parsed.linkedin || initialCreator.linkedin,
+            facebook: parsed.facebook || initialCreator.facebook,
+            engagementRate: parsed.engagementRate || initialCreator.engagementRate,
+            measurements: {
+              ...initialCreator.measurements,
+              height: parsed.height || initialCreator.measurements.height,
+              weight: parsed.weight || initialCreator.measurements.weight,
+              chest: parsed.chest || initialCreator.measurements.chest,
+              waist: parsed.waist || initialCreator.measurements.waist,
+              hip: parsed.hip || initialCreator.measurements.hip,
+              shoeSize: parsed.shoeSize || initialCreator.measurements.shoeSize,
+              hairColor: parsed.hairColor || initialCreator.measurements.hairColor,
+              skinTone: parsed.skinTone || initialCreator.measurements.skinTone,
+              tattoos: parsed.tattoos || initialCreator.measurements.tattoos
+            },
+            preferences: {
+              ...initialCreator.preferences,
+              comfortable: Array.isArray(parsed.comfortable) ? parsed.comfortable : (parsed.comfortable ? parsed.comfortable.split(",").map((s: string) => s.trim()) : initialCreator.preferences.comfortable),
+              uncomfortable: Array.isArray(parsed.uncomfortable) ? parsed.uncomfortable : (parsed.uncomfortable ? parsed.uncomfortable.split(",").map((s: string) => s.trim()) : initialCreator.preferences.uncomfortable)
+            },
+            reels: [
+              parsed.reel1Url && { id: "r1", title: parsed.reel1Title || "Showreel 1", duration: parsed.reel1Duration || "2:30", url: parsed.reel1Url },
+              parsed.reel2Url && { id: "r2", title: parsed.reel2Title || "Showreel 2", duration: parsed.reel2Duration || "1:30", url: parsed.reel2Url }
+            ].filter(Boolean)
+          };
+          setCurrentCreator(mapped);
+        } catch (e) {
+          console.error("Failed to parse stored talent profile", e);
+        }
+      }
+    }
+  }, [id]);
 
   // Form & Interaction states
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [bookingStatus, setBookingStatus] = useState<"idle" | "submitted" | "approved">("idle");
   const [isPdfOpen, setIsPdfOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const [editForm, setEditForm] = useState({
+    fullName: creator.fullName,
+    stageName: creator.stageName,
+    location: creator.location,
+    dayRate: Number(creator.dayRate),
+    languages: creator.languages.join(", "),
+    bio: creator.bio,
+    height: creator.measurements.height,
+    weight: creator.measurements.weight,
+    chest: creator.measurements.chest,
+    waist: creator.measurements.waist,
+    hip: creator.measurements.hip,
+    shoeSize: creator.measurements.shoeSize,
+    hairColor: creator.measurements.hairColor,
+    skinTone: creator.measurements.skinTone,
+    tattoos: creator.measurements.tattoos,
+    instagram: creator.instagram,
+    youtube: creator.youtube,
+    linkedin: creator.linkedin,
+    comfortable: [...creator.preferences.comfortable],
+    uncomfortable: [...creator.preferences.uncomfortable],
+    hideMeasurements: creator.privacy?.hideMeasurements || false,
+    hideDayRate: creator.privacy?.hideDayRate || false,
+    restrictDms: creator.privacy?.restrictDms || false,
+    noIndex: creator.privacy?.noIndex || false,
+    category: creator.category,
+    verifiedLevel: creator.verifiedLevel || "Premium",
+    availability: creator.availability || "Available",
+    followers: Number(creator.followers),
+    engagementRate: creator.engagementRate || "8.2%",
+    reel1Title: creator.reels[0]?.title || "Showreel 1",
+    reel1Duration: creator.reels[0]?.duration || "2:30",
+    reel1Url: creator.reels[0]?.url || "",
+    reel2Title: creator.reels[1]?.title || "Showreel 2",
+    reel2Duration: creator.reels[1]?.duration || "1:30",
+    reel2Url: creator.reels[1]?.url || "",
+    galleryUrls: creator.gallery.join(", ")
+  });
+
+  // Dynamically synchronize editForm state whenever the edit modal opens or currentCreator changes
+  useEffect(() => {
+    if (isEditOpen) {
+      setEditForm({
+        fullName: currentCreator.fullName,
+        stageName: currentCreator.stageName,
+        location: currentCreator.location,
+        dayRate: Number(currentCreator.dayRate),
+        languages: currentCreator.languages.join(", "),
+        bio: currentCreator.bio,
+        height: currentCreator.measurements.height,
+        weight: currentCreator.measurements.weight,
+        chest: currentCreator.measurements.chest,
+        waist: currentCreator.measurements.waist,
+        hip: currentCreator.measurements.hip,
+        shoeSize: currentCreator.measurements.shoeSize,
+        hairColor: currentCreator.measurements.hairColor,
+        skinTone: currentCreator.measurements.skinTone,
+        tattoos: currentCreator.measurements.tattoos,
+        instagram: currentCreator.instagram,
+        youtube: currentCreator.youtube,
+        linkedin: currentCreator.linkedin,
+        comfortable: [...currentCreator.preferences.comfortable],
+        uncomfortable: [...currentCreator.preferences.uncomfortable],
+        hideMeasurements: currentCreator.privacy?.hideMeasurements || false,
+        hideDayRate: currentCreator.privacy?.hideDayRate || false,
+        restrictDms: currentCreator.privacy?.restrictDms || false,
+        noIndex: currentCreator.privacy?.noIndex || false,
+        category: currentCreator.category,
+        verifiedLevel: currentCreator.verifiedLevel || "Premium",
+        availability: currentCreator.availability || "Available",
+        followers: Number(currentCreator.followers),
+        engagementRate: currentCreator.engagementRate || "8.2%",
+        reel1Title: currentCreator.reels[0]?.title || "Showreel 1",
+        reel1Duration: currentCreator.reels[0]?.duration || "2:30",
+        reel1Url: currentCreator.reels[0]?.url || "",
+        reel2Title: currentCreator.reels[1]?.title || "Showreel 2",
+        reel2Duration: currentCreator.reels[1]?.duration || "1:30",
+        reel2Url: currentCreator.reels[1]?.url || "",
+        galleryUrls: currentCreator.gallery.join(", ")
+      });
+    }
+  }, [isEditOpen, currentCreator]);
+
+  const handleSaveProfileEdits = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCurrentCreator({
+      ...currentCreator,
+      fullName: editForm.fullName,
+      stageName: editForm.stageName,
+      location: editForm.location,
+      dayRate: Number(editForm.dayRate),
+      languages: editForm.languages.split(",").map(s => s.trim()).filter(Boolean),
+      bio: editForm.bio,
+      instagram: editForm.instagram,
+      youtube: editForm.youtube,
+      linkedin: editForm.linkedin,
+      category: editForm.category,
+      verifiedLevel: editForm.verifiedLevel,
+      availability: editForm.availability,
+      followers: Number(editForm.followers),
+      engagementRate: editForm.engagementRate,
+      measurements: {
+        ...currentCreator.measurements,
+        height: editForm.height,
+        weight: editForm.weight,
+        chest: editForm.chest,
+        waist: editForm.waist,
+        hip: editForm.hip,
+        shoeSize: editForm.shoeSize,
+        hairColor: editForm.hairColor,
+        skinTone: editForm.skinTone,
+        tattoos: editForm.tattoos
+      },
+      preferences: {
+        ...currentCreator.preferences,
+        comfortable: [...editForm.comfortable],
+        uncomfortable: [...editForm.uncomfortable]
+      },
+      privacy: {
+        hideMeasurements: editForm.hideMeasurements,
+        hideDayRate: editForm.hideDayRate,
+        restrictDms: editForm.restrictDms,
+        noIndex: editForm.noIndex
+      },
+      reels: [
+        { id: "r1", title: editForm.reel1Title, duration: editForm.reel1Duration, url: editForm.reel1Url },
+        { id: "r2", title: editForm.reel2Title, duration: editForm.reel2Duration, url: editForm.reel2Url }
+      ].filter(r => r.url),
+      gallery: editForm.galleryUrls.split(",").map(s => s.trim()).filter(Boolean)
+    });
+    setIsEditOpen(false);
+    toast({
+      title: "Profile Updated!",
+      description: "Your advanced talent castings profile details have been saved."
+    });
+  };
 
   const [bookingForm, setBookingForm] = useState({
     projectName: "",
@@ -226,11 +421,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
   };
 
   const handleShareProfile = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast({
-      title: "Link Copied!",
-      description: "Profile link copied to clipboard."
-    });
+    setIsShareOpen(true);
   };
 
   const handleDownloadPdf = () => {
@@ -635,7 +826,9 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               <div className="space-y-3.5 text-xs text-slate-650 font-bold">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Day Rate</span>
-                  <strong className="text-slate-950">₹{creator.dayRate.toLocaleString()}</strong>
+                  <strong className="text-slate-950">
+                    {creator.privacy?.hideDayRate ? "🔒 Quote Required" : `₹${creator.dayRate.toLocaleString()}`}
+                  </strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Languages</span>
@@ -682,6 +875,15 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   className="w-full border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
                 >
                   <FileDown className="h-4 w-4 text-red-650" /> Download PDF Portfolio
+                </Button>
+
+                {/* Edit Profile Details Button */}
+                <Button 
+                  onClick={() => setIsEditOpen(true)}
+                  variant="outline"
+                  className="w-full border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
+                >
+                  <UserCheck className="h-4 w-4 text-red-650" /> Edit Profile Details
                 </Button>
               </div>
 
@@ -787,46 +989,56 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* PHYSICAL MEASUREMENTS TAB (Phase 2) */}
             <TabsContent value="measurements" className="space-y-4 outline-none">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Physical Appearance & Measurements</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Measurements</h3>
               <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm p-6">
-                <CardContent className="p-0 grid grid-cols-2 md:grid-cols-3 gap-6 font-bold text-xs text-slate-800">
-                  <div className="space-y-1">
-                    <span className="text-[9px] text-slate-405 block uppercase">Height</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.height}</strong>
+                {creator.privacy?.hideMeasurements ? (
+                  <div className="flex flex-col items-center justify-center py-6 text-center space-y-2">
+                    <ShieldAlert className="h-10 w-10 text-red-650 animate-pulse" />
+                    <span className="text-xs font-bold text-slate-800">Measurements are private</span>
+                    <p className="text-[10px] text-slate-450 max-w-sm font-medium">
+                      This creator has kept their measurements private. Please contact our managers to view them.
+                    </p>
                   </div>
-                  <div className="space-y-1">
-                    <span className="text-[9px] text-slate-405 block uppercase">Weight</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.weight}</strong>
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-[9px] text-slate-405 block uppercase">Chest</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.chest}</strong>
-                  </div>
-                  <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
-                    <span className="text-[9px] text-slate-405 block uppercase">Waist</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.waist}</strong>
-                  </div>
-                  <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
-                    <span className="text-[9px] text-slate-405 block uppercase">Hip</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.hip}</strong>
-                  </div>
-                  <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
-                    <span className="text-[9px] text-slate-405 block uppercase">Shoe Size</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.shoeSize}</strong>
-                  </div>
-                  <div className="space-y-1 border-t border-slate-100 pt-3">
-                    <span className="text-[9px] text-slate-405 block uppercase">Hair Color</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.hairColor}</strong>
-                  </div>
-                  <div className="space-y-1 border-t border-slate-100 pt-3">
-                    <span className="text-[9px] text-slate-405 block uppercase">Skin Tone</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.skinTone}</strong>
-                  </div>
-                  <div className="space-y-1 border-t border-slate-100 pt-3">
-                    <span className="text-[9px] text-slate-405 block uppercase">Tattoos</span>
-                    <strong className="text-slate-900 text-sm">{creator.measurements.tattoos}</strong>
-                  </div>
-                </CardContent>
+                ) : (
+                  <CardContent className="p-0 grid grid-cols-2 md:grid-cols-3 gap-6 font-bold text-xs text-slate-800">
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-slate-405 block uppercase">Height</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.height}</strong>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-slate-405 block uppercase">Weight</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.weight}</strong>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-slate-405 block uppercase">Chest</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.chest}</strong>
+                    </div>
+                    <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
+                      <span className="text-[9px] text-slate-405 block uppercase">Waist</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.waist}</strong>
+                    </div>
+                    <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
+                      <span className="text-[9px] text-slate-405 block uppercase">Hip</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.hip}</strong>
+                    </div>
+                    <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
+                      <span className="text-[9px] text-slate-405 block uppercase">Shoe Size</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.shoeSize}</strong>
+                    </div>
+                    <div className="space-y-1 border-t border-slate-100 pt-3">
+                      <span className="text-[9px] text-slate-405 block uppercase">Hair Color</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.hairColor}</strong>
+                    </div>
+                    <div className="space-y-1 border-t border-slate-100 pt-3">
+                      <span className="text-[9px] text-slate-405 block uppercase">Skin Tone</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.skinTone}</strong>
+                    </div>
+                    <div className="space-y-1 border-t border-slate-100 pt-3">
+                      <span className="text-[9px] text-slate-405 block uppercase">Tattoos</span>
+                      <strong className="text-slate-900 text-sm">{creator.measurements.tattoos}</strong>
+                    </div>
+                  </CardContent>
+                )}
               </Card>
             </TabsContent>
 
@@ -1057,6 +1269,574 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               Download Lookbook PDF
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Profile Sharing Infrastructure Modal (Phase 6) */}
+      <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
+        <DialogContent className="bg-white text-slate-900 border-slate-200 rounded-3xl p-6 max-w-sm font-sans">
+          <DialogHeader className="border-b border-slate-100 pb-3">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-slate-900">
+              <Share2 className="h-5 w-5 text-red-650" /> Share Creator Profile
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-450 font-bold">
+              Dispatch this premium castings card lookbook to brands or agencies.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4 space-y-4 text-xs font-bold">
+            <div className="grid grid-cols-1 gap-2">
+              {/* WhatsApp Share */}
+              <Button 
+                onClick={() => {
+                  window.open(`https://api.whatsapp.com/send?text=Check out ${creator.fullName}'s premium portfolio lookbook on Define Perspective: ${window.location.href}`, "_blank");
+                  setIsShareOpen(false);
+                  toast({ title: "WhatsApp Redirected", description: "Opening WhatsApp chat..." });
+                }}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition"
+              >
+                <MessageCircle className="h-4 w-4" /> Share on WhatsApp
+              </Button>
+
+              {/* LinkedIn Share */}
+              <Button 
+                onClick={() => {
+                  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, "_blank");
+                  setIsShareOpen(false);
+                  toast({ title: "LinkedIn Opened", description: "Opening LinkedIn share tab..." });
+                }}
+                className="w-full bg-blue-700 hover:bg-blue-800 text-white rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition"
+              >
+                <Linkedin className="h-4 w-4" /> Share on LinkedIn
+              </Button>
+
+              {/* Copy Direct Link */}
+              <Button 
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  setIsShareOpen(false);
+                  toast({
+                    title: "Link Copied!",
+                    description: "Direct profile portfolio URL copied to clipboard."
+                  });
+                }}
+                variant="outline"
+                className="w-full border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition bg-white"
+              >
+                <Check className="h-4 w-4 text-red-650" /> Copy Profile Link
+              </Button>
+            </div>
+
+            {/* Profile QR Code */}
+            <div className="border border-slate-150 p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-center">
+              <QrCode className="h-20 w-20 text-slate-800" />
+              <span className="text-[9px] text-slate-400 font-medium">
+                Direct QR Code to mobile portfolio lookbook.
+              </span>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={() => setIsShareOpen(false)} variant="ghost" className="w-full border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-full text-xs font-bold h-10 transition bg-white shadow-sm">
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Profile Details Modal (Phase 1, 2, 3, 4) */}
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent className="bg-white text-slate-900 border-slate-200 rounded-3xl p-6 max-w-2xl max-h-[90vh] overflow-y-auto font-sans">
+          <DialogHeader className="border-b border-slate-100 pb-3">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-slate-900">
+              <UserCheck className="h-5 w-5 text-red-650" /> Edit Talent Profile Details
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-450 font-bold">
+              Update your physical measurements, acting comfort levels, and social reach metrics.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSaveProfileEdits} className="space-y-6 pt-3">
+            
+            {/* Section 1: Basic Identity */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Basic Identity</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Full Name</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.fullName}
+                    onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Stage Name</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.stageName}
+                    onChange={(e) => setEditForm({ ...editForm, stageName: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5 col-span-2">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">City & Country Location</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.location}
+                    onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Day Rate (₹)</label>
+                  <Input 
+                    type="number" 
+                    value={editForm.dayRate}
+                    onChange={(e) => setEditForm({ ...editForm, dayRate: Number(e.target.value) })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Bio Description</label>
+                <textarea 
+                  value={editForm.bio}
+                  onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                  className="bg-slate-50 border border-slate-200 text-slate-805 rounded-xl text-xs h-16 w-full p-2.5 outline-none font-bold"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Category</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.category}
+                    onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Verified Level</label>
+                  <select 
+                    value={editForm.verifiedLevel}
+                    onChange={(e) => setEditForm({ ...editForm, verifiedLevel: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 px-2 font-bold outline-none"
+                  >
+                    <option value="Premium">Premium</option>
+                    <option value="Standard">Standard</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Availability</label>
+                  <select 
+                    value={editForm.availability}
+                    onChange={(e) => setEditForm({ ...editForm, availability: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 px-2 font-bold outline-none"
+                  >
+                    <option value="Available">Available</option>
+                    <option value="Booked">Booked</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Reach (Total Followers, e.g. 7800000)</label>
+                  <Input 
+                    type="number" 
+                    value={editForm.followers}
+                    onChange={(e) => setEditForm({ ...editForm, followers: Number(e.target.value) })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Engagement Rate (e.g. 8.2%)</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.engagementRate}
+                    onChange={(e) => setEditForm({ ...editForm, engagementRate: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Languages spoken (comma separated)</label>
+                <Input 
+                  type="text" 
+                  value={editForm.languages}
+                  onChange={(e) => setEditForm({ ...editForm, languages: e.target.value })}
+                  className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Section 2: Physical Appearance (Phase 2) */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Physical Details</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Height (e.g. 185 cm)</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.height}
+                    onChange={(e) => setEditForm({ ...editForm, height: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Weight (e.g. 78 kg)</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.weight}
+                    onChange={(e) => setEditForm({ ...editForm, weight: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Chest (e.g. 40 in)</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.chest}
+                    onChange={(e) => setEditForm({ ...editForm, chest: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Waist (e.g. 32 in)</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.waist}
+                    onChange={(e) => setEditForm({ ...editForm, waist: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Hip (e.g. 38 in)</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.hip}
+                    onChange={(e) => setEditForm({ ...editForm, hip: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Shoe Size</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.shoeSize}
+                    onChange={(e) => setEditForm({ ...editForm, shoeSize: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Hair Color</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.hairColor}
+                    onChange={(e) => setEditForm({ ...editForm, hairColor: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Skin Tone</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.skinTone}
+                    onChange={(e) => setEditForm({ ...editForm, skinTone: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Tattoo Details</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.tattoos}
+                    onChange={(e) => setEditForm({ ...editForm, tattoos: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: Social Links (Phase 4) */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Social Media Channels</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Instagram</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.instagram}
+                    onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">YouTube</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.youtube}
+                    onChange={(e) => setEditForm({ ...editForm, youtube: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">LinkedIn</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.linkedin}
+                    onChange={(e) => setEditForm({ ...editForm, linkedin: e.target.value })}
+                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 4: Content Preference Toggles (Phase 3) */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Campaign Preferences</h3>
+              
+              <div className="space-y-2">
+                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Comfortable With</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-slate-700 font-bold">
+                  {[
+                    "Western Wear", "Traditional Wear", "Corporate Ads", 
+                    "Action Sequences", "Night Shoots", "Live Hosting", 
+                    "Brand Collaborations", "Travel Videos", "Comedy Content", "Couple Shoots"
+                  ].map((option) => {
+                    const isChecked = editForm.comfortable.includes(option);
+                    return (
+                      <label key={option} className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                        <input 
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const newComfortable = e.target.checked
+                              ? [...editForm.comfortable, option]
+                              : editForm.comfortable.filter(c => c !== option);
+                            setEditForm({ ...editForm, comfortable: newComfortable });
+                          }}
+                          className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                        />
+                        {option}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Not Comfortable With</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-slate-700 font-bold">
+                  {[
+                    "Smoking Scenes", "Alcohol Promotions", "Political Campaigns", 
+                    "Religious Campaigns", "Intimate Scenes", "Late Night Shoots", 
+                    "Heavy Makeup", "Horror Content"
+                  ].map((option) => {
+                    const isChecked = editForm.uncomfortable.includes(option);
+                    return (
+                      <label key={option} className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                        <input 
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const newUncomfortable = e.target.checked
+                              ? [...editForm.uncomfortable, option]
+                              : editForm.uncomfortable.filter(uc => uc !== option);
+                            setEditForm({ ...editForm, uncomfortable: newUncomfortable });
+                          }}
+                          className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                        />
+                        {option}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Section 5: Creator Privacy & Protection Controls */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Creator Privacy Controls</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px] text-slate-700 font-bold">
+                
+                {/* Hide Measurements */}
+                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                  <input 
+                    type="checkbox"
+                    checked={editForm.hideMeasurements}
+                    onChange={(e) => setEditForm({ ...editForm, hideMeasurements: e.target.checked })}
+                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                  />
+                  <div>
+                    <span className="block">Hide Physical Measurements</span>
+                    <span className="text-[8px] text-slate-450 font-normal">Restricts discoverability to direct manager requests.</span>
+                  </div>
+                </label>
+
+                {/* Hide Day Rate */}
+                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                  <input 
+                    type="checkbox"
+                    checked={editForm.hideDayRate}
+                    onChange={(e) => setEditForm({ ...editForm, hideDayRate: e.target.checked })}
+                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                  />
+                  <div>
+                    <span className="block">Hide Financial Day Rate</span>
+                    <span className="text-[8px] text-slate-450 font-normal">Require custom quotes on booking intents.</span>
+                  </div>
+                </label>
+
+                {/* Restrict Direct Messaging */}
+                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                  <input 
+                    type="checkbox"
+                    checked={editForm.restrictDms}
+                    onChange={(e) => setEditForm({ ...editForm, restrictDms: e.target.checked })}
+                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                  />
+                  <div>
+                    <span className="block">Restrict Direct Messaging</span>
+                    <span className="text-[8px] text-slate-450 font-normal">Requires agency review before forwarding inquiries.</span>
+                  </div>
+                </label>
+
+                {/* Exclude from search index */}
+                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                  <input 
+                    type="checkbox"
+                    checked={editForm.noIndex}
+                    onChange={(e) => setEditForm({ ...editForm, noIndex: e.target.checked })}
+                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                  />
+                  <div>
+                    <span className="block">No Search Indexing</span>
+                    <span className="text-[8px] text-slate-450 font-normal">Block search engine visibility and crawler tags.</span>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+            {/* Section 6: Video Reels & Showreels */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Video Reels</h3>
+              
+              <div className="space-y-3 p-3 bg-slate-50 border border-slate-150 rounded-2xl">
+                <h4 className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">Reel 1 Details</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-1.5 col-span-2">
+                    <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Reel 1 Title</label>
+                    <Input 
+                      type="text" 
+                      value={editForm.reel1Title}
+                      onChange={(e) => setEditForm({ ...editForm, reel1Title: e.target.value })}
+                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Duration (e.g. 2:45)</label>
+                    <Input 
+                      type="text" 
+                      value={editForm.reel1Duration}
+                      onChange={(e) => setEditForm({ ...editForm, reel1Duration: e.target.value })}
+                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Reel 1 MP4 Video URL</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.reel1Url}
+                    onChange={(e) => setEditForm({ ...editForm, reel1Url: e.target.value })}
+                    className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3 p-3 bg-slate-50 border border-slate-150 rounded-2xl">
+                <h4 className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">Reel 2 Details</h4>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-1.5 col-span-2">
+                    <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Reel 2 Title</label>
+                    <Input 
+                      type="text" 
+                      value={editForm.reel2Title}
+                      onChange={(e) => setEditForm({ ...editForm, reel2Title: e.target.value })}
+                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Duration (e.g. 1:30)</label>
+                    <Input 
+                      type="text" 
+                      value={editForm.reel2Duration}
+                      onChange={(e) => setEditForm({ ...editForm, reel2Duration: e.target.value })}
+                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Reel 2 MP4 Video URL</label>
+                  <Input 
+                    type="text" 
+                    value={editForm.reel2Url}
+                    onChange={(e) => setEditForm({ ...editForm, reel2Url: e.target.value })}
+                    className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 7: Lookbook Photo Gallery */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Lookbook Photo Gallery</h3>
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Lookbook Gallery Image URLs (comma separated)</label>
+                <textarea 
+                  value={editForm.galleryUrls}
+                  onChange={(e) => setEditForm({ ...editForm, galleryUrls: e.target.value })}
+                  className="bg-slate-50 border border-slate-200 text-slate-805 rounded-xl text-xs h-20 w-full p-2.5 outline-none font-bold"
+                  placeholder="Paste direct image URLs..."
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="pt-4 border-t border-slate-100 gap-2">
+              <Button type="button" variant="ghost" onClick={() => setIsEditOpen(false)} className="rounded-full border border-slate-200 hover:bg-slate-50 text-xs font-bold bg-white text-slate-700 h-11 transition shadow-sm">
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold h-11 px-6 shadow shadow-red-500/10 transition">
+                Save Profile Edits
+              </Button>
+            </DialogFooter>
+
+          </form>
         </DialogContent>
       </Dialog>
 
