@@ -167,71 +167,67 @@ export default function LoginPage() {
                     <p className="text-xs text-slate-500 font-bold">Choose your portal to get started.</p>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 gap-6">
                     
-                    {/* Portal Option 1: Internal OS */}
+                    {/* Portal Option 1: Internal OS (DP Team) */}
                     <div 
                       onClick={() => setPortalMode('internal')}
-                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-slate-100 hover:border-red-500/30 transition-all cursor-pointer group text-left shadow-sm"
+                      className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-slate-100 hover:border-red-500/30 transition-all cursor-pointer group text-left shadow-sm"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 bg-red-500/10 rounded-xl flex items-center justify-center text-red-650 group-hover:scale-105 transition-transform shrink-0">
-                          <Bot className="h-5 w-5 text-red-600" />
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 bg-red-500/10 rounded-xl flex items-center justify-center text-red-650 group-hover:scale-105 transition-transform shrink-0">
+                          <Bot className="h-6 w-6 text-red-600" />
                         </div>
                         <div>
-                          <h4 className="font-bold text-xs text-slate-900 group-hover:text-red-600 transition-colors">Internal Team</h4>
-                          <p className="text-[10px] text-slate-500 mt-0.5 leading-snug font-bold">For team members, managers, and staff.</p>
+                          <h4 className="font-bold text-sm text-slate-900 group-hover:text-red-600 transition-colors">DP Team Portal</h4>
+                          <p className="text-[11px] text-slate-500 mt-1 leading-snug font-bold">Secure access for DP internal staff and managers.</p>
                         </div>
                       </div>
-                      <div className="mt-3 flex justify-end">
-                        <Button size="sm" className="bg-slate-900 hover:bg-slate-800 text-white rounded-full h-8 px-4 text-[10px] font-black gap-1 transition">
-                          Staff Sign In <ChevronRight className="h-3 w-3" />
+                      <div className="mt-4 flex justify-end">
+                        <Button size="sm" className="bg-slate-900 hover:bg-slate-800 text-white rounded-full h-9 px-5 text-xs font-black gap-1.5 transition shadow-md">
+                          Staff Sign In <ChevronRight className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </div>
 
-                    {/* Portal Option 2: Talent Network */}
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-indigo-500/30 transition-all text-left shadow-sm">
-                      <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
-                          <Users className="h-5 w-5" />
+                    {/* Portal Option 2: Talent & Business Network */}
+                    <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-indigo-500/30 transition-all text-left shadow-sm">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-600 shrink-0">
+                          <Users className="h-6 w-6" />
                         </div>
                         <div>
-                          <h4 className="font-bold text-xs text-slate-900">Talent Network</h4>
-                          <p className="text-[10px] text-slate-500 mt-0.5 leading-snug font-bold">For actors, anchors, influencers, editors, and production crew.</p>
+                          <h4 className="font-bold text-sm text-slate-900">Talent & Business Network</h4>
+                          <p className="text-[11px] text-slate-500 mt-1 leading-snug font-bold">For actors, creators, brand managers, and business clients.</p>
                         </div>
                       </div>
-                      <div className="mt-3 grid grid-cols-2 gap-2">
-                        <Link href="/talent/login" className="w-full">
-                          <Button size="sm" variant="outline" className="w-full border-slate-200 bg-white hover:bg-slate-50 text-[10px] h-8 font-black rounded-full transition text-slate-700">
-                            Talent Sign In
-                          </Button>
-                        </Link>
-                        <Link href="/talent/signup" className="w-full">
-                          <Button size="sm" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] h-8 font-black rounded-full transition">
-                            Sign Up as Talent
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
+                      
+                      <div className="mt-5 space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          <Link href="/talent/login" className="w-full">
+                            <Button size="sm" className="w-full bg-slate-900 hover:bg-slate-800 text-white text-[11px] h-9 font-black rounded-full transition shadow-md">
+                              Talent Sign In
+                            </Button>
+                          </Link>
+                          <Link href="/talent/signup" className="w-full">
+                            <Button size="sm" variant="outline" className="w-full border-slate-300 bg-white hover:bg-slate-50 text-[11px] h-9 font-black rounded-full transition text-slate-700 shadow-sm">
+                              Talent Sign Up
+                            </Button>
+                          </Link>
+                        </div>
 
-                    {/* Portal Option 3: Client Portal */}
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/30 transition-all text-left shadow-sm">
-                      <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-600 shrink-0">
-                          <Building2 className="h-5 w-5" />
+                        <div className="grid grid-cols-2 gap-3">
+                          <Link href="/client/login" className="w-full">
+                            <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] h-9 font-black rounded-full transition shadow-md">
+                              Business Sign In
+                            </Button>
+                          </Link>
+                          <Link href="/client/login?mode=signup" className="w-full">
+                            <Button size="sm" variant="outline" className="w-full border-slate-300 bg-white hover:bg-slate-50 text-[11px] h-9 font-black rounded-full transition text-slate-700 shadow-sm">
+                              Business Sign Up
+                            </Button>
+                          </Link>
                         </div>
-                        <div>
-                          <h4 className="font-bold text-xs text-slate-900">Client Portal</h4>
-                          <p className="text-[10px] text-slate-500 mt-0.5 leading-snug font-bold">For clients, brand managers, and corporate campaign approvals.</p>
-                        </div>
-                      </div>
-                      <div className="mt-3 flex justify-end">
-                        <Link href="/client/login" className="w-full flex justify-end">
-                          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full h-8 px-4 text-[10px] font-black gap-1 transition">
-                            Client Sign In <ChevronRight className="h-3 w-3" />
-                          </Button>
-                        </Link>
                       </div>
                     </div>
 
