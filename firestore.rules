@@ -1,0 +1,89 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * DP MEDIA OS - SECURITY RULES
+     */
+
+    // --- GLOBAL HELPER FUNCTIONS ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isPlatformAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email != null && request.auth.token.email.lower() == 'arundevv.com@gmail.com') || 
+        exists(/databases/$(database)/documents/super_admins/$(request.auth.uid))
+      );
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function userProfileExists() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isMember(companyId) {
+      return isPlatformAdmin() || (isSignedIn() && userProfileExists() && getUserData().company_id == companyId);
+    }
+
+    function isCompanyAdmin(companyId) {
+      return isPlatformAdmin() || (isSignedIn() && userProfileExists() && getUserData().company_id == companyId && (getUserData().role_id == 'admin' || getUserData().roleId == 'admin'));
+    }
+
+    // --- COLLECTION GROUP RULES (Master Aggregation) ---
+    
+    match /{path=**}/production_days/{dayId} {
+      allow read: if isMember(resource.data.company_id) || isMember(resource.data.companyId);
+    }
+
+    match /{path=**}/budgets/{budgetId} {
+      allow read: if isMember(resource.data.company_id) || isMember(resource.data.companyId);
+    }
+
+    match /{path=**}/tasks/{taskId} {
+      allow read: if isMember(resource.data.company_id) || isMember(resource.data.companyId);
+    }
+
+    // --- GLOBAL BYPASS: Platform Admins ---
+    match /{allPaths=**} {
+      allow read, write: if isPlatformAdmin();
+    }
+
+    // --- COLLECTION RULES ---
+
+    match /super_admins/{adminId} {
+      allow get: if isSignedIn();
+      allow write: if isSignedIn() && (request.auth.token.email.lower() == 'arundevv.com@gmail.com' || isPlatformAdmin());
+    }
+
+    match /users/{userId} {
+      allow get: if isSignedIn() && (
+        request.auth.uid == userId || 
+        (userProfileExists() && getUserData().company_id == get(/databases/$(database)/documents/users/$(userId)).data.company_id)
+      );
+      allow list: if isSignedIn() && (isPlatformAdmin() || (userProfileExists() && request.query.filters.company_id == getUserData().company_id));
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && (
+        request.auth.uid == userId || 
+        (userProfileExists() && isCompanyAdmin(resource.data.company_id))
+      );
+    }
+
+    match /companies/{companyId} {
+      allow get, list: if isMember(companyId);
+      allow create: if isSignedIn(); 
+      allow update: if isMember(companyId);
+
+      // Subcollections (Leads, Projects, Invoices, etc.)
+      match /{allSubcollections=**} {
+        allow read, write: if isMember(companyId);
+      }
+    }
+  }
+}
