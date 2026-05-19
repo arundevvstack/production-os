@@ -68,8 +68,9 @@ export default function SignupPage() {
             <span className="font-bold text-xl">DP</span>
           </div>
           <div className="space-y-1">
-            <CardTitle className="text-2xl font-headline font-bold">Get Started</CardTitle>
-            <CardDescription className="text-white/70">Create your secure multi-tenant account.</CardDescription>
+            <div className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/60 mb-1">Account Center</div>
+            <CardTitle className="text-2xl font-headline font-bold">Define Perspective</CardTitle>
+            <CardDescription className="text-white/70">Create your secure staff workspace account.</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="p-8 pt-10">
