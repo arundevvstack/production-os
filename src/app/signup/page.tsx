@@ -38,6 +38,7 @@ export default function SignupPage() {
       options: {
         data: {
           full_name: email.split('@')[0], // Fallback name
+          role: 'EMPLOYEE',
         }
       }
     });

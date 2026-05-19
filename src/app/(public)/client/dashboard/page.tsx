@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Building2, FileText, CheckSquare, Download, Clock, ShieldAlert,
   ArrowRight, ShieldCheck, CheckCircle2, Lock, Eye, Check,
@@ -14,9 +14,25 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useTenant } from "@/hooks/use-tenant";
 
 export default function ClientDashboardPage() {
   const { toast } = useToast();
+  const { user, profile, isLoading, isSuperAdmin } = useTenant();
+
+  // Auth Guard
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user) {
+      window.location.href = "/client/login";
+    } else if (profile?.status === 'suspended') {
+      window.location.href = "/access-blocked";
+    } else if (profile?.status === 'pending' && !isSuperAdmin) {
+      window.location.href = "/pending-approval";
+    } else if (profile?.role_id && profile?.role_id !== 'CLIENT' && !isSuperAdmin) {
+      window.location.href = "/login";
+    }
+  }, [user, profile, isLoading, isSuperAdmin]);
 
   // Campaign Progress State
   const [campaignProgress, setCampaignProgress] = useState({

@@ -73,13 +73,8 @@ export default function LoginPage() {
       
       if (data) {
         if (data.status === 'suspended') {
-          await supabase.auth.signOut();
-          setEntryState('suspended');
-          toast({
-            variant: "destructive",
-            title: "Access Restricted",
-            description: "The active security token has been revoked by your administrator."
-          });
+          router.push('/access-blocked');
+          return;
         } else if (data.status === 'pending') {
           // Check if they are a SuperAdmin. SuperAdmins skip verification.
           const { data: admin } = await supabase
@@ -89,19 +84,18 @@ export default function LoginPage() {
             .single();
 
           if (!admin && data.role_id !== 'SUPER_ADMIN') {
-            await supabase.auth.signOut();
-            setPendingCompany(data.company?.name || "DP Studios");
-            setEntryState('pending');
-            toast({
-              variant: "destructive",
-              title: "Onboarding Pending",
-              description: "Your operational clearance is awaiting manager approval."
-            });
+            router.push('/pending-approval');
             return;
           }
-          router.push("/");
+        }
+        
+        // If approved and active, route based on role
+        if (data.role_id === 'TALENT') {
+          router.push("/talent/dashboard");
+        } else if (data.role_id === 'CLIENT') {
+          router.push("/client/dashboard");
         } else {
-          router.push("/");
+          router.push("/dashboard");
         }
       } else {
         router.push("/");

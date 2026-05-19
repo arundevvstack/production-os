@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useTenant } from "@/hooks/use-tenant";
 
 export default function TalentDashboardPage() {
   const { toast } = useToast();
@@ -72,6 +73,22 @@ export default function TalentDashboardPage() {
       }
     }
   }, []);
+
+  const { user, profile, isLoading, isSuperAdmin } = useTenant();
+
+  // Auth Guard
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user) {
+      window.location.href = "/talent/login";
+    } else if (profile?.status === 'suspended') {
+      window.location.href = "/access-blocked";
+    } else if (profile?.status === 'pending' && !isSuperAdmin) {
+      window.location.href = "/pending-approval";
+    } else if (profile?.role_id && profile?.role_id !== 'TALENT' && !isSuperAdmin) {
+      window.location.href = "/login";
+    }
+  }, [user, profile, isLoading, isSuperAdmin]);
 
   // Creator Privacy Settings (Phase 5)
   const [privacySettings, setPrivacySettings] = useState<string[]>([

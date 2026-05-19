@@ -25,13 +25,23 @@ export default function DashboardLayout({
       return;
     }
 
-    // Safety checks: instantly route to login if status changes to suspended or pending
+    // Safety checks: instantly route to appropriate holding pages
     if (profile?.status === 'suspended') {
-      router.push("/login");
+      router.push("/access-blocked");
       return;
     }
     if (profile?.status === 'pending' && !isSuperAdmin) {
-      router.push("/login");
+      router.push("/pending-approval");
+      return;
+    }
+
+    // Role-based isolation: ensure TALENT and CLIENT cannot access internal workspace
+    if (profile?.role_id === 'TALENT') {
+      router.push("/talent/dashboard");
+      return;
+    }
+    if (profile?.role_id === 'CLIENT') {
+      router.push("/client/dashboard");
       return;
     }
 
@@ -40,7 +50,7 @@ export default function DashboardLayout({
     }
   }, [user, companyId, isSuperAdmin, profile, isLoading, router]);
 
-  if (isLoading || !user || (profile?.status === 'suspended') || (profile?.status === 'pending' && !isSuperAdmin) || (!companyId && !isSuperAdmin)) {
+  if (isLoading || !user || (profile?.status === 'suspended') || (profile?.status === 'pending' && !isSuperAdmin) || (!companyId && !isSuperAdmin) || profile?.role_id === 'TALENT' || profile?.role_id === 'CLIENT') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />

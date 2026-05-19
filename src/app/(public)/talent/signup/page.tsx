@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/supabase/client";
 
 // Available Categories
 const CATEGORY_OPTIONS = [
@@ -165,18 +166,40 @@ export default function TalentSignupFlow() {
     }, 400);
   };
 
-  const handleFinalSubmit = (e: React.FormEvent) => {
+  const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    const { error } = await supabase.auth.signUp({
+      email: formData.emailAddress,
+      password: formData.password,
+      options: {
+        data: {
+          full_name: formData.fullName,
+          role: 'TALENT'
+        }
+      }
+    });
+
+    if (error) {
       setIsSubmitting(false);
       toast({
-        title: "Profile Live!",
-        description: `Welcome aboard, ${formData.fullName}! Redirecting to your Talent Dashboard...`,
+        variant: "destructive",
+        title: "Registration Failed",
+        description: error.message || "Could not register your profile at this time.",
       });
-      // Store in local storage for sandbox preservation
-      localStorage.setItem("dp_talent_onboarded", JSON.stringify(formData));
+      return;
+    }
+
+    // Store in local storage for sandbox preservation/hydration
+    localStorage.setItem("dp_talent_onboarded", JSON.stringify(formData));
+
+    toast({
+      title: "Profile Live!",
+      description: `Welcome aboard, ${formData.fullName}! Redirecting to your Talent Dashboard...`,
+    });
+
+    setTimeout(() => {
       window.location.href = "/talent/dashboard";
     }, 1500);
   };

@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/supabase/client";
 import Link from "next/link";
 
 const GoogleIcon = () => (
@@ -27,18 +28,30 @@ export default function TalentLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
       setIsSubmitting(false);
       toast({
-        title: "Talent Login Successful",
-        description: "Welcome back! Redirecting to your Creator Network Dashboard...",
+        variant: "destructive",
+        title: "Login Failed",
+        description: error.message || "Invalid credentials provided."
       });
-      window.location.href = "/talent/dashboard";
-    }, 1200);
+      return;
+    }
+
+    toast({
+      title: "Talent Login Successful",
+      description: "Welcome back! Redirecting to your Creator Network Dashboard...",
+    });
+    window.location.href = "/talent/dashboard";
   };
 
   return (

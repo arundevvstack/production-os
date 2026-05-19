@@ -38,6 +38,9 @@ export function useTenant() {
 
           const firstCompanyId = companies && companies.length > 0 ? companies[0].id : null;
 
+          const assignedRole = user.user_metadata?.role || 'EMPLOYEE';
+          const assignedDept = assignedRole === 'TALENT' ? 'Talent' : assignedRole === 'CLIENT' ? 'Client' : 'Production';
+
           await supabase
             .from('User')
             .insert({
@@ -45,10 +48,10 @@ export function useTenant() {
               email: user.email,
               fullName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Unknown User',
               status: 'pending',
-              role_id: 'EMPLOYEE',
+              role_id: assignedRole,
               company_id: firstCompanyId,
               onboarding_status: 'awaiting_approval',
-              department: 'Production'
+              department: assignedDept
             });
         } catch (err) {
           console.error("Defensive self-healing profile generation failed:", err);

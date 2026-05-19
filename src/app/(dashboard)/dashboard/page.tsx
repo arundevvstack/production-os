@@ -54,6 +54,26 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setHasMounted(true);
+
+    // Live Realtime Clearance Listener
+    const channel = supabase
+      .channel('pending-clearance-listener')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'User' }, (payload) => {
+        const newUser = payload.new;
+        if (newUser.status === 'pending') {
+          const roleDisplay = newUser.role_id === 'TALENT' ? 'Talent' : newUser.role_id === 'CLIENT' ? 'Client' : 'Internal Employee';
+          toast({
+            title: `New ${roleDisplay} Registration`,
+            description: `${newUser.fullName} is waiting for clearance approval.`,
+            duration: 6000,
+          });
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   // --- BUSINESS COLLECTIONS ---
