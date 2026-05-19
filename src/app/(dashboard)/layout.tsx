@@ -45,12 +45,12 @@ export default function DashboardLayout({
       return;
     }
 
-    if (!companyId && !isSuperAdmin) {
-      router.push("/onboarding");
-    }
+    // Company exists — no onboarding needed for Define Perspective
+    // If companyId is still null after profile loads, it means the profile
+    // is still pending approval — handled above.
   }, [user, companyId, isSuperAdmin, profile, isLoading, router]);
 
-  if (isLoading || !user || (profile?.status === 'suspended') || (profile?.status === 'pending' && !isSuperAdmin) || (!companyId && !isSuperAdmin) || profile?.role_id === 'TALENT' || profile?.role_id === 'CLIENT') {
+  if (isLoading || !user || (profile?.status === 'suspended') || (profile?.status === 'pending' && !isSuperAdmin) || profile?.role_id === 'TALENT' || profile?.role_id === 'CLIENT') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
