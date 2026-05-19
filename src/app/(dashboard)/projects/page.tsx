@@ -105,7 +105,7 @@ export default function ProjectsPage() {
   });
 
   // Fetch Projects from Supabase
-  const { data: projects, isLoading: isProjectsLoading } = useSupabaseCollection('Project', {
+  const { data: projects, isLoading: isProjectsLoading, refetch: reloadProjects } = useSupabaseCollection('Project', {
     where: { company_id: companyId },
     orderBy: { created_at: 'desc' }
   });
@@ -216,21 +216,44 @@ export default function ProjectsPage() {
   };
 
   const handleConfirmArchive = async () => {
-    // Move to Archives table in Supabase
-    await supabase.from('Archive').insert({
-      ...projectToArchive,
+    if (!projectToArchive || !companyId) return;
+    const project = projectToArchive;
+
+    // Archive with explicit fields — no spread to avoid schema mismatch
+    const { error: archiveErr } = await supabase.from('Archive').insert({
+      id: `arch_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+      company_id: companyId,
+      project_name: project.project_name,
       archive_type: 'project',
-      archived_at: new Date().toISOString()
+      archived_at: new Date().toISOString(),
+      budget: project.budget,
+      status: project.status,
+      deadline: project.deadline,
+      client_name: project.client_name,
+      color: project.color,
+      progress: project.progress,
     });
 
+    if (archiveErr) {
+      toast({ variant: "destructive", title: "Archive Failed", description: archiveErr.message });
+      setProjectToArchive(null);
+      return;
+    }
+
     // Delete from Projects table
-    await supabase.from('Project').delete().eq('id', projectToArchive.id);
-    
-    toast({ 
-      title: "Project Archived", 
-      description: `"${projectToArchive.project_name}" has been moved to archives.` 
-    });
+    const { error: deleteErr } = await supabase.from('Project').delete().eq('id', project.id);
+
+    if (deleteErr) {
+      toast({ variant: "destructive", title: "Delete Failed", description: deleteErr.message });
+    } else {
+      toast({ 
+        title: "Project Archived", 
+        description: `"${project.project_name}" has been moved to the Workspace Vault.` 
+      });
+    }
+
     setProjectToArchive(null);
+    reloadProjects();
   };
 
   if (isTenantLoading || isProjectsLoading) {

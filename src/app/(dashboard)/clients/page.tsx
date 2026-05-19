@@ -181,11 +181,10 @@ export default function ClientsPage() {
   });
 
   // DB Collections Sync
-  const { data: leads, isLoading: isLeadsLoading } = useSupabaseCollection('Lead', {
+  const { data: leads, isLoading: isLeadsLoading, refetch: reloadLeads } = useSupabaseCollection('Lead', {
     where: { company_id: companyId },
     orderBy: { company_name: 'asc' }
   });
-  const reloadLeads = () => {};
 
   const { data: projects, isLoading: isProjectsLoading } = useSupabaseCollection('Project', {
     where: { company_id: companyId },
@@ -406,35 +405,66 @@ export default function ClientsPage() {
   const handleConfirmArchive = async () => {
     if (!companyId || !clientToArchive) return;
     const client = clientToArchive;
-    
-    await supabase.from('Archive').insert({
-      ...client,
+
+    // Archive the client lead record — explicitly set company_id for tenant visibility
+    const { error: archiveError } = await supabase.from('Archive').insert({
+      id: `arch_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+      company_id: companyId,
+      company_name: client.company_name,
       archive_type: 'client',
-      archived_at: new Date().toISOString()
+      archived_at: new Date().toISOString(),
+      industry: client.industry,
+      email: client.email,
+      contact_person: client.contact_person,
+      service_vertical: client.service_vertical,
+      sub_vertical: client.sub_vertical,
     });
 
+    if (archiveError) {
+      toast({ variant: "destructive", title: "Archive Failed", description: archiveError.message });
+      setClientToArchive(null);
+      return;
+    }
+
+    // Also archive & delete associated projects
     try {
       const { data: projectsToArchive } = await supabase
         .from('Project')
         .select('*')
-        .eq('client_name', client.company_name);
+        .eq('client_name', client.company_name)
+        .eq('company_id', companyId);
       
-      if (projectsToArchive) {
+      if (projectsToArchive && projectsToArchive.length > 0) {
         for (const project of projectsToArchive) {
           await supabase.from('Archive').insert({
-            ...project,
+            id: `arch_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+            company_id: companyId,
+            project_name: project.project_name,
             archive_type: 'project',
-            archived_at: new Date().toISOString()
+            archived_at: new Date().toISOString(),
+            budget: project.budget,
+            status: project.status,
+            deadline: project.deadline,
           });
           await supabase.from('Project').delete().eq('id', project.id);
         }
       }
     } catch (e) {
-      console.error(e);
+      console.error('Error archiving associated projects:', e);
     }
 
-    await supabase.from('Lead').delete().eq('id', client.id);
-    toast({ title: "Client Archived", description: `"${client.company_name}" moved to archives.` });
+    // Delete the lead from the Lead table (all entries for this company)
+    const { data: allCompanyLeads } = await supabase
+      .from('Lead')
+      .select('id')
+      .eq('company_name', client.company_name)
+      .eq('company_id', companyId);
+
+    if (allCompanyLeads && allCompanyLeads.length > 0) {
+      await supabase.from('Lead').delete().in('id', allCompanyLeads.map(l => l.id));
+    }
+
+    toast({ title: "Client Archived", description: `"${client.company_name}" and associated projects moved to Vault.` });
     setClientToArchive(null);
     reloadLeads();
   };
