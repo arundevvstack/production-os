@@ -1,24 +1,20 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-async function main() {
-  const email = "marketing.defineperspective@gmail.com";
-  console.log(`Checking auth.users for: ${email}...`);
-
+async function checkAuthUsers() {
   try {
     const authUsers = await prisma.$queryRawUnsafe(`
-      SELECT id, email, created_at, email_confirmed_at, last_sign_in_at
-      FROM auth.users
-      WHERE email = $1;
-    `, email);
-    
-    console.log("✔ Records found in auth.users:");
-    console.table(authUsers);
+      SELECT id, email, raw_user_meta_data 
+      FROM auth.users 
+      LIMIT 5;
+    `);
+    console.log('Auth Users:');
+    console.log(authUsers);
   } catch (error) {
-    console.error("❌ Failed to query auth.users:", error);
+    console.error('Error fetching auth users:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-main();
+checkAuthUsers();

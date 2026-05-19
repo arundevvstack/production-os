@@ -1,15 +1,14 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-async function checkFunctionOwner() {
+async function checkForceRls() {
   try {
     const res = await prisma.$queryRawUnsafe(`
-      SELECT r.rolname 
-      FROM pg_proc p 
-      JOIN pg_roles r ON p.proowner = r.oid 
-      WHERE p.proname = 'get_auth_company_id';
+      SELECT relname, relrowsecurity, relforcerowsecurity 
+      FROM pg_class 
+      WHERE relname = 'User' AND relnamespace = 'public'::regnamespace;
     `);
-    console.log('Function Owner:');
+    console.log('User RLS settings:');
     console.log(res);
   } catch (error) {
     console.error('Error:', error);
@@ -18,4 +17,4 @@ async function checkFunctionOwner() {
   }
 }
 
-checkFunctionOwner();
+checkForceRls();

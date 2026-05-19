@@ -1,15 +1,14 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-async function checkFunctionOwner() {
+async function checkRoles() {
   try {
     const res = await prisma.$queryRawUnsafe(`
-      SELECT r.rolname 
-      FROM pg_proc p 
-      JOIN pg_roles r ON p.proowner = r.oid 
-      WHERE p.proname = 'get_auth_company_id';
+      SELECT rolname, rolsuper, rolbypassrls 
+      FROM pg_roles 
+      WHERE rolname IN ('postgres', 'authenticated', 'anon', 'service_role');
     `);
-    console.log('Function Owner:');
+    console.log('Roles Attributes:');
     console.log(res);
   } catch (error) {
     console.error('Error:', error);
@@ -18,4 +17,4 @@ async function checkFunctionOwner() {
   }
 }
 
-checkFunctionOwner();
+checkRoles();
