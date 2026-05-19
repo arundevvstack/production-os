@@ -10,12 +10,13 @@ import { useSupabase } from "@/supabase/provider";
 import { supabase } from "@/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Sparkles, Loader2, ShieldCheck } from "lucide-react";
+import { Sparkles, Loader2, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { user } = useSupabase();
   const router = useRouter();
@@ -86,15 +87,26 @@ export default function SignupPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input 
-                id="password" 
-                type="password" 
-                placeholder="At least 8 characters" 
-                required 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-12 rounded-xl"
-              />
+              <div className="relative">
+                <Input 
+                  id="password" 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="At least 8 characters" 
+                  required 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-12 rounded-xl pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                </Button>
+              </div>
             </div>
             <div className="bg-muted/30 p-4 rounded-xl space-y-2">
               <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">

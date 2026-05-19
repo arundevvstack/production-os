@@ -5,7 +5,7 @@ import {
   ArrowLeft, ArrowRight, UserCheck, ShieldCheck, Sparkles, 
   MapPin, Camera, DollarSign, Globe, CheckCircle2, ChevronRight,
   Flame, Lock, HelpCircle, Layers, Sliders, Users, Star,
-  Mail, Phone, Laptop, Check, Upload, Calendar, PlayCircle, Eye,
+  Mail, Phone, Laptop, Check, Upload, Calendar, PlayCircle, Eye, EyeOff,
   Shield, Award, Sparkle, AlertCircle
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,6 +27,7 @@ export default function TalentSignupFlow() {
   
   // Wizard steps: 0 (Welcome), 1 (Basic Details), 2 (Profile Identity), 3 (Portfolio), 4 (Pricing/Availability), 5 (Verification)
   const [step, setStep] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   
   // Fields state
   const [formData, setFormData] = useState({
@@ -321,14 +322,25 @@ export default function TalentSignupFlow() {
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Password</label>
-                      <Input 
-                        type="password" 
-                        placeholder="••••••••"
-                        value={formData.password}
-                        onChange={(e) => setFormData({...formData, password: e.target.value})}
-                        className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl focus:border-red-500 text-slate-800 font-bold"
-                        required
-                      />
+                      <div className="relative">
+                        <Input 
+                          type={showPassword ? "text" : "password"} 
+                          placeholder="••••••••"
+                          value={formData.password}
+                          onChange={(e) => setFormData({...formData, password: e.target.value})}
+                          className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl pr-10 focus:border-red-500 text-slate-800 font-bold w-full"
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                        </Button>
+                      </div>
                     </div>
                   </div>
 
