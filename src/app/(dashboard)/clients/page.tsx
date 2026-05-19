@@ -406,9 +406,8 @@ export default function ClientsPage() {
     if (!companyId || !clientToArchive) return;
     const client = clientToArchive;
 
-    // Archive the client lead record — explicitly set company_id for tenant visibility
+    // Archive the client lead record — let Supabase auto-generate id
     const { error: archiveError } = await supabase.from('Archive').insert({
-      id: `arch_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
       company_id: companyId,
       company_name: client.company_name,
       archive_type: 'client',
@@ -437,7 +436,6 @@ export default function ClientsPage() {
       if (projectsToArchive && projectsToArchive.length > 0) {
         for (const project of projectsToArchive) {
           await supabase.from('Archive').insert({
-            id: `arch_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
             company_id: companyId,
             project_name: project.project_name,
             archive_type: 'project',

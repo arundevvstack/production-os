@@ -219,9 +219,12 @@ export default function ProjectsPage() {
     if (!projectToArchive || !companyId) return;
     const project = projectToArchive;
 
-    // Archive with explicit fields — no spread to avoid schema mismatch
+    const archiveId = typeof crypto !== 'undefined' && crypto.randomUUID 
+      ? crypto.randomUUID() 
+      : `${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
+
+    // Archive with explicit fields — let Supabase auto-generate id
     const { error: archiveErr } = await supabase.from('Archive').insert({
-      id: `arch_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
       company_id: companyId,
       project_name: project.project_name,
       archive_type: 'project',

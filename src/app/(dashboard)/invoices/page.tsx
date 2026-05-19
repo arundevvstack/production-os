@@ -75,18 +75,21 @@ export default function InvoicesPage() {
     due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   });
 
-  // 1. Fetch Invoices from Supabase
-  const { data: invoices, isLoading: isInvoicesLoading } = useSupabaseCollection('Invoice', {
+  // 1. Fetch Invoices from Supabase (filtered by company)
+  const { data: invoices, isLoading: isInvoicesLoading, refetch: refetchInvoices } = useSupabaseCollection('Invoice', {
+    where: companyId ? { company_id: companyId } : undefined,
     orderBy: { created_at: 'desc' }
   });
 
-  // 2. Fetch Leads from Supabase
+  // 2. Fetch Leads from Supabase (filtered by company)
   const { data: leads } = useSupabaseCollection('Lead', {
+    where: companyId ? { company_id: companyId } : undefined,
     orderBy: { company_name: 'asc' }
   });
 
-  // 3. Fetch Projects from Supabase
+  // 3. Fetch Projects from Supabase (filtered by company)
   const { data: projects } = useSupabaseCollection('Project', {
+    where: companyId ? { company_id: companyId } : undefined,
     orderBy: { project_name: 'asc' }
   });
 
@@ -197,8 +200,18 @@ export default function InvoicesPage() {
 
   const handleConfirmDelete = async () => {
     if (!companyId || !invoiceToDelete) return;
-    await supabase.from('Invoice').delete().eq('id', invoiceToDelete.id);
-    toast({ title: "Invoice Removed", description: "The billing record has been deleted." });
+    const { error } = await supabase
+      .from('Invoice')
+      .delete()
+      .eq('id', invoiceToDelete.id)
+      .eq('company_id', companyId); // Safety: only delete own company's invoice
+
+    if (error) {
+      toast({ variant: "destructive", title: "Delete Failed", description: error.message });
+    } else {
+      toast({ title: "Invoice Removed", description: "The billing record has been deleted." });
+      refetchInvoices();
+    }
     setInvoiceToDelete(null);
   };
 

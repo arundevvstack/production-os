@@ -170,23 +170,27 @@ export default function AccountsPage() {
   ];
   const isAccountsLoading = false;
 
-  // 2. Fetch Expenses from Supabase
-  const { data: expenses, isLoading: isExpensesLoading } = useSupabaseCollection('Expense', {
+  // 2. Fetch Expenses from Supabase (filtered by company)
+  const { data: expenses, isLoading: isExpensesLoading, refetch: refetchExpenses } = useSupabaseCollection('Expense', {
+    where: companyId ? { company_id: companyId } : undefined,
     orderBy: { date: 'desc' }
   });
 
-  // 3. Fetch Invoices for GST calculation from Supabase
+  // 3. Fetch Invoices for GST calculation from Supabase (filtered by company)
   const { data: invoices, isLoading: isInvoicesLoading } = useSupabaseCollection('Invoice', {
+    where: companyId ? { company_id: companyId } : undefined,
     orderBy: { issue_date: 'desc' }
   });
 
-  // 4. Fetch Filing Records from Supabase
+  // 4. Fetch Filing Records from Supabase (filtered by company)
   const { data: filings } = useSupabaseCollection('GSTFiling', {
+    where: companyId ? { company_id: companyId } : undefined,
     orderBy: { submitted_at: 'desc' }
   });
 
-  // 5. Fetch Projects for Expense Attribution from Supabase
+  // 5. Fetch Projects for Expense Attribution from Supabase (filtered by company)
   const { data: projects } = useSupabaseCollection('Project', {
+    where: companyId ? { company_id: companyId } : undefined,
     orderBy: { project_name: 'asc' }
   });
 
@@ -296,8 +300,18 @@ export default function AccountsPage() {
 
   const handleDeleteExpense = async () => {
     if (!companyId || !expenseToDelete) return;
-    await supabase.from('Expense').delete().eq('id', expenseToDelete.id);
-    toast({ title: "Expense Purged", description: "Record removed from ledger." });
+    const { error } = await supabase
+      .from('Expense')
+      .delete()
+      .eq('id', expenseToDelete.id)
+      .eq('company_id', companyId);
+
+    if (error) {
+      toast({ variant: "destructive", title: "Delete Failed", description: error.message });
+    } else {
+      toast({ title: "Expense Purged", description: "Record removed from ledger." });
+      refetchExpenses();
+    }
     setExpenseToDelete(null);
   };
 
