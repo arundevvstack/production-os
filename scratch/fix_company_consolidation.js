@@ -13,7 +13,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
 const supabaseUrl = 'https://dgskurtkixchdfhahzje.supabase.co';
-const serviceRoleKey = 'sb_secret_haoOZsXGJlJ6VXkG1g0qtg_zLOt_1cM';
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 const supabase = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false }
