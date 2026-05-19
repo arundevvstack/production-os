@@ -85,10 +85,7 @@ export default function DashboardPage() {
     where: { company_id: companyId }
   });
 
-  const { data: companyUsers } = useSupabaseCollection('User', {
-    where: { company_id: companyId }
-  });
-  const reloadUsers = () => {};
+  const { data: companyUsers, refetch: reloadUsers } = useSupabaseCollection('User');
 
   const { data: activityLogs } = useSupabaseCollection('ActivityLog', {
     where: { company_id: companyId },
@@ -101,11 +98,14 @@ export default function DashboardPage() {
     try {
       const { error } = await supabase
         .from('User')
-        .update({ status: 'approved' })
+        .update({ 
+          status: 'approved',
+          company_id: companyId || undefined
+        })
         .eq('id', memberId);
 
       if (error) throw error;
-      toast({ title: "User Approved", description: "Crew member has been granted command center clearance." });
+      toast({ title: "User Approved", description: "Crew member has been granted command center clearance and assigned to the company." });
       reloadUsers();
     } catch (err: any) {
       toast({ variant: "destructive", title: "Approval Failed", description: err.message });
@@ -238,24 +238,27 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="divide-y">
-                  {companyUsers?.filter(u => u.status === 'pending').map((member) => (
-                    <div key={member.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-9 w-9">
-                          <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-black">
-                            {member.fullName?.substring(0, 2).toUpperCase() || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-black text-slate-800">{member.fullName}</p>
-                          <p className="text-[10px] text-slate-400 font-medium">{member.email}</p>
+                  {companyUsers?.filter(u => u.status === 'pending').map((member) => {
+                    const dispName = member.fullName || member.full_name || member.email?.split('@')[0] || 'New Crew';
+                    return (
+                      <div key={member.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-9 w-9">
+                            <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-black">
+                              {dispName.substring(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="text-sm font-black text-slate-800">{dispName}</p>
+                            <p className="text-[10px] text-slate-400 font-medium">{member.email}</p>
+                          </div>
                         </div>
+                        <Button onClick={() => handleApproveUser(member.id)} className="h-9 px-4 rounded-xl gap-2 font-bold text-xs bg-emerald-600 hover:bg-emerald-500 shadow-sm shadow-emerald-200">
+                          <UserCheck className="h-4 w-4" /> Grant Access
+                        </Button>
                       </div>
-                      <Button onClick={() => handleApproveUser(member.id)} className="h-9 px-4 rounded-xl gap-2 font-bold text-xs bg-emerald-600 hover:bg-emerald-500 shadow-sm shadow-emerald-200">
-                        <UserCheck className="h-4 w-4" /> Grant Access
-                      </Button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </CardContent>

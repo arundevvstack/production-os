@@ -63,9 +63,7 @@ export default function RBACPage() {
   const [selectedRole, setSelectedRole] = useState("EMPLOYEE");
   const [selectedDepartment, setSelectedDepartment] = useState("Production");
 
-  const { data: members, isLoading: isUsersLoading, refetch: reloadMembers } = useSupabaseCollection('User', {
-    where: { company_id: companyId }
-  });
+  const { data: members, isLoading: isUsersLoading, refetch: reloadMembers } = useSupabaseCollection('User');
 
   const handleUpdateMemberCredentials = async (memberId: string, newRoleId: string, newDept: string) => {
     if (!memberId) return;
@@ -116,9 +114,14 @@ export default function RBACPage() {
 
     setMutatingId(memberId);
     try {
+      const updateData: any = { status: newStatus };
+      if (newStatus === 'approved' && companyId) {
+        updateData.company_id = companyId;
+      }
+
       const { error } = await supabase
         .from('User')
-        .update({ status: newStatus })
+        .update(updateData)
         .eq('id', memberId);
 
       if (error) throw error;
