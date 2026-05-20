@@ -131,7 +131,6 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
 
         for (const task of defaultAITasks) {
           await supabase.from('Task').insert({
-            id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'task_' + Math.random().toString(36).substring(2, 15),
             company_id: companyId,
             project_id: newProjectId,
             title: task.title,
