@@ -218,10 +218,7 @@ export default function CRMPage() {
 
     // 2. Create Project Workspace in Supabase
     const projectRefCode = `PROJ-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-    const newProjectId = generateId();
-    
     const { error } = await supabase.from('Project').insert({
-      id: newProjectId,
       company_id: companyId,
       project_name: lead.company_name,
       client_name: lead.company_name,

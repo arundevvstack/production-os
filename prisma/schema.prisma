@@ -149,13 +149,17 @@ model Prospect {
   social_links     Json? // { linkedin: "", instagram: "" }
   industry         String?
   project_category String? // e.g. "AI TVC", "Corporate Film"
+  service_vertical String? // e.g. "Advertising & Brand Films"
+  sub_vertical     String? // e.g. "TV Commercials, Social Media Ads"
   budget_range     String?
   tags             String[]
   priority         String   @default("Medium") // High, Medium, Low
   notes            String?
   deal_value       Float?
+  gstin            String?
+  billing_address  String?
 
-  stage      String @default("New Lead") // New Lead, Contacted, Meeting Scheduled, Quoted, Negotiation, Won, Lost
+  stage      String @default("New Lead") // New Lead, Contacted, Meeting Scheduled, Quoted, Negotiation, Won, Lost, client
   lead_score Int    @default(0)
 
   assignee_id    String?

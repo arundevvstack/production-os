@@ -180,9 +180,7 @@ export default function ProjectsPage() {
 
     // 2. Create Project in Supabase
     const randomColor = PROJECT_COLORS[Math.floor(Math.random() * PROJECT_COLORS.length)];
-    const newProjectId = generateId();
     const { error } = await supabase.from('Project').insert({
-      id: newProjectId,
       company_id: companyId,
       project_name: newProject.project_name,
       client_name: newProject.client_name,

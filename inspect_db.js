@@ -8,30 +8,22 @@ const client = new Client({
 async function main() {
   try {
     await client.connect();
-    
-    // Check if RLS is enabled on User table
-    const rlsRes = await client.query(`
-      SELECT relname, relrowsecurity 
-      FROM pg_class 
-      WHERE relname = 'User';
-    `);
-    console.log('RLS Status:', rlsRes.rows);
 
-    // Check grants on schema public
-    const schemaRes = await client.query(`
-      SELECT nspname, nspacl 
-      FROM pg_namespace 
-      WHERE nspname = 'public';
+    // Get all column names for the Prospect table
+    const res = await client.query(`
+      SELECT column_name, data_type, is_nullable, column_default
+      FROM information_schema.columns 
+      WHERE table_schema = 'public' AND table_name = 'Prospect'
+      ORDER BY ordinal_position;
     `);
-    console.log('Schema Grants:', schemaRes.rows);
+    console.log('Prospect columns:', JSON.stringify(res.rows, null, 2));
 
-    // Check grants on User table
-    const tableRes = await client.query(`
-      SELECT relname, relacl 
-      FROM pg_class 
-      WHERE relname = 'User';
+    // Get all tables in public schema
+    const tables = await client.query(`
+      SELECT table_name FROM information_schema.tables 
+      WHERE table_schema = 'public' ORDER BY table_name;
     `);
-    console.log('Table Grants:', tableRes.rows);
+    console.log('\nAll public tables:', tables.rows.map(r => r.table_name));
 
   } catch (error) {
     console.error('Error:', error);

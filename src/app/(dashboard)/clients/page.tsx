@@ -386,17 +386,16 @@ export default function ClientsPage() {
           sub_vertical: allServices.join(', '),
         }).eq('id', createdLeadId);
       } else {
-        const newId = generateId();
+        // Let the DB auto-generate the uuid — no manual id needed
         const { data, error } = await supabase.from('Prospect').insert({
-          id: newId,
           company_id: companyId,
           ...newClient,
           service_vertical: primaryVertical,
           sub_vertical: allServices.join(', '),
           deal_value: 0,
-          stage: 'client', 
+          stage: 'client',
         }).select();
-        
+
         if (error) throw error;
         if (data && data.length > 0) {
           setCreatedLeadId(data[0].id);
