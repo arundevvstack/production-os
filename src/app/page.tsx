@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTenant } from "@/hooks/use-tenant";
-import { ArrowRight, Play, CheckCircle2, LayoutGrid, Users, Zap, Building2, TerminalSquare, ServerCrash } from "lucide-react";
+import { ArrowRight, Play, CheckCircle2, LayoutGrid, Users, Zap, Building2, TerminalSquare, ServerCrash, Loader2, Sparkle, PlayCircle, Bot, MapPin, Eye, Sparkles, Activity } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
