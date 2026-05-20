@@ -293,13 +293,13 @@ export default function ProjectsPage() {
                 <Plus className="h-5 w-5" /> New Project
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px] rounded-[10px] border-white/60 glass-panel p-0 overflow-hidden">
-              <div className="bg-slate-900 p-8 text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12">
-                  <Sparkles className="h-32 w-32" />
+            <DialogContent className="sm:max-w-[700px] rounded-[10px] border-slate-200 bg-white p-0 overflow-hidden shadow-2xl">
+              <div className="bg-white border-b border-slate-100 p-8 text-slate-900 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-12 opacity-50 rotate-12">
+                  <Sparkles className="h-32 w-32 text-slate-100" />
                 </div>
                 <DialogHeader className="relative z-10">
-                  <DialogTitle className="text-3xl font-black tracking-tight flex items-center gap-3">
+                  <DialogTitle className="text-3xl font-black tracking-tight flex items-center gap-3 text-slate-900">
                     <div className="h-10 w-10 rounded-[10px] bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
                       <Plus className="h-6 w-6 text-white" />
                     </div>
@@ -311,8 +311,8 @@ export default function ProjectsPage() {
                 </DialogHeader>
               </div>
               
-              <form onSubmit={handleCreateProject} className="p-8 space-y-6">
-                <div className="space-y-2 p-5 bg-primary/5 rounded-[10px] border border-primary/10 backdrop-blur-md">
+              <form onSubmit={handleCreateProject} className="p-8 space-y-6 bg-white">
+                <div className="space-y-2 p-5 bg-slate-50 rounded-[10px] border border-slate-100">
                   <Label htmlFor="importLead" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2 mb-2">
                     <Database className="h-3 w-3" /> Import from Lead
                   </Label>
@@ -341,7 +341,7 @@ export default function ProjectsPage() {
                       <SelectTrigger className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-[10px] border-white/60 glass-panel">
+                      <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
                         {CONTENT_VERTICALS.map(v => (
                           <SelectItem key={v.id} value={v.name} className="text-xs font-bold rounded-xl m-1">{v.name}</SelectItem>
                         ))}
@@ -362,7 +362,7 @@ export default function ProjectsPage() {
                           <SelectValue placeholder={newProject.service_category ? "Select service" : "Select category first"} />
                         </div>
                       </SelectTrigger>
-                      <SelectContent className="rounded-[10px] border-white/60 glass-panel">
+                      <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
                         {CONTENT_VERTICALS.find(v => v.name === newProject.service_category)?.services.map(s => (
                           <SelectItem key={s} value={s} className="text-xs font-bold rounded-xl m-1">{s}</SelectItem>
                         ))}
@@ -403,7 +403,7 @@ export default function ProjectsPage() {
                       <SelectTrigger className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm font-bold">
                         <SelectValue placeholder="Select Client" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-[10px] border-white/60 glass-panel">
+                      <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
                         {!leads ? (
                           <div className="p-4 flex items-center justify-center gap-2 text-xs font-bold text-slate-400">
                             <Loader2 className="h-3 w-3 animate-spin" /> Loading clients...
