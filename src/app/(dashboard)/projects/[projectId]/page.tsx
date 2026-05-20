@@ -144,6 +144,8 @@ export default function ProjectWorkspacePage() {
     orderBy: { date: 'desc' }
   });
 
+  const { data: companyUsers } = useSupabaseCollection('User');
+
   // RBAC Gated access filter: accounts team blocked from creative media assets
   const hasMediaAccess = useMemo(() => {
     return roleId !== 'ACCOUNTS';
@@ -814,9 +816,12 @@ export default function ProjectWorkspacePage() {
                   <SelectValue placeholder="Select Assignee" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
-                  {["Creative Director", "Producer", "Lead Editor", "Sound Designer", "Colorist", "Project Manager"].map(r => (
-                    <SelectItem key={r} value={r} className="rounded-lg m-1">{r}</SelectItem>
+                  {companyUsers?.map(user => (
+                    <SelectItem key={user.id} value={user.fullName || user.email?.split('@')[0] || "Unknown"} className="rounded-lg m-1">
+                      {user.fullName || user.email?.split('@')[0]} <span className="text-muted-foreground text-[10px] ml-1 uppercase font-bold">({(user.role_id || "Crew").replace('_', ' ')})</span>
+                    </SelectItem>
                   ))}
+                  <SelectItem value="Unassigned" className="rounded-lg m-1 text-slate-400 italic">Leave Unassigned</SelectItem>
                 </SelectContent>
               </Select>
             </div>
