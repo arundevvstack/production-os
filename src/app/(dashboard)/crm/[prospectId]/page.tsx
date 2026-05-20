@@ -42,8 +42,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { cn } from "@/lib/utils";
 import { CONTENT_VERTICALS } from "../../clients/page";
 
-export default function LeadDetailPage({ params }: { params: Promise<{ leadId: string }> }) {
-  const { leadId } = use(params);
+export default function ProspectDetailPage({ params }: { params: Promise<{ prospectId: string }> }) {
+  const { prospectId } = use(params);
   const { companyId, isLoading: isTenantLoading, profile } = useTenant();
   const router = useRouter();
   
@@ -56,32 +56,32 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
     deal_value: ""
   });
 
-  // 1. Fetch Lead Details from Supabase
-  const { data: lead, isLoading: isLeadLoading } = useSupabaseDoc('Lead', leadId);
+  // 1. Fetch Prospect Details from Supabase
+  const { data: prospect, isLoading: isProspectLoading } = useSupabaseDoc('Prospect', prospectId);
 
-  // 2. Fetch Proposals linked to this lead from Supabase
+  // 2. Fetch Proposals linked to this prospect from Supabase
   const { data: proposals, isLoading: isProposalsLoading } = useSupabaseCollection('Proposal', {
-    where: { lead_id: leadId },
+    where: { prospect_id: prospectId },
     orderBy: { created_at: 'desc' }
   });
 
-  // Sync edit form with lead data when opened
+  // Sync edit form with prospect data when opened
   useEffect(() => {
-    if (lead && isEditOpen) {
+    if (prospect && isEditOpen) {
       setEditForm({
-        company_name: lead.company_name || "",
-        service_vertical: lead.service_vertical || "",
-        sub_vertical: lead.sub_vertical || "",
-        industry: lead.industry || "",
-        deal_value: lead.deal_value?.toString() || ""
+        company_name: prospect.company_name || "",
+        service_vertical: prospect.service_vertical || "",
+        sub_vertical: prospect.sub_vertical || "",
+        industry: prospect.industry || "",
+        deal_value: prospect.deal_value?.toString() || ""
       });
     }
-  }, [lead, isEditOpen]);
+  }, [prospect, isEditOpen]);
 
   const handleUpdateStage = async (newStage: string) => {
-    if (!lead) return;
+    if (!prospect) return;
     
-    await supabase.from('Lead').update({ stage: newStage }).eq('id', leadId);
+    await supabase.from('Prospect').update({ stage: newStage }).eq('id', prospectId);
 
     // Conversion Logic: If Won, trigger the AI Operating Layer
     if (newStage === 'won') {
@@ -93,10 +93,10 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
         const { error: projError } = await supabase.from('Project').insert({
           id: newProjectId,
           company_id: companyId,
-          project_name: lead.company_name,
-          client_name: lead.company_name,
+          project_name: prospect.company_name,
+          client_name: prospect.company_name,
           project_ref: projectRefCode,
-          budget: lead.deal_value || 0,
+          budget: prospect.deal_value || 0,
           status: 'pre-prod',
           progress: 0,
           color: 'card-red',
@@ -105,8 +105,8 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
         if (projError) throw projError;
 
         // 2. AI Operating Layer: Provision Gated Deliverables & Objectives
-        const vertical = lead.service_vertical || 'Media Production';
-        const defaultAITasks = [
+        const vertical = prospect.service_vertical || 'Media Production';
+        const defaultAIObjectives = [
           {
             title: `[AI Blueprint] Moodboard & Script Setup (${vertical})`,
             phase: 'pre-prod',
@@ -120,7 +120,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
           {
             title: `[AI Blueprint] Post-Prod Assembly Edit & Sound Mix`,
             phase: 'post-prod',
-            assignedTo: 'Lead Editor',
+            assignedTo: 'Prospect Editor',
           },
           {
             title: `[AI Blueprint] Delivery QC & Master Delivery Package`,
@@ -129,14 +129,12 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
           }
         ];
 
-        for (const task of defaultAITasks) {
-          await supabase.from('Task').insert({
-            company_id: companyId,
+        for (const objective of defaultAIObjectives) {
+          await supabase.from('Objective').insert({
             project_id: newProjectId,
-            title: task.title,
-            phase: task.phase,
-            assignedTo: task.assignedTo,
-            status: 'todo',
+            title: objective.title,
+            department: objective.assignedTo, // Using department since we don't have user IDs yet
+            status: 'Pending',
             priority: 'High',
           });
         }
@@ -146,7 +144,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
           company_id: companyId,
           user_id: profile?.id || 'system',
           title: 'AI Production Roadmap Active',
-          message: `AI has generated a 4-phase production checklist for new workspace "${lead.company_name}".`,
+          message: `AI has generated a 4-phase production checklist for new workspace "${prospect.company_name}".`,
           is_read: false,
         });
 
@@ -156,24 +154,24 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
           user_id: profile?.id || 'system',
           user_name: profile?.fullName || 'AI System Agent',
           action: 'AI_PLAN_GENERATED',
-          details: `AI Blueprint active for project "${lead.company_name}". 4 phase-gated objectives auto-provisioned.`,
+          details: `AI Blueprint active for project "${prospect.company_name}". 4 phase-gated objectives auto-provisioned.`,
         });
 
         toast({ 
           title: "Deal Won & AI Blueprint Active", 
-          description: `"${lead.company_name}" converted. The AI Operating Layer has provisioned a 4-stage workflow pipeline.` 
+          description: `"${prospect.company_name}" converted. The AI Operating Layer has provisioned a 4-stage workflow pipeline.` 
         });
       } catch (err: any) {
         toast({ variant: "destructive", title: "Conversion Failed", description: err.message });
       }
     } else {
-      toast({ title: "Deal Progressed", description: `Lead moved to ${newStage.toUpperCase()}` });
+      toast({ title: "Deal Progressed", description: `Prospect moved to ${newStage.toUpperCase()}` });
     }
   };
 
   const handleUpdateAddressSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!lead) return;
+    if (!prospect) return;
     const formData = new FormData(e.currentTarget);
     const address = formData.get('billing_address') as string;
     const gstin = formData.get('gstin') as string;
@@ -181,30 +179,30 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
     const state = formData.get('state') as string;
     const gstType = formData.get('gst_type') as string;
 
-    await supabase.from('Lead').update({ 
+    await supabase.from('Prospect').update({ 
       billing_address: address,
       gstin: gstin,
       legal_business_name: legalName,
       state: state,
       gst_type: gstType
-    }).eq('id', leadId);
+    }).eq('id', prospectId);
     
     toast({ title: "Client Data Saved", description: "Billing address and GST updated." });
   };
 
   const handleSaveDetails = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!lead) return;
+    if (!prospect) return;
 
-    await supabase.from('Lead').update({
+    await supabase.from('Prospect').update({
       company_name: editForm.company_name,
       service_vertical: editForm.service_vertical,
       sub_vertical: editForm.sub_vertical,
       industry: editForm.industry,
       deal_value: parseFloat(editForm.deal_value) || 0,
-    }).eq('id', leadId);
+    }).eq('id', prospectId);
     
-    toast({ title: "Details Updated", description: "Lead record has been synced." });
+    toast({ title: "Details Updated", description: "Prospect record has been synced." });
     setIsEditOpen(false);
   };
 
@@ -212,7 +210,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
     CONTENT_VERTICALS.find(v => v.name === editForm.service_vertical), 
   [editForm.service_vertical]);
 
-  if (isTenantLoading || isLeadLoading) {
+  if (isTenantLoading || isProspectLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -220,16 +218,16 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
     );
   }
 
-  if (!lead) {
+  if (!prospect) {
     return (
       <div className="text-center py-20">
-        <h2 className="text-2xl font-bold">Lead not found</h2>
+        <h2 className="text-2xl font-bold">Prospect not found</h2>
         <Button variant="link" onClick={() => router.push("/crm")}>Back to Pipeline</Button>
       </div>
     );
   }
 
-  const currentStageIndex = PIPELINE_STAGES.findIndex(s => s.id === lead.stage);
+  const currentStageIndex = PIPELINE_STAGES.findIndex(s => s.id === prospect.stage);
   const progressValue = ((currentStageIndex + 1) / PIPELINE_STAGES.length) * 100;
 
   return (
@@ -239,13 +237,13 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-primary">{lead.company_name}</h1>
+          <h1 className="text-3xl font-bold text-primary">{prospect.company_name}</h1>
           <p className="text-muted-foreground flex items-center gap-2">
-            Lead ID: <span className="font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded uppercase">{leadId.slice(0,8)}</span>
+            Prospect ID: <span className="font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded uppercase">{prospectId.slice(0,8)}</span>
           </p>
         </div>
         <div className="ml-auto flex items-center gap-3">
-          <Link href={`/clients/${leadId}`} className="hidden sm:block">
+          <Link href={`/clients/${prospectId}`} className="hidden sm:block">
             <Button variant="outline" className="rounded-xl text-xs h-9 gap-2">
               <Building2 className="h-3.5 w-3.5" /> Full Portfolio
             </Button>
@@ -268,7 +266,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
                   <CardTitle className="text-lg">Deal Progression</CardTitle>
                   <CardDescription>Current stage in the sales lifecycle</CardDescription>
                 </div>
-                <Select onValueChange={handleUpdateStage} defaultValue={lead.stage}>
+                <Select onValueChange={handleUpdateStage} defaultValue={prospect.stage}>
                   <SelectTrigger className="w-[180px] rounded-xl h-10">
                     <SelectValue placeholder="Move Stage" />
                   </SelectTrigger>
@@ -327,12 +325,12 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
                         </div>
                         {isCompleted && (
                           <div className="space-y-3">
-                            <p className="text-[10px] text-muted-foreground font-medium italic leading-relaxed">
+                            <p className="text-[10px] text-muted-foreground font-medium italic prospecting-relaxed">
                               Stage reached successfully.
                             </p>
                             {s.id === 'meeting' && (
                               <div className="animate-in fade-in slide-in-from-left-2 duration-500">
-                                <Link href={`/proposals?source=crm&leadId=${leadId}&companyName=${encodeURIComponent(lead.company_name)}&vertical=${encodeURIComponent(lead.service_vertical || '')}&industry=${encodeURIComponent(lead.industry || '')}`}>
+                                <Link href={`/proposals?source=crm&prospectId=${prospectId}&companyName=${encodeURIComponent(prospect.company_name)}&vertical=${encodeURIComponent(prospect.service_vertical || '')}&industry=${encodeURIComponent(prospect.industry || '')}`}>
                                   <Button 
                                     size="sm" 
                                     variant="outline" 
@@ -359,7 +357,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
               <CardTitle className="text-lg flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" /> Drafted Proposals
               </CardTitle>
-              <CardDescription>AI-generated proposals linked to this lead.</CardDescription>
+              <CardDescription>AI-generated proposals linked to this prospect.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               {isProposalsLoading ? (
@@ -403,16 +401,16 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
               <form onSubmit={handleUpdateAddressSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="legal_business_name" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Legal Business Name</Label>
-                  <Input id="legal_business_name" name="legal_business_name" placeholder="e.g. Acme Corp Pvt Ltd" defaultValue={lead.legal_business_name} className="rounded-xl font-medium text-sm" />
+                  <Input id="legal_business_name" name="legal_business_name" placeholder="e.g. Acme Corp Pvt Ltd" defaultValue={prospect.legal_business_name} className="rounded-xl font-medium text-sm" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="gstin" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">GSTIN (Optional)</Label>
-                    <Input id="gstin" name="gstin" placeholder="e.g. 32AAQCM..." defaultValue={lead.gstin} className="rounded-xl font-mono text-sm uppercase" />
+                    <Input id="gstin" name="gstin" placeholder="e.g. 32AAQCM..." defaultValue={prospect.gstin} className="rounded-xl font-mono text-sm uppercase" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="gst_type" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">GST Type</Label>
-                    <Select name="gst_type" defaultValue={lead.gst_type || "Intra-state"}>
+                    <Select name="gst_type" defaultValue={prospect.gst_type || "Intra-state"}>
                       <SelectTrigger className="rounded-xl bg-white shadow-sm h-10">
                         <SelectValue />
                       </SelectTrigger>
@@ -427,11 +425,11 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="state" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">State / Province</Label>
-                  <Input id="state" name="state" placeholder="e.g. Maharashtra" defaultValue={lead.state} className="rounded-xl font-medium text-sm" />
+                  <Input id="state" name="state" placeholder="e.g. Maharashtra" defaultValue={prospect.state} className="rounded-xl font-medium text-sm" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="billing_address" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Detailed Billing Address</Label>
-                  <Textarea id="billing_address" name="billing_address" placeholder="Address..." defaultValue={lead.billing_address} className="rounded-xl min-h-[100px] text-sm" />
+                  <Textarea id="billing_address" name="billing_address" placeholder="Address..." defaultValue={prospect.billing_address} className="rounded-xl min-h-[100px] text-sm" />
                 </div>
                 <Button type="submit" className="rounded-xl font-bold px-8">Save Context</Button>
               </form>
@@ -450,7 +448,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
                   <p className="text-[10px] font-bold text-muted-foreground uppercase">Est. Deal Value</p>
                   <h4 className="text-3xl font-bold flex items-center gap-1">
                     <IndianRupee className="h-5 w-5 text-primary" />
-                    {(lead.deal_value || 0).toLocaleString()}
+                    {(prospect.deal_value || 0).toLocaleString()}
                   </h4>
                 </div>
                 <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 uppercase text-[9px] font-bold">Active Deal</Badge>
@@ -458,7 +456,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
               <div className="pt-4 border-t space-y-3">
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">Probability</span>
-                  <span className="font-bold">{lead.stage === 'won' ? '100%' : lead.stage === 'negotiation' ? '85%' : '45%'}</span>
+                  <span className="font-bold">{prospect.stage === 'won' ? '100%' : prospect.stage === 'negotiation' ? '85%' : '45%'}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">Expected Close</span>
@@ -470,7 +468,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
 
           <Card className="border-none shadow-sm rounded-[10px] bg-white">
             <CardHeader>
-              <CardTitle className="text-lg">Lead Context</CardTitle>
+              <CardTitle className="text-lg">Prospect Context</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex flex-col gap-4">
@@ -479,17 +477,17 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
                     <Zap className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-bold text-base leading-none">{lead.service_vertical || 'General Production'}</p>
+                    <p className="font-bold text-base prospecting-none">{prospect.service_vertical || 'General Production'}</p>
                     <p className="text-xs text-muted-foreground mt-1 uppercase font-bold tracking-tighter">Service Vertical</p>
                   </div>
                 </div>
-                {lead.sub_vertical && (
+                {prospect.sub_vertical && (
                   <div className="flex items-center gap-4 pl-4 border-l-2 border-slate-100">
                     <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
                       <ListTree className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="font-bold text-sm leading-none">{lead.sub_vertical}</p>
+                      <p className="font-bold text-sm prospecting-none">{prospect.sub_vertical}</p>
                       <p className="text-[10px] text-muted-foreground mt-1 uppercase font-bold tracking-tighter">Sub Category</p>
                     </div>
                   </div>
@@ -498,15 +496,15 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
               <div className="space-y-3 pt-4 border-t">
                 <div className="flex items-center gap-3 text-xs">
                   <Briefcase className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">Industry: {lead.industry || 'Media Production'}</span>
+                  <span className="font-medium">Industry: {prospect.industry || 'Media Production'}</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs">
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">Lead Source: Referral</span>
+                  <span className="font-medium">Prospect Source: Referral</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs">
                   <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">Created: {lead.created_at?.toDate ? lead.created_at.toDate().toLocaleDateString() : 'Just now'}</span>
+                  <span className="font-medium">Created: {prospect.created_at?.toDate ? prospect.created_at.toDate().toLocaleDateString() : 'Just now'}</span>
                 </div>
               </div>
               <Button 
@@ -526,7 +524,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-accent" />
-              Edit Lead
+              Edit Prospect
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSaveDetails} className="space-y-4 py-4">
@@ -577,7 +575,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ leadId: s
               </div>
             </div>
             <DialogFooter className="pt-4">
-              <Button type="submit" className="w-full rounded-xl h-11 font-bold">Save Lead Details</Button>
+              <Button type="submit" className="w-full rounded-xl h-11 font-bold">Save Prospect Details</Button>
             </DialogFooter>
           </form>
         </DialogContent>

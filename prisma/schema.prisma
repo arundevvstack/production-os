@@ -8,10 +8,14 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// --------------------------------------------------
+// USERS, TEAMS & ROLES
+// --------------------------------------------------
+
 model Company {
-  id               String           @id @default(uuid())
+  id               String   @id @default(uuid())
   name             String
-  onboardingStatus String           @default("pending")
+  onboardingStatus String   @default("pending")
   cin              String?
   gstin            String?
   address          String?
@@ -19,46 +23,28 @@ model Company {
   contact_email    String?
   contact_phone    String?
   website          String?
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  activityLogs     ActivityLog[]
-  assets           Asset[]
-  bankAccounts     BankAccount[]
-  comments         Comment[]
-  settings         CompanySettings?
-  deliverables     Deliverable[]
-  expenses         Expense[]
-  gstFilings       GSTFiling[]
-  invoices         Invoice[]
-  leads            Lead[]
-  notifications    Notification[]
-  projects         Project[]
-  proposals        Proposal[]
-  resources        Resource[]
-  talents          Talent[]
-  users            User[]
-}
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
-model User {
-  id                String   @id
-  company_id        String?
-  role_id           String   @default("EMPLOYEE")
-  email             String   @unique
-  fullName          String
-  status            String   @default("pending")
-  createdAt         DateTime @default(now())
-  department        String   @default("Production")
-  onboarding_status String   @default("awaiting_approval")
-  company           Company? @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
-  @@index([status])
-}
-
-model SuperAdmin {
-  id         String   @id
-  email      String   @unique
-  granted_at DateTime @default(now())
+  settings          CompanySettings?
+  users             User[]
+  teams             Team[]
+  clients           Client[]
+  prospects         Prospect[]
+  projects          Project[]
+  assets            Asset[]
+  deliverables      Deliverable[]
+  expenses          Expense[]
+  invoices          Invoice[]
+  notifications     Notification[]
+  activityLogs      ActivityLog[]
+  resources         Resource[]
+  talents           Talent[]
+  bankAccounts      BankAccount[]
+  gstFilings        GSTFiling[]
+  proposals         Proposal[]
+  communicationLogs CommunicationLog[]
+  Comment           Comment[]
 }
 
 model CompanySettings {
@@ -70,69 +56,283 @@ model CompanySettings {
   updated_at      DateTime @default(now()) @updatedAt
   theme           Json?
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String // "SUPER_ADMIN", "ADMIN", "PROJECT_DIRECTOR", "PROJECT_MANAGER", "DEPT_HEAD", "TEAM_MEMBER", "CLIENT", "VENDOR"
+  permissions String[] // JSON or Array of permission strings
+  users       User[]
+}
+
+model Team {
+  id         String     @id @default(uuid())
+  company_id String
+  name       String
+  department String
+  created_at DateTime   @default(now())
+  company    Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  users      UserTeam[]
+}
+
+model UserTeam {
+  user_id String
+  team_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  team    Team   @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, team_id])
+}
+
+model User {
+  id                 String   @id // Usually from Supabase Auth
+  company_id         String?
+  role_id            String?
+  email              String   @unique
+  fullName           String
+  status             String   @default("pending")
+  department         String   @default("Production")
+  onboarding_status  String   @default("awaiting_approval")
+  skill_tags         String[]
+  availability       String   @default("available") // available, busy, offline
+  productivity_score Float    @default(100.0)
+  createdAt          DateTime @default(now())
+
+  company Company?   @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  role    Role?      @relation(fields: [role_id], references: [id])
+  teams   UserTeam[]
+
+  assigned_prospects  Prospect[]  @relation("ProspectAssignee")
+  assigned_objectives Objective[] @relation("ObjectiveAssignee")
+  reviewed_objectives Objective[] @relation("ObjectiveReviewer")
+
+  time_entries  TimeEntry[]
+  comments      Comment[]
+  notifications Notification[]
+  activityLogs  ActivityLog[]
+  approvals     Approval[]
 
   @@index([company_id])
 }
 
-model Lead {
-  id               String   @id @default(uuid())
-  company_id       String
+// --------------------------------------------------
+// CRM & PIPELINE
+// --------------------------------------------------
+
+model Client {
+  id              String   @id @default(uuid())
+  company_id      String
+  name            String
+  contact_person  String?
+  email           String?
+  phone           String?
+  industry        String?
+  billing_address String?
+  gstin           String?
+  created_at      DateTime @default(now())
+
+  company   Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  projects  Project[]
+  invoices  Invoice[]
+  prospects Prospect[]
+}
+
+model Prospect {
+  id         String  @id @default(uuid())
+  company_id String
+  client_id  String?
+
   company_name     String?
-  email            String?
   contact_person   String?
+  email            String?
+  whatsapp         String?
+  social_links     Json? // { linkedin: "", instagram: "" }
   industry         String?
-  service_vertical String?
-  sub_vertical     String?
+  project_category String? // e.g. "AI TVC", "Corporate Film"
+  budget_range     String?
+  tags             String[]
+  priority         String   @default("Medium") // High, Medium, Low
+  notes            String?
   deal_value       Float?
-  stage            String?
-  billing_address  String?
-  gstin            String?
-  created_at       DateTime @default(now())
-  company          Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
-  @@index([company_id])
-  @@index([stage])
+  stage      String @default("New Lead") // New Lead, Contacted, Meeting Scheduled, Quoted, Negotiation, Won, Lost
+  lead_score Int    @default(0)
+
+  assignee_id    String?
+  next_follow_up DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  company  Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  client   Client? @relation(fields: [client_id], references: [id], onDelete: SetNull)
+  assignee User?   @relation("ProspectAssignee", fields: [assignee_id], references: [id], onDelete: SetNull)
+
+  meetings       Meeting[]
+  communications CommunicationLog[]
 }
+
+model Meeting {
+  id           String   @id @default(uuid())
+  prospect_id  String?
+  project_id   String?
+  title        String
+  scheduled_at DateTime
+  duration     Int // Minutes
+  notes        String?
+  created_at   DateTime @default(now())
+
+  prospect Prospect? @relation(fields: [prospect_id], references: [id], onDelete: Cascade)
+  project  Project?  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+model CommunicationLog {
+  id          String   @id @default(uuid())
+  company_id  String
+  prospect_id String
+  type        String // Email, Call, WhatsApp
+  summary     String
+  logged_at   DateTime @default(now())
+
+  company  Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  prospect Prospect @relation(fields: [prospect_id], references: [id], onDelete: Cascade)
+}
+
+// --------------------------------------------------
+// PROJECT ENGINE
+// --------------------------------------------------
 
 model Project {
-  id           String        @id @default(uuid())
-  company_id   String
+  id         String  @id @default(uuid())
+  company_id String
+  client_id  String?
+
   project_name String
   project_ref  String?
-  client_name  String?
-  status       String
-  progress     Float         @default(0)
-  budget       Float         @default(0)
+  type         String    @default("Custom") // AI TVC, Corporate Film, etc.
+  status       String    @default("draft") // draft, active, on_hold, completed, archived
+  progress     Float     @default(0) // Auto-calculated
+  budget       Float     @default(0)
   deadline     DateTime?
   color        String?
-  created_at   DateTime      @default(now())
-  assets       Asset[]
-  bookings     Booking[]
-  comments     Comment[]
-  deliverables Deliverable[]
-  company      Company       @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  tasks        Task[]
 
-  @@index([company_id])
-  @@index([status])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  client  Client? @relation(fields: [client_id], references: [id])
+
+  stages         ProjectStage[]
+  milestones     Milestone[]
+  objectives     Objective[]
+  deliverables   Deliverable[]
+  assets         Asset[]
+  bookings       Booking[]
+  comments       Comment[]
+  expenses       Expense[]
+  meetings       Meeting[]
+  productionLogs ProductionLog[]
 }
 
-model Task {
+model ProjectStage {
   id         String    @id @default(uuid())
   project_id String
-  company_id String
-  title      String
-  phase      String?
-  assignedTo String?
-  priority   String?
-  status     String    @default("pending")
-  due_date   DateTime?
-  created_at DateTime  @default(now())
-  project    Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  name       String // PRE_PRODUCTION, PRODUCTION, POST_PRODUCTION, RELEASE
+  order      Int
+  status     String    @default("pending") // pending, active, completed
+  start_date DateTime?
+  end_date   DateTime?
 
-  @@index([company_id])
-  @@index([project_id])
-  @@index([status])
+  project    Project     @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  objectives Objective[]
+}
+
+model Milestone {
+  id         String    @id @default(uuid())
+  project_id String
+  title      String
+  due_date   DateTime?
+  is_locked  Boolean   @default(false)
+  status     String    @default("pending")
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+// --------------------------------------------------
+// OBJECTIVE ENGINE (Replacing Tasks)
+// --------------------------------------------------
+
+model Objective {
+  id         String  @id @default(uuid())
+  project_id String
+  stage_id   String?
+
+  title       String
+  description String?
+  department  String?
+  status      String  @default("Pending") // Pending, In Progress, In Review, Changes Requested, Approved, Completed, Blocked
+  priority    String  @default("Medium") // High, Medium, Low
+
+  assignee_id String?
+  reviewer_id String?
+
+  start_date      DateTime?
+  due_date        DateTime?
+  estimated_hours Float?
+  actual_hours    Float     @default(0)
+  completion_pct  Float     @default(0)
+
+  checklist Json? // [{ task: "", done: false }]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  project  Project       @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  stage    ProjectStage? @relation(fields: [stage_id], references: [id])
+  assignee User?         @relation("ObjectiveAssignee", fields: [assignee_id], references: [id])
+  reviewer User?         @relation("ObjectiveReviewer", fields: [reviewer_id], references: [id])
+
+  time_entries TimeEntry[]
+  comments     Comment[]
+  assets       Asset[] // Linked media
+  approvals    Approval[]
+
+  // Self-referencing dependencies
+  depends_on ObjectiveDependency[] @relation("ChildDependency")
+  blocking   ObjectiveDependency[] @relation("ParentDependency")
+}
+
+model ObjectiveDependency {
+  id        String @id @default(uuid())
+  parent_id String // The objective that must be finished first
+  child_id  String // The objective that is waiting
+  type      String @default("blocking") // blocking, relates_to
+
+  parent Objective @relation("ParentDependency", fields: [parent_id], references: [id], onDelete: Cascade)
+  child  Objective @relation("ChildDependency", fields: [child_id], references: [id], onDelete: Cascade)
+
+  @@unique([parent_id, child_id])
+}
+
+// --------------------------------------------------
+// TIME TRACKING & RESOURCES
+// --------------------------------------------------
+
+model TimeEntry {
+  id           String  @id @default(uuid())
+  user_id      String
+  objective_id String?
+
+  start_time   DateTime
+  end_time     DateTime?
+  duration_sec Int       @default(0)
+  is_billable  Boolean   @default(true)
+  notes        String?
+
+  created_at DateTime @default(now())
+
+  user      User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  objective Objective? @relation(fields: [objective_id], references: [id], onDelete: SetNull)
 }
 
 model Resource {
@@ -145,8 +345,6 @@ model Resource {
   created_at         DateTime  @default(now())
   bookings           Booking[]
   company            Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
 }
 
 model Booking {
@@ -160,26 +358,27 @@ model Booking {
   created_at  DateTime @default(now())
   project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
   resource    Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
-  @@index([resource_id])
-  @@index([project_id])
 }
 
-model Asset {
-  id         String   @id @default(uuid())
-  company_id String
-  project_id String
-  name       String
-  url        String
-  file_size  Int?
-  file_type  String?
-  created_at DateTime @default(now())
-  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+// --------------------------------------------------
+// APPROVALS, DELIVERABLES, ASSETS
+// --------------------------------------------------
 
-  @@index([company_id])
-  @@index([project_id])
+model Approval {
+  id           String  @id @default(uuid())
+  objective_id String
+  requester_id String
+  reviewer_id  String?
+
+  status       String  @default("Pending") // Pending, Approved, Changes Requested
+  feedback     String?
+  review_round Int     @default(1)
+
+  requested_at DateTime  @default(now())
+  reviewed_at  DateTime?
+
+  objective Objective @relation(fields: [objective_id], references: [id], onDelete: Cascade)
+  requester User      @relation(fields: [requester_id], references: [id])
 }
 
 model Deliverable {
@@ -190,27 +389,52 @@ model Deliverable {
   status     String    @default("pending")
   due_date   DateTime?
   url        String?
+  version    Int       @default(1)
   created_at DateTime  @default(now())
-  company    Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  project    Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
-  @@index([company_id])
-  @@index([project_id])
+  company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
 }
 
-model Comment {
-  id         String   @id @default(uuid())
-  company_id String
-  project_id String
-  user_id    String
-  user_name  String
-  content    String
-  created_at DateTime @default(now())
-  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+model Asset {
+  id           String  @id @default(uuid())
+  company_id   String
+  project_id   String
+  objective_id String?
 
-  @@index([company_id])
-  @@index([project_id])
+  name      String
+  url       String
+  file_size Int?
+  file_type String?
+  version   Int     @default(1)
+
+  created_at DateTime @default(now())
+
+  company   Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  project   Project    @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  objective Objective? @relation(fields: [objective_id], references: [id], onDelete: SetNull)
+}
+
+// --------------------------------------------------
+// COMMUNICATION, AUDIT & LOGS
+// --------------------------------------------------
+
+model Comment {
+  id           String  @id @default(uuid())
+  company_id   String
+  project_id   String?
+  objective_id String?
+  user_id      String
+
+  content   String
+  timestamp String? // For media annotations (e.g. "01:23")
+
+  created_at DateTime @default(now())
+
+  company   Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  project   Project?   @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  objective Objective? @relation(fields: [objective_id], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [user_id], references: [id])
 }
 
 model Notification {
@@ -219,36 +443,56 @@ model Notification {
   user_id    String
   title      String
   message    String
+  type       String   @default("info") // info, alert, approval, mention
+  link       String?
   is_read    Boolean  @default(false)
   created_at DateTime @default(now())
   company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
-  @@index([user_id])
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model ActivityLog {
-  id         String   @id @default(uuid())
-  company_id String
-  user_id    String
-  user_name  String
-  action     String
-  details    String?
+  id             String  @id @default(uuid())
+  company_id     String
+  user_id        String
+  user_name      String
+  action         String
+  details        String?
+  previous_state Json?
+  new_state      Json?
+
   created_at DateTime @default(now())
   company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [user_id], references: [id])
+}
 
-  @@index([company_id])
-  @@index([created_at])
+model ProductionLog {
+  id         String   @id @default(uuid())
+  project_id String
+  type       String // Camera Report, Audio Report, Call Sheet
+  date       DateTime
+  content    Json
+
+  created_at DateTime @default(now())
+  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+// --------------------------------------------------
+// FINANCE & OTHERS (Existing)
+// --------------------------------------------------
+
+model SuperAdmin {
+  id         String   @id
+  email      String   @unique
+  granted_at DateTime @default(now())
 }
 
 model Invoice {
-  id             String    @id @default(uuid())
-  company_id     String
-  client_name    String?
-  client_id      String?
-  project_id     String?
-  project_name   String?
-  project_ref    String?
+  id         String  @id @default(uuid())
+  company_id String
+  client_id  String?
+  project_id String?
+
   invoice_number String    @unique
   total          Float
   subtotal       Float
@@ -258,11 +502,28 @@ model Invoice {
   due_date       DateTime?
   gst_filed      Boolean   @default(false)
   line_items     Json
-  created_at     DateTime  @default(now())
-  company        Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
-  @@index([company_id])
-  @@index([payment_status])
+  created_at DateTime @default(now())
+
+  company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  client  Client? @relation(fields: [client_id], references: [id])
+}
+
+model Expense {
+  id         String  @id @default(uuid())
+  company_id String
+  project_id String?
+
+  category    String
+  description String?
+  amount      Float
+  date        DateTime
+  account_id  String?
+  status      String
+
+  created_at DateTime @default(now())
+  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  project    Project? @relation(fields: [project_id], references: [id])
 }
 
 model GSTFiling {
@@ -274,41 +535,17 @@ model GSTFiling {
   status       String
   submitted_at DateTime @default(now())
   company      Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
-}
-
-model Expense {
-  id          String   @id @default(uuid())
-  company_id  String
-  project_id  String?
-  category    String
-  description String?
-  amount      Float
-  date        DateTime
-  account_id  String?
-  status      String
-  created_at  DateTime @default(now())
-  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
-  @@index([project_id])
 }
 
 model Proposal {
   id              String   @id @default(uuid())
   company_id      String
-  lead_id         String?
   title           String
-  client_name     String?
   proposal_number String?
   content         String
   status          String
   created_at      DateTime @default(now())
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
-  @@index([status])
 }
 
 model Talent {
@@ -323,8 +560,6 @@ model Talent {
   portfolio_urls  String[]
   created_at      DateTime @default(now())
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
 }
 
 model BankAccount {
@@ -337,30 +572,13 @@ model BankAccount {
   bank_name      String?
   created_at     DateTime @default(now())
   company        Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  @@index([company_id])
 }
 
 model Archive {
-  id               String    @id @default(dbgenerated("(gen_random_uuid())::text"))
-  company_id       String?
-  archive_type     String
-  archived_at      DateTime? @default(now())
-  company_name     String?
-  industry         String?
-  email            String?
-  contact_person   String?
-  service_vertical String?
-  sub_vertical     String?
-  project_name     String?
-  client_name      String?
-  budget           Decimal?
-  status           String?
-  deadline         String?
-  color            String?
-  progress         Int?
-  notes            String?
-  created_at       DateTime? @default(now())
-
-  @@index([company_id])
+  id           String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  company_id   String?
+  archive_type String
+  archived_at  DateTime? @default(now())
+  data         Json?
+  created_at   DateTime? @default(now())
 }

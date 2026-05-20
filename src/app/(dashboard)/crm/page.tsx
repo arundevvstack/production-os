@@ -97,8 +97,8 @@ export default function CRMPage() {
     stage: "lead"
   });
 
-  // Fetch Leads from Supabase
-  const { data: allLeads, isLoading: isLeadsLoading } = useSupabaseCollection('Lead', {
+  // Fetch Prospects from Supabase
+  const { data: allLeads, isLoading: isLeadsLoading } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId },
     orderBy: { created_at: 'desc' }
   });
@@ -176,7 +176,7 @@ export default function CRMPage() {
     setIsSubmitting(true);
     
     const newLeadId = generateId();
-    const { error } = await supabase.from('Lead').insert({
+    const { error } = await supabase.from('Prospect').insert({
       id: newLeadId,
       company_id: companyId,
       ...newLead,
@@ -213,8 +213,8 @@ export default function CRMPage() {
     // Spot Update! Update local stage instantly so it drops out of active columns
     setLocalLeads(prev => prev.map(l => l.id === lead.id ? { ...l, stage: 'won' } : l));
 
-    // 1. Update Lead Status in Supabase
-    await supabase.from('Lead').update({ stage: 'won' }).eq('id', lead.id);
+    // 1. Update Prospect Status in Supabase
+    await supabase.from('Prospect').update({ stage: 'won' }).eq('id', lead.id);
 
     // 2. Create Project Workspace in Supabase
     const projectRefCode = `PROJ-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -251,15 +251,15 @@ export default function CRMPage() {
     // Spot Update! Remove from local leads list instantly
     setLocalLeads(prev => prev.filter(l => l.id !== archivedLead.id));
 
-    // Archive Lead in Supabase
+    // Archive Prospect in Supabase
     await supabase.from('Archive').insert({
       ...archivedLead,
-      archive_type: 'lead',
+      archive_type: 'prospect',
       archived_at: new Date().toISOString()
     });
 
-    // Delete Lead from active table
-    await supabase.from('Lead').delete().eq('id', archivedLead.id);
+    // Delete Prospect from active table
+    await supabase.from('Prospect').delete().eq('id', archivedLead.id);
 
     toast({ title: "Lead Archived", description: "The lead has been moved to archives." });
     setLeadToArchive(null);

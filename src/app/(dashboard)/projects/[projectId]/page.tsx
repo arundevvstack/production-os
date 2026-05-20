@@ -89,12 +89,12 @@ export default function ProjectWorkspacePage() {
   const [activeTab, setActiveTab] = useState("pre-prod");
   
   // Dialog States
-  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const [isAddObjectiveOpen, setIsAddObjectiveOpen] = useState(false);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const [isLogExpenseOpen, setIsLogExpenseOpen] = useState(false);
   
   // Form States
-  const [newTask, setNewTask] = useState({ title: "", assignedTo: "" });
+  const [newObjective, setNewObjective] = useState({ title: "", assignedTo: "" });
   const [newAsset, setNewAsset] = useState({ name: "", url: "", file_type: "Video", folder: "pre-prod" });
   const [newExpense, setNewExpense] = useState({
     category: "Talent & Crew",
@@ -124,7 +124,7 @@ export default function ProjectWorkspacePage() {
   // --- DATA FETCHING FROM SUPABASE ---
   const { data: project, isLoading: isProjectLoading } = useSupabaseDoc('Project', projectId);
 
-  const { data: tasks, isLoading: isTasksLoading, refetch: refetchTasks } = useSupabaseCollection('Task', {
+  const { data: objectives, isLoading: isObjectivesLoading, refetch: refetchObjectives } = useSupabaseCollection('Objective', {
     where: { project_id: projectId },
     orderBy: { created_at: 'asc' }
   });
@@ -153,13 +153,13 @@ export default function ProjectWorkspacePage() {
 
   // --- DERIVED CALCULATIONS ---
   const liveProgress = useMemo(() => {
-    if (!tasks || tasks.length === 0) return project?.progress || 0;
+    if (!objectives || objectives.length === 0) return project?.progress || 0;
     const corePhases = ['pre-prod', 'production', 'post-prod', 'release'];
-    const productionTasks = tasks.filter(t => corePhases.includes(t.phase));
-    if (productionTasks.length === 0) return 0;
-    const completedCount = productionTasks.filter(t => t.status === 'done').length;
-    return Math.round((completedCount / productionTasks.length) * 100);
-  }, [tasks, project?.progress]);
+    const productionObjectives = objectives.filter(t => corePhases.includes(t.phase));
+    if (productionObjectives.length === 0) return 0;
+    const completedCount = productionObjectives.filter(t => t.status === 'done').length;
+    return Math.round((completedCount / productionObjectives.length) * 100);
+  }, [objectives, project?.progress]);
 
   // Strict enterprise phase progression gate validation
   const canAdvanceTo = (targetStatus: string): { allowed: boolean; reason?: string } => {
@@ -168,21 +168,21 @@ export default function ProjectWorkspacePage() {
     }
 
     if (targetStatus === 'production') {
-      const incompletePre = tasks?.filter(t => t.phase === 'pre-prod' && t.status !== 'done') || [];
+      const incompletePre = objectives?.filter(t => t.phase === 'pre-prod' && t.status !== 'done') || [];
       if (incompletePre.length > 0) {
         return { allowed: false, reason: `Cannot advance to Production. ${incompletePre.length} Pre-Production objectives are incomplete.` };
       }
     }
     
     if (targetStatus === 'post-prod') {
-      const incompleteProd = tasks?.filter(t => ['pre-prod', 'production'].includes(t.phase) && t.status !== 'done') || [];
+      const incompleteProd = objectives?.filter(t => ['pre-prod', 'production'].includes(t.phase) && t.status !== 'done') || [];
       if (incompleteProd.length > 0) {
         return { allowed: false, reason: `Cannot advance to Post-Production. Complete outstanding production phase objectives first.` };
       }
     }
 
     if (targetStatus === 'release') {
-      const incompletePost = tasks?.filter(t => ['pre-prod', 'production', 'post-prod'].includes(t.phase) && t.status !== 'done') || [];
+      const incompletePost = objectives?.filter(t => ['pre-prod', 'production', 'post-prod'].includes(t.phase) && t.status !== 'done') || [];
       if (incompletePost.length > 0) {
         return { allowed: false, reason: `Cannot advance to Release. Complete all post-production edits first.` };
       }
@@ -196,39 +196,39 @@ export default function ProjectWorkspacePage() {
   const netProfit = totalRevenueBase - totalExpenses;
 
   // --- ACTIONS ---
-  const handleToggleTask = async (taskId: string, currentStatus: string) => {
+  const handleToggleObjective = async (objectiveId: string, currentStatus: string) => {
     if (!projectId) return;
     const newStatus = currentStatus === 'done' ? 'todo' : 'done';
     
-    await supabase.from('Task').update({ status: newStatus }).eq('id', taskId);
+    await supabase.from('Objective').update({ status: newStatus }).eq('id', objectiveId);
 
     // Update project progress
     await supabase.from('Project').update({ progress: liveProgress }).eq('id', projectId);
-    refetchTasks();
+    refetchObjectives();
   };
 
-  const handleAddTask = async (e: React.FormEvent) => {
+  const handleAddObjective = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!companyId || !projectId || !newTask.title) return;
+    if (!companyId || !projectId || !newObjective.title) return;
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase.from('Task').insert({
+      const { error } = await supabase.from('Objective').insert({
         company_id: companyId,
         project_id: projectId,
-        title: newTask.title,
+        title: newObjective.title,
         phase: activeTab === 'assets' || activeTab === 'finances' ? 'production' : activeTab,
-        assignedTo: newTask.assignedTo || "Producer",
+        assignedTo: newObjective.assignedTo || "Producer",
         status: 'todo',
         priority: 'Medium',
       });
 
       if (error) throw error;
 
-      toast({ title: "Objective Added", description: `Task "${newTask.title}" has been registered.` });
-      setIsAddTaskOpen(false);
-      setNewTask({ title: "", assignedTo: "" });
-      refetchTasks();
+      toast({ title: "Objective Added", description: `Objective "${newObjective.title}" has been registered.` });
+      setIsAddObjectiveOpen(false);
+      setNewObjective({ title: "", assignedTo: "" });
+      refetchObjectives();
     } catch (error: any) {
       toast({ variant: "destructive", title: "Error", description: error.message });
     } finally {
@@ -322,11 +322,11 @@ export default function ProjectWorkspacePage() {
   };
 
   // Helper functions for rendering
-  const phaseTasks = (phase: string) => tasks?.filter(t => t.phase === phase) || [];
-  const completedPhaseTasks = (phase: string) => phaseTasks(phase).filter(t => t.status === 'done').length;
+  const phaseObjectives = (phase: string) => objectives?.filter(t => t.phase === phase) || [];
+  const completedPhaseObjectives = (phase: string) => phaseObjectives(phase).filter(t => t.status === 'done').length;
   const phaseProgress = (phase: string) => {
-    const pt = phaseTasks(phase);
-    return pt.length > 0 ? Math.round((completedPhaseTasks(phase) / pt.length) * 100) : 0;
+    const pt = phaseObjectives(phase);
+    return pt.length > 0 ? Math.round((completedPhaseObjectives(phase) / pt.length) * 100) : 0;
   };
 
   const getPhaseIcon = (phase: string) => {
@@ -350,7 +350,7 @@ export default function ProjectWorkspacePage() {
     }
   };
 
-  const isLoading = isTenantLoading || isProjectLoading || isTasksLoading || isAssetsLoading || isInvoicesLoading || isProjectExpensesLoading;
+  const isLoading = isTenantLoading || isProjectLoading || isObjectivesLoading || isAssetsLoading || isInvoicesLoading || isProjectExpensesLoading;
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-[80vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
@@ -442,7 +442,7 @@ export default function ProjectWorkspacePage() {
               <span className="text-sm font-black text-primary">{liveProgress}%</span>
             </div>
           </div>
-          <Button className="rounded-[10px] gap-2 shadow-lg shadow-primary/20 h-12 px-6 font-bold text-xs" onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' ? setIsLogExpenseOpen(true) : setIsAddTaskOpen(true))}>
+          <Button className="rounded-[10px] gap-2 shadow-lg shadow-primary/20 h-12 px-6 font-bold text-xs" onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}>
             <Plus className="h-4 w-4" /> {activeTab === 'assets' ? 'Register Asset' : (activeTab === 'finances' ? 'Log Cost' : 'Add Objective')}
           </Button>
         </div>
@@ -471,30 +471,30 @@ export default function ProjectWorkspacePage() {
                       </div>
                       <CardDescription>Assign and track key deliverables for this phase.</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" className="rounded-xl font-bold text-xs" onClick={() => setIsAddTaskOpen(true)}>
+                    <Button variant="outline" size="sm" className="rounded-xl font-bold text-xs" onClick={() => setIsAddObjectiveOpen(true)}>
                       <Plus className="h-4 w-4 mr-2" /> Add Objective
                     </Button>
                   </CardHeader>
                   <CardContent className="p-0">
-                    {phaseTasks(phase).length === 0 ? (
+                    {phaseObjectives(phase).length === 0 ? (
                       <div className="text-center py-24 text-muted-foreground space-y-4">
                         <Target className="h-12 w-12 mx-auto opacity-10" />
                         <p className="text-sm font-medium">No objectives set up for this phase.</p>
                       </div>
                     ) : (
                       <div className="divide-y">
-                        {phaseTasks(phase).map((task) => (
-                          <div key={task.id} className="flex items-center gap-4 px-8 py-5 hover:bg-slate-50 transition-colors group">
+                        {phaseObjectives(phase).map((objective) => (
+                          <div key={objective.id} className="flex items-center gap-4 px-8 py-5 hover:bg-slate-50 transition-colors group">
                             <Checkbox 
-                              checked={task.status === 'done'} 
-                              onCheckedChange={() => handleToggleTask(task.id, task.status)}
+                              checked={objective.status === 'done'} 
+                              onCheckedChange={() => handleToggleObjective(objective.id, objective.status)}
                               className="h-5 w-5 rounded-md border-2 border-primary data-[state=checked]:bg-primary"
                             />
                             <div className="flex-1">
-                              <p className={`font-bold text-sm ${task.status === 'done' ? 'line-through text-muted-foreground' : 'text-slate-800'}`}>
-                                {task.title}
+                              <p className={`font-bold text-sm ${objective.status === 'done' ? 'line-through text-muted-foreground' : 'text-slate-800'}`}>
+                                {objective.title}
                               </p>
-                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Assigned: {task.assignedTo || 'Unassigned'}</p>
+                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Assigned: {objective.assignedTo || 'Unassigned'}</p>
                             </div>
                           </div>
                         ))}
@@ -520,12 +520,12 @@ export default function ProjectWorkspacePage() {
                   </div>
                   <div className="pt-4 border-t space-y-3">
                     <div className="flex justify-between text-xs font-medium">
-                      <span className="text-slate-400">Total Phase Tasks</span>
-                      <span className="font-bold text-slate-700">{phaseTasks(phase).length}</span>
+                      <span className="text-slate-400">Total Phase Objectives</span>
+                      <span className="font-bold text-slate-700">{phaseObjectives(phase).length}</span>
                     </div>
                     <div className="flex justify-between text-xs font-medium">
                       <span className="text-slate-400">Completed Checklist</span>
-                      <span className="font-bold text-slate-700">{completedPhaseTasks(phase)}</span>
+                      <span className="font-bold text-slate-700">{completedPhaseObjectives(phase)}</span>
                     </div>
                   </div>
                 </Card>
@@ -799,7 +799,7 @@ export default function ProjectWorkspacePage() {
       </Tabs>
 
       {/* Dialog: Add Objective */}
-      <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
+      <Dialog open={isAddObjectiveOpen} onOpenChange={setIsAddObjectiveOpen}>
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -808,14 +808,14 @@ export default function ProjectWorkspacePage() {
             </DialogTitle>
             <DialogDescription>Assign objectives and milestone dates to crew members.</DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleAddTask} className="space-y-4 py-4">
+          <form onSubmit={handleAddObjective} className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Objective Title</Label>
-              <Input placeholder="e.g. Rough Cut Assembly and Editing check" value={newTask.title} onChange={(e) => setNewTask({...newTask, title: e.target.value})} required className="rounded-xl" />
+              <Input placeholder="e.g. Rough Cut Assembly and Editing check" value={newObjective.title} onChange={(e) => setNewObjective({...newObjective, title: e.target.value})} required className="rounded-xl" />
             </div>
             <div className="space-y-2">
               <Label>Assigned Role / Crew Member</Label>
-              <Select value={newTask.assignedTo} onValueChange={(val) => setNewTask({...newTask, assignedTo: val})}>
+              <Select value={newObjective.assignedTo} onValueChange={(val) => setNewObjective({...newObjective, assignedTo: val})}>
                 <SelectTrigger className="rounded-xl">
                   <SelectValue placeholder="Select Assignee" />
                 </SelectTrigger>

@@ -81,7 +81,7 @@ export default function DashboardPage() {
     where: { company_id: companyId }
   });
 
-  const { data: rawTasks, isLoading: isTasksLoading } = useSupabaseCollection('Task', {
+  const { data: rawObjectives, isLoading: isObjectivesLoading } = useSupabaseCollection('Objective', {
     where: { company_id: companyId }
   });
 
@@ -89,7 +89,7 @@ export default function DashboardPage() {
     where: { company_id: companyId }
   });
 
-  const { data: leads, isLoading: isLeadsLoading } = useSupabaseCollection('Lead', {
+  const { data: prospects, isLoading: isProspectsLoading } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId }
   });
 
@@ -138,16 +138,16 @@ export default function DashboardPage() {
     const grossExpenses = expenses?.reduce((sum, exp) => sum + (exp.amount || 0), 0) || 0;
     const activeProjects = allProjects?.filter(p => p.status === 'in_progress').length || 0;
     const pendingInvoices = invoices?.filter(inv => inv.payment_status === 'pending').length || 0;
-    const crmPipeline = leads?.reduce((sum, l) => !['won', 'lost'].includes(l.stage || '') ? sum + (l.deal_value || 0) : sum, 0) || 0;
+    const crmPipeline = prospects?.reduce((sum, l) => !['won', 'lost'].includes(l.stage || '') ? sum + (l.deal_value || 0) : sum, 0) || 0;
     const pendingUsers = companyUsers?.filter(u => u.status === 'pending').length || 0;
     
     return { revenue, grossExpenses, activeProjects, pendingInvoices, crmPipeline, pendingUsers };
-  }, [invoices, expenses, allProjects, leads, companyUsers]);
+  }, [invoices, expenses, allProjects, prospects, companyUsers]);
 
-  const tasksFeed = useMemo(() => {
-    if (!rawTasks) return [];
-    return rawTasks.filter(t => t.status !== 'done').slice(0, 5);
-  }, [rawTasks]);
+  const objectivesFeed = useMemo(() => {
+    if (!rawObjectives) return [];
+    return rawObjectives.filter(t => t.status !== 'done').slice(0, 5);
+  }, [rawObjectives]);
 
   const revenueChartData = useMemo(() => {
     const months = Array.from({ length: 6 }).map((_, i) => {
@@ -170,7 +170,7 @@ export default function DashboardPage() {
     return allProjects.filter(p => p.status === 'in_progress').slice(0, 4);
   }, [allProjects]);
 
-  if (isTenantLoading || isProjectsLoading || isTasksLoading || isInvoicesLoading || isLeadsLoading || !hasMounted) {
+  if (isTenantLoading || isProjectsLoading || isObjectivesLoading || isInvoicesLoading || isProspectsLoading || !hasMounted) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -347,7 +347,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-teal-50 text-teal-500 rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Active Objectives</span>
-                <span className="text-2xl font-black text-slate-800">{rawTasks?.filter(t => t.status !== 'done').length || 0} tasks</span>
+                <span className="text-2xl font-black text-slate-800">{rawObjectives?.filter(t => t.status !== 'done').length || 0} tasks</span>
               </div>
             </CardContent>
           </Card>
@@ -456,8 +456,8 @@ export default function DashboardPage() {
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-teal-50 text-teal-500 rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Assigned Tasks</span>
-                <span className="text-2xl font-black text-slate-800">{tasksFeed.length} active</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Assigned Objectives</span>
+                <span className="text-2xl font-black text-slate-800">{objectivesFeed.length} active</span>
               </div>
             </CardContent>
           </Card>
@@ -481,19 +481,19 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Employee Assigned Tasks backlogs */}
+        {/* Employee Assigned Objectives backlogs */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="p-6 border-b">
-              <CardTitle className="text-lg font-black text-slate-800">My Task Backlog</CardTitle>
+              <CardTitle className="text-lg font-black text-slate-800">My Objective Backlog</CardTitle>
               <CardDescription className="text-slate-400 font-medium">Clear assigned milestones inside production roadmaps.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              {tasksFeed.length === 0 ? (
+              {objectivesFeed.length === 0 ? (
                 <p className="text-center py-12 text-slate-400 font-bold uppercase tracking-wider text-xs">All objectives completed successfully!</p>
               ) : (
                 <div className="divide-y divide-slate-100">
-                  {tasksFeed.map((t) => (
+                  {objectivesFeed.map((t) => (
                     <div key={t.id} className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="space-y-1">
                         <span className="text-[9px] font-black uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded">Milestone</span>
@@ -518,7 +518,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 relative z-10 pt-0 space-y-4">
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              <p className="text-xs text-slate-400 font-medium prospecting-relaxed">
                 As a crew member, your profile is locked under strict tenant isolation policies. You do not have permissions to access:
               </p>
               <ul className="text-[10px] font-black uppercase tracking-wider text-slate-400 space-y-2">
@@ -622,7 +622,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 relative z-10 pt-0 space-y-4">
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              <p className="text-xs text-slate-400 font-medium prospecting-relaxed">
                 As a finance crew member, your profile is locked under strict tenant isolation policies. You do not have permissions to access:
               </p>
               <ul className="text-[10px] font-black uppercase tracking-wider text-slate-400 space-y-2">
@@ -668,8 +668,8 @@ export default function DashboardPage() {
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-indigo-50 text-indigo-500 rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Total Leads</span>
-                <span className="text-2xl font-black text-slate-800">{leads?.length || 0} leads</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Total Prospects</span>
+                <span className="text-2xl font-black text-slate-800">{prospects?.length || 0} prospects</span>
               </div>
             </CardContent>
           </Card>
@@ -698,14 +698,14 @@ export default function DashboardPage() {
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="p-6 border-b">
               <CardTitle className="text-lg font-black text-slate-800">Growth Opportunities</CardTitle>
-              <CardDescription className="text-slate-400 font-medium">Latest incoming leads in the sales pipeline.</CardDescription>
+              <CardDescription className="text-slate-400 font-medium">Latest incoming prospects in the sales pipeline.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              {leads?.length === 0 ? (
-                <p className="text-center py-12 text-slate-400 font-bold uppercase tracking-wider text-xs">Funnel empty. Create new lead opportunity.</p>
+              {prospects?.length === 0 ? (
+                <p className="text-center py-12 text-slate-400 font-bold uppercase tracking-wider text-xs">Funnel empty. Create new prospect opportunity.</p>
               ) : (
                 <div className="divide-y divide-slate-100">
-                  {leads?.slice(0, 4).map((l) => (
+                  {prospects?.slice(0, 4).map((l) => (
                     <div key={l.id} className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="space-y-1">
                         <h4 className="font-bold text-sm text-slate-800">{l.company_name}</h4>
@@ -736,7 +736,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 relative z-10 pt-0 space-y-4">
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              <p className="text-xs text-slate-400 font-medium prospecting-relaxed">
                 As a marketing strategist, your profile is locked under strict tenant isolation policies. You do not have permissions to access:
               </p>
               <ul className="text-[10px] font-black uppercase tracking-wider text-slate-400 space-y-2">
