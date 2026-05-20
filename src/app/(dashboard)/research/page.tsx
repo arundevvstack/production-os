@@ -50,6 +50,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { useTenant } from "@/hooks/use-tenant";
@@ -330,6 +331,7 @@ export default function MarketIntelligenceOS() {
   
   const [activeTab, setActiveTab] = useState("overview");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("All");
   
   // Collaborative notes states
   const [researchNotes, setResearchNotes] = useState("Focus heavily on Wayanad resort gaps. Outdated landscape drone shots are extremely common, and offering dynamic vertical cinematic reels with localized AI narration will close deals easily.");
@@ -433,12 +435,14 @@ export default function MarketIntelligenceOS() {
   };
 
   const filteredLeads = useMemo(() => {
-    return leadsList.filter(l => 
-      l.company_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      l.industry.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      l.location.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [leadsList, searchQuery]);
+    return leadsList.filter(l => {
+      const matchesSearch = l.company_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            l.industry.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            l.location.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesLocation = selectedLocation === "All" || l.location === selectedLocation;
+      return matchesSearch && matchesLocation;
+    });
+  }, [leadsList, searchQuery, selectedLocation]);
 
   if (!isAuthorized) {
     return (
@@ -469,6 +473,20 @@ export default function MarketIntelligenceOS() {
         </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="relative w-full sm:w-40">
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger className="h-10 rounded-xl bg-white border-zinc-200 text-zinc-950 shadow-sm focus:ring-zinc-200">
+                <SelectValue placeholder="All Locations" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-zinc-200 shadow-lg">
+                <SelectItem value="All">All Locations</SelectItem>
+                <SelectItem value="Kerala">Kerala</SelectItem>
+                <SelectItem value="Bangalore">Bangalore</SelectItem>
+                <SelectItem value="Mumbai">Mumbai</SelectItem>
+                <SelectItem value="Wayanad">Wayanad</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="relative w-full sm:w-64">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
             <Input 

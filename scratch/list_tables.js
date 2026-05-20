@@ -1,24 +1,20 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log("Listing all tables in the public schema of your database...");
-
+async function listTables() {
   try {
     const tables = await prisma.$queryRawUnsafe(`
       SELECT table_name 
       FROM information_schema.tables 
-      WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
-      ORDER BY table_name;
+      WHERE table_schema = 'public';
     `);
-    
-    console.log("✔ Physical Tables in Database:");
-    console.table(tables);
+    console.log('Tables in Database:');
+    console.log(tables.map(t => t.table_name));
   } catch (error) {
-    console.error("❌ Failed to query tables:", error);
+    console.error('Error listing tables:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-main();
+listTables();

@@ -23,7 +23,13 @@ export const SupabaseProvider: React.FC<{ children: ReactNode }> = ({ children }
     const fetchUser = async () => {
       try {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError) throw userError;
+        if (userError) {
+          // If the token is invalid/missing, clear the corrupted local session
+          if (userError.message.includes('Refresh Token Not Found') || userError.message.includes('Invalid Refresh Token')) {
+            await supabase.auth.signOut();
+          }
+          throw userError;
+        }
         setUser(user);
       } catch (err: any) {
         setError(err);

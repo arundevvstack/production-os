@@ -31,6 +31,7 @@ model Company {
   proposals        Proposal[]
   talents          Talent[]
   resources        Resource[]
+  bankAccounts     BankAccount[]
 
   settings         CompanySettings?
   assets           Asset[]
@@ -323,6 +324,44 @@ model Talent {
   is_public       Boolean  @default(true)
   portfolio_urls  String[] // Postgres array
   created_at      DateTime @default(now())
+
+  @@index([company_id])
+}
+
+model BankAccount {
+  id             String   @id @default(uuid())
+  company_id     String
+  company        Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  name           String
+  type           String   @default("Bank") // Bank, Cash, Credit Card
+  balance        Float    @default(0)
+  account_number String?
+  bank_name      String?
+  created_at     DateTime @default(now())
+
+  @@index([company_id])
+}
+
+model Archive {
+  id               String    @id @default(dbgenerated("gen_random_uuid()::text"))
+  company_id       String?
+  archive_type     String
+  archived_at      DateTime? @default(now())
+  company_name     String?
+  industry         String?
+  email            String?
+  contact_person   String?
+  service_vertical String?
+  sub_vertical     String?
+  project_name     String?
+  client_name      String?
+  budget           Decimal?
+  status           String?
+  deadline         String?
+  color            String?
+  progress         Int?
+  notes            String?
+  created_at       DateTime? @default(now())
 
   @@index([company_id])
 }

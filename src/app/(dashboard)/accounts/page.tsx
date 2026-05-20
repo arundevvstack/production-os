@@ -163,12 +163,32 @@ export default function AccountsPage() {
     approval_status: "Pending"
   });
 
-  // 1. Mock Company Accounts (Table does not exist yet)
-  const accounts = [
-    { id: 1, name: "Main Operating Account", type: "Bank", balance: "1450000", account_number: "XXXX-1234", bank_name: "HDFC Bank" },
-    { id: 2, name: "Tax Reserve", type: "Bank", balance: "320000", account_number: "XXXX-5678", bank_name: "ICICI Bank" },
-  ];
-  const isAccountsLoading = false;
+  // 1. Fetch BankAccounts from Supabase (filtered by company)
+  const { data: accounts, isLoading: isAccountsLoading, refetch: refetchAccounts } = useSupabaseCollection('BankAccount', {
+    where: companyId ? { company_id: companyId } : undefined,
+    orderBy: { created_at: 'desc' }
+  });
+
+  const [isSeeding, setIsSeeding] = useState(false);
+  const handleSeedDemoAccounts = async () => {
+    if (!companyId || isSeeding) return;
+    setIsSeeding(true);
+    try {
+      const demoAccounts = [
+        { company_id: companyId, name: "Main Operating Account", type: "Bank", balance: 1450000, account_number: "XXXX-1234", bank_name: "HDFC Bank" },
+        { company_id: companyId, name: "Tax Reserve", type: "Bank", balance: 320000, account_number: "XXXX-5678", bank_name: "ICICI Bank" },
+      ];
+      const { error } = await supabase.from('BankAccount').insert(demoAccounts);
+      if (error) throw error;
+      toast({ title: "Accounts Synced", description: "Default organizational accounts registered." });
+      refetchAccounts();
+    } catch(e: any) {
+      console.error(e);
+      toast({ variant: "destructive", title: "Sync Failed", description: e.message || "Could not seed default accounts." });
+    } finally {
+      setIsSeeding(false);
+    }
+  };
 
   // 2. Fetch Expenses from Supabase (filtered by company)
   const { data: expenses, isLoading: isExpensesLoading, refetch: refetchExpenses } = useSupabaseCollection('Expense', {
@@ -248,20 +268,33 @@ export default function AccountsPage() {
     };
   }, [invoices, filings]);
 
-  // --- ACTIONS ---
-
   const handleAddAccount = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyId || !newAccount.name) return;
 
     setIsSubmitting(true);
-    
-    toast({ title: "Feature Disabled", description: "Adding accounts is disabled in this environment." });
+    try {
+      const { error } = await supabase.from('BankAccount').insert({
+        company_id: companyId,
+        name: newAccount.name,
+        type: newAccount.type,
+        balance: parseFloat(newAccount.balance) || 0,
+        account_number: newAccount.account_number || null,
+        bank_name: newAccount.bank_name || null
+      });
 
-    toast({ title: "Account Registered", description: `${newAccount.name} added to the vault.` });
-    setNewAccount({ name: "", type: "Bank", balance: "", account_number: "", bank_name: "" });
-    setIsAddOpen(false);
-    setIsSubmitting(false);
+      if (error) throw error;
+
+      toast({ title: "Account Registered", description: `${newAccount.name} added to the vault.` });
+      setNewAccount({ name: "", type: "Bank", balance: "", account_number: "", bank_name: "" });
+      setIsAddOpen(false);
+      refetchAccounts();
+    } catch(err: any) {
+      console.error(err);
+      toast({ variant: "destructive", title: "Registration Failed", description: err.message });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleLogExpense = async (e: React.FormEvent) => {
@@ -269,33 +302,68 @@ export default function AccountsPage() {
     if (!companyId || !newExpense.description || !newExpense.amount) return;
 
     setIsSubmitting(true);
-    
-    await supabase.from('Expense').insert({
-      company_id: companyId,
-      category: newExpense.category,
-      sub_category: newExpense.sub_category,
-      description: newExpense.description,
-      amount: parseFloat(newExpense.amount) || 0,
-      // Pending SQL Migration:
-      // gst_amount: parseFloat(newExpense.gst_amount) || 0,
-      // tax_type: newExpense.tax_type,
-      date: newExpense.date,
-      status: newExpense.status,
-      // approval_status: newExpense.approval_status,
-      project_id: newExpense.project_id === 'none' ? null : newExpense.project_id,
-      notes: `Vendor: ${newExpense.vendor_name} | Tax Type: ${newExpense.tax_type} | GST Amount: ${newExpense.gst_amount} | Approval: ${newExpense.approval_status}`,
-    });
+    try {
+      const amountVal = parseFloat(newExpense.amount) || 0;
+      const { error } = await supabase.from('Expense').insert({
+        company_id: companyId,
+        category: newExpense.category,
+        sub_category: newExpense.sub_category,
+        description: newExpense.description,
+        amount: amountVal,
+        date: newExpense.date,
+        status: newExpense.status,
+        account_id: newExpense.account_id === 'none' ? null : newExpense.account_id,
+        project_id: newExpense.project_id === 'none' ? null : newExpense.project_id,
+        notes: `Vendor: ${newExpense.vendor_name} | Tax Type: ${newExpense.tax_type} | GST Amount: ${newExpense.gst_amount} | Approval: ${newExpense.approval_status}`,
+      });
 
-    toast({ title: "Expense Recorded", description: `${newExpense.category} cost has been added to ledger.` });
-    setNewExpense({ category: "Talent & Crew", sub_category: "Director", description: "", amount: "", gst_amount: "", tax_type: "None", vendor_name: "", date: new Date().toISOString().split('T')[0], account_id: "", project_id: "none", status: "Pending", approval_status: "Pending" });
-    setIsLogExpenseOpen(false);
-    setIsSubmitting(false);
+      if (error) throw error;
+
+      // Update bank account balance if account is selected and status is 'Paid'
+      if (newExpense.account_id && newExpense.account_id !== 'none' && newExpense.status === 'Paid') {
+        const selectedAcc = accounts?.find(a => a.id === newExpense.account_id);
+        if (selectedAcc) {
+          const newBalance = (parseFloat(selectedAcc.balance) || 0) - amountVal;
+          const { error: balanceErr } = await supabase
+            .from('BankAccount')
+            .update({ balance: newBalance })
+            .eq('id', newExpense.account_id);
+          if (balanceErr) console.error("Balance update failed:", balanceErr.message);
+        }
+      }
+
+      toast({ title: "Expense Recorded", description: `${newExpense.category} cost has been added to ledger.` });
+      setNewExpense({ category: "Talent & Crew", sub_category: "Director", description: "", amount: "", gst_amount: "", tax_type: "None", vendor_name: "", date: new Date().toISOString().split('T')[0], account_id: "", project_id: "none", status: "Pending", approval_status: "Pending" });
+      setIsLogExpenseOpen(false);
+      refetchExpenses();
+      refetchAccounts();
+    } catch(err: any) {
+      console.error(err);
+      toast({ variant: "destructive", title: "Recording Failed", description: err.message });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDeleteAccount = async () => {
-    toast({ title: "Feature Disabled", description: "Deleting accounts is disabled in this environment." });
-    toast({ title: "Vault Decommissioned", description: `"${accountToDelete.name}" has been removed.` });
-    setAccountToDelete(null);
+    if (!companyId || !accountToDelete) return;
+    try {
+      const { error } = await supabase
+        .from('BankAccount')
+        .delete()
+        .eq('id', accountToDelete.id)
+        .eq('company_id', companyId);
+
+      if (error) throw error;
+
+      toast({ title: "Vault Decommissioned", description: `"${accountToDelete.name}" has been removed.` });
+      refetchAccounts();
+    } catch(err: any) {
+      console.error(err);
+      toast({ variant: "destructive", title: "Delete Failed", description: err.message });
+    } finally {
+      setAccountToDelete(null);
+    }
   };
 
   const handleDeleteExpense = async () => {
@@ -507,13 +575,22 @@ export default function AccountsPage() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {accounts?.length === 0 ? (
-                  <div className="col-span-full py-32 text-center bg-white/40 backdrop-blur-md rounded-[10px] border-2 border-dashed border-white/60">
-                    <div className="h-16 w-16 rounded-[10px] bg-slate-50 flex items-center justify-center mx-auto mb-6">
-                      <Lock className="h-8 w-8 text-slate-300" />
+                  <div className="col-span-full py-32 text-center bg-slate-900/50 backdrop-blur-md rounded-[10px] border border-white/5 shadow-2xl">
+                    <div className="h-20 w-20 rounded-[10px] bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6 animate-pulse">
+                      <Building2 className="h-10 w-10 text-slate-500" />
                     </div>
-                    <p className="text-sm font-black uppercase tracking-widest text-slate-400">No active accounts found.</p>
-                    <Button variant="link" className="mt-4 text-primary font-black uppercase tracking-widest text-[10px]" onClick={() => setIsAddOpen(true)}>Add First Account</Button>
+                    <p className="text-base font-black uppercase tracking-widest text-slate-400">No active accounts found</p>
+                    <p className="text-xs text-slate-600 mt-2 font-medium max-w-sm mx-auto">Create a dynamic bank account or populate demo environments with default accounts.</p>
+                    <div className="flex justify-center gap-4 mt-8">
+                      <Button className="h-12 px-6 rounded-[10px] bg-white text-slate-950 hover:bg-slate-100 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg" onClick={() => setIsAddOpen(true)}>
+                        <Plus className="h-4 w-4 mr-2" /> Add Account
+                      </Button>
+                      <Button variant="outline" className="h-12 px-6 rounded-[10px] border-white/10 bg-white/5 text-white hover:bg-white/10 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95" onClick={handleSeedDemoAccounts} disabled={isSeeding}>
+                        {isSeeding ? "Syncing..." : "Seed Default Accounts"}
+                      </Button>
+                    </div>
                   </div>
+
                 ) : (
                   accounts?.map((acc) => (
                     <Card key={acc.id} className="obsidian-panel group border-white/5 shadow-2xl rounded-[10px] transition-all duration-700 hover:scale-[1.02] hover:bg-slate-900">
@@ -966,6 +1043,31 @@ export default function AccountsPage() {
                 />
               </div>
             </div>
+
+            {newAccount.type === 'Bank' && (
+              <div className="grid grid-cols-2 gap-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="space-y-3">
+                  <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 ml-1">Bank Name</Label>
+                  <Input 
+                    placeholder="e.g. HDFC Bank, ICICI Bank..." 
+                    value={newAccount.bank_name}
+                    onChange={(e) => setNewAccount({...newAccount, bank_name: e.target.value})}
+                    required
+                    className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 ml-1">Account Number</Label>
+                  <Input 
+                    placeholder="e.g. XXXX-1234" 
+                    value={newAccount.account_number}
+                    onChange={(e) => setNewAccount({...newAccount, account_number: e.target.value})}
+                    required
+                    className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
+                  />
+                </div>
+              </div>
+            )}
             
             <Button type="submit" disabled={isSubmitting} className="w-full h-16 bg-white text-slate-900 hover:bg-slate-100 font-black rounded-[10px] shadow-2xl active:scale-95 transition-all mt-4 text-xs uppercase tracking-[0.2em]">
               {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Save Account"}
@@ -1121,6 +1223,23 @@ export default function AccountsPage() {
                   className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-black placeholder:text-slate-600 disabled:opacity-50"
                 />
               </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 ml-1">Account Paid From</Label>
+              <Select value={newExpense.account_id} onValueChange={(val) => setNewExpense({...newExpense, account_id: val})}>
+                <SelectTrigger className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold">
+                  <SelectValue placeholder="Select Account" />
+                </SelectTrigger>
+                <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                  <SelectItem value="none" className="text-xs font-bold rounded-xl m-1">Select Account (Optional)</SelectItem>
+                  {accounts?.map(acc => (
+                    <SelectItem key={acc.id} value={acc.id} className="text-xs font-bold rounded-xl m-1">
+                      {acc.name} (Balance: ₹{Number(acc.balance).toLocaleString()})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-3">

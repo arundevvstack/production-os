@@ -63,12 +63,13 @@ export function useSupabaseCollection<T = any>(
 
         // Apply order guidelines
         if (queryConfig?.orderBy) {
-          if (typeof queryConfig.orderBy === 'object' && 'column' in queryConfig.orderBy) {
-            query = query.order(queryConfig.orderBy.column, {
-              ascending: queryConfig.orderBy.ascending ?? true,
+          const orderByVal = queryConfig.orderBy as any;
+          if (typeof orderByVal === 'object' && 'column' in orderByVal) {
+            query = query.order(orderByVal.column, {
+              ascending: orderByVal.ascending ?? true,
             });
           } else {
-            Object.entries(queryConfig.orderBy).forEach(([column, order]) => {
+            Object.entries(orderByVal).forEach(([column, order]) => {
               query = query.order(column, {
                 ascending: (order as any) === 'asc',
               });
