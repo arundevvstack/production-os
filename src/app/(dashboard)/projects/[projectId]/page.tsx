@@ -51,6 +51,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TimelineEngine } from "@/components/gantt/TimelineEngine";
 import { useTenant } from "@/hooks/use-tenant";
 import { useSupabaseDoc } from "@/supabase/hooks/use-doc";
 import { useSupabaseCollection } from "@/supabase/hooks/use-collection";
@@ -450,9 +451,9 @@ export default function ProjectWorkspacePage() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="bg-white border p-1.5 rounded-[10px] h-auto flex-wrap mb-8 gap-1.5">
-          {["pre-prod", "production", "post-prod", "release", "assets", "finances"].map(tab => (
+          {["pre-prod", "production", "post-prod", "release", "assets", "finances", "timeline"].map(tab => (
             <TabsTrigger key={tab} value={tab} className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
-              {getPhaseIcon(tab)} {tab.replace('-', ' ')}
+              {tab === 'timeline' ? <Calendar className="h-3.5 w-3.5" /> : getPhaseIcon(tab)} {tab.replace('-', ' ')}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -471,9 +472,16 @@ export default function ProjectWorkspacePage() {
                       </div>
                       <CardDescription>Assign and track key deliverables for this phase.</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" className="rounded-xl font-bold text-xs" onClick={() => setIsAddObjectiveOpen(true)}>
-                      <Plus className="h-4 w-4 mr-2" /> Add Objective
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/projects/${projectId}/approvals`}>
+                        <Button size="sm" variant="outline" className="hidden sm:flex rounded-xl font-bold bg-white text-slate-700 border-slate-200 shadow-sm hover:bg-slate-50 gap-2">
+                          <CheckCircle2 className="h-4 w-4" /> Review Assets
+                        </Button>
+                      </Link>
+                      <Button size="sm" className="rounded-xl font-bold bg-primary text-white shadow-xl shadow-primary/20 hover:bg-primary/90 gap-2" onClick={() => setIsAddObjectiveOpen(true)}>
+                        <Plus className="h-4 w-4 mr-2" /> Add Objective
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent className="p-0">
                     {phaseObjectives(phase).length === 0 ? (
@@ -796,6 +804,11 @@ export default function ProjectWorkspacePage() {
           </div>
         </TabsContent>
 
+      
+        <TabsContent value="timeline" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <TimelineEngine objectives={objectives || []} startDate={project?.created_at} />
+        </TabsContent>
+  
       </Tabs>
 
       {/* Dialog: Add Objective */}

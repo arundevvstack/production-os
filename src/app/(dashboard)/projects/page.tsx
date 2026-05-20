@@ -70,6 +70,7 @@ import { ListTree, IndianRupee, Zap, Target, Cpu } from "lucide-react";
 import { CONTENT_VERTICALS } from "../clients/page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UnifiedClientSelector } from "@/components/unified-client-selector";
+import { generateProjectFromTemplate, ProjectTemplate } from "@/lib/workflow/template-engine";
 
 type ViewMode = 'grid' | 'list' | 'timeline' | 'board';
 
@@ -93,6 +94,7 @@ export default function ProjectsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [projectToArchive, setProjectToArchive] = useState<any>(null);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("None");
 
   // Form State
   const [newProject, setNewProject] = useState({
@@ -208,6 +210,7 @@ export default function ProjectsPage() {
     });
 
     setNewProject({ project_name: "", client_name: "", budget: "", deadline: "", service_category: "", service: "" });
+    setSelectedTemplate("None");
     setSelectedLeadId(null);
     setIsCreateOpen(false);
     setIsSubmitting(false);
