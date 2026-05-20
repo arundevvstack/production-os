@@ -111,7 +111,7 @@ export default function ProjectsPage() {
   });
 
   // Fetch Leads for the client dropdown from Supabase
-  const { data: leads } = useSupabaseCollection('Lead', {
+  const { data: leads } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId },
     orderBy: { company_name: 'asc' }
   });
@@ -173,7 +173,7 @@ export default function ProjectsPage() {
     setIsSubmitting(true);
     // 1. Trigger lead status update to 'won' if imported
     if (selectedLeadId) {
-      await supabase.from('Lead').update({ 
+      await supabase.from('Prospect').update({ 
         stage: 'won' 
       }).eq('id', selectedLeadId);
     }

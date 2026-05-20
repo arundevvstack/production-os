@@ -386,7 +386,7 @@ function ProposalsContent() {
   const reloadProposals = () => {};
 
   // Fetch CRM Leads
-  const { data: leads } = useSupabaseCollection('Lead', {
+  const { data: leads } = useSupabaseCollection('Prospect', {
     orderBy: { company_name: 'asc' }
   });
 
@@ -590,7 +590,7 @@ function ProposalsContent() {
 
       // CRM Sync Stage: Update to Proposal Draft stage
       if (aiInputs.leadId) {
-        await supabase.from('Lead').update({ stage: 'proposal_draft' }).eq('id', aiInputs.leadId);
+        await supabase.from('Prospect').update({ stage: 'proposal_draft' }).eq('id', aiInputs.leadId);
       }
 
       setGeneratedDraft(null);
@@ -674,7 +674,7 @@ function ProposalsContent() {
         else if (status === 'approved' || status === 'signed' || status === 'won') crmStage = 'won';
         else if (status === 'rejected' || status === 'lost') crmStage = 'lost';
 
-        await supabase.from('Lead').update({ stage: crmStage }).eq('id', editingProposal.lead_id);
+        await supabase.from('Prospect').update({ stage: crmStage }).eq('id', editingProposal.lead_id);
       }
 
       toast({ title: "Document Synchronized", description: "Ledger and CRM pipelines updated." });
@@ -910,7 +910,7 @@ function ProposalsContent() {
 
     // 1. Move CRM stage to won
     if (editingProposal.lead_id) {
-      await supabase.from('Lead').update({ stage: 'won' }).eq('id', editingProposal.lead_id);
+      await supabase.from('Prospect').update({ stage: 'won' }).eq('id', editingProposal.lead_id);
     }
 
     // 2. Fetch counts to build formatted unique Refs

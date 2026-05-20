@@ -61,7 +61,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
   });
 
   // 1. Fetch Client (Lead) Info from Supabase
-  const { data: client, isLoading: isClientLoading } = useSupabaseDoc('Lead', clientId);
+  const { data: client, isLoading: isClientLoading } = useSupabaseDoc('Prospect', clientId);
 
   // 2. Fetch Projects for this client from Supabase
   const { data: projects, isLoading: isProjectsLoading } = useSupabaseCollection('Project', {
@@ -81,7 +81,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
   });
 
   // 5. Fetch all leads for this company from Supabase
-  const { data: allRelatedLeads } = useSupabaseCollection('Lead', {
+  const { data: allRelatedLeads } = useSupabaseCollection('Prospect', {
     where: { company_name: client?.company_name }
   });
 
@@ -150,7 +150,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
     setIsSubmitting(true);
     try {
-      await supabase.from('Lead').insert({
+      await supabase.from('Prospect').insert({
         company_id: companyId,
         company_name: client.company_name,
         industry: client.industry,
@@ -432,7 +432,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                         <CardHeader className="bg-indigo-50/30 pb-6 pt-8 px-8">
                           <div className="flex justify-between items-start mb-4">
                             <Badge className={cn("text-[9px] font-black uppercase tracking-widest border-none px-3", stage?.color || 'bg-slate-100 text-slate-600')}>
-                              {stage?.name || 'Lead'}
+                              {stage?.name || 'Prospect'}
                             </Badge>
                             <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">CRM Opportunity</span>
                           </div>

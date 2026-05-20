@@ -45,7 +45,7 @@ export default function ReportsPage() {
   const { data: talents, isLoading: isTalentsLoading } = useSupabaseCollection('Talent', {
     where: { company_id: companyId }
   });
-  const { data: leads, isLoading: isLeadsLoading } = useSupabaseCollection('Lead', {
+  const { data: leads, isLoading: isLeadsLoading } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId }
   });
   const { data: expensesForBudgets, isLoading: isExpensesForBudgetsLoading } = useSupabaseCollection('Expense', {

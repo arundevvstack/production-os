@@ -214,7 +214,7 @@ export default function ClientsPage() {
   });
 
   // DB Collections Sync
-  const { data: leads, isLoading: isLeadsLoading, refetch: reloadLeads } = useSupabaseCollection('Lead', {
+  const { data: leads, isLoading: isLeadsLoading, refetch: reloadLeads } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId },
     orderBy: { company_name: 'asc' }
   });
@@ -380,14 +380,14 @@ export default function ClientsPage() {
 
     try {
       if (createdLeadId) {
-        await supabase.from('Lead').update({
+        await supabase.from('Prospect').update({
           ...newClient,
           service_vertical: primaryVertical,
           sub_vertical: allServices.join(', '),
         }).eq('id', createdLeadId);
       } else {
         const newId = generateId();
-        const { data, error } = await supabase.from('Lead').insert({
+        const { data, error } = await supabase.from('Prospect').insert({
           id: newId,
           company_id: companyId,
           ...newClient,
@@ -486,13 +486,13 @@ export default function ClientsPage() {
 
     // Delete the lead from the Lead table (all entries for this company)
     const { data: allCompanyLeads } = await supabase
-      .from('Lead')
+      .from('Prospect')
       .select('id')
       .eq('company_name', client.company_name)
       .eq('company_id', companyId);
 
     if (allCompanyLeads && allCompanyLeads.length > 0) {
-      await supabase.from('Lead').delete().in('id', allCompanyLeads.map(l => l.id));
+      await supabase.from('Prospect').delete().in('id', allCompanyLeads.map(l => l.id));
     }
 
     toast({ title: "Client Archived", description: `"${client.company_name}" and associated projects moved to Vault.` });
@@ -509,7 +509,7 @@ export default function ClientsPage() {
     if (!selectedHubGraph || !companyId) return;
     const master = selectedHubGraph.masterProfile;
 
-    const { error } = await supabase.from('Lead').insert({
+    const { error } = await supabase.from('Prospect').insert({
       company_id: companyId,
       company_name: master.company_name,
       industry: master.industry,

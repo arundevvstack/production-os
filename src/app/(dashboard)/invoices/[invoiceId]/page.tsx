@@ -35,7 +35,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
   const { companyId, company, profile, isLoading: isTenantLoading } = useTenant();
   const { data: invoice, isLoading: isInvoiceLoading } = useSupabaseDoc('Invoice', invoiceId);
 
-  const { data: client } = useSupabaseDoc('Lead', invoice?.client_id);
+  const { data: client } = useSupabaseDoc('Prospect', invoice?.client_id);
 
   if (isTenantLoading || isInvoiceLoading) {
     return (

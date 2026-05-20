@@ -376,7 +376,7 @@ export default function MarketIntelligenceOS() {
         const newLeadId = generateId();
         
         // Write cleanly into the CRM table (Lead)
-        const { error } = await supabase.from('Lead').insert({
+        const { error } = await supabase.from('Prospect').insert({
           id: newLeadId,
           company_id: companyId,
           company_name: lead.company_name,

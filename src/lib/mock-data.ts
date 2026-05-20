@@ -63,7 +63,7 @@ export const MOCK_SCHEDULE = [
 ];
 
 export const PIPELINE_STAGES = [
-  { id: 'lead', name: 'Lead', color: 'bg-slate-200' },
+  { id: 'lead', name: 'Prospect', color: 'bg-slate-200' },
   { id: 'contacted', name: 'Contacted', color: 'bg-blue-200' },
   { id: 'meeting', name: 'Meeting', color: 'bg-cyan-200' },
   { id: 'proposal', name: 'Proposal Sent', color: 'bg-indigo-200' },

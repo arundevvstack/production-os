@@ -82,7 +82,7 @@ export default function InvoicesPage() {
   });
 
   // 2. Fetch Leads from Supabase (filtered by company)
-  const { data: leads } = useSupabaseCollection('Lead', {
+  const { data: leads } = useSupabaseCollection('Prospect', {
     where: companyId ? { company_id: companyId } : undefined,
     orderBy: { company_name: 'asc' }
   });

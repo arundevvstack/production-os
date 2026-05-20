@@ -78,7 +78,7 @@ export default function ArchivesPage() {
     if (!companyId || !itemToRestore) return;
 
     const item = itemToRestore;
-    const targetTable = item.archive_type === 'project' ? 'Project' : 'Lead';
+    const targetTable = item.archive_type === 'project' ? 'Project' : 'Prospect';
     
     // Remove archive-specific fields
     const { id, archive_type, archived_at, ...originalData } = item;

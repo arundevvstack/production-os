@@ -35,7 +35,7 @@ export function UnifiedClientSelector({
   onOnboardTrigger
 }: UnifiedClientSelectorProps) {
   // Query all relationship entities from Lead table
-  const { data: leads, isLoading } = useSupabaseCollection('Lead', {
+  const { data: leads, isLoading } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId },
     orderBy: { company_name: 'asc' }
   });
