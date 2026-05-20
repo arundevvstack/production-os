@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sparkles, Loader2, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-
+import { Logo } from "@/components/ui/logo";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,76 +60,137 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F1F4] flex items-center justify-center p-6">
-      <Card className="w-full max-w-md border-none shadow-2xl rounded-[10px] overflow-hidden">
-        <CardHeader className="space-y-4 pt-10 pb-6 text-center bg-accent text-white relative">
-          <Sparkles className="absolute top-6 right-6 h-6 w-6 text-white opacity-50" />
-          <div className="mx-auto h-12 w-12 bg-white/20 rounded-[10px] flex items-center justify-center backdrop-blur-md">
-            <span className="font-bold text-xl">DP</span>
-          </div>
-          <div className="space-y-1">
-            <div className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/60 mb-1">Account Center</div>
-            <CardTitle className="text-2xl font-headline font-bold">Define Perspective</CardTitle>
-            <CardDescription className="text-white/70">Create your secure staff workspace account.</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="p-8 pt-10">
-          <form onSubmit={handleSignup} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Work Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="alex@dpstudios.com" 
-                required 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 rounded-xl"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="At least 8 characters" 
-                  required 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 rounded-xl pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
-                </Button>
+    <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+      {/* Ambient gradients */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
+
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white border border-slate-200 shadow-2xl rounded-3xl overflow-hidden">
+        
+        {/* LEFT — Account Center Signup */}
+        <div className="flex flex-col justify-center p-8 lg:p-12 relative bg-white">
+          <div className="w-full space-y-8">
+
+            {/* Brand Header */}
+            <div className="space-y-1">
+              <div className="mb-8">
+                <Logo />
               </div>
-            </div>
-            <div className="bg-muted/30 p-4 rounded-xl space-y-2">
-              <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                <ShieldCheck className="h-3 w-3 text-emerald-500" /> Security Guarantee
-              </div>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                Your data is isolated at the tenant level. We enforce strict cross-company data access blocks by default.
+
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                Create your account
+              </h1>
+              <p className="text-sm text-slate-500 mt-1">
+                Join your team and start managing media production together.
               </p>
             </div>
-            <Button disabled={loading} className="w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-accent/20 bg-accent hover:bg-accent/90">
-              {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Create Workspace"}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="p-8 pt-0 text-center flex flex-col gap-4">
-          <p className="text-sm text-muted-foreground font-medium">
-            Already have an account?{" "}
-            <Link href="/login" className="text-accent font-bold hover:underline">Sign in</Link>
-          </p>
-        </CardFooter>
-      </Card>
+
+            {/* Signup Form */}
+            <form onSubmit={handleSignup} className="space-y-5">
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold text-slate-700 ml-1" htmlFor="email">
+                  Email Address
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="alex@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-400 focus:ring-red-500/20 focus:border-red-500 text-sm font-medium transition"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold text-slate-700 ml-1" htmlFor="password">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    placeholder="At least 8 characters"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-400 focus:ring-red-500/20 focus:border-red-500 text-sm font-medium w-full pr-12 transition"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+              
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-sm active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-lg shadow-red-500/20 transition duration-300"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Sign Up"
+                )}
+              </Button>
+            </form>
+
+            {/* Security note */}
+            <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100 text-xs text-emerald-800 leading-relaxed font-semibold">
+              <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span>Your work is private and secure, accessible only by your team.</span>
+            </div>
+
+            {/* Login link */}
+            <div className="text-center border-t border-slate-100 pt-5">
+              <p className="text-sm text-slate-500">
+                Already have an account?{" "}
+                <Link href="/login" className="font-bold text-red-600 hover:underline">
+                  Sign in
+                </Link>
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* RIGHT — Static Visual (To match new aesthetic) */}
+        <div className="hidden md:flex relative p-4 lg:p-6 bg-slate-950 items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-indigo-600/5 mix-blend-overlay z-10 pointer-events-none" />
+          
+          <div className="absolute inset-0 z-0">
+             <img 
+               src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2070&auto=format&fit=crop" 
+               alt="Creative Production" 
+               className="w-full h-full object-cover opacity-40"
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+          </div>
+
+          <div className="relative z-20 text-center space-y-4 max-w-sm">
+            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xl flex items-center justify-center mx-auto border border-white/10 shadow-2xl">
+              <Sparkles className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-3xl font-black text-white tracking-tight">Built for Creators</h2>
+            <p className="text-sm text-slate-300 font-medium leading-relaxed">
+              Everything you need to manage your media production workflow in one place.
+            </p>
+          </div>
+          
+          <div className="absolute bottom-8 left-8 right-8 z-20 text-white space-y-1">
+            <div className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Account Center</div>
+            <div className="text-xs font-black text-white/80">Define Perspective</div>
+            <div className="text-[10px] text-white/40 font-medium">Media Production Agency</div>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }

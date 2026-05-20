@@ -4,12 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTenant } from "@/hooks/use-tenant";
-import { 
-  Sparkles, Bot, Users, Film, Building2, ChevronRight, Play, ArrowRight,
-  TrendingUp, BarChart3, Star, CheckCircle2, ShieldCheck, Database,
-  ArrowUpRight, Heart, HeartOff, PhoneCall, Send, Search,
-  Activity, Zap, Network, Loader2, Sparkle, Terminal, MapPin, Eye, PlayCircle
-} from "lucide-react";
+import { ArrowRight, Play, CheckCircle2, LayoutGrid, Users, Zap, Building2, TerminalSquare, ServerCrash } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -120,10 +116,9 @@ export default function PublicEcosystemHomepage() {
       {/* 🚀 Pure Apple Translucent Header */}
       <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="font-black text-base uppercase tracking-widest text-slate-900">Define Perspective</span>
-            <Badge className="bg-red-500/10 text-red-600 border-none font-bold text-[8px] uppercase tracking-widest py-0.5 px-2 rounded-full ring-1 ring-red-500/20 shadow-sm">Active</Badge>
-          </div>
+          <div className="flex items-center gap-2">
+            <Logo />
+          </div>  <Badge className="bg-red-500/10 text-red-600 border-none font-bold text-[8px] uppercase tracking-widest py-0.5 px-2 rounded-full ring-1 ring-red-500/20 shadow-sm">Active</Badge>
 
           <nav className="flex items-center gap-6">
             <Link href="/creators" className="text-[10px] uppercase tracking-wider text-slate-500 hover:text-slate-900 font-bold transition">Directory</Link>
@@ -467,8 +462,8 @@ export default function PublicEcosystemHomepage() {
             <div className="text-slate-500">Zero-Trust Auth</div>
           </div>
 
-          <div className="space-y-2">
-            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest block mb-2">Define Perspective</span>
+          <div className="col-span-1 md:col-span-1 space-y-4">
+            <Logo />
             <p className="text-[11px] leading-relaxed font-bold text-slate-500 max-w-[200px]">
               Advanced intelligence network for high-end cinematic production and creator casting.
             </p>

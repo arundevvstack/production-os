@@ -192,7 +192,7 @@ export default function DashboardPage() {
                 Command, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Administrator'}</span>
               </h1>
               <div className="flex items-center gap-1.5 px-3 py-1 bg-primary shadow-lg shadow-primary/20 text-white rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-white/20">
-                <Zap className="h-3 w-3 fill-current animate-pulse" /> Super Admin Status
+                <Zap className="h-3 w-3 fill-current animate-pulse" /> {profile?.role_id ? `${profile.role_id.replace('_', ' ')} STATUS` : 'SUPER ADMIN STATUS'}
               </div>
             </div>
             <p className="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">

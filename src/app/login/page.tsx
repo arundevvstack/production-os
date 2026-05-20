@@ -13,6 +13,7 @@ import {
   Loader2, Eye, EyeOff, ShieldCheck, Radio, Sparkles, ChevronRight, Building2
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { Logo } from "@/components/ui/logo";
 import {
   Carousel, CarouselContent, CarouselItem
 } from "@/components/ui/carousel";
@@ -20,22 +21,22 @@ import Autoplay from "embla-carousel-autoplay";
 
 const features = [
   {
-    title: "Production Command Center",
-    description: "Manage cinematic video campaigns, camera rentals, and edit schedules in real-time.",
+    title: "Manage your production",
+    description: "Keep track of all your video campaigns, rentals, and team schedules in one place.",
     icon: <Radio className="w-8 h-8 text-red-600" />,
     bgColor: "bg-red-500/10",
     image: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=2070&auto=format&fit=crop"
   },
   {
     title: "AI Media Assistant",
-    description: "Find b-roll, generate automated audio transcripts, and plan editing workflows.",
+    description: "Quickly find clips, generate subtitles, and organize your editing workflow.",
     icon: <Sparkles className="w-8 h-8 text-red-600" />,
     bgColor: "bg-red-500/10",
     image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2070&auto=format&fit=crop"
   },
   {
-    title: "Review & Feedback Tools",
-    description: "Get frame-accurate client feedback and manage multi-version exports under secure keys.",
+    title: "Review & Feedback",
+    description: "Share videos with clients and get precise feedback on every frame securely.",
     icon: <ShieldCheck className="w-8 h-8 text-red-600" />,
     bgColor: "bg-red-500/10",
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2070&auto=format&fit=crop"
@@ -126,34 +127,28 @@ export default function LoginPage() {
 
             {/* Brand Header */}
             <div className="space-y-1">
-              <div className="flex items-center gap-2.5 mb-5">
-                <div className="h-9 w-9 rounded-xl bg-red-500/10 flex items-center justify-center shadow-sm">
-                  <Building2 className="h-5 w-5 text-red-600" />
-                </div>
-                <div>
-                  <span className="text-sm font-black tracking-wide uppercase text-slate-900 block leading-none">Define Perspective</span>
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Account Center</span>
-                </div>
+              <div className="mb-8">
+                <Logo />
               </div>
 
               <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
-                Staff Sign In
+                Welcome Back
               </h1>
-              <p className="text-xs text-slate-500 font-medium mt-1">
-                Enter your credentials to access the DP Media workspace.
+              <p className="text-sm text-slate-500 mt-1">
+                Log in to manage your projects, team, and media.
               </p>
             </div>
 
             {/* Login Form */}
             <form onSubmit={handleLogin} className="space-y-5">
-              <div className="space-y-1.5">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1" htmlFor="email">
-                  Work Email
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold text-slate-700 ml-1" htmlFor="email">
+                  Email Address
                 </Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@defineperspective.com"
+                  placeholder="alex@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -161,12 +156,12 @@ export default function LoginPage() {
                 />
               </div>
               
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between ml-1">
-                  <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400" htmlFor="password">
+                  <Label className="text-sm font-semibold text-slate-700" htmlFor="password">
                     Password
                   </Label>
-                  <Link href="/forgot-password" className="text-[9px] font-bold text-red-600 hover:underline uppercase tracking-wider">
+                  <Link href="/forgot-password" className="text-xs font-semibold text-red-600 hover:underline">
                     Forgot Password?
                   </Link>
                 </div>
@@ -206,17 +201,17 @@ export default function LoginPage() {
             </form>
 
             {/* Security note */}
-            <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100 text-[10px] text-emerald-800 leading-relaxed font-bold">
+            <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100 text-xs text-emerald-800 leading-relaxed font-semibold">
               <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>Single-tenant workspace — access is restricted to approved DP staff only.</span>
+              <span>Secure access. Your data is private and protected.</span>
             </div>
 
             {/* Register link */}
             <div className="text-center border-t border-slate-100 pt-5">
-              <p className="text-xs text-slate-400 font-medium">
-                New to DP Media?{" "}
+              <p className="text-sm text-slate-500">
+                Don't have an account?{" "}
                 <Link href="/signup" className="font-bold text-red-600 hover:underline">
-                  Request Access
+                  Sign up
                 </Link>
               </p>
               <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
