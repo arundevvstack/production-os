@@ -293,7 +293,7 @@ export default function ProjectsPage() {
                 <Plus className="h-5 w-5" /> New Project
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] rounded-[10px] border-white/60 glass-panel p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-[700px] rounded-[10px] border-white/60 glass-panel p-0 overflow-hidden">
               <div className="bg-slate-900 p-8 text-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12">
                   <Sparkles className="h-32 w-32" />
@@ -387,7 +387,17 @@ export default function ProjectsPage() {
                     <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Client</Label>
                     <Select 
                       value={newProject.client_name} 
-                      onValueChange={(val) => setNewProject({...newProject, client_name: val})}
+                      onValueChange={(val) => {
+                        const lead = leads?.find(l => l.company_name === val);
+                        setNewProject({
+                          ...newProject, 
+                          client_name: val,
+                          service_category: lead?.service_vertical || newProject.service_category,
+                          service: lead?.sub_vertical || newProject.service,
+                          budget: lead?.deal_value ? lead.deal_value.toString() : newProject.budget
+                        });
+                        if (lead) setSelectedLeadId(lead.id);
+                      }}
                       required
                     >
                       <SelectTrigger className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm font-bold">
