@@ -213,6 +213,7 @@ export default function ProjectWorkspacePage() {
     
     try {
       const { error } = await supabase.from('Task').insert({
+        id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'task_' + Math.random().toString(36).substring(2, 15),
         company_id: companyId,
         project_id: projectId,
         title: newTask.title,
