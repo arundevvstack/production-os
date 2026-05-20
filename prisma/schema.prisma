@@ -9,56 +9,54 @@ datasource db {
 }
 
 model Company {
-  id               String   @id @default(uuid())
+  id               String           @id @default(uuid())
   name             String
-  onboardingStatus String   @default("pending")
+  onboardingStatus String           @default("pending")
   cin              String?
   gstin            String?
   address          String?
-  bank_details     Json?    // Stores bank_name, account_no, ifsc, branch, pan
+  bank_details     Json?
   contact_email    String?
   contact_phone    String?
   website          String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  users            User[]
-  leads            Lead[]
-  projects         Project[]
-  invoices         Invoice[]
-  gstFilings       GSTFiling[]
-  expenses         Expense[]
-  proposals        Proposal[]
-  talents          Talent[]
-  resources        Resource[]
-  bankAccounts     BankAccount[]
-
-  settings         CompanySettings?
-  assets           Asset[]
-  deliverables     Deliverable[]
-  comments         Comment[]
-  notifications    Notification[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
   activityLogs     ActivityLog[]
+  assets           Asset[]
+  bankAccounts     BankAccount[]
+  comments         Comment[]
+  settings         CompanySettings?
+  deliverables     Deliverable[]
+  expenses         Expense[]
+  gstFilings       GSTFiling[]
+  invoices         Invoice[]
+  leads            Lead[]
+  notifications    Notification[]
+  projects         Project[]
+  proposals        Proposal[]
+  resources        Resource[]
+  talents          Talent[]
+  users            User[]
 }
 
 model User {
-  id                String   @id // Maps to Supabase Auth ID
+  id                String   @id
   company_id        String?
-  company           Company? @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  role_id           String   @default("EMPLOYEE") // SUPER_ADMIN, MANAGER, EMPLOYEE, ACCOUNTS, MARKETING_SALES
+  role_id           String   @default("EMPLOYEE")
   email             String   @unique
   fullName          String
-  status            String   @default("pending")  // pending, approved, suspended
-  onboarding_status String   @default("awaiting_approval") // awaiting_approval, completed
-  department        String   @default("Production")       // e.g. Production, Accounts, Creative, Sales
+  status            String   @default("pending")
   createdAt         DateTime @default(now())
+  department        String   @default("Production")
+  onboarding_status String   @default("awaiting_approval")
+  company           Company? @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([status])
 }
 
 model SuperAdmin {
-  id         String   @id // Maps to Supabase Auth ID
+  id         String   @id
   email      String   @unique
   granted_at DateTime @default(now())
 }
@@ -66,12 +64,12 @@ model SuperAdmin {
 model CompanySettings {
   id              String   @id @default(uuid())
   company_id      String   @unique
-  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  modules_enabled String[] // Array of enabled modules (e.g. CRM, Projects, Talent)
+  modules_enabled String[]
   currency        String   @default("INR")
   timezone        String   @default("Asia/Kolkata")
-  theme           Json?    // Custom workspace branding colors
   updated_at      DateTime @default(now()) @updatedAt
+  theme           Json?
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
 }
@@ -79,7 +77,6 @@ model CompanySettings {
 model Lead {
   id               String   @id @default(uuid())
   company_id       String
-  company          Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   company_name     String?
   email            String?
   contact_person   String?
@@ -91,44 +88,47 @@ model Lead {
   billing_address  String?
   gstin            String?
   created_at       DateTime @default(now())
+  company          Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([stage])
 }
 
 model Project {
-  id           String   @id @default(uuid())
+  id           String        @id @default(uuid())
   company_id   String
-  company      Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   project_name String
   project_ref  String?
   client_name  String?
   status       String
-  progress     Float    @default(0)
-  budget       Float    @default(0)
+  progress     Float         @default(0)
+  budget       Float         @default(0)
   deadline     DateTime?
   color        String?
-  created_at   DateTime @default(now())
-  
-  tasks        Task[]
+  created_at   DateTime      @default(now())
   assets       Asset[]
-  deliverables Deliverable[]
-  comments     Comment[]
   bookings     Booking[]
+  comments     Comment[]
+  deliverables Deliverable[]
+  company      Company       @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  tasks        Task[]
 
   @@index([company_id])
   @@index([status])
 }
 
 model Task {
-  id          String   @id @default(uuid())
-  project_id  String
-  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  company_id  String   // Redundant but useful for cross-project queries
-  title       String
-  status      String   @default("pending")
-  due_date    DateTime?
-  created_at  DateTime @default(now())
+  id         String    @id @default(uuid())
+  project_id String
+  company_id String
+  title      String
+  phase      String?
+  assignedTo String?
+  priority   String?
+  status     String    @default("pending")
+  due_date   DateTime?
+  created_at DateTime  @default(now())
+  project    Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([project_id])
@@ -138,14 +138,13 @@ model Task {
 model Resource {
   id                 String    @id @default(uuid())
   company_id         String
-  company            Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
   name               String
-  type               String    // Camera, Drone, Lighting, Studio, Editor, Vehicle, Audio, Render System, Space
-  status             String    @default("available") // available, booked, maintenance
-  maintenance_status String    @default("good")      // good, servicing, broken
+  type               String
+  status             String    @default("available")
+  maintenance_status String    @default("good")
   created_at         DateTime  @default(now())
-
   bookings           Booking[]
+  company            Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
 }
@@ -154,13 +153,13 @@ model Booking {
   id          String   @id @default(uuid())
   company_id  String
   resource_id String
-  resource    Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
   project_id  String
-  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
   start_date  DateTime
   end_date    DateTime
-  status      String   @default("confirmed") // pending, confirmed, cancelled
+  status      String   @default("confirmed")
   created_at  DateTime @default(now())
+  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  resource    Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([resource_id])
@@ -168,99 +167,99 @@ model Booking {
 }
 
 model Asset {
-  id          String   @id @default(uuid())
-  company_id  String
-  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  project_id  String
-  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  name        String
-  url         String
-  file_size   Int?
-  file_type   String?
-  created_at  DateTime @default(now())
+  id         String   @id @default(uuid())
+  company_id String
+  project_id String
+  name       String
+  url        String
+  file_size  Int?
+  file_type  String?
+  created_at DateTime @default(now())
+  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([project_id])
 }
 
 model Deliverable {
-  id          String   @id @default(uuid())
-  company_id  String
-  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  project_id  String
-  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  title       String
-  status      String   @default("pending") // pending, in_progress, approved, rejected
-  due_date    DateTime?
-  url         String?
-  created_at  DateTime @default(now())
+  id         String    @id @default(uuid())
+  company_id String
+  project_id String
+  title      String
+  status     String    @default("pending")
+  due_date   DateTime?
+  url        String?
+  created_at DateTime  @default(now())
+  company    Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  project    Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([project_id])
 }
 
 model Comment {
-  id          String   @id @default(uuid())
-  company_id  String
-  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  project_id  String
-  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  user_id     String
-  user_name   String
-  content     String
-  created_at  DateTime @default(now())
+  id         String   @id @default(uuid())
+  company_id String
+  project_id String
+  user_id    String
+  user_name  String
+  content    String
+  created_at DateTime @default(now())
+  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([project_id])
 }
 
 model Notification {
-  id          String   @id @default(uuid())
-  company_id  String
-  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  user_id     String   // Recipient User ID
-  title       String
-  message     String
-  is_read     Boolean  @default(false)
-  created_at  DateTime @default(now())
+  id         String   @id @default(uuid())
+  company_id String
+  user_id    String
+  title      String
+  message    String
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([user_id])
 }
 
 model ActivityLog {
-  id          String   @id @default(uuid())
-  company_id  String
-  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  user_id     String
-  user_name   String
-  action      String
-  details     String?
-  created_at  DateTime @default(now())
+  id         String   @id @default(uuid())
+  company_id String
+  user_id    String
+  user_name  String
+  action     String
+  details    String?
+  created_at DateTime @default(now())
+  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([created_at])
 }
 
 model Invoice {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   company_id     String
-  company        Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   client_name    String?
   client_id      String?
   project_id     String?
   project_name   String?
   project_ref    String?
-  invoice_number String   @unique
+  invoice_number String    @unique
   total          Float
   subtotal       Float
   gst_amount     Float
   payment_status String
   issue_date     DateTime?
   due_date       DateTime?
-  gst_filed      Boolean  @default(false)
-  line_items     Json     // Array of {description, unit_price, quantity, total}
-  created_at     DateTime @default(now())
+  gst_filed      Boolean   @default(false)
+  line_items     Json
+  created_at     DateTime  @default(now())
+  company        Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([payment_status])
@@ -269,12 +268,12 @@ model Invoice {
 model GSTFiling {
   id           String   @id @default(uuid())
   company_id   String
-  company      Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   period       String
   gst_output   Float
   arn_number   String?
   status       String
   submitted_at DateTime @default(now())
+  company      Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
 }
@@ -282,7 +281,6 @@ model GSTFiling {
 model Expense {
   id          String   @id @default(uuid())
   company_id  String
-  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   project_id  String?
   category    String
   description String?
@@ -291,6 +289,7 @@ model Expense {
   account_id  String?
   status      String
   created_at  DateTime @default(now())
+  company     Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([project_id])
@@ -299,14 +298,14 @@ model Expense {
 model Proposal {
   id              String   @id @default(uuid())
   company_id      String
-  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   lead_id         String?
   title           String
   client_name     String?
   proposal_number String?
-  content         String   // Structured JSON blueprint stringified
+  content         String
   status          String
   created_at      DateTime @default(now())
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
   @@index([status])
@@ -315,15 +314,15 @@ model Proposal {
 model Talent {
   id              String   @id @default(uuid())
   company_id      String
-  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   full_name       String
   category        String
   location        String?
   followers       Int      @default(0)
   engagement_rate Float    @default(0)
   is_public       Boolean  @default(true)
-  portfolio_urls  String[] // Postgres array
+  portfolio_urls  String[]
   created_at      DateTime @default(now())
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
 }
@@ -331,19 +330,19 @@ model Talent {
 model BankAccount {
   id             String   @id @default(uuid())
   company_id     String
-  company        Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   name           String
-  type           String   @default("Bank") // Bank, Cash, Credit Card
+  type           String   @default("Bank")
   balance        Float    @default(0)
   account_number String?
   bank_name      String?
   created_at     DateTime @default(now())
+  company        Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   @@index([company_id])
 }
 
 model Archive {
-  id               String    @id @default(dbgenerated("gen_random_uuid()::text"))
+  id               String    @id @default(dbgenerated("(gen_random_uuid())::text"))
   company_id       String?
   archive_type     String
   archived_at      DateTime? @default(now())
