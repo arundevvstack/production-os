@@ -124,22 +124,22 @@ export default function ProjectWorkspacePage() {
   // --- DATA FETCHING FROM SUPABASE ---
   const { data: project, isLoading: isProjectLoading } = useSupabaseDoc('Project', projectId);
 
-  const { data: tasks, isLoading: isTasksLoading } = useSupabaseCollection('Task', {
+  const { data: tasks, isLoading: isTasksLoading, refetch: refetchTasks } = useSupabaseCollection('Task', {
     where: { project_id: projectId },
     orderBy: { created_at: 'asc' }
   });
 
-  const { data: assets, isLoading: isAssetsLoading } = useSupabaseCollection('Asset', {
+  const { data: assets, isLoading: isAssetsLoading, refetch: refetchAssets } = useSupabaseCollection('Asset', {
     where: { project_id: projectId },
     orderBy: { created_at: 'desc' }
   });
   
-  const { data: invoices, isLoading: isInvoicesLoading } = useSupabaseCollection('Invoice', {
+  const { data: invoices, isLoading: isInvoicesLoading, refetch: refetchInvoices } = useSupabaseCollection('Invoice', {
     where: { project_id: projectId },
     orderBy: { created_at: 'desc' }
   });
 
-  const { data: projectExpenses, isLoading: isProjectExpensesLoading } = useSupabaseCollection('Expense', {
+  const { data: projectExpenses, isLoading: isProjectExpensesLoading, refetch: refetchExpenses } = useSupabaseCollection('Expense', {
     where: { project_id: projectId },
     orderBy: { date: 'desc' }
   });
@@ -204,6 +204,7 @@ export default function ProjectWorkspacePage() {
 
     // Update project progress
     await supabase.from('Project').update({ progress: liveProgress }).eq('id', projectId);
+    refetchTasks();
   };
 
   const handleAddTask = async (e: React.FormEvent) => {
@@ -228,6 +229,7 @@ export default function ProjectWorkspacePage() {
       toast({ title: "Objective Added", description: `Task "${newTask.title}" has been registered.` });
       setIsAddTaskOpen(false);
       setNewTask({ title: "", assignedTo: "" });
+      refetchTasks();
     } catch (error: any) {
       toast({ variant: "destructive", title: "Error", description: error.message });
     } finally {
@@ -264,9 +266,10 @@ export default function ProjectWorkspacePage() {
         details: `Uploaded asset "${newAsset.name}" to directory.`
       });
 
-      toast({ title: "Asset Uploaded", description: `"${newAsset.name}" successfully registered in storage vault.` });
+      toast({ title: "Asset Uploaded", description: `"${newAsset.name}" synced to the vault.` });
       setIsAddAssetOpen(false);
       setNewAsset({ name: "", url: "", file_type: "Video", folder: "pre-prod" });
+      refetchAssets();
     } catch (error: any) {
       toast({ variant: "destructive", title: "Upload Failed", description: error.message });
     } finally {
@@ -295,6 +298,7 @@ export default function ProjectWorkspacePage() {
       toast({ title: "Expense Saved", description: "Cost ledger updated successfully." });
       setIsLogExpenseOpen(false);
       setNewExpense({ category: "Talent & Crew", description: "", amount: "", date: new Date().toISOString().split('T')[0], status: "Paid" });
+      refetchExpenses();
     } catch (error: any) {
       toast({ variant: "destructive", title: "Error", description: error.message });
     } finally {
