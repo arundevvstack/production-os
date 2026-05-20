@@ -60,9 +60,8 @@ model CompanySettings {
 
 model Role {
   id          String   @id @default(uuid())
-  name        String // "SUPER_ADMIN", "ADMIN", "PROJECT_DIRECTOR", "PROJECT_MANAGER", "DEPT_HEAD", "TEAM_MEMBER", "CLIENT", "VENDOR"
-  permissions String[] // JSON or Array of permission strings
-  users       User[]
+  name        String   @unique // "SUPER_ADMIN", "ADMIN", "PROJECT_DIRECTOR", "PROJECT_MANAGER", "DEPT_HEAD", "TEAM_MEMBER", "CLIENT", "VENDOR"
+  permissions String[] // Array of permission strings
 }
 
 model Team {
@@ -87,7 +86,7 @@ model UserTeam {
 model User {
   id                 String   @id // Usually from Supabase Auth
   company_id         String?
-  role_id            String?
+  role_id            String?  // Stores role NAME string: SUPER_ADMIN, MANAGER, EMPLOYEE, etc.
   email              String   @unique
   fullName           String
   status             String   @default("pending")
@@ -99,7 +98,6 @@ model User {
   createdAt          DateTime @default(now())
 
   company Company?   @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  role    Role?      @relation(fields: [role_id], references: [id])
   teams   UserTeam[]
 
   assigned_prospects  Prospect[]  @relation("ProspectAssignee")
