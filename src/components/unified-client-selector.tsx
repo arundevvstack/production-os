@@ -127,7 +127,7 @@ export function UnifiedClientSelector({
 
   return (
     <div className="flex gap-2 items-center w-full">
-      <Select onValueChange={handleValueChange} value={value}>
+      <Select onValueChange={handleValueChange} value={value || undefined}>
         <SelectTrigger className={className}>
           {value ? (
             <div className="flex items-center gap-2 text-slate-800">
