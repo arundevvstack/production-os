@@ -56,6 +56,20 @@ export async function GET(req: Request) {
         _count: { id: true }
     });
 
+    // 5. Phase 8: Autonomous Cost Intelligence & Economics
+    const marginForecasts = await prisma.tenantMarginForecast.findMany();
+    
+    const aggregatedEcosystemHealth = {
+        total_tenants: marginForecasts.length,
+        average_profit_margin: marginForecasts.length > 0 
+            ? marginForecasts.reduce((sum, t) => sum + t.profit_margin_pct, 0) / marginForecasts.length 
+            : 100.0,
+        average_churn_risk: marginForecasts.length > 0 
+            ? marginForecasts.reduce((sum, t) => sum + t.forecasted_churn_risk, 0) / marginForecasts.length 
+            : 0.0,
+        total_infrastructure_cogs: marginForecasts.reduce((sum, t) => sum + t.compute_cost_cogs, 0)
+    };
+
     return NextResponse.json({ 
         success: true, 
         data: {
@@ -78,7 +92,8 @@ export async function GET(req: Request) {
                 total_ai_spend: aiJobs._sum.cost_credits || 0,
                 monthly_ai_limit: subscription?.ai_usage_limit || 0
             },
-            telemetry_averages: telemetry
+            telemetry_averages: telemetry,
+            ecosystem_economics: aggregatedEcosystemHealth
         }
     });
 

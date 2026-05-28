@@ -13,7 +13,15 @@ export async function middleware(request: NextRequest) {
   if (user && request.nextUrl.pathname.startsWith('/api/v1/')) {
      const companyId = user.user_metadata?.company_id;
      if (companyId) {
-       // Ideally we'd set this on the headers of the request that is passed down
+       // Phase 8.4: Autonomous Platform Governance (QUARANTINE_TENANT)
+       // Check if the tenant has been temporarily quarantined due to API abuse / error budget drops
+       const isQuarantined = user.user_metadata?.is_quarantined;
+       if (isQuarantined) {
+           return new NextResponse(
+             JSON.stringify({ error: 'Tenant Quarantined: Error budget depleted or abuse detected. Contact support.' }),
+             { status: 429, headers: { 'content-type': 'application/json' } }
+           );
+       }
        // request.headers.set('x-tenant-id', companyId);
      }
   }
