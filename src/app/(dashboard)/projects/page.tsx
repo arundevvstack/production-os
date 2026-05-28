@@ -165,11 +165,17 @@ export default function ProjectsPage() {
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyId || !newProject.project_name || !newProject.client_name) {
-      console.error("Project creation failed: Missing required fields");
+      console.error("Project creation failed: Missing required fields", { 
+        companyId, 
+        projectName: newProject.project_name, 
+        clientName: newProject.client_name,
+        serviceCat: newProject.service_category,
+        service: newProject.service
+      });
       toast({
         variant: "destructive",
         title: "Information Missing",
-        description: "Please provide a project name and select a client.",
+        description: `Please provide a project name and select a client. ${!newProject.client_name ? "(Client is missing)" : ""}`,
       });
       return;
     }
@@ -436,13 +442,13 @@ export default function ProjectsPage() {
                       value={newProject.client_name}
                       onSelect={(clientData) => {
                         const lead = leads?.find(l => l.company_name === clientData.company_name);
-                        setNewProject({
-                          ...newProject, 
+                        setNewProject(prev => ({
+                          ...prev, 
                           client_name: clientData.company_name,
-                          service_category: clientData.service_vertical || newProject.service_category,
-                          service: clientData.sub_vertical || newProject.service,
-                          budget: lead?.deal_value ? lead.deal_value.toString() : newProject.budget
-                        });
+                          service_category: clientData.service_vertical || prev.service_category,
+                          service: clientData.sub_vertical || prev.service,
+                          budget: lead?.deal_value ? lead.deal_value.toString() : prev.budget
+                        }));
                         if (lead) setSelectedLeadId(lead.id);
                       }}
                       placeholder="Select Client / Prospect..."
