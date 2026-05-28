@@ -125,7 +125,7 @@ export function UnifiedClientSelector({
 
   return (
     <div className="flex gap-2 items-center w-full">
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen} modal={true}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -144,7 +144,7 @@ export function UnifiedClientSelector({
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 z-[100] bg-white rounded-[10px] shadow-xl border-slate-100" align="start">
+        <PopoverContent style={{ width: "var(--radix-popover-trigger-width)" }} className="p-0 z-[100] bg-white rounded-[10px] shadow-xl border-slate-100" align="start">
           <Command>
             <CommandInput placeholder="Search registry..." className="h-10 text-xs font-medium" />
             <CommandList className="max-h-[300px] overflow-y-auto overflow-x-hidden">
