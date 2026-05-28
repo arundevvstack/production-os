@@ -851,9 +851,9 @@ export default function CRMPage() {
         </Card>
       </div>
 
-      <div className="flex-1 min-h-[600px] relative">
+      <div className="flex-1 min-h-[600px] relative w-full overflow-hidden">
         <div className="absolute inset-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-6">
-          <div className="flex h-full gap-6 w-max min-w-full">
+          <div className="flex h-full gap-6 w-max min-w-full pr-8">
             {PIPELINE_STAGES.filter(s => s.id !== 'won').map((stage) => {
               const leadsInStage = filteredLeads.filter(l => l.stage === stage.id);
               const totalValue = leadsInStage.reduce((sum, l) => sum + (l.deal_value || 0), 0);
