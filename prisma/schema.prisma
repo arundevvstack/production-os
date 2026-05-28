@@ -657,6 +657,8 @@ model Talent {
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 }
 
+
+
 model BankAccount {
   id             String   @id @default(uuid())
   company_id     String
@@ -889,12 +891,22 @@ model DistributedJobQueue {
   id              String   @id @default(uuid())
   job_type        String   // "RENDER", "AI_ANALYSIS", "VIDEO_ENCODE"
   payload         Json
-  status          String   @default("queued") // queued, processing, completed, failed, retrying
+  status          String   @default("pending") // pending, processing, completed, failed, retrying
   priority        Int      @default(0) // Higher = faster
   worker_id       String?
   started_at      DateTime?
   completed_at    DateTime?
   error_log       String?
+  
+  // Phase 7: Event Governance & Tracing
+  schema_version  String   @default("1.0")
+  trace_id        String?
+  retry_count     Int      @default(0)
+  max_retries     Int      @default(3)
+  next_retry_at   DateTime?
+  
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 }
 
 model ProjectHealthScore {
@@ -990,6 +1002,19 @@ model WebhookEndpoint {
   is_active       Boolean  @default(true)
   created_at      DateTime @default(now())
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  logs            WebhookDeliveryLog[]
+}
+
+model WebhookDeliveryLog {
+  id              String   @id @default(uuid())
+  endpoint_id     String
+  event_type      String
+  payload_hash    String
+  http_status     Int?
+  response_time_ms Int?
+  error_message   String?
+  timestamp       DateTime @default(now())
+  endpoint        WebhookEndpoint @relation(fields: [endpoint_id], references: [id], onDelete: Cascade)
 }
 
 model MarketplacePlugin {
@@ -1000,6 +1025,10 @@ model MarketplacePlugin {
   plugin_type     String   // "WORKFLOW", "AI_PROVIDER", "ANALYTICS"
   price_monthly   Float    @default(0.00)
   is_verified     Boolean  @default(false)
+  
+  // Phase 7: Plugin Sandboxing
+  required_scopes String[] @default([]) // e.g. ["projects:read", "ai:generate"]
+  
   installations   CompanyPluginInstallation[]
 }
 
@@ -1009,6 +1038,11 @@ model CompanyPluginInstallation {
   plugin_id       String
   config_json     Json     @default("{}")
   installed_at    DateTime @default(now())
+  
+  // Phase 7: Plugin Sandboxing
+  granted_scopes  String[] @default([])
+  is_active       Boolean  @default(true)
+  
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   plugin          MarketplacePlugin @relation(fields: [plugin_id], references: [id], onDelete: Cascade)
 }
