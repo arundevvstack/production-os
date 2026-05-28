@@ -34,16 +34,21 @@ export function UnifiedClientSelector({
   showOnboardOption = true,
   onOnboardTrigger
 }: UnifiedClientSelectorProps) {
-  // Query all relationship entities from Lead table
-  const { data: leads, isLoading } = useSupabaseCollection('Prospect', {
+  // Query all relationship entities from Prospect and Client tables
+  const { data: leads, isLoading: isLeadsLoading } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId },
     orderBy: { company_name: 'asc' }
   });
 
+  const { data: clients, isLoading: isClientsLoading } = useSupabaseCollection('Client', {
+    where: { company_id: companyId },
+    orderBy: { name: 'asc' }
+  });
+
+  const isLoading = isLeadsLoading || isClientsLoading;
+
   // Consolidate relationship records by company name without duplication
   const consolidatedClients = useMemo(() => {
-    if (!leads) return [];
-    
     const clientMap: Record<string, {
       company_name: string;
       industry: string;
@@ -57,40 +62,61 @@ export function UnifiedClientSelector({
       leadsCount: number;
     }> = {};
 
-    leads.forEach(l => {
-      const name = l.company_name?.trim();
-      if (!name) return;
-
-      const isCurrentPartner = l.stage === 'client' || l.stage === 'won';
-      
-      if (!clientMap[name]) {
+    if (clients) {
+      clients.forEach(c => {
+        const name = c.name?.trim();
+        if (!name) return;
         clientMap[name] = {
           company_name: name,
-          industry: l.industry || "Luxury & Lifestyle",
-          service_vertical: l.service_vertical || "General Production",
-          sub_vertical: l.sub_vertical || "",
-          email: l.email || "",
-          contact_person: l.contact_person || "",
-          gstin: l.gstin || "",
-          billing_address: l.billing_address || "",
-          isPartner: isCurrentPartner,
-          leadsCount: 1
+          industry: c.industry || "Luxury & Lifestyle",
+          service_vertical: c.service_vertical || "General Production",
+          sub_vertical: c.sub_vertical || "",
+          email: c.email || "",
+          contact_person: c.contact_person || "",
+          gstin: c.gstin || "",
+          billing_address: c.billing_address || "",
+          isPartner: true,
+          leadsCount: 0
         };
-      } else {
-        clientMap[name].leadsCount += 1;
-        // Elevate properties to master onboarded values if this record is a confirmed client
-        if (isCurrentPartner && !clientMap[name].isPartner) {
-          clientMap[name].isPartner = true;
-          if (l.gstin) clientMap[name].gstin = l.gstin;
-          if (l.billing_address) clientMap[name].billing_address = l.billing_address;
-          if (l.contact_person) clientMap[name].contact_person = l.contact_person;
-          if (l.email) clientMap[name].email = l.email;
+      });
+    }
+
+    if (leads) {
+      leads.forEach(l => {
+        const name = l.company_name?.trim();
+        if (!name) return;
+
+        const isCurrentPartner = l.stage === 'client' || l.stage === 'won';
+        
+        if (!clientMap[name]) {
+          clientMap[name] = {
+            company_name: name,
+            industry: l.industry || "Luxury & Lifestyle",
+            service_vertical: l.service_vertical || "General Production",
+            sub_vertical: l.sub_vertical || "",
+            email: l.email || "",
+            contact_person: l.contact_person || "",
+            gstin: l.gstin || "",
+            billing_address: l.billing_address || "",
+            isPartner: isCurrentPartner,
+            leadsCount: 1
+          };
+        } else {
+          clientMap[name].leadsCount += 1;
+          // Elevate properties to master onboarded values if this record is a confirmed client
+          if (isCurrentPartner && !clientMap[name].isPartner) {
+            clientMap[name].isPartner = true;
+          }
+          if (!clientMap[name].gstin && l.gstin) clientMap[name].gstin = l.gstin;
+          if (!clientMap[name].billing_address && l.billing_address) clientMap[name].billing_address = l.billing_address;
+          if (!clientMap[name].contact_person && l.contact_person) clientMap[name].contact_person = l.contact_person;
+          if (!clientMap[name].email && l.email) clientMap[name].email = l.email;
         }
-      }
-    });
+      });
+    }
 
     return Object.values(clientMap).sort((a, b) => a.company_name.localeCompare(b.company_name));
-  }, [leads]);
+  }, [leads, clients]);
 
   const handleValueChange = (selectedName: string) => {
     const client = consolidatedClients.find(c => c.company_name === selectedName);
