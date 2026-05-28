@@ -4,7 +4,6 @@
 import { useEffect } from "react";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/toaster";
 import { Loader2 } from "lucide-react";
 import { useTenant } from "@/hooks/use-tenant";
 import { useRouter } from "next/navigation";
@@ -78,7 +77,6 @@ export default function DashboardLayout({
             </main>
         </SidebarInset>
         <LiveTimer />
-        <Toaster />
     </SidebarProvider>
   );
 }

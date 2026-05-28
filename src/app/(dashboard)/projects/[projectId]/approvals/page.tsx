@@ -10,6 +10,7 @@ import { ArrowLeft, Play, Pause, MessageSquare, Clock, CheckCircle2, XCircle } f
 import { useTenant } from "@/hooks/use-tenant";
 import { supabase } from "@/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export default function ApprovalsPage() {
   const params = useParams();

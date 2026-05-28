@@ -60,8 +60,9 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
     value: ""
   });
 
-  // 1. Fetch Client (Lead) Info from Supabase
-  const { data: client, isLoading: isClientLoading } = useSupabaseDoc('Prospect', clientId);
+  // 1. Fetch Client Info from Supabase Client table
+  const { data: rawClient, isLoading: isClientLoading } = useSupabaseDoc('Client', clientId);
+  const client = useMemo(() => rawClient ? { ...rawClient, company_name: rawClient.name } : null, [rawClient]);
 
   // 2. Fetch Projects for this client from Supabase
   const { data: projects, isLoading: isProjectsLoading } = useSupabaseCollection('Project', {

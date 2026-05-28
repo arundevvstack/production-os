@@ -45,6 +45,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Select, 
   SelectContent, 
@@ -87,14 +88,22 @@ export default function CRMPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAnalytics, setShowAnalytics] = useState(false);
 
-  // Quick Add State
   const [newLead, setNewLead] = useState({
+    lead_type: "Prospect", // "Prospect" | "Client"
     company_name: "",
+    contact_person: "",
+    email: "",
+    phone: "",
+    whatsapp: "",
     service_vertical: "",
     sub_vertical: "",
-    industry: "",
+    industry: "Luxury & Lifestyle",
     deal_value: "",
-    stage: "lead"
+    stage: "new_lead",
+    notes: "",
+    billing_address: "",
+    gstin: "",
+    template: "Brand Identity"
   });
 
   // Fetch Prospects from Supabase
@@ -132,9 +141,9 @@ export default function CRMPage() {
 
   const filteredLeads = useMemo(() => {
     if (!localLeads) return [];
-    // Movement Logic: Only show active pipeline items (exclude official partners and closed/won deals)
+    // Exclude converted prospects, direct clients, and won/lost from active pipeline board columns
     return localLeads.filter(l => 
-      !['client', 'won'].includes(l.stage || '') && (
+      !l.is_converted && !['won', 'lost', 'client'].includes(l.stage || '') && (
         (l.company_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (l.service_vertical || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (l.sub_vertical || '').toLowerCase().includes(searchQuery.toLowerCase())
@@ -169,75 +178,127 @@ export default function CRMPage() {
   const handleAddLead = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyId || !newLead.company_name) {
-      toast({ variant: "destructive", title: "Selection Required", description: "Please select a client company from your directory." });
+      toast({ variant: "destructive", title: "Selection Required", description: "Please specify a company name." });
       return;
     }
 
     setIsSubmitting(true);
-    
-    const newLeadId = generateId();
-    const { error } = await supabase.from('Prospect').insert({
-      id: newLeadId,
-      company_id: companyId,
-      ...newLead,
-      deal_value: parseFloat(newLead.deal_value) || 0,
-    });
 
-    if (error) {
-      toast({ variant: "destructive", title: "Creation Failed", description: error.message });
-    } else {
+    try {
+      if (newLead.lead_type === "Client") {
+        const response = await fetch("/api/v1/crm/client/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            company_name: newLead.company_name,
+            contact_person: newLead.contact_person,
+            email: newLead.email,
+            phone: newLead.phone || newLead.whatsapp,
+            industry: newLead.industry,
+            billing_address: newLead.billing_address,
+            gstin: newLead.gstin,
+            template: newLead.template,
+          }),
+        });
+
+        const resData = await response.json();
+        if (!response.ok) {
+          throw new Error(resData.error || "Failed to onboard client.");
+        }
+
+        toast({
+          title: "Client Onboarded",
+          description: `${newLead.company_name} has been added to your directory and workspace.`,
+        });
+
+        window.location.reload();
+      } else {
+        const response = await fetch("/api/v1/crm/prospect/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            company_name: newLead.company_name,
+            contact_person: newLead.contact_person,
+            email: newLead.email,
+            phone: newLead.phone || newLead.whatsapp,
+            whatsapp: newLead.whatsapp || newLead.phone,
+            service_vertical: newLead.service_vertical,
+            sub_vertical: newLead.sub_vertical,
+            industry: newLead.industry,
+            deal_value: newLead.deal_value,
+            stage: newLead.stage,
+            notes: newLead.notes,
+          }),
+        });
+
+        const resData = await response.json();
+        if (!response.ok) {
+          throw new Error(resData.error || "Failed to create prospect.");
+        }
+
+        toast({
+          title: "Prospect Created",
+          description: `${newLead.company_name} is now in your sales pipeline.`,
+        });
+
+        if (resData.data) {
+          setLocalLeads(prev => [resData.data, ...prev]);
+        }
+
+        setNewLead({
+          lead_type: "Prospect",
+          company_name: "",
+          contact_person: "",
+          email: "",
+          phone: "",
+          whatsapp: "",
+          service_vertical: "",
+          sub_vertical: "",
+          industry: "Luxury & Lifestyle",
+          deal_value: "",
+          stage: "new_lead",
+          notes: "",
+          billing_address: "",
+          gstin: "",
+          template: "Brand Identity"
+        });
+        setIsAddOpen(false);
+      }
+    } catch (err: any) {
       toast({
-        title: "Lead Created",
-        description: `${newLead.company_name} opportunity is now live in the pipeline.`,
+        variant: "destructive",
+        title: "Action Failed",
+        description: err.message,
       });
-      // Spot Update!
-      setLocalLeads(prev => [
-        {
-          id: newLeadId,
-          company_id: companyId,
-          ...newLead,
-          deal_value: parseFloat(newLead.deal_value) || 0,
-          created_at: new Date().toISOString()
-        },
-        ...prev
-      ]);
-      setNewLead({ company_name: "", service_vertical: "", sub_vertical: "", industry: "", deal_value: "", stage: "lead" });
-      setIsAddOpen(false);
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   const handleMarkAsWon = async (lead: any) => {
     if (!companyId || !lead) return;
 
     // Spot Update! Update local stage instantly so it drops out of active columns
-    setLocalLeads(prev => prev.map(l => l.id === lead.id ? { ...l, stage: 'won' } : l));
+    setLocalLeads(prev => prev.map(l => l.id === lead.id ? { ...l, stage: 'won', is_converted: true } : l));
 
-    // 1. Update Prospect Status in Supabase
-    await supabase.from('Prospect').update({ stage: 'won' }).eq('id', lead.id);
+    try {
+      const response = await fetch(`/api/v1/crm/prospect/${lead.id}/convert`, {
+        method: "POST",
+      });
 
-    // 2. Create Project Workspace in Supabase
-    const projectRefCode = `PROJ-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-    const { error } = await supabase.from('Project').insert({
-      company_id: companyId,
-      project_name: lead.company_name,
-      client_name: lead.company_name,
-      project_ref: projectRefCode,
-      budget: lead.deal_value || 0,
-      status: 'in_progress',
-      progress: 0,
-      color: 'card-purple',
-    });
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to convert prospect.");
+      }
 
-    if (error) {
-      toast({ variant: "destructive", title: "Project Creation Failed", description: error.message });
-      // Rollback on error
-      setLocalLeads(prev => prev.map(l => l.id === lead.id ? { ...l, stage: lead.stage } : l));
-    } else {
       toast({ 
         title: "Success! Deal Converted", 
-        description: `"${lead.company_name}" has moved from the pipeline to an active production workspace.` 
+        description: `"${lead.company_name}" has been converted to a client with an active workspace.` 
       });
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Conversion Failed", description: err.message });
+      // Rollback on error
+      setLocalLeads(prev => prev.map(l => l.id === lead.id ? { ...l, stage: lead.stage, is_converted: false } : l));
     }
   };
 
@@ -355,89 +416,210 @@ export default function CRMPage() {
               </div>
               <form onSubmit={handleAddLead} className="p-8 space-y-5">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">
-                    Select Client Company
-                  </Label>
-                  <UnifiedClientSelector 
-                    companyId={companyId || ''} 
-                    value={newLead.company_name}
-                    onSelect={handleSelectUnified}
-                    placeholder="Select a client..."
-                    className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 focus:border-red-500 focus:ring-red-500/20 placeholder:text-slate-400 shadow-sm"
-                    showOnboardOption={false}
-                  />
+                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Lead Type</Label>
+                  <Select 
+                    value={newLead.lead_type} 
+                    onValueChange={(val) => setNewLead(prev => ({...prev, lead_type: val}))}
+                  >
+                    <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                      <SelectValue placeholder="Select Type" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                      <SelectItem value="Prospect" className="text-xs font-bold rounded-xl m-1 cursor-pointer">Prospect</SelectItem>
+                      <SelectItem value="Client" className="text-xs font-bold rounded-xl m-1 cursor-pointer">Client (Direct Onboard)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Service Category</Label>
-                    <Select 
-                      value={newLead.service_vertical} 
-                      onValueChange={(val) => setNewLead(prev => ({...prev, service_vertical: val, sub_vertical: ""}))}
-                    >
-                      <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
-                        <SelectValue placeholder="Select vertical" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
-                        {CONTENT_VERTICALS.map(v => (
-                          <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{v.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Service</Label>
-                    <Select 
-                      disabled={!newLead.service_vertical}
-                      value={newLead.sub_vertical} 
-                      onValueChange={(val) => setNewLead(prev => ({...prev, sub_vertical: val}))}
-                    >
-                      <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 disabled:opacity-40 shadow-sm">
-                        <div className="flex items-center gap-2">
-                          <ListTree className="h-3 w-3 text-slate-500" />
-                          <SelectValue placeholder={newLead.service_vertical ? "Select a service" : "Select category first"} />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
-                        {activeVertical?.services.map(s => (
-                          <SelectItem key={s} value={s} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{s}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">
+                    Company Name
+                  </Label>
+                  <Input 
+                    placeholder="e.g. Nike Global" 
+                    value={newLead.company_name}
+                    onChange={(e) => setNewLead(prev => ({...prev, company_name: e.target.value}))}
+                    className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                    required
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Budget (₹)</Label>
+                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Contact Person</Label>
                     <Input 
-                      id="value" 
-                      type="number"
-                      placeholder="25000" 
-                      value={newLead.deal_value}
-                      onChange={(e) => setNewLead(prev => ({...prev, deal_value: e.target.value}))}
+                      placeholder="John Doe" 
+                      value={newLead.contact_person}
+                      onChange={(e) => setNewLead(prev => ({...prev, contact_person: e.target.value}))}
                       className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Status</Label>
-                    <Select onValueChange={(val) => setNewLead(prev => ({...prev, stage: val}))} value={newLead.stage}>
-                      <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
-                        <SelectValue placeholder="Select stage" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
-                        {PIPELINE_STAGES.filter(s => s.id !== 'won').map(s => (
-                          <SelectItem key={s.id} value={s.id} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{s.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Email</Label>
+                    <Input 
+                      type="email" 
+                      placeholder="john@doe.com" 
+                      value={newLead.email}
+                      onChange={(e) => setNewLead(prev => ({...prev, email: e.target.value}))}
+                      className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                    />
                   </div>
                 </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Phone / WhatsApp</Label>
+                  <Input 
+                    placeholder="+91 99999 99999" 
+                    value={newLead.phone}
+                    onChange={(e) => setNewLead(prev => ({...prev, phone: e.target.value, whatsapp: e.target.value}))}
+                    className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                  />
+                </div>
+
+                {newLead.lead_type === "Prospect" && (
+                  <>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Service Category</Label>
+                        <Select 
+                          value={newLead.service_vertical} 
+                          onValueChange={(val) => setNewLead(prev => ({...prev, service_vertical: val, sub_vertical: ""}))}
+                        >
+                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                            <SelectValue placeholder="Select Vertical" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                            {CONTENT_VERTICALS.map(v => (
+                              <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{v.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Service</Label>
+                        <Select 
+                          disabled={!newLead.service_vertical}
+                          value={newLead.sub_vertical} 
+                          onValueChange={(val) => setNewLead(prev => ({...prev, sub_vertical: val}))}
+                        >
+                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 disabled:opacity-40 shadow-sm">
+                            <SelectValue placeholder={newLead.service_vertical ? "Select Service" : "Select Category First"} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                            {activeVertical?.services.map(s => (
+                              <SelectItem key={s} value={s} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{s}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Expected Deal (₹)</Label>
+                        <Input 
+                          type="number"
+                          placeholder="25000" 
+                          value={newLead.deal_value}
+                          onChange={(e) => setNewLead(prev => ({...prev, deal_value: e.target.value}))}
+                          className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Status</Label>
+                        <Select onValueChange={(val) => setNewLead(prev => ({...prev, stage: val}))} value={newLead.stage}>
+                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                            <SelectValue placeholder="Select Stage" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                            {PIPELINE_STAGES.filter(s => !['won', 'lost', 'client'].includes(s.id)).map(s => (
+                              <SelectItem key={s.id} value={s.id} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{s.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Notes</Label>
+                      <Textarea 
+                        placeholder="Enter Prospect Details..." 
+                        value={newLead.notes}
+                        onChange={(e) => setNewLead(prev => ({...prev, notes: e.target.value}))}
+                        className="rounded-[10px] bg-slate-50 border-slate-200 text-slate-800 text-sm shadow-sm"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {newLead.lead_type === "Client" && (
+                  <>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Industry</Label>
+                        <Select 
+                          value={newLead.industry} 
+                          onValueChange={(val) => setNewLead(prev => ({...prev, industry: val}))}
+                        >
+                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                            <SelectValue placeholder="Select Industry" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl max-h-[200px] overflow-y-auto">
+                            <SelectItem value="Luxury & Lifestyle" className="text-xs rounded-xl m-1 cursor-pointer">Luxury & Lifestyle</SelectItem>
+                            <SelectItem value="Tech & SaaS" className="text-xs rounded-xl m-1 cursor-pointer">Tech & SaaS</SelectItem>
+                            <SelectItem value="Gaming & Esports" className="text-xs rounded-xl m-1 cursor-pointer">Gaming & Esports</SelectItem>
+                            <SelectItem value="Automotive & Mobility" className="text-xs rounded-xl m-1 cursor-pointer">Automotive & Mobility</SelectItem>
+                            <SelectItem value="E-commerce & D2C" className="text-xs rounded-xl m-1 cursor-pointer">E-commerce & D2C</SelectItem>
+                            <SelectItem value="Broadcasting & Media Production" className="text-xs rounded-xl m-1 cursor-pointer">Broadcasting & Media</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">GSTIN (Optional)</Label>
+                        <Input 
+                          placeholder="GSTIN Code" 
+                          value={newLead.gstin}
+                          onChange={(e) => setNewLead(prev => ({...prev, gstin: e.target.value}))}
+                          className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Billing Address</Label>
+                      <Textarea 
+                        placeholder="Corporate Billing Address" 
+                        value={newLead.billing_address}
+                        onChange={(e) => setNewLead(prev => ({...prev, billing_address: e.target.value}))}
+                        className="rounded-[10px] bg-slate-50 border-slate-200 text-slate-800 text-sm shadow-sm"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Roadmap Template</Label>
+                      <Select 
+                        value={newLead.template} 
+                        onValueChange={(val) => setNewLead(prev => ({...prev, template: val}))}
+                      >
+                        <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                          <SelectValue placeholder="Select Onboarding Template" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                          <SelectItem value="Brand Identity" className="text-xs rounded-xl m-1 cursor-pointer">Brand Identity</SelectItem>
+                          <SelectItem value="AI TVC" className="text-xs rounded-xl m-1 cursor-pointer">AI TVC</SelectItem>
+                          <SelectItem value="Corporate Film" className="text-xs rounded-xl m-1 cursor-pointer">Corporate Film</SelectItem>
+                          <SelectItem value="Social Media Campaign" className="text-xs rounded-xl m-1 cursor-pointer">Social Media Campaign</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                )}
+
                 <DialogFooter className="pt-2">
                   <Button type="submit" disabled={isSubmitting} className="w-full rounded-[10px] h-12 font-black text-xs uppercase tracking-widest bg-red-600 hover:bg-red-500 text-white shadow-xl shadow-red-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
                     {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Add Lead
+                    {newLead.lead_type === "Client" ? "Onboard Client" : "Add Lead"}
                   </Button>
                 </DialogFooter>
               </form>

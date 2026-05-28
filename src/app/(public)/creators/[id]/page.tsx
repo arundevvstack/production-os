@@ -325,7 +325,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
       stageName: editForm.stageName,
       location: editForm.location,
       dayRate: Number(editForm.dayRate),
-      languages: editForm.languages.split(",").map(s => s.trim()).filter(Boolean),
+      languages: editForm.languages.split(",").map((s: string) => s.trim()).filter(Boolean),
       bio: editForm.bio,
       instagram: editForm.instagram,
       youtube: editForm.youtube,
@@ -362,7 +362,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
         { id: "r1", title: editForm.reel1Title, duration: editForm.reel1Duration, url: editForm.reel1Url },
         { id: "r2", title: editForm.reel2Title, duration: editForm.reel2Duration, url: editForm.reel2Url }
       ].filter(r => r.url),
-      gallery: editForm.galleryUrls.split(",").map(s => s.trim()).filter(Boolean)
+      gallery: editForm.galleryUrls.split(",").map((s: string) => s.trim()).filter(Boolean)
     });
     setIsEditOpen(false);
     toast({

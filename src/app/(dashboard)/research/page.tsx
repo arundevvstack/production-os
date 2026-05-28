@@ -757,7 +757,7 @@ export default function MarketIntelligenceOS() {
                     <span className="text-xs font-black uppercase text-zinc-400 tracking-widest block">Market Gaps</span>
                     <h3 className="text-lg font-black text-zinc-950 mt-1">High-Impact Gaps</h3>
                   </div>
-                  <Button variant="ghost" size="xs" onClick={() => setActiveTab("gaps")} className="text-red-500 text-xs font-bold hover:bg-red-50 hover:text-red-600 rounded-lg">View All Gaps</Button>
+                  <Button variant="ghost" size="sm" onClick={() => setActiveTab("gaps")} className="text-red-500 text-xs font-bold hover:bg-red-50 hover:text-red-600 rounded-lg">View All Gaps</Button>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                   {MARKET_GAPS.slice(0, 2).map((gap) => (
@@ -824,7 +824,7 @@ export default function MarketIntelligenceOS() {
                             </Badge>
                           ) : (
                             <Button 
-                              size="xs"
+                              size="sm"
                               disabled={crmSyncingId === lead.id}
                               onClick={(e) => {
                                 e.stopPropagation();

@@ -819,15 +819,17 @@ export default function TalentDashboardPage() {
                         "Fashion & Lifestyle", "Stunt Work", "Fitness Campaigns", "High-Action Leads", 
                         "Product Shoots", "Digital Campaigns"
                       ].map((sugg) => {
-                        const items = tempData.comfortable 
-                          ? (Array.isArray(tempData.comfortable) ? tempData.comfortable : tempData.comfortable.split(",").map((s) => s.trim()))
-                          : [];
-                        const isSelected = items.some((item) => item.toLowerCase() === sugg.toLowerCase());
+                        const items: string[] = Array.isArray(tempData.comfortable)
+                          ? tempData.comfortable
+                          : typeof tempData.comfortable === 'string'
+                            ? (tempData.comfortable as string).split(",").map((s: string) => s.trim())
+                            : [];
+                        const isSelected = items.some((item: string) => item.toLowerCase() === sugg.toLowerCase());
                         
                         const handleToggle = () => {
-                          let updated;
+                          let updated: string[];
                           if (isSelected) {
-                            updated = items.filter((item) => item.toLowerCase() !== sugg.toLowerCase());
+                            updated = items.filter((item: string) => item.toLowerCase() !== sugg.toLowerCase());
                           } else {
                             // Filter out empty items
                             const cleanItems = items.filter(Boolean);
@@ -876,15 +878,17 @@ export default function TalentDashboardPage() {
                         "Smoking Scenes", "Alcohol Ads", "Political Ads", "Religious Content", 
                         "Extreme Heights", "Deep Water Stunts", "Nudity & Adult", "Tobacco Campaigns"
                       ].map((sugg) => {
-                        const items = tempData.uncomfortable 
-                          ? (Array.isArray(tempData.uncomfortable) ? tempData.uncomfortable : tempData.uncomfortable.split(",").map((s) => s.trim()))
-                          : [];
-                        const isSelected = items.some((item) => item.toLowerCase() === sugg.toLowerCase());
+                        const items: string[] = Array.isArray(tempData.uncomfortable)
+                          ? tempData.uncomfortable
+                          : typeof tempData.uncomfortable === 'string'
+                            ? (tempData.uncomfortable as string).split(",").map((s: string) => s.trim())
+                            : [];
+                        const isSelected = items.some((item: string) => item.toLowerCase() === sugg.toLowerCase());
                         
                         const handleToggle = () => {
-                          let updated;
+                          let updated: string[];
                           if (isSelected) {
-                            updated = items.filter((item) => item.toLowerCase() !== sugg.toLowerCase());
+                            updated = items.filter((item: string) => item.toLowerCase() !== sugg.toLowerCase());
                           } else {
                             // Filter out empty items
                             const cleanItems = items.filter(Boolean);

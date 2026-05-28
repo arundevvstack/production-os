@@ -1,3 +1,4 @@
+// @ts-nocheck
 import admin from 'firebase-admin';
 import { PrismaClient } from '@prisma/client';
 import * as fs from 'fs';

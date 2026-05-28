@@ -81,6 +81,11 @@ export default function LoginPage() {
           }
         }
         
+        toast({
+          title: "Welcome Back",
+          description: `Logged in as ${data.fullName} (${data.company?.name || 'Workspace'})`,
+        });
+
         if (data.role_id === 'TALENT') {
           router.push("/talent/dashboard");
         } else if (data.role_id === 'CLIENT') {

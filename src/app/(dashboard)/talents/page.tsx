@@ -433,7 +433,7 @@ export default function TalentNetworkPage() {
     return talents.filter(t => {
       const matchSearch = t.full_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           t.skills.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          t.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+                          t.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchCat = categoryFilter === "All" || t.category === categoryFilter;
       const matchLoc = locationFilter === "All" || t.location?.includes(locationFilter);
       const matchGender = genderFilter === "All" || t.gender === genderFilter;

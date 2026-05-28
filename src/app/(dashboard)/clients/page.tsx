@@ -194,6 +194,7 @@ export default function ClientsPage() {
     industry: "Luxury & Lifestyle",
     email: "",
     contact_person: "",
+    phone: "",
     gstin: "",
     billing_address: ""
   });
@@ -219,6 +220,11 @@ export default function ClientsPage() {
     orderBy: { company_name: 'asc' }
   });
 
+  const { data: clients, isLoading: isClientsLoading, refetch: reloadClients } = useSupabaseCollection('Client', {
+    where: { company_id: companyId },
+    orderBy: { name: 'asc' }
+  });
+
   const { data: projects, isLoading: isProjectsLoading } = useSupabaseCollection('Project', {
     where: { company_id: companyId },
     orderBy: { created_at: 'desc' }
@@ -237,29 +243,18 @@ export default function ClientsPage() {
   // Dynamic Derived Mappings (Relations Layer)
   // ----------------------------------------------------
 
-  // 1. Existing Clients List (stage: 'client' or 'won')
+  // 1. Existing Clients List (from Client table)
   const existingClients = useMemo(() => {
-    if (!leads) return [];
-    const matching = leads.filter(l => 
-      (l.stage === 'client' || l.stage === 'won') && (
-        (l.company_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (l.industry || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (l.service_vertical || '').toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-
-    const unique = new Map();
-    matching.forEach(l => {
-      const companyName = l.company_name?.trim();
-      if (!companyName) return;
-      const existing = unique.get(companyName);
-      if (!existing || (l.stage === 'client' && existing.stage !== 'client')) {
-        unique.set(companyName, l);
-      }
-    });
-
-    return Array.from(unique.values());
-  }, [leads, searchQuery]);
+    if (!clients) return [];
+    return clients.filter(c => 
+      (c.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.industry || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.service_vertical || '').toLowerCase().includes(searchQuery.toLowerCase())
+    ).map(c => ({
+      ...c,
+      company_name: c.name
+    }));
+  }, [clients, searchQuery]);
 
   // 2. Active Prospects List (stage: other pipeline stages)
   const prospectClients = useMemo(() => {
@@ -379,40 +374,40 @@ export default function ClientsPage() {
     const allServices = Object.values(selectedServices).flat();
 
     try {
-      if (createdLeadId) {
-        await supabase.from('Prospect').update({
-          ...newClient,
-          service_vertical: primaryVertical,
-          sub_vertical: allServices.join(', '),
-        }).eq('id', createdLeadId);
-      } else {
-        // Let the DB auto-generate the uuid — no manual id needed
-        const { data, error } = await supabase.from('Prospect').insert({
-          company_id: companyId,
-          ...newClient,
-          service_vertical: primaryVertical,
-          sub_vertical: allServices.join(', '),
-          deal_value: 0,
-          stage: 'client',
-        }).select();
-
-        if (error) throw error;
-        if (data && data.length > 0) {
-          setCreatedLeadId(data[0].id);
-        }
-      }
-
-      if (shouldAdvance) {
+      if (shouldAdvance && onboardStep === 'info') {
         setOnboardStep('services');
-        toast({ title: "Client Registered", description: "Identity captured. Configuring specific service scope..." });
-      } else {
-        toast({ 
-          title: "Client Onboarded", 
-          description: `${newClient.company_name} has been added to your directory.` 
-        });
-        resetOnboarding();
-        reloadLeads();
+        setIsSubmitting(false);
+        return;
       }
+
+      const response = await fetch("/api/v1/crm/client/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          company_name: newClient.company_name,
+          contact_person: newClient.contact_person,
+          email: newClient.email,
+          phone: newClient.phone,
+          industry: newClient.industry,
+          billing_address: newClient.billing_address,
+          gstin: newClient.gstin,
+          service_vertical: primaryVertical,
+          sub_vertical: allServices.join(', '),
+          template: "Brand Identity",
+        }),
+      });
+
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to onboard client.");
+      }
+
+      toast({ 
+        title: "Client Onboarded", 
+        description: `${newClient.company_name} has been added to your directory.` 
+      });
+      resetOnboarding();
+      reloadClients();
     } catch (error: any) {
       console.error(error);
       toast({ 
@@ -426,7 +421,7 @@ export default function ClientsPage() {
   };
 
   const resetOnboarding = () => {
-    setNewClient({ company_name: "", industry: "Luxury & Lifestyle", email: "", contact_person: "", gstin: "", billing_address: "" });
+    setNewClient({ company_name: "", industry: "Luxury & Lifestyle", email: "", contact_person: "", phone: "", gstin: "", billing_address: "" });
     setSelectedVerticalId(null);
     setSelectedServices({});
     setCreatedLeadId(null);
@@ -483,19 +478,24 @@ export default function ClientsPage() {
       console.error('Error archiving associated projects:', e);
     }
 
-    // Delete the lead from the Lead table (all entries for this company)
-    const { data: allCompanyLeads } = await supabase
-      .from('Prospect')
-      .select('id')
-      .eq('company_name', client.company_name)
-      .eq('company_id', companyId);
+    // Delete the Client from Client table
+    const { error: deleteClientError } = await supabase
+      .from('Client')
+      .delete()
+      .eq('id', client.id);
 
-    if (allCompanyLeads && allCompanyLeads.length > 0) {
-      await supabase.from('Prospect').delete().in('id', allCompanyLeads.map(l => l.id));
+    if (deleteClientError) {
+      toast({ variant: "destructive", title: "Delete Client Failed", description: deleteClientError.message });
+      setClientToArchive(null);
+      return;
     }
+
+    // Delete associated prospects
+    await supabase.from('Prospect').delete().eq('converted_client_id', client.id);
 
     toast({ title: "Client Archived", description: `"${client.company_name}" and associated projects moved to Vault.` });
     setClientToArchive(null);
+    reloadClients();
     reloadLeads();
   };
 
@@ -531,7 +531,7 @@ export default function ClientsPage() {
     }
   };
 
-  if (isTenantLoading || isLeadsLoading || isProjectsLoading || isProposalsLoading) {
+  if (isTenantLoading || isLeadsLoading || isClientsLoading || isProjectsLoading || isProposalsLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-[85vh] gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-red-600" />

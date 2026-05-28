@@ -48,6 +48,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
   const router = useRouter();
   
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isConverting, setIsConverting] = useState(false);
   const [editForm, setEditForm] = useState({
     company_name: "",
     service_vertical: "",
@@ -58,6 +59,36 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
 
   // 1. Fetch Prospect Details from Supabase
   const { data: prospect, isLoading: isProspectLoading } = useSupabaseDoc('Prospect', prospectId);
+
+  const handleConvertToClient = async () => {
+    if (!prospectId) return;
+    setIsConverting(true);
+    try {
+      const response = await fetch(`/api/v1/crm/prospect/${prospectId}/convert`, {
+        method: "POST",
+      });
+
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to convert prospect.");
+      }
+
+      toast({
+        title: "Success! Prospect Converted",
+        description: `"${prospect?.company_name || 'Prospect'}" has been successfully converted to a Client.`,
+      });
+
+      window.location.reload();
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "Conversion Failed",
+        description: err.message,
+      });
+    } finally {
+      setIsConverting(false);
+    }
+  };
 
   // 2. Fetch Proposals linked to this prospect from Supabase
   const { data: proposals, isLoading: isProposalsLoading } = useSupabaseCollection('Proposal', {
@@ -81,90 +112,10 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
   const handleUpdateStage = async (newStage: string) => {
     if (!prospect) return;
     
-    await supabase.from('Prospect').update({ stage: newStage }).eq('id', prospectId);
-
-    // Conversion Logic: If Won, trigger the AI Operating Layer
     if (newStage === 'won') {
-      const projectRefCode = `PROJ-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-      const newProjectId = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : 'proj_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      
-      try {
-        // 1. Initialize Project at Pre-Production Phase
-        const { error: projError } = await supabase.from('Project').insert({
-          id: newProjectId,
-          company_id: companyId,
-          project_name: prospect.company_name,
-          client_name: prospect.company_name,
-          project_ref: projectRefCode,
-          budget: prospect.deal_value || 0,
-          status: 'pre-prod',
-          progress: 0,
-          color: 'card-red',
-        });
-
-        if (projError) throw projError;
-
-        // 2. AI Operating Layer: Provision Gated Deliverables & Objectives
-        const vertical = prospect.service_vertical || 'Media Production';
-        const defaultAIObjectives = [
-          {
-            title: `[AI Blueprint] Moodboard & Script Setup (${vertical})`,
-            phase: 'pre-prod',
-            assignedTo: 'Creative Director',
-          },
-          {
-            title: `[AI Blueprint] Shoot Scheduling & Cine Equipment Reserve`,
-            phase: 'production',
-            assignedTo: 'Producer',
-          },
-          {
-            title: `[AI Blueprint] Post-Prod Assembly Edit & Sound Mix`,
-            phase: 'post-prod',
-            assignedTo: 'Prospect Editor',
-          },
-          {
-            title: `[AI Blueprint] Delivery QC & Master Delivery Package`,
-            phase: 'release',
-            assignedTo: 'Project Manager',
-          }
-        ];
-
-        for (const objective of defaultAIObjectives) {
-          await supabase.from('Objective').insert({
-            project_id: newProjectId,
-            title: objective.title,
-            department: objective.assignedTo, // Using department since we don't have user IDs yet
-            status: 'Pending',
-            priority: 'High',
-          });
-        }
-
-        // 3. System Notification Trigger
-        await supabase.from('Notification').insert({
-          company_id: companyId,
-          user_id: profile?.id || 'system',
-          title: 'AI Production Roadmap Active',
-          message: `AI has generated a 4-phase production checklist for new workspace "${prospect.company_name}".`,
-          is_read: false,
-        });
-
-        // 4. Compliance Audit Logger
-        await supabase.from('ActivityLog').insert({
-          company_id: companyId,
-          user_id: profile?.id || 'system',
-          user_name: profile?.fullName || 'AI System Agent',
-          action: 'AI_PLAN_GENERATED',
-          details: `AI Blueprint active for project "${prospect.company_name}". 4 phase-gated objectives auto-provisioned.`,
-        });
-
-        toast({ 
-          title: "Deal Won & AI Blueprint Active", 
-          description: `"${prospect.company_name}" converted. The AI Operating Layer has provisioned a 4-stage workflow pipeline.` 
-        });
-      } catch (err: any) {
-        toast({ variant: "destructive", title: "Conversion Failed", description: err.message });
-      }
+      await handleConvertToClient();
     } else {
+      await supabase.from('Prospect').update({ stage: newStage }).eq('id', prospectId);
       toast({ title: "Deal Progressed", description: `Prospect moved to ${newStage.toUpperCase()}` });
     }
   };
@@ -243,14 +194,29 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
           </p>
         </div>
         <div className="ml-auto flex items-center gap-3">
-          <Link href={`/clients/${prospectId}`} className="hidden sm:block">
+          {prospect.is_converted ? (
+            <Badge className="bg-emerald-50 text-emerald-600 border-none font-bold text-xs h-9 px-4 gap-2 flex items-center">
+              <CheckCircle2 className="h-4 w-4" /> Converted to Client
+            </Badge>
+          ) : (
+            <Button
+              className="rounded-xl text-xs h-9 bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 gap-2 font-bold"
+              onClick={handleConvertToClient}
+              disabled={isConverting}
+            >
+              {isConverting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Building2 className="h-3.5 w-3.5" />}
+              Convert to Client
+            </Button>
+          )}
+          <Link href={`/clients`} className="hidden sm:block">
             <Button variant="outline" className="rounded-xl text-xs h-9 gap-2">
-              <Building2 className="h-3.5 w-3.5" /> Full Portfolio
+              <Building2 className="h-3.5 w-3.5" /> Full Directory
             </Button>
           </Link>
           <Button 
             className="rounded-xl text-xs h-9 shadow-lg shadow-primary/20 gap-2"
             onClick={() => setIsEditOpen(true)}
+            disabled={prospect.is_converted}
           >
             <Edit3 className="h-3.5 w-3.5" /> Edit Details
           </Button>

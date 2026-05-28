@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { SupabaseProvider } from '@/supabase/provider';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'DP Media OS | Multi-Tenant SaaS',
@@ -22,8 +23,10 @@ export default function RootLayout({
       <body className="font-body antialiased" suppressHydrationWarning>
         <SupabaseProvider>
           {children}
+          <Toaster />
         </SupabaseProvider>
       </body>
     </html>
   );
 }
+

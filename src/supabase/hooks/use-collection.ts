@@ -83,7 +83,13 @@ export function useSupabaseCollection<T = any>(
 
         const { data: result, error: fetchError } = await query;
         if (fetchError) {
-          console.error(`Supabase fetch error [${table}]:`, fetchError);
+          console.error(`Supabase fetch error [${table}]:`, {
+            ...fetchError,
+            message: fetchError.message,
+            details: fetchError.details,
+            hint: fetchError.hint,
+            code: fetchError.code
+          });
           throw fetchError;
         }
 

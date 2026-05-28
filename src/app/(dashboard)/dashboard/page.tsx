@@ -81,9 +81,7 @@ export default function DashboardPage() {
     where: { company_id: companyId }
   });
 
-  const { data: rawObjectives, isLoading: isObjectivesLoading } = useSupabaseCollection('Objective', {
-    where: { company_id: companyId }
-  });
+  const { data: rawObjectives, isLoading: isObjectivesLoading } = useSupabaseCollection('Objective');
 
   const { data: invoices, isLoading: isInvoicesLoading } = useSupabaseCollection('Invoice', {
     where: { company_id: companyId }
@@ -149,10 +147,20 @@ export default function DashboardPage() {
     return { revenue, grossExpenses, activeProjects, pendingInvoices, crmPipeline, pendingUsers };
   }, [invoices, expenses, allProjects, prospects, companyUsers]);
 
-  const objectivesFeed = useMemo(() => {
+  const companyObjectives = useMemo(() => {
     if (!rawObjectives) return [];
-    return rawObjectives.filter(t => t.status !== 'done').slice(0, 5);
-  }, [rawObjectives]);
+    if (!allProjects) return [];
+    const projectIds = new Set(allProjects.map(p => p.id));
+    return rawObjectives.filter(t => projectIds.has(t.project_id));
+  }, [rawObjectives, allProjects]);
+
+  const objectivesFeed = useMemo(() => {
+    // For EMPLOYEE, show only their assigned objectives
+    const baseObjectives = roleId === 'EMPLOYEE'
+      ? companyObjectives.filter(t => t.assignee_id === user?.id)
+      : companyObjectives;
+    return baseObjectives.filter(t => t.status !== 'done').slice(0, 5);
+  }, [companyObjectives, roleId, user]);
 
   const revenueChartData = useMemo(() => {
     const months = Array.from({ length: 6 }).map((_, i) => {
@@ -352,7 +360,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-teal-50 text-teal-500 rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Active Objectives</span>
-                <span className="text-2xl font-black text-slate-800">{rawObjectives?.filter(t => t.status !== 'done').length || 0} tasks</span>
+                <span className="text-2xl font-black text-slate-800">{companyObjectives.filter(t => t.status !== 'done').length || 0} tasks</span>
               </div>
             </CardContent>
           </Card>
