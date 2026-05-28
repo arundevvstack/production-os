@@ -103,7 +103,8 @@ export default function ProjectsPage() {
     budget: "",
     deadline: "",
     service_category: "",
-    service: ""
+    service: "",
+    project_type: "Normal Production"
   });
 
   // Fetch Projects from Supabase
@@ -180,40 +181,50 @@ export default function ProjectsPage() {
       }).eq('id', selectedLeadId);
     }
 
-    // 2. Create Project in Supabase
+    // 2. Create Project via Enterprise API
     const randomColor = PROJECT_COLORS[Math.floor(Math.random() * PROJECT_COLORS.length)];
-    const { error } = await supabase.from('Project').insert({
-      company_id: companyId,
-      project_name: newProject.project_name,
-      client_name: newProject.client_name,
-      budget: parseFloat(newProject.budget) || 0,
-      deadline: newProject.deadline || null,
-      status: 'in_progress',
-      progress: 0,
-      color: randomColor,
-    });
+    try {
+      const res = await fetch('/api/v1/projects/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company_id: companyId,
+          user_id: profile?.id,
+          project_name: newProject.project_name,
+          client_name: newProject.client_name,
+          budget: newProject.budget,
+          deadline: newProject.deadline,
+          project_type: newProject.project_type,
+          project_category: newProject.service_category,
+          color: randomColor
+        })
+      });
 
-    if (error) {
-      console.error("Project creation error:", error);
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "Failed to initialize project workspace");
+      }
+      
+      toast({
+        title: "Project Created",
+        description: `${newProject.project_name} has been created with all stages and objectives pre-loaded.`,
+      });
+
+      setNewProject({ project_name: "", client_name: "", budget: "", deadline: "", service_category: "", service: "", project_type: "Normal Production" });
+      setSelectedTemplate("None");
+      setSelectedLeadId(null);
+      setIsCreateOpen(false);
+      reloadProjects();
+    } catch (err: any) {
+      console.error("Project creation error:", err);
       toast({
         variant: "destructive",
         title: "Creation Failed",
-        description: error.message || "Failed to initialize project workspace.",
+        description: err.message || "An unexpected error occurred.",
       });
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    toast({
-      title: "Project Created",
-      description: `${newProject.project_name} has been added to your production queue and moved from the pipeline.`,
-    });
-
-    setNewProject({ project_name: "", client_name: "", budget: "", deadline: "", service_category: "", service: "" });
-    setSelectedTemplate("None");
-    setSelectedLeadId(null);
-    setIsCreateOpen(false);
-    setIsSubmitting(false);
   };
 
   const handleConfirmArchive = async () => {
@@ -370,6 +381,26 @@ export default function ProjectsPage() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Workflow Pipeline (Project Type)</Label>
+                  <Select 
+                    value={newProject.project_type} 
+                    onValueChange={(val) => setNewProject({...newProject, project_type: val})}
+                  >
+                    <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-slate-50 shadow-inner font-black text-slate-800">
+                      <div className="flex items-center gap-3">
+                        <Cpu className="h-4 w-4 text-primary" />
+                        <SelectValue placeholder="Select Pipeline" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
+                      <SelectItem value="AI Production" className="text-xs font-bold rounded-xl m-1 py-3"><div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-primary" /> AI Production Pipeline</div></SelectItem>
+                      <SelectItem value="Hybrid Production" className="text-xs font-bold rounded-xl m-1 py-3"><div className="flex items-center gap-2"><Layers className="h-4 w-4 text-amber-500" /> Hybrid Production Pipeline</div></SelectItem>
+                      <SelectItem value="Normal Production" className="text-xs font-bold rounded-xl m-1 py-3"><div className="flex items-center gap-2"><Film className="h-4 w-4 text-slate-500" /> Standard Production Pipeline</div></SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
