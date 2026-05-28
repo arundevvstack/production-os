@@ -54,6 +54,9 @@ model Company {
   vendors             Vendor[]
   automation_rules    AutomationRule[]
   ai_operational_memories AIOperationalMemory[]
+  tenant_subscription TenantSubscription?
+  telemetry           OperationalTelemetry[]
+  api_keys            ApiKey[]
 }
 
 model CompanySettings {
@@ -932,5 +935,43 @@ model FreelancerBid {
   estimated_days  Int
   status          String   @default("pending") // pending, accepted, rejected
   objective       Objective @relation(fields: [objective_id], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// PHASE 5: COMMERCIAL PLATFORM & SAAS
+// ==========================================
+
+model TenantSubscription {
+  id                    String   @id @default(uuid())
+  company_id            String   @unique
+  stripe_customer_id    String?  @unique
+  stripe_subscription_id String? @unique
+  plan_tier             String   @default("STARTER") // STARTER, AGENCY, ENTERPRISE
+  status                String   @default("active")
+  ai_usage_limit        Float    @default(50.00) // Default $50 AI budget
+  storage_limit_gb      Int      @default(100)
+  current_period_end    DateTime?
+  company               Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+model OperationalTelemetry {
+  id              String   @id @default(uuid())
+  company_id      String
+  metric_type     String   // "RENDER_LATENCY", "TEAM_EFFICIENCY", "APPROVAL_DELAY"
+  metric_value    Float
+  context         Json     // Details about the measurement
+  timestamp       DateTime @default(now())
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id              String   @id @default(uuid())
+  company_id      String
+  name            String
+  key_hash        String   @unique
+  scopes          String[] // e.g., ["read:projects", "write:assets"]
+  last_used_at    DateTime?
+  created_at      DateTime @default(now())
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 }
 
