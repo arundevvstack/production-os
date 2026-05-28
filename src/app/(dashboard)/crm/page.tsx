@@ -33,7 +33,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useTenant } from "@/hooks/use-tenant";
-import { useSupabaseCollection } from "@/supabase/hooks/use-collection";
+import { useSupabaseCollection, broadcastTableUpdate } from "@/supabase/hooks/use-collection";
 import { supabase } from "@/supabase/client";
 import { PIPELINE_STAGES } from "@/lib/mock-data";
 import { 
@@ -334,6 +334,8 @@ export default function CRMPage() {
     toast({ title: "Lead Archived", description: "The lead has been moved to archives." });
     setLeadToArchive(null);
     refetchLeads();
+    broadcastTableUpdate('Prospect');
+    broadcastTableUpdate('Archive');
   };
 
   const handleConfirmPermanentDelete = async () => {

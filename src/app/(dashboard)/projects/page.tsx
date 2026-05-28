@@ -71,6 +71,7 @@ import { CONTENT_VERTICALS } from "../clients/page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UnifiedClientSelector } from "@/components/unified-client-selector";
 import { ENTERPRISE_TEMPLATES, DEFAULT_TIMELINE_DAYS } from "@/lib/enterprise-workflow-templates";
+import { broadcastTableUpdate } from "@/supabase/hooks/use-collection";
 
 type ViewMode = 'grid' | 'list' | 'timeline' | 'board';
 
@@ -215,6 +216,7 @@ export default function ProjectsPage() {
       setSelectedLeadId(null);
       setIsCreateOpen(false);
       reloadProjects();
+      broadcastTableUpdate('Project');
     } catch (err: any) {
       console.error("Project creation error:", err);
       toast({
@@ -263,6 +265,8 @@ export default function ProjectsPage() {
 
     setProjectToArchive(null);
     reloadProjects();
+    broadcastTableUpdate('Project');
+    broadcastTableUpdate('Archive');
   };
 
   if (isTenantLoading || isProjectsLoading) {
