@@ -711,7 +711,7 @@ export default function ClientsPage() {
                           <Link href={`/clients/${client.id}`} className="gap-2"><ExternalLink className="h-3.5 w-3.5 text-slate-500" /> Portfolio View</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2 text-red-600 rounded-xl hover:bg-red-50 cursor-pointer" onClick={() => setClientToArchive(client)}>
-                          <Archive className="h-3.5 w-3.5" /> Archive Partner
+                          <Trash2 className="h-3.5 w-3.5" /> Delete Client
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -1440,14 +1440,14 @@ export default function ClientsPage() {
             <div className="h-12 w-12 bg-red-50 rounded-[10px] flex items-center justify-center text-red-500 mb-4">
               <Archive className="h-6 w-6" />
             </div>
-            <AlertDialogTitle className="text-slate-850">Archive Client Record?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500">
+            <AlertDialogTitle className="text-slate-850">Delete Client Record?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500 font-medium">
               This will move "{clientToArchive?.company_name}" and associated active projects to archives.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-xl border-slate-200 bg-transparent text-slate-500 hover:bg-slate-50">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmArchive} className="bg-red-600 hover:bg-red-700 rounded-xl text-white">Confirm Archive</AlertDialogAction>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel className="rounded-xl h-12 font-bold text-slate-500">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmArchive} className="bg-red-600 hover:bg-red-700 rounded-xl text-white">Confirm Deletion</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
