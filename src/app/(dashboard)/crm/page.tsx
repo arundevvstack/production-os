@@ -911,7 +911,7 @@ export default function CRMPage() {
                                   <Archive className="h-3.5 w-3.5" /> Archive Lead
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="bg-slate-50" />
-                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-rose-500 font-bold focus:text-rose-600 focus:bg-rose-50" onClick={() => setLeadToPermanentDelete(lead)}>
+                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-rose-500 font-bold focus:text-rose-600 focus:bg-rose-50 force-cache-bust-1" onClick={() => setLeadToPermanentDelete(lead)}>
                                   <Trash2 className="h-3.5 w-3.5" /> Delete Lead
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
