@@ -148,7 +148,7 @@ export function UnifiedClientSelector({
                 value={client.company_name}
                 className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer py-2.5"
               >
-                <div className="flex items-center justify-between w-full gap-8">
+                <div className="flex items-center justify-between w-full gap-8 pointer-events-none">
                   <div className="flex items-center gap-2">
                     <Building2 className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                     <span className="font-bold text-slate-800 truncate max-w-[160px]">{client.company_name}</span>
