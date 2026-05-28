@@ -46,10 +46,10 @@ model Company {
   communicationLogs CommunicationLog[]
   Comment           Comment[]
 
-  workflow_templates WorkflowTemplate[]
-  audit_logs         AuditLog[]
-  approval_chains    ApprovalChain[]
-  approval_requests  ApprovalRequest[]
+  workflow_templates  WorkflowTemplate[]
+  audit_logs          AuditLog[]
+  approval_chains     ApprovalChain[]
+  approval_requests   ApprovalRequest[]
   notification_queues NotificationQueue[]
 }
 
@@ -92,7 +92,7 @@ model UserTeam {
 model User {
   id                 String   @id // Usually from Supabase Auth
   company_id         String?
-  role_id            String?  // Stores role NAME string: SUPER_ADMIN, MANAGER, EMPLOYEE, etc.
+  role_id            String? // Stores role NAME string: SUPER_ADMIN, MANAGER, EMPLOYEE, etc.
   email              String   @unique
   fullName           String
   status             String   @default("pending")
@@ -110,16 +110,18 @@ model User {
   assigned_objectives Objective[] @relation("ObjectiveAssignee")
   reviewed_objectives Objective[] @relation("ObjectiveReviewer")
 
+  project_members ProjectMember[]
+
   time_entries  TimeEntry[]
   comments      Comment[]
   notifications Notification[]
   activityLogs  ActivityLog[]
   approvals     Approval[]
 
-  audit_logs              AuditLog[]
-  approval_histories      ApprovalHistory[]
+  audit_logs               AuditLog[]
+  approval_histories       ApprovalHistory[]
   notification_preferences NotificationPreference?
-  queued_notifications    NotificationQueue[]
+  queued_notifications     NotificationQueue[]
 
   @@index([company_id])
 }
@@ -149,7 +151,7 @@ model Client {
 }
 
 model Prospect {
-  id         String  @id @default(uuid())
+  id         String @id @default(uuid())
   company_id String
 
   company_name     String
@@ -166,14 +168,14 @@ model Prospect {
   tags             String[]
   priority         String   @default("Medium") // High, Medium, Low
   notes            String?
-  
+
   stage      String @default("new_lead") // new_lead, contacted, etc.
   lead_score Int    @default(0)
 
   is_converted        Boolean @default(false)
   converted_client_id String?
 
-  deal_value       Float    @default(0)
+  deal_value Float @default(0)
 
   assignee_id    String?
   next_follow_up DateTime?
@@ -227,14 +229,16 @@ model Project {
   company_id String
   client_id  String?
 
-  project_name String
-  project_ref  String?
-  type         String    @default("Custom") // AI TVC, Corporate Film, etc.
-  status       String    @default("draft") // draft, active, on_hold, completed, archived
-  progress     Float     @default(0) // Auto-calculated
-  budget       Float     @default(0)
-  deadline     DateTime?
-  color        String?
+  project_name     String
+  project_ref      String?
+  type             String    @default("Custom") // Legacy type field
+  project_type     String    @default("Normal Production") // AI Production, Hybrid Production, Normal Production
+  project_category String?
+  status           String    @default("draft") // draft, active, on_hold, completed, archived
+  progress         Float     @default(0) // Auto-calculated
+  budget           Float     @default(0)
+  deadline         DateTime?
+  color            String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -245,6 +249,7 @@ model Project {
   stages         ProjectStage[]
   milestones     Milestone[]
   objectives     Objective[]
+  members        ProjectMember[]
   deliverables   Deliverable[]
   assets         Asset[]
   bookings       Booking[]
@@ -281,6 +286,19 @@ model Milestone {
 // --------------------------------------------------
 // OBJECTIVE ENGINE (Replacing Tasks)
 // --------------------------------------------------
+
+model ProjectMember {
+  id         String   @id @default(uuid())
+  project_id String
+  user_id    String
+  role       String // Project Manager, Editor, AI Artist, etc.
+  created_at DateTime @default(now())
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([project_id, user_id])
+}
 
 model Objective {
   id         String  @id @default(uuid())
@@ -610,29 +628,29 @@ model Archive {
 // ==========================================
 
 model WorkflowTemplate {
-  id          String   @id @default(uuid())
-  company_id  String
-  name        String
-  trigger     String   // e.g. "PROSPECT_WON", "MILESTONE_APPROVED"
-  rules       Json     // array/object of steps & actions
-  is_active   Boolean  @default(true)
-  created_at  DateTime @default(now())
+  id         String   @id @default(uuid())
+  company_id String
+  name       String
+  trigger    String // e.g. "PROSPECT_WON", "MILESTONE_APPROVED"
+  rules      Json // array/object of steps & actions
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
 
-  company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  company    Company             @relation(fields: [company_id], references: [id], onDelete: Cascade)
   executions WorkflowExecution[]
 }
 
 model WorkflowExecution {
   id           String   @id @default(uuid())
   template_id  String
-  entity_id    String   // target ID (e.g. prospectId or clientId)
-  status       String   // "running", "completed", "failed", "rolled_back"
+  entity_id    String // target ID (e.g. prospectId or clientId)
+  status       String // "running", "completed", "failed", "rolled_back"
   current_step Int      @default(0)
-  context      Json     // variable storage
+  context      Json // variable storage
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  template WorkflowTemplate @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  template WorkflowTemplate       @relation(fields: [template_id], references: [id], onDelete: Cascade)
   logs     WorkflowExecutionLog[]
 }
 
@@ -641,7 +659,7 @@ model WorkflowExecutionLog {
   execution_id String
   step_name    String
   action_type  String
-  status       String   // "success", "failed"
+  status       String // "success", "failed"
   error        String?
   created_at   DateTime @default(now())
 
@@ -656,8 +674,8 @@ model AuditLog {
   id           String   @id @default(uuid())
   company_id   String
   user_id      String?
-  action       String   // e.g. "ROLE_CHANGED", "INVOICE_APPROVED"
-  entity_type  String   // e.g. "Prospect", "Invoice", "User"
+  action       String // e.g. "ROLE_CHANGED", "INVOICE_APPROVED"
+  entity_type  String // e.g. "Prospect", "Invoice", "User"
   entity_id    String
   before_state Json?
   after_state  Json?
@@ -680,38 +698,38 @@ model ApprovalChain {
   id          String   @id @default(uuid())
   company_id  String
   name        String
-  target_type String   // e.g. "Invoice", "Milestone"
-  stages      Json     // e.g. list of stages: [{ step: 1, approver_role: "ADMIN" }]
+  target_type String // e.g. "Invoice", "Milestone"
+  stages      Json // e.g. list of stages: [{ step: 1, approver_role: "ADMIN" }]
   created_at  DateTime @default(now())
 
-  company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  company  Company           @relation(fields: [company_id], references: [id], onDelete: Cascade)
   requests ApprovalRequest[]
 }
 
 model ApprovalRequest {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   chain_id     String
   company_id   String
   entity_id    String
-  status       String   // "pending", "approved", "rejected", "escalated"
-  current_step Int      @default(1)
+  status       String // "pending", "approved", "rejected", "escalated"
+  current_step Int       @default(1)
   due_date     DateTime?
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
 
-  chain   ApprovalChain @relation(fields: [chain_id], references: [id], onDelete: Cascade)
-  company Company       @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  chain   ApprovalChain     @relation(fields: [chain_id], references: [id], onDelete: Cascade)
+  company Company           @relation(fields: [company_id], references: [id], onDelete: Cascade)
   history ApprovalHistory[]
 }
 
 model ApprovalHistory {
-  id          String   @id @default(uuid())
-  request_id  String
-  step        Int
-  actor_id    String
-  action      String   // "approved", "rejected", "commented"
-  comment     String?
-  created_at  DateTime @default(now())
+  id         String   @id @default(uuid())
+  request_id String
+  step       Int
+  actor_id   String
+  action     String // "approved", "rejected", "commented"
+  comment    String?
+  created_at DateTime @default(now())
 
   request ApprovalRequest @relation(fields: [request_id], references: [id], onDelete: Cascade)
   actor   User            @relation(fields: [actor_id], references: [id], onDelete: Cascade)
@@ -725,7 +743,7 @@ model NotificationQueue {
   id           String    @id @default(uuid())
   company_id   String
   user_id      String
-  channel      String    // "IN_APP", "EMAIL", "SLACK", "WHATSAPP"
+  channel      String // "IN_APP", "EMAIL", "SLACK", "WHATSAPP"
   title        String
   body         String
   priority     String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
@@ -741,10 +759,8 @@ model NotificationQueue {
 model NotificationPreference {
   id         String   @id @default(uuid())
   user_id    String   @unique
-  channels   Json     // e.g. { "invoice_approval": ["IN_APP", "EMAIL"] }
+  channels   Json // e.g. { "invoice_approval": ["IN_APP", "EMAIL"] }
   updated_at DateTime @updatedAt
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
-
-
