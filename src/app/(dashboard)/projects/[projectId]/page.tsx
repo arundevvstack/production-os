@@ -87,7 +87,7 @@ export default function ProjectWorkspacePage() {
   const router = useRouter();
   const projectId = params.projectId as string;
   const { companyId, isLoading: isTenantLoading, roleId, profile, isSuperAdmin } = useTenant();
-  const [activeTab, setActiveTab] = useState("pre-prod");
+  const [activeTab, setActiveTab] = useState("");
   
   // Dialog States
   const [isAddObjectiveOpen, setIsAddObjectiveOpen] = useState(false);
@@ -125,6 +125,11 @@ export default function ProjectWorkspacePage() {
   // --- DATA FETCHING FROM SUPABASE ---
   const { data: project, isLoading: isProjectLoading } = useSupabaseDoc('Project', projectId);
 
+  const { data: projectStages, isLoading: isStagesLoading } = useSupabaseCollection('ProjectStage', {
+    where: { project_id: projectId },
+    orderBy: { order: 'asc' }
+  });
+
   const { data: objectives, isLoading: isObjectivesLoading, refetch: refetchObjectives } = useSupabaseCollection('Objective', {
     where: { project_id: projectId },
     orderBy: { created_at: 'asc' }
@@ -153,13 +158,12 @@ export default function ProjectWorkspacePage() {
   }, [roleId]);
 
   // --- DERIVED CALCULATIONS ---
+  const currentTab = activeTab || projectStages?.[0]?.name || "assets";
+
   const liveProgress = useMemo(() => {
     if (!objectives || objectives.length === 0) return project?.progress || 0;
-    const corePhases = ['pre-prod', 'production', 'post-prod', 'release'];
-    const productionObjectives = objectives.filter(t => corePhases.includes(t.phase));
-    if (productionObjectives.length === 0) return 0;
-    const completedCount = productionObjectives.filter(t => t.status === 'done').length;
-    return Math.round((completedCount / productionObjectives.length) * 100);
+    const completedCount = objectives.filter(t => t.status === 'Completed' || t.status === 'done').length;
+    return Math.round((completedCount / objectives.length) * 100);
   }, [objectives, project?.progress]);
 
   // Strict enterprise phase progression gate validation
@@ -218,7 +222,7 @@ export default function ProjectWorkspacePage() {
         company_id: companyId,
         project_id: projectId,
         title: newObjective.title,
-        phase: activeTab === 'assets' || activeTab === 'finances' ? 'production' : activeTab,
+        stage_id: projectStages?.find(s => s.name === currentTab)?.id || null,
         assignedTo: newObjective.assignedTo || "Producer",
         status: 'todo',
         priority: 'Medium',
@@ -323,11 +327,14 @@ export default function ProjectWorkspacePage() {
   };
 
   // Helper functions for rendering
-  const phaseObjectives = (phase: string) => objectives?.filter(t => t.phase === phase) || [];
-  const completedPhaseObjectives = (phase: string) => phaseObjectives(phase).filter(t => t.status === 'done').length;
-  const phaseProgress = (phase: string) => {
-    const pt = phaseObjectives(phase);
-    return pt.length > 0 ? Math.round((completedPhaseObjectives(phase) / pt.length) * 100) : 0;
+  const phaseObjectives = (stageName: string) => {
+    const stage = projectStages?.find(s => s.name === stageName);
+    return objectives?.filter(t => t.stage_id === stage?.id || (t as any).phase === stageName) || [];
+  };
+  const completedPhaseObjectives = (stageName: string) => phaseObjectives(stageName).filter(t => t.status === 'done' || t.status === 'Completed').length;
+  const phaseProgress = (stageName: string) => {
+    const pt = phaseObjectives(stageName);
+    return pt.length > 0 ? Math.round((completedPhaseObjectives(stageName) / pt.length) * 100) : 0;
   };
 
   const getPhaseIcon = (phase: string) => {
@@ -351,7 +358,7 @@ export default function ProjectWorkspacePage() {
     }
   };
 
-  const isLoading = isTenantLoading || isProjectLoading || isObjectivesLoading || isAssetsLoading || isInvoicesLoading || isProjectExpensesLoading;
+  const isLoading = isTenantLoading || isProjectLoading || isStagesLoading || isObjectivesLoading || isAssetsLoading || isInvoicesLoading || isProjectExpensesLoading;
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-[80vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
@@ -449,26 +456,35 @@ export default function ProjectWorkspacePage() {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="bg-white border p-1.5 rounded-[10px] h-auto flex-wrap mb-8 gap-1.5">
-          {["pre-prod", "production", "post-prod", "release", "assets", "finances", "timeline"].map(tab => (
-            <TabsTrigger key={tab} value={tab} className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
-              {tab === 'timeline' ? <Calendar className="h-3.5 w-3.5" /> : getPhaseIcon(tab)} {tab.replace('-', ' ')}
+          {projectStages?.map(stage => (
+            <TabsTrigger key={stage.id} value={stage.name} className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
+              {getPhaseIcon(stage.name.toLowerCase())} {stage.name}
             </TabsTrigger>
           ))}
+          <TabsTrigger value="assets" className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
+            <Package className="h-3.5 w-3.5" /> Assets
+          </TabsTrigger>
+          <TabsTrigger value="finances" className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
+            <Receipt className="h-3.5 w-3.5" /> Finances
+          </TabsTrigger>
+          <TabsTrigger value="timeline" className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
+            <Calendar className="h-3.5 w-3.5" /> Timeline
+          </TabsTrigger>
         </TabsList>
 
-        {/* Tab Content: Production Phases */}
-        {["pre-prod", "production", "post-prod", "release"].map((phase) => (
-          <TabsContent key={phase} value={phase} className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        {/* Tab Content: Dynamic Production Phases */}
+        {projectStages?.map((stage) => (
+          <TabsContent key={stage.id} value={stage.name} className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-2">
               <div className="lg:col-span-2 space-y-6">
                 <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white">
                   <CardHeader className="bg-slate-50/50 flex flex-row items-center justify-between border-b px-8 py-6">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="p-1.5 bg-primary/10 rounded-lg text-primary">{getPhaseIcon(phase)}</div>
-                        <CardTitle className="text-xl capitalize">{phase.replace('-', ' ')} Objectives</CardTitle>
+                        <div className="p-1.5 bg-primary/10 rounded-lg text-primary">{getPhaseIcon(stage.name.toLowerCase())}</div>
+                        <CardTitle className="text-xl capitalize">{stage.name} Objectives</CardTitle>
                       </div>
                       <CardDescription>Assign and track key deliverables for this phase.</CardDescription>
                     </div>
@@ -484,14 +500,14 @@ export default function ProjectWorkspacePage() {
                     </div>
                   </CardHeader>
                   <CardContent className="p-0">
-                    {phaseObjectives(phase).length === 0 ? (
+                    {phaseObjectives(stage.name).length === 0 ? (
                       <div className="text-center py-24 text-muted-foreground space-y-4">
                         <Target className="h-12 w-12 mx-auto opacity-10" />
                         <p className="text-sm font-medium">No objectives set up for this phase.</p>
                       </div>
                     ) : (
                       <div className="divide-y">
-                        {phaseObjectives(phase).map((objective) => (
+                        {phaseObjectives(stage.name).map((objective) => (
                           <div key={objective.id} className="flex items-center gap-4 px-8 py-5 hover:bg-slate-50 transition-colors group">
                             <Checkbox 
                               checked={objective.status === 'done'} 
@@ -499,7 +515,7 @@ export default function ProjectWorkspacePage() {
                               className="h-5 w-5 rounded-md border-2 border-primary data-[state=checked]:bg-primary"
                             />
                             <div className="flex-1">
-                              <p className={`font-bold text-sm ${objective.status === 'done' ? 'line-through text-muted-foreground' : 'text-slate-800'}`}>
+                              <p className={`font-bold text-sm ${objective.status === 'done' || objective.status === 'Completed' ? 'line-through text-muted-foreground' : 'text-slate-800'}`}>
                                 {objective.title}
                               </p>
                               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Assigned: {objective.assignedTo || 'Unassigned'}</p>
@@ -517,23 +533,23 @@ export default function ProjectWorkspacePage() {
                 <Card className="border-none shadow-sm rounded-[10px] bg-white p-8 space-y-6">
                   <div className="space-y-1">
                     <span className="text-[10px] font-black uppercase text-primary/60 tracking-[0.2em]">Phase Progress</span>
-                    <h3 className="text-3xl font-black capitalize">{phase.replace('-', ' ')}</h3>
+                    <h3 className="text-3xl font-black capitalize">{stage.name}</h3>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between items-end">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Objectives Finished</span>
-                      <span className="text-base font-black text-primary">{phaseProgress(phase)}%</span>
+                      <span className="text-base font-black text-primary">{phaseProgress(stage.name)}%</span>
                     </div>
-                    <Progress value={phaseProgress(phase)} className="h-2 bg-slate-100" />
+                    <Progress value={phaseProgress(stage.name)} className="h-2 bg-slate-100" />
                   </div>
                   <div className="pt-4 border-t space-y-3">
                     <div className="flex justify-between text-xs font-medium">
                       <span className="text-slate-400">Total Phase Objectives</span>
-                      <span className="font-bold text-slate-700">{phaseObjectives(phase).length}</span>
+                      <span className="font-bold text-slate-700">{phaseObjectives(stage.name).length}</span>
                     </div>
                     <div className="flex justify-between text-xs font-medium">
                       <span className="text-slate-400">Completed Checklist</span>
-                      <span className="font-bold text-slate-700">{completedPhaseObjectives(phase)}</span>
+                      <span className="font-bold text-slate-700">{completedPhaseObjectives(stage.name)}</span>
                     </div>
                   </div>
                 </Card>
