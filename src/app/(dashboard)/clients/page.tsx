@@ -182,6 +182,7 @@ export default function ClientsPage() {
   const [activeTab, setActiveTab] = useState<'directory' | 'pipeline' | 'intelligence_hub'>('directory');
   const [searchQuery, setSearchQuery] = useState("");
   const [clientToArchive, setClientToArchive] = useState<any>(null);
+  const [clientToPermanentDelete, setClientToPermanentDelete] = useState<any>(null);
   
   // Onboarding Form State
   const [isOnboardOpen, setIsOnboardOpen] = useState(false);
@@ -499,6 +500,34 @@ export default function ClientsPage() {
     reloadLeads();
   };
 
+  const handleConfirmPermanentDelete = async () => {
+    if (!companyId || !clientToPermanentDelete) return;
+    const client = clientToPermanentDelete;
+
+    // Delete associated projects
+    await supabase.from('Project').delete().eq('client_id', client.id);
+    
+    // Delete associated prospects
+    await supabase.from('Prospect').delete().eq('converted_client_id', client.id);
+
+    // Delete the Client from Client table
+    const { error: deleteClientError } = await supabase
+      .from('Client')
+      .delete()
+      .eq('id', client.id);
+
+    if (deleteClientError) {
+      toast({ variant: "destructive", title: "Delete Client Failed", description: deleteClientError.message });
+      setClientToPermanentDelete(null);
+      return;
+    }
+
+    toast({ title: "Client Deleted", description: `"${client.company_name}" has been permanently deleted.` });
+    setClientToPermanentDelete(null);
+    reloadClients();
+    reloadLeads();
+  };
+
   // ----------------------------------------------------
   // Quick Relationship Generators (Intelligence Hub)
   // ----------------------------------------------------
@@ -710,7 +739,11 @@ export default function ClientsPage() {
                         <DropdownMenuItem asChild className="rounded-xl hover:bg-slate-50 cursor-pointer">
                           <Link href={`/clients/${client.id}`} className="gap-2"><ExternalLink className="h-3.5 w-3.5 text-slate-500" /> Portfolio View</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-red-600 rounded-xl hover:bg-red-50 cursor-pointer" onClick={() => setClientToArchive(client)}>
+                        <DropdownMenuItem className="gap-2 text-slate-600 rounded-xl hover:bg-slate-50 cursor-pointer" onClick={() => setClientToArchive(client)}>
+                          <Archive className="h-3.5 w-3.5" /> Archive Partner
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-slate-100" />
+                        <DropdownMenuItem className="gap-2 text-red-600 rounded-xl hover:bg-red-50 cursor-pointer font-bold" onClick={() => setClientToPermanentDelete(client)}>
                           <Trash2 className="h-3.5 w-3.5" /> Delete Client
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -1452,6 +1485,23 @@ export default function ClientsPage() {
         </AlertDialogContent>
       </AlertDialog>
 
+      <AlertDialog open={!!clientToPermanentDelete} onOpenChange={(open) => !open && setClientToPermanentDelete(null)}>
+        <AlertDialogContent className="rounded-[10px] p-8 max-w-md border-0 bg-white">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 bg-red-50 rounded-[10px] flex items-center justify-center text-red-500 mb-4">
+              <Trash2 className="h-6 w-6" />
+            </div>
+            <AlertDialogTitle className="text-slate-850">Permanently Delete Client?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500 font-medium">
+              This will permanently delete "{clientToPermanentDelete?.company_name}" and ALL associated projects from the database. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel className="rounded-xl h-12 font-bold text-slate-500">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmPermanentDelete} className="bg-red-600 hover:bg-red-700 rounded-xl text-white font-bold h-12 px-6">Delete Forever</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
