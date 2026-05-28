@@ -15,19 +15,32 @@ export class AIRouter {
    * and records the outcome in the AIGenerationJob ledger for financial tracking.
    */
   static async dispatchJob(payload: AIRequestPayload) {
-    // 0. AI Governance & Cost Control Check
+    // 0. AI Governance & Cost Control Check (PHASE 5)
     const project = await prisma.project.findUnique({
       where: { id: payload.projectId },
-      include: { budget_tracking: true }
+      include: { 
+        company: { include: { tenant_subscription: true } }
+      }
     });
 
-    if (project?.budget_tracking) {
-      const budget = project.budget_tracking;
-      const aiUsagePercent = budget.utilized_budget / budget.approved_budget;
+    if (project?.company?.tenant_subscription) {
+      const sub = project.company.tenant_subscription;
       
-      // Hard cap: If total project budget is > 95% utilized, block AI generations
-      if (aiUsagePercent > 0.95) {
-        throw new Error('AI Generation blocked: Project budget cap exceeded (95%+ utilization).');
+      // Calculate total AI usage for this company in the current billing period
+      const currentUsageJobs = await prisma.aIGenerationJob.aggregate({
+        where: {
+          project: { company_id: project.company_id },
+          status: 'completed',
+          created_at: { gte: sub.current_period_end ? new Date(sub.current_period_end.getTime() - 30 * 24 * 60 * 60 * 1000) : new Date(0) }
+        },
+        _sum: { cost_credits: true }
+      });
+
+      const totalUsage = currentUsageJobs._sum.cost_credits || 0;
+
+      // Hard cap: If total usage exceeds their tier limit, block AI generation
+      if (totalUsage >= sub.ai_usage_limit) {
+        throw new Error('AI Generation blocked: Workspace AI budget limit exceeded (Payment Required).');
       }
     }
 
