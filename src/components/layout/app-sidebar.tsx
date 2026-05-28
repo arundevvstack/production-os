@@ -29,11 +29,12 @@ interface NavItem {
   icon: React.ElementType;
   module: string;
   isCore?: boolean;
+  exact?: boolean;
 }
 
 const navGroups: { label: string; items: NavItem[] }[] = [
   { label: "Workspace", items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true },
+      { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true, exact: true },
       { title: "AI Command", url: "/ai-command", icon: Bot, module: "dashboard", isCore: true },
       { title: "Projects", url: "/projects", icon: Film, module: "projects", isCore: true },
       { title: "Analytics", url: "/reports", icon: PieChart, module: "reports" },
@@ -62,6 +63,16 @@ export function AppSidebar() {
   const router = useRouter();
   const { state } = useSidebar();
   const { profile, company, isLoading, isModuleEnabled, hasPermission } = useTenant();
+  // isMounted prevents SSR/hydration mismatch causing all links to appear active
+  const [isMounted, setIsMounted] = React.useState(false);
+  React.useEffect(() => { setIsMounted(true); }, []);
+
+  // Stable active check: use startsWith so sub-routes stay highlighted
+  const isNavItemActive = (item: NavItem): boolean => {
+    if (!isMounted || !pathname) return false;
+    if (item.exact) return pathname === item.url;
+    return pathname === item.url || pathname.startsWith(item.url + '/');
+  };
 
   const handleLogout = async () => {
     try {
@@ -103,7 +114,7 @@ export function AppSidebar() {
                 <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-normal text-slate-500 mb-1 h-4">{group.label}</SidebarGroupLabel>
                 <SidebarMenu className="gap-0.5">
                     {visibleItems.map((item) => {
-                      const isActive = pathname === item.url;
+                      const isActive = isNavItemActive(item);
                       return (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={cn(
