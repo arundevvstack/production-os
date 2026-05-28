@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { SupabaseProvider } from '@/supabase/provider';
 import { Toaster } from '@/components/ui/toaster';
+import { GlobalCommandMenu } from "@/components/system/GlobalCommandMenu";
 
 export const metadata: Metadata = {
   title: 'DP Media OS | Multi-Tenant SaaS',
@@ -24,6 +25,7 @@ export default function RootLayout({
         <SupabaseProvider>
           {children}
           <Toaster />
+          <GlobalCommandMenu />
         </SupabaseProvider>
       </body>
     </html>
