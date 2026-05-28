@@ -54,7 +54,8 @@ export default function ArchivesPage() {
     );
   }, [archives, searchQuery]);
 
-  const clients = useMemo(() => filteredArchives.filter(i => i.archive_type === 'client' || i.archive_type === 'lead'), [filteredArchives]);
+  const clients = useMemo(() => filteredArchives.filter(i => i.archive_type === 'client'), [filteredArchives]);
+  const prospects = useMemo(() => filteredArchives.filter(i => i.archive_type === 'prospect' || i.archive_type === 'lead'), [filteredArchives]);
   const projects = useMemo(() => filteredArchives.filter(i => i.archive_type === 'project'), [filteredArchives]);
 
   const handlePermanentDelete = async () => {
@@ -78,10 +79,13 @@ export default function ArchivesPage() {
     if (!companyId || !itemToRestore) return;
 
     const item = itemToRestore;
-    const targetTable = item.archive_type === 'project' ? 'Project' : 'Prospect';
+    let targetTable = 'Project';
+    if (item.archive_type === 'client') targetTable = 'Client';
+    else if (item.archive_type === 'prospect' || item.archive_type === 'lead') targetTable = 'Prospect';
     
     // Remove archive-specific fields
-    const { id, archive_type, archived_at, ...originalData } = item;
+    const { id, archive_type, archived_at, created_at, ...originalData } = item;
+    // Note: We strip created_at from Archive, as the target table usually generates it or we can let the target table's default handle it
 
     const { error: restoreError } = await supabase.from(targetTable).insert({
       ...originalData,
@@ -96,7 +100,7 @@ export default function ArchivesPage() {
 
     toast({ 
       title: "Record Restored", 
-      description: `"${item.company_name || item.project_name}" is back in the active workspace.` 
+      description: `"${item.company_name || item.project_name || item.name}" is back in the active workspace.` 
     });
     setItemToRestore(null);
   };
@@ -149,6 +153,9 @@ export default function ArchivesPage() {
           <TabsTrigger value="clients" className="rounded-xl px-8 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-xs uppercase tracking-widest">
             <Building2 className="h-4 w-4" /> Archived Clients ({clients.length})
           </TabsTrigger>
+          <TabsTrigger value="prospects" className="rounded-xl px-8 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-xs uppercase tracking-widest">
+            <Users className="h-4 w-4" /> Archived Leads ({prospects.length})
+          </TabsTrigger>
           <TabsTrigger value="projects" className="rounded-xl px-8 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-xs uppercase tracking-widest">
             <Film className="h-4 w-4" /> Archived Projects ({projects.length})
           </TabsTrigger>
@@ -160,6 +167,23 @@ export default function ArchivesPage() {
               <EmptyState icon={Building2} label="No archived clients found." />
             ) : (
               clients.map(item => (
+                <ArchiveCard 
+                  key={item.id} 
+                  item={item} 
+                  onRestore={setItemToRestore} 
+                  onDelete={setItemToDelete} 
+                />
+              ))
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="prospects" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {prospects.length === 0 ? (
+              <EmptyState icon={Users} label="No archived leads found." />
+            ) : (
+              prospects.map(item => (
                 <ArchiveCard 
                   key={item.id} 
                   item={item} 
@@ -240,14 +264,16 @@ function ArchiveCard({ item, onRestore, onDelete }: { item: any, onRestore: (i: 
       <CardHeader className="bg-slate-50/50 pb-4 px-6 pt-6">
         <div className="flex justify-between items-start">
           <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm">
-            {item.archive_type === 'project' ? <Film className="h-5 w-5" /> : <Building2 className="h-5 w-5" />}
+            {item.archive_type === 'project' ? <Film className="h-5 w-5" /> : 
+             (item.archive_type === 'prospect' || item.archive_type === 'lead') ? <Users className="h-5 w-5" /> :
+             <Building2 className="h-5 w-5" />}
           </div>
           <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-slate-200 text-slate-400">
             Archived
           </Badge>
         </div>
         <CardTitle className="text-lg font-bold mt-4 truncate">
-          {item.company_name || item.project_name}
+          {item.company_name || item.project_name || item.name}
         </CardTitle>
         <CardDescription className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1.5 mt-1">
           <History className="h-3 w-3" /> Moved to vault on {new Date(item.archived_at).toLocaleDateString()}
