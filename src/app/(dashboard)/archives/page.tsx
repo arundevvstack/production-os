@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -34,77 +34,111 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
 
 export default function ArchivesPage() {
   const { companyId, isLoading: isTenantLoading } = useTenant();
   const [searchQuery, setSearchQuery] = useState("");
   const [itemToDelete, setItemToDelete] = useState<any>(null);
   const [itemToRestore, setItemToRestore] = useState<any>(null);
+  const [localArchives, setLocalArchives] = useState<any[] | null>(null);
 
   // Fetch Archives from Supabase
-  const { data: archives, isLoading: isArchivesLoading } = useSupabaseCollection('Archive', {
+  const { data: archives, isLoading: isArchivesLoading, refetch } = useSupabaseCollection('Archive', {
     where: { company_id: companyId },
     orderBy: { archived_at: 'desc' }
   });
 
+  // Sync server data to local state (only when server data changes)
+  const effectiveArchives = localArchives ?? archives ?? [];
+
+  // Normalize: each archive row has a 'data' JSON field with the actual record fields
+  const normalizedArchives = useMemo(() => {
+    return effectiveArchives.map((item: any) => {
+      const nested = item.data ?? {};
+      return {
+        ...nested,
+        // Always keep Archive row's own fields as top-level (they take precedence)
+        id: item.id,
+        company_id: item.company_id,
+        archive_type: item.archive_type,
+        archived_at: item.archived_at ?? item.created_at,
+        // Ensure display name fields are accessible
+        company_name: nested.company_name || nested.name || null,
+        project_name: nested.project_name || nested.name || null,
+      };
+    });
+  }, [effectiveArchives]);
+
   const filteredArchives = useMemo(() => {
-    if (!archives) return [];
-    return archives.filter(item => 
+    return normalizedArchives.filter(item =>
       (item.company_name || item.project_name || "").toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [archives, searchQuery]);
+  }, [normalizedArchives, searchQuery]);
 
   const clients = useMemo(() => filteredArchives.filter(i => i.archive_type === 'client'), [filteredArchives]);
   const prospects = useMemo(() => filteredArchives.filter(i => i.archive_type === 'prospect' || i.archive_type === 'lead'), [filteredArchives]);
   const projects = useMemo(() => filteredArchives.filter(i => i.archive_type === 'project'), [filteredArchives]);
 
-  const handlePermanentDelete = async () => {
+  const handlePermanentDelete = useCallback(async () => {
     if (!companyId || !itemToDelete) return;
-    
+
+    // Optimistic UI: remove instantly
+    setLocalArchives(prev => (prev ?? archives ?? []).filter((a: any) => a.id !== itemToDelete.id));
+
     const { error } = await supabase.from('Archive').delete().eq('id', itemToDelete.id);
-    
+
     if (error) {
       toast({ variant: "destructive", title: "Deletion Failed", description: error.message });
+      // Rollback
+      setLocalArchives(null);
+      refetch();
     } else {
-      toast({ 
+      toast({
         variant: "destructive",
-        title: "Permanent Purge Complete", 
-        description: "Data has been scrubbed from the workspace vault." 
+        title: "Permanent Purge Complete",
+        description: "Data has been scrubbed from the workspace vault."
       });
-      setItemToDelete(null);
     }
-  };
+    setItemToDelete(null);
+  }, [companyId, itemToDelete, archives, refetch]);
 
-  const handleRestore = async () => {
+  const handleRestore = useCallback(async () => {
     if (!companyId || !itemToRestore) return;
 
     const item = itemToRestore;
     let targetTable = 'Project';
     if (item.archive_type === 'client') targetTable = 'Client';
     else if (item.archive_type === 'prospect' || item.archive_type === 'lead') targetTable = 'Prospect';
-    
-    // Remove archive-specific fields
-    const { id, archive_type, archived_at, created_at, ...originalData } = item;
-    // Note: We strip created_at from Archive, as the target table usually generates it or we can let the target table's default handle it
 
-    const { error: restoreError } = await supabase.from(targetTable).insert({
-      ...originalData,
+    // Optimistic UI: remove from archive list
+    setLocalArchives(prev => (prev ?? archives ?? []).filter((a: any) => a.id !== item.id));
+
+    // The original data was saved in item.data — re-insert it into the proper table
+    const originalData = item.data ?? {};
+    // Remove archive-specific and meta fields before restoring
+    const { archive_type: _at, archived_at: _aa, ...restorable } = originalData;
+
+    const { error: restoreError } = await supabase.from(targetTable).upsert({
+      ...restorable,
     });
 
     if (restoreError) {
       toast({ variant: "destructive", title: "Restoration Failed", description: restoreError.message });
+      // Rollback
+      setLocalArchives(null);
+      refetch();
+      setItemToRestore(null);
       return;
     }
 
-    await supabase.from('Archive').delete().eq('id', id);
+    await supabase.from('Archive').delete().eq('id', item.id);
 
-    toast({ 
-      title: "Record Restored", 
-      description: `"${item.company_name || item.project_name || item.name}" is back in the active workspace.` 
+    toast({
+      title: "Record Restored",
+      description: `"${item.company_name || item.project_name}" is back in the active workspace.`
     });
     setItemToRestore(null);
-  };
+  }, [companyId, itemToRestore, archives, refetch]);
 
   if (isTenantLoading || isArchivesLoading) {
     return (
@@ -125,8 +159,8 @@ export default function ArchivesPage() {
         </div>
         <div className="relative w-full md:w-72">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input 
-            placeholder="Search vault..." 
+          <Input
+            placeholder="Search vault..."
             className="pl-10 h-11 rounded-[10px] bg-white shadow-sm border-none"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -142,7 +176,7 @@ export default function ArchivesPage() {
           <div className="space-y-1">
             <h4 className="font-bold text-indigo-900 text-sm">Vault Retention Policy</h4>
             <p className="text-xs text-indigo-800/70 leading-relaxed">
-              Archived items are retained indefinitely until you choose to <strong>Permanently Delete</strong> them. 
+              Archived items are retained indefinitely until you choose to <strong>Permanently Delete</strong> them.
               Restoring an item will move it back to its original production or CRM stage.
             </p>
           </div>
@@ -168,11 +202,11 @@ export default function ArchivesPage() {
               <EmptyState icon={Building2} label="No archived clients found." />
             ) : (
               clients.map(item => (
-                <ArchiveCard 
-                  key={item.id} 
-                  item={item} 
-                  onRestore={setItemToRestore} 
-                  onDelete={setItemToDelete} 
+                <ArchiveCard
+                  key={item.id}
+                  item={item}
+                  onRestore={setItemToRestore}
+                  onDelete={setItemToDelete}
                 />
               ))
             )}
@@ -185,11 +219,11 @@ export default function ArchivesPage() {
               <EmptyState icon={Users} label="No archived leads found." />
             ) : (
               prospects.map(item => (
-                <ArchiveCard 
-                  key={item.id} 
-                  item={item} 
-                  onRestore={setItemToRestore} 
-                  onDelete={setItemToDelete} 
+                <ArchiveCard
+                  key={item.id}
+                  item={item}
+                  onRestore={setItemToRestore}
+                  onDelete={setItemToDelete}
                 />
               ))
             )}
@@ -202,11 +236,11 @@ export default function ArchivesPage() {
               <EmptyState icon={Film} label="No archived projects found." />
             ) : (
               projects.map(item => (
-                <ArchiveCard 
-                  key={item.id} 
-                  item={item} 
-                  onRestore={setItemToRestore} 
-                  onDelete={setItemToDelete} 
+                <ArchiveCard
+                  key={item.id}
+                  item={item}
+                  onRestore={setItemToRestore}
+                  onDelete={setItemToDelete}
                 />
               ))
             )}
@@ -223,7 +257,7 @@ export default function ArchivesPage() {
             </div>
             <AlertDialogTitle className="text-2xl font-black tracking-tighter">Confirm Permanent Purge?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 font-medium text-base">
-              You are about to permanently delete <strong>{itemToDelete?.company_name || itemToDelete?.project_name}</strong>. 
+              You are about to permanently delete <strong>{itemToDelete?.company_name || itemToDelete?.project_name}</strong>.
               This action is irreversible and will scrub all associated metadata from your cloud records.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -260,37 +294,40 @@ export default function ArchivesPage() {
 }
 
 function ArchiveCard({ item, onRestore, onDelete }: { item: any, onRestore: (i: any) => void, onDelete: (i: any) => void }) {
+  const displayName = item.company_name || item.project_name || item.name || "Unknown";
+  const archivedDate = item.archived_at ? new Date(item.archived_at).toLocaleDateString() : "Unknown date";
+
   return (
     <Card className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white hover:shadow-md transition-all">
       <CardHeader className="bg-slate-50/50 pb-4 px-6 pt-6">
         <div className="flex justify-between items-start">
           <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm">
-            {item.archive_type === 'project' ? <Film className="h-5 w-5" /> : 
+            {item.archive_type === 'project' ? <Film className="h-5 w-5" /> :
              (item.archive_type === 'prospect' || item.archive_type === 'lead') ? <Users className="h-5 w-5" /> :
              <Building2 className="h-5 w-5" />}
           </div>
           <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-slate-200 text-slate-400">
-            Archived
+            {item.archive_type || "Archived"}
           </Badge>
         </div>
         <CardTitle className="text-lg font-bold mt-4 truncate">
-          {item.company_name || item.project_name || item.name}
+          {displayName}
         </CardTitle>
         <CardDescription className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1.5 mt-1">
-          <History className="h-3 w-3" /> Moved to vault on {new Date(item.archived_at).toLocaleDateString()}
+          <History className="h-3 w-3" /> Moved to vault on {archivedDate}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6 bg-white border-t border-slate-50 flex items-center gap-2">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="flex-1 rounded-xl h-10 text-[10px] font-black uppercase tracking-widest gap-2"
           onClick={() => onRestore(item)}
         >
           <RotateCcw className="h-3.5 w-3.5" /> Restore
         </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className="rounded-xl h-10 w-10 text-rose-400 hover:text-rose-600 hover:bg-rose-50"
           onClick={() => onDelete(item)}
         >

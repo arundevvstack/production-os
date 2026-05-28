@@ -109,7 +109,7 @@ export default function CRMPage() {
   });
 
   // Fetch Prospects from Supabase
-  const { data: allLeads, isLoading: isLeadsLoading } = useSupabaseCollection('Prospect', {
+  const { data: allLeads, isLoading: isLeadsLoading, refetch: refetchLeads } = useSupabaseCollection('Prospect', {
     where: { company_id: companyId },
     orderBy: { created_at: 'desc' }
   });
@@ -308,21 +308,32 @@ export default function CRMPage() {
     if (!companyId || !leadToArchive) return;
     
     const archivedLead = leadToArchive;
-    // Spot Update! Remove from local leads list instantly
+    // Optimistic UI: remove from local leads list instantly
     setLocalLeads(prev => prev.filter(l => l.id !== archivedLead.id));
 
-    // Archive Prospect in Supabase
-    await supabase.from('Archive').insert({
-      ...archivedLead,
+    // Archive Prospect in Supabase — store all fields inside 'data' JSON column
+    // (Archive table only has: id, company_id, archive_type, archived_at, data, created_at)
+    const { error: archiveError } = await supabase.from('Archive').insert({
+      company_id: companyId,
       archive_type: 'prospect',
-      archived_at: new Date().toISOString()
+      archived_at: new Date().toISOString(),
+      data: archivedLead
     });
+
+    if (archiveError) {
+      toast({ variant: "destructive", title: "Archive Failed", description: archiveError.message });
+      // Rollback optimistic update
+      setLocalLeads(prev => [archivedLead, ...prev]);
+      setLeadToArchive(null);
+      return;
+    }
 
     // Delete Prospect from active table
     await supabase.from('Prospect').delete().eq('id', archivedLead.id);
 
     toast({ title: "Lead Archived", description: "The lead has been moved to archives." });
     setLeadToArchive(null);
+    refetchLeads();
   };
 
   const handleConfirmPermanentDelete = async () => {
