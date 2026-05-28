@@ -85,6 +85,7 @@ export default function CRMPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [leadToArchive, setLeadToArchive] = useState<any>(null);
+  const [leadToPermanentDelete, setLeadToPermanentDelete] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAnalytics, setShowAnalytics] = useState(false);
 
@@ -321,6 +322,27 @@ export default function CRMPage() {
 
     toast({ title: "Lead Archived", description: "The lead has been moved to archives." });
     setLeadToArchive(null);
+  };
+
+  const handleConfirmPermanentDelete = async () => {
+    if (!companyId || !leadToPermanentDelete) return;
+    
+    const archivedLead = leadToPermanentDelete;
+    
+    // Optimistic UI update
+    setLocalLeads(prev => prev.filter(l => l.id !== archivedLead.id));
+
+    // Delete Prospect from active table
+    const { error } = await supabase.from('Prospect').delete().eq('id', archivedLead.id);
+
+    if (error) {
+      toast({ variant: "destructive", title: "Delete Failed", description: error.message });
+      setLeadToPermanentDelete(null);
+      return;
+    }
+
+    toast({ title: "Lead Deleted", description: "The lead has been permanently deleted." });
+    setLeadToPermanentDelete(null);
   };
 
   const activeVertical = useMemo(() => 
@@ -884,7 +906,11 @@ export default function CRMPage() {
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="bg-slate-50" />
-                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-rose-500 focus:text-rose-600 focus:bg-rose-50" onClick={() => setLeadToArchive(lead)}>
+                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-slate-600 focus:text-slate-700 focus:bg-slate-50" onClick={() => setLeadToArchive(lead)}>
+                                  <Archive className="h-3.5 w-3.5" /> Archive Lead
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator className="bg-slate-50" />
+                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-rose-500 font-bold focus:text-rose-600 focus:bg-rose-50" onClick={() => setLeadToPermanentDelete(lead)}>
                                   <Trash2 className="h-3.5 w-3.5" /> Delete Lead
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
@@ -956,6 +982,25 @@ export default function CRMPage() {
             <AlertDialogCancel className="rounded-xl h-11 font-bold">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmArchive} className="bg-rose-500 hover:bg-rose-600 rounded-xl h-11 font-bold px-8">
               Confirm Deletion
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={!!leadToPermanentDelete} onOpenChange={(open) => !open && setLeadToPermanentDelete(null)}>
+        <AlertDialogContent className="rounded-3xl p-8 max-w-md border-0 bg-white">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 bg-rose-50 rounded-[10px] flex items-center justify-center text-rose-500 mb-4">
+              <Trash2 className="h-6 w-6" />
+            </div>
+            <AlertDialogTitle className="text-2xl font-bold">Permanently Delete Lead?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500 font-medium">
+              This will permanently delete "{leadToPermanentDelete?.company_name}" from the database. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel className="rounded-xl h-11 font-bold">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmPermanentDelete} className="bg-rose-500 hover:bg-rose-600 rounded-xl h-11 font-bold px-8">
+              Delete Forever
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
