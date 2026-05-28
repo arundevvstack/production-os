@@ -885,7 +885,7 @@ export default function CRMPage() {
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="bg-slate-50" />
                                 <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-rose-500 focus:text-rose-600 focus:bg-rose-50" onClick={() => setLeadToArchive(lead)}>
-                                  <Archive className="h-3.5 w-3.5" /> Archive Lead
+                                  <Trash2 className="h-3.5 w-3.5" /> Delete Lead
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -947,7 +947,7 @@ export default function CRMPage() {
             <div className="h-12 w-12 bg-rose-50 rounded-[10px] flex items-center justify-center text-rose-500 mb-4">
               <Archive className="h-6 w-6" />
             </div>
-            <AlertDialogTitle className="text-2xl font-bold">Archive Lead Record?</AlertDialogTitle>
+            <AlertDialogTitle className="text-2xl font-bold">Delete Lead Record?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 font-medium">
               This will move "{leadToArchive?.company_name}" to your archives. It will no longer appear in the active sales pipeline.
             </AlertDialogDescription>
@@ -955,7 +955,7 @@ export default function CRMPage() {
           <AlertDialogFooter className="pt-6">
             <AlertDialogCancel className="rounded-xl h-11 font-bold">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmArchive} className="bg-rose-500 hover:bg-rose-600 rounded-xl h-11 font-bold px-8">
-              Confirm Archive
+              Confirm Deletion
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
