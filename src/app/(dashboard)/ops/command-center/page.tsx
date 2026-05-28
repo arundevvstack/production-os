@@ -1,37 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { TelemetryCard } from '@/components/system/TelemetryCard';
+import { InfrastructureMap } from '@/components/system/InfrastructureMap';
 import { motion } from 'framer-motion';
+import { useThrottledTelemetry, type TelemetryData } from '@/hooks/useThrottledTelemetry';
 
-// Mock data type for the simulation
-type TelemetryData = {
-    active_tenants: number;
-    queue_depth: number;
-    error_budget: number;
-    ai_cogs: number;
-};
 
 export default function CommandCenter() {
-    const [telemetry, setTelemetry] = useState<TelemetryData>({
-        active_tenants: 124,
-        queue_depth: 0,
-        error_budget: 99.8,
-        ai_cogs: 1450.50
-    });
-
-    // Simulate realtime fluctuations for the initial UI mockup (Pre-Phase 9.4)
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTelemetry(prev => ({
-                ...prev,
-                queue_depth: Math.floor(Math.random() * 50),
-                ai_cogs: prev.ai_cogs + (Math.random() * 2),
-                error_budget: prev.error_budget > 95 ? prev.error_budget - (Math.random() * 0.01) : 99.9
-            }));
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
+    const telemetry = useThrottledTelemetry(250);
 
     return (
         <div className="min-h-screen bg-background p-8 font-sans">
@@ -75,11 +52,19 @@ export default function CommandCenter() {
                 />
             </div>
 
-            {/* Middle Row: Infrastructure Maps & Live Activity (Placeholders) */}
+            {/* Middle Row: Infrastructure Maps & Live Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="col-span-2 bg-card border border-border rounded-xl p-6 relative overflow-hidden h-[400px] flex items-center justify-center">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neon-purple/5 to-transparent pointer-events-none" />
-                    <p className="text-muted-foreground font-mono text-sm">[ React Flow Infrastructure Map Placeholder ]</p>
+                <div className="col-span-2 bg-card border border-border rounded-xl p-2 relative overflow-hidden h-[400px]">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neon-purple/5 to-transparent pointer-events-none z-0" />
+                    <div className="absolute top-4 left-4 z-10 flex gap-2">
+                        <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full border border-border">
+                            <div className={`w-2 h-2 rounded-full ${telemetry.incident_active ? 'bg-destructive animate-pulse' : 'bg-neon-emerald'}`} />
+                            Global AI Routing Topology
+                        </span>
+                    </div>
+                    <div className="w-full h-full relative z-10">
+                        <InfrastructureMap telemetry={telemetry} />
+                    </div>
                 </div>
                 
                 <div className="col-span-1 bg-card border border-border rounded-xl p-6">
