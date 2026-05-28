@@ -18,13 +18,20 @@ export async function POST(req: Request) {
     
     // Simulate 50 active telemetry updates hitting the Event Bus instantly
     for (let i = 0; i < 50; i++) {
-        // We broadcast directly to a 'demo_telemetry' channel so the UI lights up
-        // (In a full architecture, EventBus would do this after processing)
+        const isSpike = spike && Math.random() > 0.9;
         const mockPayload = {
             queue_depth: Math.floor(Math.random() * (spike ? 5000 : 50)),
             ai_cogs: Math.random() * 5.0,
-            error_budget_drop: spike && Math.random() > 0.9 ? 0.05 : 0
+            error_budget_drop: isSpike ? 0.05 : 0,
+            incident: isSpike ? 'AI_PROVIDER_FAILOVER' : undefined
         };
+
+        // Broadcast directly to Supabase Realtime so UI responds instantly
+        supabase.channel('demo_telemetry').send({
+            type: 'broadcast',
+            event: 'TELEMETRY_RECORDED',
+            payload: mockPayload
+        });
 
         // We use the event bus to also queue up the database side
         EventBus.emit('TELEMETRY_RECORDED', mockPayload).catch(() => {});
