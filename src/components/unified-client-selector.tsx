@@ -127,7 +127,7 @@ export function UnifiedClientSelector({
 
   return (
     <div className="flex gap-2 items-center w-full">
-      <Select onValueChange={handleValueChange} value={value}>
+      <Select onValueChange={handleValueChange} value={value || undefined}>
         <SelectTrigger className={className}>
           {value ? (
             <div className="flex items-center gap-2 text-slate-800">
@@ -138,7 +138,7 @@ export function UnifiedClientSelector({
             <SelectValue placeholder={isLoading ? "Loading Registry..." : placeholder} />
           )}
         </SelectTrigger>
-        <SelectContent className="max-h-[300px] bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+        <SelectContent className="max-h-[300px] bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl z-[100]">
           {consolidatedClients.length === 0 ? (
             <div className="p-4 text-center text-xs text-slate-500">No client entities found in registry.</div>
           ) : (
