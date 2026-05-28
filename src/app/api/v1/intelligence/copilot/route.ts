@@ -31,12 +31,22 @@ export async function POST(req: Request) {
             include: {
                 budget_tracking: true,
                 workflow_state: true,
+                health_score: true,
                 objectives: {
                     where: { status: { in: ['Pending', 'In Progress', 'Blocked'] } }
                 }
             }
         });
-        contextData = project;
+        
+        // Fetch AI Operational Memory for this project
+        const projectMemories = await prisma.aIOperationalMemory.findMany({
+            where: { entity_id: project_id, entity_type: 'Project' }
+        });
+
+        contextData = {
+            project,
+            memories: projectMemories
+        };
     }
 
     // 2. Pass contextData to the LLM (Simulated)
@@ -45,10 +55,12 @@ export async function POST(req: Request) {
     // 3. Simulated Response based on mock context
     let generatedResponse = "The production is currently on track. No immediate bottlenecks detected.";
     
-    if (contextData?.workflow_state?.is_blocked) {
-        generatedResponse = `Warning: Project is currently blocked on stage ${contextData.workflow_state.active_stage_id}. I recommend reassigning the pending objectives.`;
-    } else if (contextData?.budget_tracking?.utilized_budget > contextData?.budget_tracking?.approved_budget) {
-        generatedResponse = `Critical: The project is currently over budget. Utilized: ${contextData.budget_tracking.utilized_budget}.`;
+    if (contextData?.project?.workflow_state?.is_blocked) {
+        generatedResponse = `Warning: Project is currently blocked on stage ${contextData.project.workflow_state.active_stage_id}. I recommend reassigning the pending objectives.`;
+    } else if (contextData?.project?.health_score && contextData.project.health_score.delivery_confidence < 70) {
+        generatedResponse = `Critical: Project health is low (${contextData.project.health_score.delivery_confidence}%). AI Recommends: ${JSON.stringify(contextData.project.health_score.ai_recommendations)}`;
+    } else if (contextData?.project?.budget_tracking?.utilized_budget > contextData?.project?.budget_tracking?.approved_budget) {
+        generatedResponse = `Critical: The project is currently over budget. Utilized: ${contextData.project.budget_tracking.utilized_budget}.`;
     }
 
     // You could also execute AutomationRules automatically based on the LLM's structured output.

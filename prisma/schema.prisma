@@ -53,6 +53,7 @@ model Company {
   notification_queues NotificationQueue[]
   vendors             Vendor[]
   automation_rules    AutomationRule[]
+  ai_operational_memories AIOperationalMemory[]
 }
 
 model CompanySettings {
@@ -265,6 +266,8 @@ model Project {
   workflow_state WorkflowState?
   budget_tracking Budget?
   ai_jobs        AIGenerationJob[]
+  health_score   ProjectHealthScore?
+  collaboration_sessions LiveCollaborationSession[]
 }
 
 model ProjectStage {
@@ -365,6 +368,8 @@ model Objective {
   // Self-referencing dependencies
   depends_on ObjectiveDependency[] @relation("ChildDependency")
   blocking   ObjectiveDependency[] @relation("ParentDependency")
+
+  freelancer_bids FreelancerBid[]
 }
 
 model ObjectiveDependency {
@@ -869,5 +874,63 @@ model AutomationRule {
   actions         Json     // e.g. [{ "type": "NOTIFY_MANAGER" }, { "type": "SHIFT_TIMELINE" }]
   is_active       Boolean  @default(true)
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// PHASE 4: AUTONOMOUS PRODUCTION & SCALE
+// ==========================================
+
+model DistributedJobQueue {
+  id              String   @id @default(uuid())
+  job_type        String   // "RENDER", "AI_ANALYSIS", "VIDEO_ENCODE"
+  payload         Json
+  status          String   @default("queued") // queued, processing, completed, failed, retrying
+  priority        Int      @default(0) // Higher = faster
+  worker_id       String?
+  started_at      DateTime?
+  completed_at    DateTime?
+  error_log       String?
+}
+
+model ProjectHealthScore {
+  id                    String   @id @default(uuid())
+  project_id            String   @unique
+  delivery_confidence   Float    // 0-100%
+  budget_risk_score     Float
+  burnout_risk_score    Float
+  last_calculated_at    DateTime @default(now())
+  ai_recommendations    Json     // [{ type: 'REASSIGN', action: 'Move editing from John to Sarah' }]
+  project               Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+model AIOperationalMemory {
+  id              String   @id @default(uuid())
+  company_id      String
+  entity_type     String   // "Client", "Project", "Team"
+  entity_id       String
+  memory_key      String   // e.g., "preferred_color_grade"
+  memory_value    Json
+  confidence      Float
+  last_updated    DateTime @updatedAt
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+model LiveCollaborationSession {
+  id              String   @id @default(uuid())
+  project_id      String
+  active_users    String[] // User IDs
+  session_state   Json     // e.g. { current_video_time: 12.5, active_tab: "timeline" }
+  started_at      DateTime @default(now())
+  project         Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+model FreelancerBid {
+  id              String   @id @default(uuid())
+  objective_id    String
+  freelancer_id   String
+  proposed_rate   Float
+  estimated_days  Int
+  status          String   @default("pending") // pending, accepted, rejected
+  objective       Objective @relation(fields: [objective_id], references: [id], onDelete: Cascade)
 }
 
