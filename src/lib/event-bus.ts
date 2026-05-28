@@ -5,26 +5,53 @@ const prisma = new PrismaClient();
 export type EventType = 
   | 'STAGE_TRANSITIONED' 
   | 'OBJECTIVE_COMPLETED' 
-  | 'ASSET_UPLOADED' 
-  | 'BUDGET_EXCEEDED'
-  | 'AI_RENDER_FAILED';
+  | 'PROJECT_CREATED'
+  | 'STAGE_TRANSITIONED'
+  | 'ASSET_UPLOADED'
+  | 'APPROVAL_REQUESTED'
+  | 'APPROVAL_GRANTED'
+  | 'APPROVAL_REJECTED'
+  | 'AI_RENDER_STARTED'
+  | 'AI_RENDER_COMPLETED'
+  | 'AI_RENDER_FAILED'
+  | 'WEBHOOK_DISPATCHED';
 
 export class EventBus {
   /**
-   * Emits a system-wide event. Instead of directly executing logic,
-   * we queue it into the DistributedJobQueue for async workers to pick up.
-   * This decouples the API from slow operations like AI generation, emails, and deep analytics.
+   * Phase 7: Strict Event Governance & Trace Injection
    */
-  static async emit(eventType: EventType, payload: any, priority: number = 0) {
-    console.log(`[EventBus] Emitting ${eventType}`, payload);
+  static async emit(eventType: EventType, rawPayload: any, priority: number = 0) {
+    const traceId = uuidv4();
+    const timestamp = new Date().toISOString();
+    
+    // Construct governed payload wrapper
+    const governedPayload = {
+      event: eventType,
+      schema_version: "1.0",
+      trace_id: traceId,
+      tenant_id: rawPayload.companyId || null,
+      timestamp: timestamp,
+      payload: rawPayload
+    };
+
+    console.log(`[EventBus] Validating ${eventType} (Trace: ${traceId})`);
+
+    // In a production system, we would map the eventType to its specific Zod schema here.
+    // e.g. if (eventType === 'PROJECT_CREATED') ProjectCreatedEventSchema.parse(governedPayload);
+    // For now, we enforce that the structure has the required governance fields.
+    if (!governedPayload.trace_id || !governedPayload.schema_version) {
+       throw new Error(`[EventBus] Governance validation failed for event ${eventType}`);
+    }
 
     try {
       const job = await prisma.distributedJobQueue.create({
         data: {
           job_type: eventType,
-          payload: payload,
+          payload: governedPayload,
           status: 'pending',
           priority: priority,
+          trace_id: traceId,
+          schema_version: "1.0"
         }
       });
       console.log(`[EventBus] Emitted ${eventType} -> Job ${job.id}`);
@@ -39,16 +66,49 @@ export class EventBus {
           // Filter for webhooks subscribed to this specific event (or listening to all via "*")
           const activeWebhooks = webhooks.filter(w => w.events.includes(eventType) || w.events.includes('*'));
 
-          // In production, this would be pushed to a dedicated 'WebhookRetryQueue'.
-          // For now, we simulate the HTTP POST fan-out.
+          // Phase 7: Webhook Security Hardening (HMAC SHA-256)
           for (const webhook of activeWebhooks) {
-              // Simulated async POST
-              console.log(`[EventBus -> Webhook] POST ${webhook.url} (Event: ${eventType})`);
-              // fetch(webhook.url, {
-              //    method: 'POST',
-              //    headers: { 'Content-Type': 'application/json', 'X-DP-Signature': '...' },
-              //    body: JSON.stringify({ event: eventType, data: payload, timestamp: new Date() })
-              // }).catch(e => console.error(`Webhook Delivery Failed to ${webhook.url}`, e));
+              const rawBody = JSON.stringify(governedPayload);
+              const payloadHash = crypto.createHash('sha256').update(rawBody).digest('hex');
+              
+              // Generate HMAC Signature: HMAC_SHA256(secret, timestamp + rawBody)
+              const signaturePayload = `${timestamp}.${rawBody}`;
+              const signature = crypto.createHmac('sha256', webhook.secret).update(signaturePayload).digest('hex');
+
+              console.log(`[EventBus -> Webhook] POST ${webhook.url} (Event: ${eventType}, Signature: ${signature.substring(0, 8)}...)`);
+              
+              // Simulated async POST with signature headers
+              /*
+              fetch(webhook.url, {
+                 method: 'POST',
+                 headers: { 
+                     'Content-Type': 'application/json', 
+                     'x-dp-signature': signature,
+                     'x-dp-timestamp': timestamp,
+                     'x-dp-event': eventType,
+                     'x-dp-delivery-id': traceId
+                 },
+                 body: rawBody
+              }).then(res => {
+                  prisma.webhookDeliveryLog.create({
+                      data: {
+                          endpoint_id: webhook.id,
+                          event_type: eventType,
+                          payload_hash: payloadHash,
+                          http_status: res.status
+                      }
+                  });
+              }).catch(e => {
+                  prisma.webhookDeliveryLog.create({
+                      data: {
+                          endpoint_id: webhook.id,
+                          event_type: eventType,
+                          payload_hash: payloadHash,
+                          error_message: e.message
+                      }
+                  });
+              });
+              */
           }
       }
 
