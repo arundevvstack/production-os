@@ -127,7 +127,7 @@ export function UnifiedClientSelector({
 
   return (
     <div className="flex gap-2 items-center w-full">
-      <Select onValueChange={handleValueChange} value={value || undefined}>
+      <Select onValueChange={handleValueChange} value={value}>
         <SelectTrigger className={className}>
           {value ? (
             <div className="flex items-center gap-2 text-slate-800">
@@ -135,7 +135,7 @@ export function UnifiedClientSelector({
               <span className="font-bold text-slate-800 truncate">{value}</span>
             </div>
           ) : (
-            <SelectValue placeholder={isLoading ? "Loading Registry..." : placeholder} />
+            <span className="text-slate-500 text-sm font-normal">{isLoading ? "Loading Registry..." : placeholder}</span>
           )}
         </SelectTrigger>
         <SelectContent className="max-h-[300px] bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl z-[100]">
