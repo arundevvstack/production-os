@@ -55,26 +55,63 @@ export class AIRouter {
       }
     });
 
+    // 2. SELF-HEALING: Circuit Breaker & Failover Logic (PHASE 6)
+    // Check if the requested provider is currently experiencing issues.
+    const recentIncidents = await prisma.infrastructureIncident.findMany({
+        where: { 
+            component: `AI_PROVIDER_${payload.provider.toUpperCase()}`, 
+            resolved: false,
+            timestamp: { gte: new Date(Date.now() - 5 * 60 * 1000) } // Last 5 minutes
+        }
+    });
+
+    let activeProvider = payload.provider;
+    let activeModel = payload.model;
+
+    if (recentIncidents.length >= 3) {
+        console.warn(`[AIRouter] Circuit breaker tripped for ${payload.provider}. Falling back to OpenAI.`);
+        activeProvider = 'OpenAI';
+        activeModel = 'dall-e-3';
+        
+        // Log telemetry for the failover
+        if (project?.company_id) {
+            await prisma.operationalTelemetry.create({
+                data: {
+                    company_id: project.company_id,
+                    metric_type: 'AI_PROVIDER_FAILOVER',
+                    metric_value: 1,
+                    context: { original: payload.provider, fallback: activeProvider }
+                }
+            });
+        }
+    }
+
     try {
       const startMs = Date.now();
       let resultUrls: string[] = [];
       let costCredits = 0;
 
-      // 2. Route to specific provider (Mocked API calls for now)
-      switch (payload.provider) {
+      console.log(`[AIRouter] Simulating generation via ${activeProvider} / ${activeModel}...`);
+      
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      
+      // Simulate random failure (for testing the self-healing incident engine)
+      if (Math.random() < 0.05) { // 5% chance of failure
+          throw new Error(`Simulated upstream API timeout for ${activeProvider}`);
+      }
+
+      // Route to specific provider (Mocked API calls for now)
+      switch (activeProvider) {
         case 'OpenAI':
-          // const res = await openai.images.generate({ model: payload.model, prompt: payload.prompt });
-          // resultUrls = [res.data[0].url];
           resultUrls = ['https://placeholder.co/generated-openai-img.png'];
           costCredits = 0.04;
           break;
         case 'Runway':
-          // const res = await fetch('https://api.runwayml.com/v1/generate', ...);
           resultUrls = ['https://placeholder.co/generated-runway-vid.mp4'];
           costCredits = 0.50;
           break;
         case 'Midjourney':
-          // (Via third-party API wrapper since MJ has no official API)
           resultUrls = ['https://placeholder.co/generated-mj-img.png'];
           costCredits = 0.05;
           break;
@@ -108,6 +145,17 @@ export class AIRouter {
           error_log: error.message
         }
       });
+
+      // (Phase 6) Log Infrastructure Incident if it's a provider timeout
+      if (error.message.includes('timeout')) {
+          await prisma.infrastructureIncident.create({
+              data: {
+                  component: `AI_PROVIDER_${activeProvider.toUpperCase()}`,
+                  error_message: error.message,
+                  severity: 'HIGH'
+              }
+          });
+      }
 
       // Optionally trigger an AutomationRule for 'RENDER_FAILED' here.
       throw error;

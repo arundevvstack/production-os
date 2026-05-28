@@ -57,6 +57,8 @@ model Company {
   tenant_subscription TenantSubscription?
   telemetry           OperationalTelemetry[]
   api_keys            ApiKey[]
+  webhooks            WebhookEndpoint[]
+  plugin_installations CompanyPluginInstallation[]
 }
 
 model CompanySettings {
@@ -973,5 +975,50 @@ model ApiKey {
   last_used_at    DateTime?
   created_at      DateTime @default(now())
   company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// PHASE 6: GLOBAL ECOSYSTEM & SELF-HEALING
+// ==========================================
+
+model WebhookEndpoint {
+  id              String   @id @default(uuid())
+  company_id      String
+  url             String
+  events          String[] // e.g., ["project.created", "stage.transitioned"]
+  secret          String
+  is_active       Boolean  @default(true)
+  created_at      DateTime @default(now())
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+model MarketplacePlugin {
+  id              String   @id @default(uuid())
+  name            String
+  description     String
+  developer_name  String
+  plugin_type     String   // "WORKFLOW", "AI_PROVIDER", "ANALYTICS"
+  price_monthly   Float    @default(0.00)
+  is_verified     Boolean  @default(false)
+  installations   CompanyPluginInstallation[]
+}
+
+model CompanyPluginInstallation {
+  id              String   @id @default(uuid())
+  company_id      String
+  plugin_id       String
+  config_json     Json     @default("{}")
+  installed_at    DateTime @default(now())
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  plugin          MarketplacePlugin @relation(fields: [plugin_id], references: [id], onDelete: Cascade)
+}
+
+model InfrastructureIncident {
+  id              String   @id @default(uuid())
+  component       String   // "AI_ROUTER", "EVENT_BUS", "DB"
+  error_message   String
+  severity        String   // "LOW", "HIGH", "CRITICAL"
+  resolved        Boolean  @default(false)
+  timestamp       DateTime @default(now())
 }
 
