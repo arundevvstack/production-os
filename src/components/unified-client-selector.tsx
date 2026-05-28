@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { useSupabaseCollection } from "@/supabase/hooks/use-collection";
@@ -123,35 +121,43 @@ export function UnifiedClientSelector({
   }, [leads, clients]);
 
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="flex gap-2 items-center w-full">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className={cn("justify-between px-3 w-full font-normal shadow-sm", className)}
-          >
-            {value ? (
-              <div className="flex items-center gap-2 text-slate-800 w-[90%] overflow-hidden">
-                <Building2 className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                <span className="font-bold text-slate-800 truncate">{value}</span>
-              </div>
-            ) : (
-              <span className="text-slate-500 text-sm font-normal">{isLoading ? "Loading Registry..." : placeholder}</span>
-            )}
-            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverPrimitive.Content 
-          style={{ width: "var(--radix-popover-trigger-width)" }} 
-          className="p-0 z-[100] bg-white rounded-[10px] shadow-xl border-slate-100 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 outline-none" 
-          align="start"
-          sideOffset={4}
+    <div className="flex gap-2 items-center w-full" ref={containerRef}>
+      <div className="relative w-full">
+        <Button
+          type="button"
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className={cn("justify-between px-3 w-full font-normal shadow-sm", className)}
+          onClick={() => setOpen(!open)}
         >
-          <Command>
+          {value ? (
+            <div className="flex items-center gap-2 text-slate-800 w-[90%] overflow-hidden">
+              <Building2 className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+              <span className="font-bold text-slate-800 truncate">{value}</span>
+            </div>
+          ) : (
+            <span className="text-slate-500 text-sm font-normal">{isLoading ? "Loading Registry..." : placeholder}</span>
+          )}
+          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+        
+        {open && (
+          <div className="absolute top-[calc(100%+4px)] left-0 w-full z-[100] bg-white rounded-[10px] shadow-xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+            <Command>
             <CommandInput placeholder="Search registry..." className="h-10 text-xs font-medium" />
             <CommandList className="max-h-[300px] overflow-y-auto overflow-x-hidden">
               <CommandEmpty className="py-6 text-center text-xs text-slate-500">No client entities found.</CommandEmpty>
@@ -182,8 +188,9 @@ export function UnifiedClientSelector({
               </CommandGroup>
             </CommandList>
           </Command>
-        </PopoverPrimitive.Content>
-      </Popover>
+        </div>
+      )}
+      </div>
 
       {showOnboardOption && onOnboardTrigger && (
         <button
