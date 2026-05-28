@@ -51,6 +51,8 @@ model Company {
   approval_chains     ApprovalChain[]
   approval_requests   ApprovalRequest[]
   notification_queues NotificationQueue[]
+  vendors             Vendor[]
+  automation_rules    AutomationRule[]
 }
 
 model CompanySettings {
@@ -149,6 +151,8 @@ model Client {
   projects  Project[]
   invoices  Invoice[]
   prospects Prospect[]
+  portal_settings ClientPortalSetting?
+  revision_requests RevisionRequest[]
 }
 
 model Prospect {
@@ -259,6 +263,8 @@ model Project {
   meetings       Meeting[]
   productionLogs ProductionLog[]
   workflow_state WorkflowState?
+  budget_tracking Budget?
+  ai_jobs        AIGenerationJob[]
 }
 
 model ProjectStage {
@@ -458,6 +464,7 @@ model Deliverable {
 
   company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
   project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  revision_requests RevisionRequest[]
 }
 
 model Asset {
@@ -579,6 +586,7 @@ model Expense {
   id         String  @id @default(uuid())
   company_id String
   project_id String?
+  vendor_id  String?
 
   category    String
   description String?
@@ -590,6 +598,17 @@ model Expense {
   created_at DateTime @default(now())
   company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
   project    Project? @relation(fields: [project_id], references: [id])
+  vendor     Vendor?  @relation(fields: [vendor_id], references: [id], onDelete: SetNull)
+}
+
+model Vendor {
+  id              String   @id @default(uuid())
+  company_id      String
+  name            String
+  service_type    String
+  payment_terms   String
+  expenses        Expense[]
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 }
 
 model GSTFiling {
@@ -790,3 +809,65 @@ model NotificationPreference {
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
+
+// ==========================================
+// PHASE 3: ENTERPRISE ECOSYSTEM
+// ==========================================
+
+model Budget {
+  id              String   @id @default(uuid())
+  project_id      String   @unique
+  estimated_cost  Float
+  approved_budget Float
+  utilized_budget Float    @default(0)
+  currency        String   @default("USD")
+  project         Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+model AIGenerationJob {
+  id               String   @id @default(uuid())
+  project_id       String
+  provider         String   // OpenAI, Runway, Midjourney
+  model            String
+  prompt           String
+  status           String   // queued, processing, completed, failed
+  cost_credits     Float    @default(0)
+  compute_time_ms  Int      @default(0)
+  result_urls      String[]
+  error_log        String?
+  created_at       DateTime @default(now())
+  project          Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+model ClientPortalSetting {
+  id              String  @id @default(uuid())
+  client_id       String  @unique
+  brand_color     String?
+  logo_url        String?
+  custom_domain   String?
+  features_enabled Json   // e.g., { approvals: true, invoices: true }
+  client          Client  @relation(fields: [client_id], references: [id], onDelete: Cascade)
+}
+
+model RevisionRequest {
+  id              String   @id @default(uuid())
+  deliverable_id  String
+  client_id       String
+  round_number    Int
+  feedback_notes  Json     // Time-stamped annotations
+  status          String   @default("pending")
+  deliverable     Deliverable @relation(fields: [deliverable_id], references: [id], onDelete: Cascade)
+  client          Client      @relation(fields: [client_id], references: [id], onDelete: Cascade)
+}
+
+model AutomationRule {
+  id              String   @id @default(uuid())
+  company_id      String
+  name            String
+  trigger_event   String   // e.g. "STAGE_DELAYED", "RENDER_FAILED"
+  conditions      Json     // e.g. { "days_delayed": "> 2" }
+  actions         Json     // e.g. [{ "type": "NOTIFY_MANAGER" }, { "type": "SHIFT_TIMELINE" }]
+  is_active       Boolean  @default(true)
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
