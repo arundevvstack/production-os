@@ -59,6 +59,10 @@ model Company {
   api_keys            ApiKey[]
   webhooks            WebhookEndpoint[]
   plugin_installations CompanyPluginInstallation[]
+  
+  // Phase 8: Reliability & Economics
+  sla_metrics         TenantSlaMetrics?
+  margin_forecast     TenantMarginForecast?
 }
 
 model CompanySettings {
@@ -1054,5 +1058,44 @@ model InfrastructureIncident {
   severity        String   // "LOW", "HIGH", "CRITICAL"
   resolved        Boolean  @default(false)
   timestamp       DateTime @default(now())
+  
+  remediations    AutoRemediationAction[]
+}
+
+// ==========================================
+// PHASE 8: OPERATIONAL EXCELLENCE
+// ==========================================
+
+model TenantSlaMetrics {
+  id                  String   @id @default(uuid())
+  company_id          String   @unique
+  error_budget_pct    Float    @default(100.0) // Drops when API calls fail
+  uptime_pct          Float    @default(100.0)
+  avg_latency_ms      Int      @default(0)
+  total_requests      Int      @default(0)
+  failed_requests     Int      @default(0)
+  updated_at          DateTime @updatedAt
+  company             Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+model AutoRemediationAction {
+  id              String   @id @default(uuid())
+  incident_id     String
+  action_type     String   // "RESTART_WORKER", "REROUTE_PROVIDER", "QUARANTINE_TENANT"
+  success         Boolean  @default(false)
+  logs            String?
+  executed_at     DateTime @default(now())
+  incident        InfrastructureIncident @relation(fields: [incident_id], references: [id], onDelete: Cascade)
+}
+
+model TenantMarginForecast {
+  id                    String   @id @default(uuid())
+  company_id            String   @unique
+  estimated_mrr         Float    @default(0.0) // Subscription + Addons
+  compute_cost_cogs     Float    @default(0.0) // AI + Storage + Queue Execution
+  profit_margin_pct     Float    @default(100.0)
+  forecasted_churn_risk Float    @default(0.0) // 0 to 100%
+  updated_at            DateTime @updatedAt
+  company               Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 }
 

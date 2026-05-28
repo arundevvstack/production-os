@@ -126,7 +126,7 @@ export class AIRouter {
       const computeTimeMs = Date.now() - startMs;
 
       // 3. Update Job with Success
-      return await prisma.aIGenerationJob.update({
+      const completedJob = await prisma.aIGenerationJob.update({
         where: { id: job.id },
         data: {
           status: 'completed',
@@ -135,6 +135,33 @@ export class AIRouter {
           compute_time_ms: computeTimeMs
         }
       });
+
+      // Phase 8.3: Cost Intelligence Engine (Update COGS and Margin Forecast)
+      if (project?.company_id) {
+          const marginRecord = await prisma.tenantMarginForecast.upsert({
+              where: { company_id: project.company_id },
+              update: { 
+                  compute_cost_cogs: { increment: costCredits }
+              },
+              create: {
+                  company_id: project.company_id,
+                  compute_cost_cogs: costCredits,
+                  estimated_mrr: 1000.00, // Example fallback for mock data
+                  profit_margin_pct: 100.0
+              }
+          });
+
+          // Calculate current dynamic profit margin
+          if (marginRecord.estimated_mrr > 0) {
+              const newMarginPct = ((marginRecord.estimated_mrr - marginRecord.compute_cost_cogs) / marginRecord.estimated_mrr) * 100;
+              await prisma.tenantMarginForecast.update({
+                  where: { company_id: project.company_id },
+                  data: { profit_margin_pct: newMarginPct }
+              });
+          }
+      }
+
+      return completedJob;
 
     } catch (error: any) {
       // 4. Update Job with Failure
