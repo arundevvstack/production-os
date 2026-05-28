@@ -21,12 +21,12 @@ const PROJECT_TEMPLATES = {
       { name: "Delivery", order: 13 }
     ],
     objectives: [
-      { title: "Concept finalized", estimated_hours: 10, priority: "High" },
-      { title: "Script approved", estimated_hours: 5, priority: "High" },
-      { title: "Prompt finalized", estimated_hours: 8, priority: "Medium" },
-      { title: "AI assets generated", estimated_hours: 40, priority: "High" },
-      { title: "Voice approved", estimated_hours: 3, priority: "Medium" },
-      { title: "Final render delivered", estimated_hours: 5, priority: "High" }
+      { title: "Concept finalized", stage: "Concept Development", estimated_hours: 10, priority: "High" },
+      { title: "Script approved", stage: "Script Writing", estimated_hours: 5, priority: "High" },
+      { title: "Prompt finalized", stage: "AI Prompt Creation", estimated_hours: 8, priority: "Medium" },
+      { title: "AI assets generated", stage: "AI Asset Generation", estimated_hours: 40, priority: "High" },
+      { title: "Voice approved", stage: "Voice Generation", estimated_hours: 3, priority: "Medium" },
+      { title: "Final render delivered", stage: "Final Render", estimated_hours: 5, priority: "High" }
     ]
   },
   "Hybrid Production": {
@@ -46,10 +46,10 @@ const PROJECT_TEMPLATES = {
       { name: "Final Delivery", order: 13 }
     ],
     objectives: [
-      { title: "Shoot completed", estimated_hours: 24, priority: "High" },
-      { title: "AI enhancement completed", estimated_hours: 16, priority: "High" },
-      { title: "VFX approved", estimated_hours: 12, priority: "Medium" },
-      { title: "Final export delivered", estimated_hours: 4, priority: "High" }
+      { title: "Shoot completed", stage: "Production Shoot", estimated_hours: 24, priority: "High" },
+      { title: "AI enhancement completed", stage: "AI Enhancement", estimated_hours: 16, priority: "High" },
+      { title: "VFX approved", stage: "VFX", estimated_hours: 12, priority: "Medium" },
+      { title: "Final export delivered", stage: "Final Delivery", estimated_hours: 4, priority: "High" }
     ]
   },
   "Normal Production": {
@@ -67,11 +67,11 @@ const PROJECT_TEMPLATES = {
       { name: "Delivery", order: 11 }
     ],
     objectives: [
-      { title: "Crew finalized", estimated_hours: 4, priority: "High" },
-      { title: "Equipment booked", estimated_hours: 2, priority: "Medium" },
-      { title: "Shoot completed", estimated_hours: 48, priority: "High" },
-      { title: "Editing completed", estimated_hours: 30, priority: "High" },
-      { title: "Delivery approved", estimated_hours: 2, priority: "High" }
+      { title: "Crew finalized", stage: "Crew Assignment", estimated_hours: 4, priority: "High" },
+      { title: "Equipment booked", stage: "Equipment Booking", estimated_hours: 2, priority: "Medium" },
+      { title: "Shoot completed", stage: "Production", estimated_hours: 48, priority: "High" },
+      { title: "Editing completed", stage: "Editing", estimated_hours: 30, priority: "High" },
+      { title: "Delivery approved", stage: "Delivery", estimated_hours: 2, priority: "High" }
     ]
   }
 };
@@ -127,9 +127,10 @@ export async function POST(req: Request) {
         });
       }
 
-      // 3. Create workflow stages
+      // 3. Create workflow stages and keep their IDs
+      const stageIdMap: Record<string, string> = {};
       for (const stage of template.stages) {
-        await tx.projectStage.create({
+        const createdStage = await tx.projectStage.create({
           data: {
             project_id: newProject.id,
             name: stage.name,
@@ -137,6 +138,7 @@ export async function POST(req: Request) {
             status: stage.order === 1 ? 'active' : 'pending' // Only first stage active
           }
         });
+        stageIdMap[stage.name] = createdStage.id;
       }
 
       // 4. Create default objectives
@@ -144,6 +146,7 @@ export async function POST(req: Request) {
         await tx.objective.create({
           data: {
             project_id: newProject.id,
+            stage_id: stageIdMap[obj.stage] || null,
             title: obj.title,
             estimated_hours: obj.estimated_hours,
             priority: obj.priority,
