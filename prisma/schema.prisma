@@ -101,6 +101,7 @@ model User {
   skill_tags         String[]
   availability       String   @default("available") // available, busy, offline
   productivity_score Float    @default(100.0)
+  capacity_hours     Float    @default(40)
   createdAt          DateTime @default(now())
 
   company Company?   @relation(fields: [company_id], references: [id], onDelete: Cascade)
@@ -257,6 +258,7 @@ model Project {
   expenses       Expense[]
   meetings       Meeting[]
   productionLogs ProductionLog[]
+  workflow_state WorkflowState?
 }
 
 model ProjectStage {
@@ -279,6 +281,20 @@ model Milestone {
   due_date   DateTime?
   is_locked  Boolean   @default(false)
   status     String    @default("pending")
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+model WorkflowState {
+  id                    String    @id @default(uuid())
+  project_id            String    @unique
+  active_stage_id       String?
+  previous_stage_id     String?
+  completion_percentage Float     @default(0)
+  is_blocked            Boolean   @default(false)
+  blocked_reason        String?
+  approval_status       String    @default("pending") // pending, approved, rejected
+  updated_at            DateTime  @updatedAt
 
   project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
 }
@@ -321,6 +337,9 @@ model Objective {
   completion_pct  Float     @default(0)
 
   checklist Json? // [{ task: "", done: false }]
+  revision_count   Int     @default(0)
+  attachment_count Int     @default(0)
+  template_id      String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -369,6 +388,9 @@ model TimeEntry {
   is_billable  Boolean   @default(true)
   notes        String?
 
+  approval_status String  @default("pending") // pending, approved, rejected
+  approved_by     String?
+
   created_at DateTime @default(now())
 
   user      User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -382,6 +404,8 @@ model Resource {
   type               String
   status             String    @default("available")
   maintenance_status String    @default("good")
+  department         String?
+  capacity_hours     Float     @default(40)
   created_at         DateTime  @default(now())
   bookings           Booking[]
   company            Company   @relation(fields: [company_id], references: [id], onDelete: Cascade)
@@ -447,6 +471,8 @@ model Asset {
   file_size Int?
   file_type String?
   version   Int     @default(1)
+  metadata  Json?
+  parent_id String?
 
   created_at DateTime @default(now())
 
