@@ -322,25 +322,6 @@ export default function ProjectsPage() {
               </div>
               
               <form onSubmit={handleCreateProject} className="p-8 space-y-6 bg-white">
-                <div className="space-y-2 p-5 bg-slate-50 rounded-[10px] border border-slate-100">
-                  <Label htmlFor="importLead" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2 mb-2">
-                    <Database className="h-3 w-3" /> Import from Lead
-                  </Label>
-                  <UnifiedClientSelector 
-                    companyId={companyId || ''} 
-                    value={leads?.find(l => l.id === selectedLeadId)?.company_name || ""}
-                    onSelect={(cData) => {
-                      const lead = leads?.find(l => l.company_name === cData.company_name);
-                      if (lead) {
-                        handleLeadImport(lead.id);
-                      }
-                    }}
-                    placeholder="Sync with CRM / Client..."
-                    className="rounded-[10px] h-11 bg-white border-white/60 shadow-sm text-xs font-bold text-slate-800"
-                    showOnboardOption={false}
-                  />
-                </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Service Category</Label>
@@ -450,43 +431,24 @@ export default function ProjectsPage() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Client</Label>
-                    <Select 
-                      value={newProject.client_name} 
-                      onValueChange={(val) => {
-                        const lead = leads?.find(l => l.company_name === val);
+                    <UnifiedClientSelector
+                      companyId={companyId || ''}
+                      value={newProject.client_name}
+                      onSelect={(clientData) => {
+                        const lead = leads?.find(l => l.company_name === clientData.company_name);
                         setNewProject({
                           ...newProject, 
-                          client_name: val,
-                          service_category: lead?.service_vertical || newProject.service_category,
-                          service: lead?.sub_vertical || newProject.service,
+                          client_name: clientData.company_name,
+                          service_category: clientData.service_vertical || newProject.service_category,
+                          service: clientData.sub_vertical || newProject.service,
                           budget: lead?.deal_value ? lead.deal_value.toString() : newProject.budget
                         });
                         if (lead) setSelectedLeadId(lead.id);
                       }}
-                      required
-                    >
-                      <SelectTrigger className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm font-bold">
-                        <SelectValue placeholder="Select Client" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
-                        {!leads ? (
-                          <div className="p-4 flex items-center justify-center gap-2 text-xs font-bold text-slate-400">
-                            <Loader2 className="h-3 w-3 animate-spin" /> Loading clients...
-                          </div>
-                        ) : leads.filter(l => l.stage === 'client' || l.company_name === newProject.client_name).length === 0 ? (
-                          <div className="p-6 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            No clients found. <br />
-                            <span className="text-primary/60 mt-1 block">Onboard a client in the directory first.</span>
-                          </div>
-                        ) : (
-                          leads.filter(l => l.stage === 'client' || l.company_name === newProject.client_name).map((lead) => (
-                            <SelectItem key={lead.id} value={lead.company_name} className="text-xs font-bold rounded-xl m-1">
-                              {lead.company_name}
-                            </SelectItem>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
+                      placeholder="Select Client / Prospect..."
+                      className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm font-bold"
+                      showOnboardOption={false}
+                    />
                   </div>
                 </div>
 
