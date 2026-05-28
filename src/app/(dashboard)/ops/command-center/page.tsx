@@ -54,10 +54,10 @@ export default function CommandCenter() {
 
             {/* Middle Row: Infrastructure Maps & Live Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="col-span-2 bg-card border border-border rounded-xl p-2 relative overflow-hidden h-[400px]">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neon-purple/5 to-transparent pointer-events-none z-0" />
+                <div className="col-span-2 bg-card border border-border shadow-sm rounded-xl p-2 relative overflow-hidden h-[400px]">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/5 to-transparent pointer-events-none z-0" />
                     <div className="absolute top-4 left-4 z-10 flex gap-2">
-                        <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full border border-border">
+                        <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground bg-background/80 backdrop-blur-md px-3 py-1 rounded-full border border-border shadow-sm">
                             <div className={`w-2 h-2 rounded-full ${telemetry.incident_active ? 'bg-destructive animate-pulse' : 'bg-neon-emerald'}`} />
                             Global AI Routing Topology
                         </span>
@@ -67,7 +67,7 @@ export default function CommandCenter() {
                     </div>
                 </div>
                 
-                <div className="col-span-1 bg-card border border-border rounded-xl p-6">
+                <div className="col-span-1 bg-card border border-border shadow-sm rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-foreground mb-4">Autonomous Remediation Log</h3>
                     <div className="space-y-4">
                         {[1, 2, 3].map((i) => (
