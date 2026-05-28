@@ -15,11 +15,11 @@ import { TelemetryData } from '@/hooks/useThrottledTelemetry';
 
 // Initial Nodes
 const initialNodes = [
-  { id: 'ingress', position: { x: 50, y: 150 }, data: { label: 'Webhooks Ingress' }, style: { background: '#1c1c1c', color: '#fff', border: '1px solid #333' } },
-  { id: 'event-bus', position: { x: 250, y: 150 }, data: { label: 'Global Event Bus' }, style: { background: '#1c1c1c', color: '#fff', border: '1px solid #333' } },
-  { id: 'queue', position: { x: 450, y: 150 }, data: { label: 'Worker Queue' }, style: { background: '#1c1c1c', color: '#fff', border: '1px solid #333' } },
-  { id: 'openai', position: { x: 700, y: 50 }, data: { label: 'OpenAI (Primary)' }, style: { background: '#1c1c1c', color: '#fff', border: '1px solid #333' } },
-  { id: 'anthropic', position: { x: 700, y: 250 }, data: { label: 'Anthropic (Failover)' }, style: { background: '#1c1c1c', color: '#fff', border: '1px solid #333' } },
+  { id: 'ingress', position: { x: 50, y: 150 }, data: { label: 'Webhooks Ingress' }, style: { background: '#ffffff', color: '#111', border: '1px solid #e5e5e5', borderRadius: '8px', padding: '10px' } },
+  { id: 'event-bus', position: { x: 250, y: 150 }, data: { label: 'Global Event Bus' }, style: { background: '#ffffff', color: '#111', border: '1px solid #e5e5e5', borderRadius: '8px', padding: '10px' } },
+  { id: 'queue', position: { x: 450, y: 150 }, data: { label: 'Worker Queue' }, style: { background: '#ffffff', color: '#111', border: '1px solid #e5e5e5', borderRadius: '8px', padding: '10px' } },
+  { id: 'openai', position: { x: 700, y: 50 }, data: { label: 'OpenAI (Primary)' }, style: { background: '#ffffff', color: '#111', border: '1px solid #e5e5e5', borderRadius: '8px', padding: '10px' } },
+  { id: 'anthropic', position: { x: 700, y: 250 }, data: { label: 'Anthropic (Failover)' }, style: { background: '#ffffff', color: '#111', border: '1px solid #e5e5e5', borderRadius: '8px', padding: '10px' } },
 ];
 
 // Base Edges
@@ -38,10 +38,10 @@ export function InfrastructureMap({ telemetry }: { telemetry: TelemetryData }) {
       // If there is an incident, make OpenAI red and pulse Anthropic
       if (telemetry.incident_active) {
         if (node.id === 'openai') {
-          return { ...node, style: { ...node.style, background: '#4a0f0f', border: '1px solid #ff4444' } };
+          return { ...node, style: { ...node.style, background: '#ffebee', color: '#b71c1c', border: '1px solid #ef5350' } };
         }
         if (node.id === 'anthropic') {
-          return { ...node, style: { ...node.style, background: '#1c1c1c', border: '1px solid #00bcd4', boxShadow: '0 0 15px #00bcd4' } };
+          return { ...node, style: { ...node.style, background: '#ffffff', color: '#111', border: '1px solid #00bcd4', boxShadow: '0 0 15px rgba(0, 188, 212, 0.4)' } };
         }
       }
       return node;
@@ -70,10 +70,9 @@ export function InfrastructureMap({ telemetry }: { telemetry: TelemetryData }) {
         nodes={nodes}
         edges={edges}
         fitView
-        className="dark"
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#333" gap={16} />
+        <Background color="#ccc" gap={16} />
       </ReactFlow>
     </div>
   );
