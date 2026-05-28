@@ -459,12 +459,36 @@ export default function CRMPage() {
                     Company Name
                   </Label>
                   <Input 
+                    list="company-names"
                     placeholder="e.g. Nike Global" 
                     value={newLead.company_name}
-                    onChange={(e) => setNewLead(prev => ({...prev, company_name: e.target.value}))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setNewLead(prev => ({...prev, company_name: val}));
+                      
+                      // Auto-fill other fields if it matches an existing lead/client
+                      const existing = localLeads.find(l => l.company_name === val);
+                      if (existing) {
+                        setNewLead(prev => ({
+                          ...prev,
+                          contact_person: prev.contact_person || existing.contact_person || "",
+                          email: prev.email || existing.email || "",
+                          phone: prev.phone || existing.phone || existing.whatsapp || "",
+                          whatsapp: prev.whatsapp || existing.whatsapp || existing.phone || "",
+                          industry: existing.industry || prev.industry,
+                          service_vertical: existing.service_vertical || prev.service_vertical,
+                          sub_vertical: existing.sub_vertical || prev.sub_vertical
+                        }));
+                      }
+                    }}
                     className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
                     required
                   />
+                  <datalist id="company-names">
+                    {Array.from(new Set(localLeads.map(l => l.company_name).filter(Boolean))).map((name, i) => (
+                      <option key={i} value={name as string} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
