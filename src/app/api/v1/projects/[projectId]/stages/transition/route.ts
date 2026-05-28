@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { WorkflowEngine } from '@/lib/workflow-engine';
-import { createClient } from '@/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
