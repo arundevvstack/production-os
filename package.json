@@ -9,7 +9,8 @@
     "build": "prisma generate && NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate:platform": "npx tsx tests/validation/tenant-isolation.test.ts && npx tsx tests/validation/db-concurrency-test.ts && npx tsx tests/validation/queue-load-test.ts"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.28.0",
@@ -70,6 +71,7 @@
     "postcss": "^8",
     "prisma": "^6.0.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.22.3",
     "typescript": "^5"
   }
 }
