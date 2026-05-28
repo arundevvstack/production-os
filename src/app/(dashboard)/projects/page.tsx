@@ -70,7 +70,7 @@ import { ListTree, IndianRupee, Zap, Target, Cpu } from "lucide-react";
 import { CONTENT_VERTICALS } from "../clients/page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UnifiedClientSelector } from "@/components/unified-client-selector";
-import { generateProjectFromTemplate, ProjectTemplate } from "@/lib/workflow/template-engine";
+import { ENTERPRISE_TEMPLATES, DEFAULT_TIMELINE_DAYS } from "@/lib/enterprise-workflow-templates";
 
 type ViewMode = 'grid' | 'list' | 'timeline' | 'board';
 
@@ -235,18 +235,12 @@ export default function ProjectsPage() {
       ? crypto.randomUUID() 
       : `${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
 
-    // Archive with explicit fields — let Supabase auto-generate id
+    // Archive with data in JSON column (Archive table schema: id, company_id, archive_type, archived_at, data)
     const { error: archiveErr } = await supabase.from('Archive').insert({
       company_id: companyId,
-      project_name: project.project_name,
       archive_type: 'project',
       archived_at: new Date().toISOString(),
-      budget: project.budget,
-      status: project.status,
-      deadline: project.deadline,
-      client_name: project.client_name,
-      color: project.color,
-      progress: project.progress,
+      data: project,
     });
 
     if (archiveErr) {
@@ -401,6 +395,41 @@ export default function ProjectsPage() {
                       <SelectItem value="Normal Production" className="text-xs font-bold rounded-xl m-1 py-3"><div className="flex items-center gap-2"><Film className="h-4 w-4 text-slate-500" /> Standard Production Pipeline</div></SelectItem>
                     </SelectContent>
                   </Select>
+
+                  {/* Pipeline Preview Panel */}
+                  {newProject.project_type && ENTERPRISE_TEMPLATES[newProject.project_type] && (() => {
+                    const tmpl = ENTERPRISE_TEMPLATES[newProject.project_type];
+                    const totalObjs = tmpl.stages.reduce((acc, s) => acc + s.objectives.length, 0);
+                    const defaultDays = DEFAULT_TIMELINE_DAYS[newProject.project_type];
+                    return (
+                      <div className="mt-3 rounded-[10px] border border-slate-100 bg-slate-50/80 p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Auto-Generated Workspace</p>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-bold text-slate-400">{tmpl.stages.length} Stages</span>
+                            <span className="text-[10px] font-bold text-slate-400">{totalObjs} Objectives</span>
+                            {!newProject.deadline && <span className="text-[10px] font-bold text-amber-500">{defaultDays}d default timeline</span>}
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          {tmpl.stages.map((stage, i) => (
+                            <div key={stage.name} className="flex items-center gap-2">
+                              <div className="h-5 w-5 rounded-md bg-white border border-slate-200 flex items-center justify-center shrink-0">
+                                <span className="text-[9px] font-black text-slate-500">{i + 1}</span>
+                              </div>
+                              <div className="flex-1 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-700">{stage.name}</span>
+                                <span className="text-[10px] text-slate-400 font-medium">{stage.objectives.length} tasks</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-[9px] text-slate-400 font-medium pt-1 border-t border-slate-100">
+                          All stages, objectives, timelines, and dependency chains will be created automatically.
+                        </p>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
