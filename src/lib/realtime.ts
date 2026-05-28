@@ -28,3 +28,42 @@ export function setupRealtimeSubscription(channelName: string, onUpdate: (payloa
     supabase.removeChannel(channel);
   };
 }
+
+/**
+ * Collaboration Presence Hub
+ * Connects to a specific project session and tracks active editors/reviewers
+ * using Supabase Presence.
+ */
+export function setupPresence(
+  projectId: string, 
+  userId: string, 
+  onPresenceUpdate: (state: any) => void
+) {
+  const supabase = createClient();
+  const room = supabase.channel(`presence:project-${projectId}`);
+
+  room.on('presence', { event: 'sync' }, () => {
+      const newState = room.presenceState();
+      onPresenceUpdate(newState);
+  })
+  .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+      console.log('User joined:', newPresences);
+  })
+  .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+      console.log('User left:', leftPresences);
+  })
+  .subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+          await room.track({
+              user: userId,
+              online_at: new Date().toISOString(),
+          });
+      }
+  });
+
+  return () => {
+    room.untrack();
+    supabase.removeChannel(room);
+  };
+}
+

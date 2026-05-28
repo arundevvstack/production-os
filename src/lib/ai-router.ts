@@ -15,6 +15,22 @@ export class AIRouter {
    * and records the outcome in the AIGenerationJob ledger for financial tracking.
    */
   static async dispatchJob(payload: AIRequestPayload) {
+    // 0. AI Governance & Cost Control Check
+    const project = await prisma.project.findUnique({
+      where: { id: payload.projectId },
+      include: { budget_tracking: true }
+    });
+
+    if (project?.budget_tracking) {
+      const budget = project.budget_tracking;
+      const aiUsagePercent = budget.utilized_budget / budget.approved_budget;
+      
+      // Hard cap: If total project budget is > 95% utilized, block AI generations
+      if (aiUsagePercent > 0.95) {
+        throw new Error('AI Generation blocked: Project budget cap exceeded (95%+ utilization).');
+      }
+    }
+
     // 1. Create Job Entry
     const job = await prisma.aIGenerationJob.create({
       data: {
