@@ -520,9 +520,6 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
           {profileType === "talent" && (
             <TabsTrigger value="talent" className="rounded-lg text-[10px] md:text-xs font-bold py-2 px-4">Talent Details</TabsTrigger>
           )}
-          {profileType === "client" && (
-            <TabsTrigger value="client" className="rounded-lg text-[10px] md:text-xs font-bold py-2 px-4">Client Relationship</TabsTrigger>
-          )}
           <TabsTrigger value="activity" className="rounded-lg text-[10px] md:text-xs font-bold py-2 px-4">Activity</TabsTrigger>
           <TabsTrigger value="scheduling" className="rounded-lg text-[10px] md:text-xs font-bold py-2 px-4">Schedule</TabsTrigger>
           {canViewFinance && (
@@ -539,6 +536,61 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             PHASE 2: OVERVIEW SECTION TAB
             ---------------------------------------------------- */}
         <TabsContent value="overview" className="space-y-6">
+          {profileType === "client" ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              
+              <div className="lg:col-span-2 space-y-6">
+                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                  <CardContent className="p-6 space-y-4">
+                    <h3 className="font-black text-sm text-slate-800">Relationship Summary</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      {profileData.relationshipSummary}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Proposals History */}
+                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                  <CardContent className="p-5 space-y-4">
+                    <h3 className="font-black text-sm text-slate-800">Proposals Overview</h3>
+                    <div className="space-y-3">
+                      {profileData.activeProposals?.map((prop: any, index: number) => (
+                        <div key={index} className="flex justify-between p-3 bg-white/30 rounded-xl border border-white/10 text-xs items-center">
+                          <div>
+                            <strong className="text-slate-800 font-bold block">{prop.title}</strong>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">{prop.num}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="font-black text-slate-800 block">{prop.val}</span>
+                            <Badge className="bg-emerald-500/10 text-emerald-500 border-none font-bold mt-1 text-[8px]">{prop.status}</Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="space-y-6">
+                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                  <CardContent className="p-5 space-y-4">
+                    <h4 className="font-black text-xs text-slate-800 uppercase tracking-wider">Account Metrics</h4>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-slate-500">Total Proposals Submitted</span>
+                        <strong className="text-slate-800">{profileData.proposalsCount}</strong>
+                      </div>
+                      <div className="flex justify-between items-center pt-2 border-t">
+                        <span className="font-bold text-slate-500">Invoiced Revenue</span>
+                        <strong className="text-slate-900 font-black">₹{profileData.invoicesTotal?.toLocaleString()}</strong>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+            </div>
+          ) : (
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             
             {/* Left overview widgets: work breakdown */}
@@ -646,236 +698,8 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             </div>
 
           </div>
+          )}
         </TabsContent>
-
-        {/* ----------------------------------------------------
-            PHASE 3: PROJECT CONNECTIONS TAB
-            ---------------------------------------------------- */}
-        <TabsContent value="projects" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="font-black text-sm text-slate-800">Production Allocations</h3>
-              <p className="text-[10px] text-muted-foreground">Active and completed milestones mapped from Project Management.</p>
-            </div>
-            {(roleId === "SUPER_ADMIN" || roleId === "MANAGER") && (
-              <Button onClick={() => setIsAssignOpen(true)} className="rounded-xl h-9 text-xs bg-primary text-white font-bold px-4">
-                <Plus className="h-4 w-4 mr-1" /> Add Project Assignment
-              </Button>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {projects.map(p => (
-              <Card key={p.id} className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
-                <CardContent className="p-5 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <Badge className={`${
-                        p.status === "Active" ? "bg-primary/10 text-primary" : "bg-emerald-500/10 text-emerald-500"
-                      } border-none text-[8px] font-black uppercase tracking-wider`}>
-                        {p.status}
-                      </Badge>
-                      <h4 className="font-black text-sm text-slate-800 mt-1.5 leading-tight">{p.name}</h4>
-                    </div>
-                    {(roleId === "SUPER_ADMIN" || roleId === "MANAGER") && (
-                      <Button 
-                        onClick={() => handleRemoveProject(p.id, p.name)}
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-8 w-8 text-rose-500 hover:bg-rose-50 rounded-lg shrink-0"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-
-                  <div className="space-y-1 text-xs">
-                    <span className="text-[10px] text-slate-400 block font-bold">Assigned Responsibility</span>
-                    <span className="font-bold text-slate-700">{p.role}</span>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[10px] font-bold text-slate-500">
-                      <span>Completion Progress</span>
-                      <span>{p.progress}%</span>
-                    </div>
-                    <Progress value={p.progress} className="h-1.5 bg-slate-100 mt-1.5" />
-                  </div>
-
-                  <div className="border-t border-white/10 pt-3 flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase">
-                    <span>Deadline</span>
-                    <span className="text-slate-600">{p.deadline}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* ----------------------------------------------------
-            PHASE 4: TALENT RICH PORTFOLIO MODE
-            ---------------------------------------------------- */}
-        <TabsContent value="talent" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Portfolio gallery & media links */}
-            <div className="lg:col-span-2 space-y-6">
-              <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
-                <CardContent className="p-6 space-y-4">
-                  <h3 className="font-black text-sm text-slate-800">Portfolio Galleries</h3>
-                  <div className="grid grid-cols-3 gap-3">
-                    {profileData.portfolioUrls?.map((url: string, index: number) => (
-                      <div 
-                        key={index} 
-                        onClick={() => {
-                          setSelectedMediaUrl(url);
-                          setIsGalleryOpen(true);
-                        }}
-                        className="relative aspect-square rounded-xl overflow-hidden cursor-pointer group shadow border"
-                      >
-                        <img src={url} alt="Portfolio lookbook item" className="object-cover h-full w-full group-hover:scale-105 transition duration-300" />
-                        <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                          <Eye className="h-5 w-5 text-white" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Day rates & castings history */}
-              <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
-                <CardContent className="p-5 space-y-4">
-                  <h3 className="font-black text-sm text-slate-800">Casting & Project History</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between p-3 bg-white/30 rounded-xl border border-white/10 text-xs items-center">
-                      <div>
-                        <strong className="text-slate-800 font-bold block">Kalyan Silks Onam Commercial</strong>
-                        <span className="text-[10px] text-slate-400 block mt-0.5">Role: Lead Actor | Year: 2025</span>
-                      </div>
-                      <Badge className="bg-emerald-500/10 text-emerald-500 border-none font-bold">Successfully Delivered</Badge>
-                    </div>
-                    <div className="flex justify-between p-3 bg-white/30 rounded-xl border border-white/10 text-xs items-center">
-                      <div>
-                        <strong className="text-slate-800 font-bold block">Tech-Brand Dubbing Campaign</strong>
-                        <span className="text-[10px] text-slate-400 block mt-0.5">Role: Main Voice Over | Year: 2024</span>
-                      </div>
-                      <Badge className="bg-emerald-500/10 text-emerald-500 border-none font-bold">Successfully Delivered</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* AI Talent details sidebar */}
-            <div className="space-y-6">
-              <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
-                <CardContent className="p-5 space-y-4">
-                  <h4 className="font-black text-xs text-slate-800 uppercase tracking-wider">Social Media Roster</h4>
-                  <div className="space-y-3 pt-1 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="flex items-center gap-1.5 font-bold text-slate-500">
-                        <Instagram className="h-4 w-4 text-primary" /> Instagram Followers
-                      </span>
-                      <strong className="text-slate-800">{(profileData.followers / 1000000).toFixed(1)}M</strong>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="flex items-center gap-1.5 font-bold text-slate-500">
-                        <Star className="h-4 w-4 text-amber-500" /> Engagement Rate
-                      </span>
-                      <strong className="text-slate-800">{(profileData.engagementRate * 100).toFixed(1)}%</strong>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t">
-                      <span className="font-bold text-slate-500">Pricing / Day Rate</span>
-                      <strong className="text-slate-900 text-sm font-black">₹{profileData.dayRate?.toLocaleString()}/day</strong>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* AI matching block */}
-              <Card className="glass-panel border-white/20 shadow-premium bg-gradient-to-br from-indigo-50/15 to-purple-50/15 backdrop-blur-3xl rounded-[12px] border-l-4 border-l-indigo-400">
-                <CardContent className="p-5 space-y-4">
-                  <h4 className="font-black text-xs text-indigo-700 flex items-center gap-1.5">
-                    <Sparkles className="h-4 w-4 text-indigo-500 animate-pulse" /> AI Talent Matcher
-                  </h4>
-                  <div className="space-y-3 text-[11px] leading-relaxed text-slate-600">
-                    <div className="p-2 bg-indigo-50/30 rounded-lg">
-                      <span className="font-bold block text-indigo-800">Direct Project Recommendations</span>
-                      <p className="mt-1 text-slate-600">Ideal for high-budget commercial campaigns, lifestyle brands, and deep dramatic scripts.</p>
-                    </div>
-                    <div className="p-2 bg-indigo-50/30 rounded-lg">
-                      <span className="font-bold block text-indigo-800">Recommended Roles</span>
-                      <p className="mt-1 text-slate-600">Lead actor, brand ambassador model, or premium product spokesperson.</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-          </div>
-        </TabsContent>
-
-        {/* ----------------------------------------------------
-            PHASE 12: CLIENT SIMPLIFIED RELATIONSHIP VIEW TAB
-            ---------------------------------------------------- */}
-        {profileType === "client" && (
-          <TabsContent value="client" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
-              <div className="lg:col-span-2 space-y-6">
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
-                  <CardContent className="p-6 space-y-4">
-                    <h3 className="font-black text-sm text-slate-800">Relationship Summary</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {profileData.relationshipSummary}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                {/* Proposals History */}
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
-                  <CardContent className="p-5 space-y-4">
-                    <h3 className="font-black text-sm text-slate-800">Proposals Overview</h3>
-                    <div className="space-y-3">
-                      {profileData.activeProposals?.map((prop: any, index: number) => (
-                        <div key={index} className="flex justify-between p-3 bg-white/30 rounded-xl border border-white/10 text-xs items-center">
-                          <div>
-                            <strong className="text-slate-800 font-bold block">{prop.title}</strong>
-                            <span className="text-[10px] text-slate-400 block mt-0.5">{prop.num}</span>
-                          </div>
-                          <div className="text-right">
-                            <span className="font-black text-slate-800 block">{prop.val}</span>
-                            <Badge className="bg-emerald-500/10 text-emerald-500 border-none font-bold mt-1 text-[8px]">{prop.status}</Badge>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="space-y-6">
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
-                  <CardContent className="p-5 space-y-4">
-                    <h4 className="font-black text-xs text-slate-800 uppercase tracking-wider">Account Metrics</h4>
-                    <div className="space-y-2 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="font-bold text-slate-500">Total Proposas Submitted</span>
-                        <strong className="text-slate-800">{profileData.proposalsCount}</strong>
-                      </div>
-                      <div className="flex justify-between items-center pt-2 border-t">
-                        <span className="font-bold text-slate-500">Invoiced Revenue</span>
-                        <strong className="text-slate-900 font-black">₹{profileData.invoicesTotal?.toLocaleString()}</strong>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-            </div>
-          </TabsContent>
-        )}
 
         {/* ----------------------------------------------------
             PHASE 5: PERFORMANCE & ACTIVITY TIMELINE TAB
