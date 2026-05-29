@@ -4,6 +4,7 @@ export const PIPELINE_STAGES = [
   { id: 'discovery_scheduled', name: 'Discovery Scheduled', color: 'bg-sky-200' },
   { id: 'discovery_completed', name: 'Discovery Completed', color: 'bg-cyan-200' },
   { id: 'requirement_analysis', name: 'Requirement Analysis', color: 'bg-indigo-200' },
+  { id: 'pilot_video', name: 'Pilot Video', color: 'bg-fuchsia-200' },
   { id: 'proposal_sent', name: 'Proposal Sent', color: 'bg-violet-200' },
   { id: 'negotiation', name: 'Negotiation', color: 'bg-amber-200' },
   { id: 'awaiting_approval', name: 'Awaiting Approval', color: 'bg-orange-200' },

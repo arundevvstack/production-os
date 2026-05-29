@@ -56,6 +56,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { 
   DropdownMenu, 
@@ -89,6 +90,14 @@ export default function CRMPage() {
   const [leadToPermanentDelete, setLeadToPermanentDelete] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAnalytics, setShowAnalytics] = useState(false);
+  
+  // Drag and Drop State
+  const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null);
+  
+  // Pilot Video State
+  const [leadToPromoteToPilot, setLeadToPromoteToPilot] = useState<any>(null);
+  const [pilotProjectAssignee, setPilotProjectAssignee] = useState<string>("");
+  const router = useRouter();
 
   const [newLead, setNewLead] = useState({
     lead_type: "Prospect", // "Prospect" | "Client"
@@ -115,6 +124,8 @@ export default function CRMPage() {
   });
 
   const [localLeads, setLocalLeads] = useState<any[]>([]);
+
+  const { data: companyUsers } = useSupabaseCollection('User');
 
   useEffect(() => {
     if (allLeads) {
@@ -357,6 +368,101 @@ export default function CRMPage() {
 
     toast({ title: "Lead Deleted", description: "The lead has been permanently deleted." });
     setLeadToPermanentDelete(null);
+  };
+
+  const handleDragStart = (e: React.DragEvent, leadId: string) => {
+    setDraggedLeadId(leadId);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetStageId: string) => {
+    e.preventDefault();
+    if (!draggedLeadId || !companyId) return;
+
+    const lead = localLeads.find(l => l.id === draggedLeadId);
+    if (!lead || lead.stage === targetStageId) {
+      setDraggedLeadId(null);
+      return;
+    }
+
+    if (targetStageId === 'pilot_video') {
+      setLeadToPromoteToPilot(lead);
+      setDraggedLeadId(null);
+      return; // Stop here, wait for dialog
+    }
+
+    // Optimistic Update
+    setLocalLeads(prev => prev.map(l => l.id === draggedLeadId ? { ...l, stage: targetStageId } : l));
+    
+    try {
+      const { error } = await supabase.from('Prospect').update({ stage: targetStageId }).eq('id', draggedLeadId);
+      if (error) throw error;
+      toast({ title: "Stage Updated", description: "Lead has been moved successfully." });
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Error moving lead", description: err.message });
+      refetchLeads();
+    } finally {
+      setDraggedLeadId(null);
+    }
+  };
+
+  const handlePilotProjectSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leadToPromoteToPilot || !companyId) return;
+    setIsSubmitting(true);
+    
+    try {
+      // Create Project
+      const { data: newProject, error: projectError } = await supabase.from('Project').insert({
+        company_id: companyId,
+        project_name: `Pilot Video Creation - ${leadToPromoteToPilot.company_name}`,
+        client_name: leadToPromoteToPilot.company_name,
+        status: 'pre-prod',
+        created_by: profile?.id || 'system'
+      }).select().single();
+
+      if (projectError) throw projectError;
+
+      // Assign Objective if assignee selected
+      if (pilotProjectAssignee && pilotProjectAssignee !== "Unassigned") {
+        await supabase.from('Objective').insert({
+          company_id: companyId,
+          project_id: newProject.id,
+          title: "Pilot Video Setup",
+          assignedTo: pilotProjectAssignee,
+          status: 'todo',
+          priority: 'High'
+        });
+      }
+
+      // Update lead stage
+      const { error: updateError } = await supabase.from('Prospect')
+        .update({ stage: 'pilot_video' })
+        .eq('id', leadToPromoteToPilot.id);
+        
+      if (updateError) throw updateError;
+      
+      setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToPilot.id ? { ...l, stage: 'pilot_video' } : l));
+      toast({ title: "Project Created", description: `Pilot Video project created successfully.` });
+      
+      setLeadToPromoteToPilot(null);
+      setPilotProjectAssignee("");
+      
+      // Navigate to the new project
+      if (newProject?.id) {
+        router.push(`/projects/${newProject.id}`);
+      }
+      
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Action Failed", description: err.message });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const activeVertical = useMemo(() => 
@@ -899,6 +1005,8 @@ export default function CRMPage() {
                 <div 
                   key={stage.id} 
                   className="flex flex-col gap-4 w-[320px] shrink-0 h-full bg-slate-50/50 rounded-[10px] p-3 border border-slate-200/50"
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, stage.id)}
                 >
                   <div className="flex items-center justify-between px-3 shrink-0 py-2">
                     <div className="flex items-center gap-2">
@@ -913,7 +1021,12 @@ export default function CRMPage() {
 
                   <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 space-y-4 pb-4">
                     {leadsInStage.map((lead) => (
-                      <Card key={lead.id} className="hover:ring-2 hover:ring-primary/10 transition-all border-none shadow-sm group bg-white rounded-[10px]">
+                      <Card 
+                        key={lead.id} 
+                        draggable={true}
+                        onDragStart={(e) => handleDragStart(e, lead.id)}
+                        className="hover:ring-2 hover:ring-primary/10 transition-all border-none shadow-sm group bg-white rounded-[10px] cursor-grab active:cursor-grabbing"
+                      >
                         <CardContent className="p-5 space-y-4">
                           <div className="flex items-start justify-between gap-2">
                             <Link href={`/crm/${lead.id}`} className="flex-1">
@@ -1043,6 +1156,56 @@ export default function CRMPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Dialog: Promote to Pilot Video Project */}
+      <Dialog open={!!leadToPromoteToPilot} onOpenChange={(open) => !open && setLeadToPromoteToPilot(null)}>
+        <DialogContent className="sm:max-w-[460px] rounded-[10px] p-0 border border-slate-100 bg-white shadow-2xl">
+          <div className="relative p-8 pb-6 border-b border-slate-100">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/20 to-transparent" />
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-fuchsia-500/5 rounded-full blur-3xl pointer-events-none" />
+            <DialogHeader className="relative">
+              <DialogTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
+                <div className="h-10 w-10 rounded-[10px] bg-fuchsia-50 border border-fuchsia-100 flex items-center justify-center">
+                  <Sparkles className="h-5 w-5 text-fuchsia-500" />
+                </div>
+                Pilot Video Activation
+              </DialogTitle>
+              <DialogDescription className="text-slate-500 text-xs mt-1">
+                This will create a new pilot project for <strong className="text-slate-800">{leadToPromoteToPilot?.company_name}</strong>. Assign a producer or manager to take charge.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          <form onSubmit={handlePilotProjectSubmit} className="p-8 space-y-5">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Primary Assignee</Label>
+              <Select 
+                value={pilotProjectAssignee} 
+                onValueChange={setPilotProjectAssignee}
+              >
+                <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                  <SelectValue placeholder="Select Assignee (Optional)" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                  {companyUsers?.map(user => (
+                    <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-xl m-1 cursor-pointer">
+                      {user.fullName || user.email} <span className="text-[10px] text-slate-400 font-normal uppercase ml-1">({user.role_id?.replace('_', ' ') || 'User'})</span>
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="Unassigned" className="text-xs italic text-slate-400 rounded-xl m-1 cursor-pointer">Leave Unassigned</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <DialogFooter className="pt-2">
+              <Button type="button" variant="outline" onClick={() => setLeadToPromoteToPilot(null)} className="rounded-[10px] h-11 font-black text-xs uppercase tracking-widest text-slate-600 bg-white">Cancel</Button>
+              <Button type="submit" disabled={isSubmitting} className="rounded-[10px] h-11 font-black text-xs uppercase tracking-widest bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-xl shadow-fuchsia-600/20 transition-all">
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                Create Project
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
