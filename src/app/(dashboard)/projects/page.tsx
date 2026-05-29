@@ -500,7 +500,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
                <div 
-                 className={cn("h-full transition-all duration-1000 shadow-lg", project.color?.replace('bg-', 'bg-') || 'bg-primary')} 
+                 className={cn("h-full transition-all duration-1000 shadow-lg", project.progress === 100 ? "bg-emerald-500" : "bg-primary")} 
                  style={{ width: `${project.progress || 0}%` }} 
                />
             </div>
@@ -541,7 +541,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <div className={cn(
               "absolute top-0 bottom-0 w-1.5 transition-all duration-500 group-hover:w-2.5",
               isEven ? "right-0" : "left-0",
-              project.color?.replace('bg-', 'bg-') || 'bg-primary'
+              project.progress === 100 ? "bg-emerald-500" : "bg-primary"
             )} />
             <CardContent className={cn("p-6 space-y-5", isEven ? "pr-8" : "pl-8")}>
               <div className="flex items-start justify-between">
@@ -591,11 +591,11 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
 
               <div className="space-y-2.5 pt-4 border-t border-border">
                 <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                  <span className="flex items-center gap-1.5"><Zap className={cn("h-3 w-3", project.color?.replace('bg-', 'text-') || 'text-accent')} /> Progress</span>
+                  <span className="flex items-center gap-1.5"><Zap className={cn("h-3 w-3", project.progress === 100 ? "text-emerald-500" : "text-primary")} /> Progress</span>
                   <span className="text-foreground">{project.progress}%</span>
                 </div>
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
-                   <div className={cn("h-full transition-all duration-1000 shadow-md", project.color || "bg-primary")} style={{ width: `${project.progress}%` }} />
+                   <div className={cn("h-full transition-all duration-1000 shadow-md", project.progress === 100 ? "bg-emerald-500" : "bg-primary")} style={{ width: `${project.progress}%` }} />
                 </div>
               </div>
             </CardContent>
@@ -613,7 +613,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             href={`/projects/${project.id}`} 
             className="px-6 py-5 md:w-[35%] flex flex-col gap-3 relative group-hover:bg-white/40 transition-all rounded-l-[15px]"
           >
-            <div className={cn("absolute left-0 top-0 bottom-0 w-2 transition-all group-hover:w-3", project.color?.replace('bg-', 'bg-') || 'bg-primary')} />
+            <div className={cn("absolute left-0 top-0 bottom-0 w-2 transition-all group-hover:w-3", project.progress === 100 ? "bg-emerald-500" : "bg-primary")} />
             <div className="flex items-center gap-4">
               <h3 className="font-black text-xl tracking-tight text-foreground group-hover:text-foreground transition-colors truncate">
                 {project.project_name}
@@ -639,7 +639,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                   <span className="text-xl font-black text-foreground">{project.progress || 0}%</span>
                 </div>
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
-                  <div className={cn("h-full transition-all duration-1000 shadow-md", project.color?.replace('bg-', 'bg-') || 'bg-primary')} style={{ width: `${project.progress || 0}%` }} />
+                  <div className={cn("h-full transition-all duration-1000 shadow-md", project.progress === 100 ? "bg-emerald-500" : "bg-primary")} style={{ width: `${project.progress || 0}%` }} />
                 </div>
               </div>
               
