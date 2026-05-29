@@ -441,7 +441,7 @@ export default function ProjectWorkspacePage() {
   }
 
   return (
-    <div className="space-y-0 -mt-2">
+    <div className="space-y-0 -mt-4 -mx-4 md:-mt-8 md:-mx-8 lg:-mt-12 lg:-mx-12 bg-white min-h-[calc(100vh-2rem)]">
       {/* ── All-white Header ── */}
       <div className="bg-white px-8 pt-8 pb-0">
         {/* Top row */}
