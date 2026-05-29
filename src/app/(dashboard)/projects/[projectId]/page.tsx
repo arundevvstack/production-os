@@ -93,6 +93,9 @@ export default function ProjectWorkspacePage() {
   const [isAddObjectiveOpen, setIsAddObjectiveOpen] = useState(false);
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const [isLogExpenseOpen, setIsLogExpenseOpen] = useState(false);
+  const [isLogTimeOpen, setIsLogTimeOpen] = useState(false);
+  const [timeLogObjective, setTimeLogObjective] = useState<any>(null);
+  const [newTimeEntry, setNewTimeEntry] = useState({ hours: "", notes: "", is_billable: true });
   
   // Form States
   const [newObjective, setNewObjective] = useState({ title: "", assignedTo: "" });
@@ -203,13 +206,51 @@ export default function ProjectWorkspacePage() {
   // --- ACTIONS ---
   const handleToggleObjective = async (objectiveId: string, currentStatus: string) => {
     if (!projectId) return;
-    const newStatus = currentStatus === 'done' ? 'todo' : 'done';
-    
+    const newStatus = currentStatus === 'done' || currentStatus === 'Completed' ? 'Pending' : 'Completed';
     await supabase.from('Objective').update({ status: newStatus }).eq('id', objectiveId);
-
-    // Update project progress
     await supabase.from('Project').update({ progress: liveProgress }).eq('id', projectId);
     refetchObjectives();
+  };
+
+  const handleAssignObjective = async (objectiveId: string, userId: string | null) => {
+    await supabase.from('Objective').update({ assignee_id: userId }).eq('id', objectiveId);
+    refetchObjectives();
+  };
+
+  const handleLogTime = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profile?.id || !timeLogObjective || !newTimeEntry.hours) return;
+    setIsSubmitting(true);
+    try {
+      const durationSec = Math.round(parseFloat(newTimeEntry.hours) * 3600);
+      const now = new Date();
+      const startTime = new Date(now.getTime() - durationSec * 1000);
+
+      const { error } = await supabase.from('TimeEntry').insert({
+        user_id: profile.id,
+        objective_id: timeLogObjective.id,
+        start_time: startTime.toISOString(),
+        end_time: now.toISOString(),
+        duration_sec: durationSec,
+        is_billable: newTimeEntry.is_billable,
+        notes: newTimeEntry.notes || null,
+      });
+      if (error) throw error;
+
+      // Update actual_hours on objective
+      const newActual = (parseFloat(timeLogObjective.actual_hours || '0') + parseFloat(newTimeEntry.hours));
+      await supabase.from('Objective').update({ actual_hours: newActual }).eq('id', timeLogObjective.id);
+
+      toast({ title: 'Time Logged', description: `${newTimeEntry.hours}h logged to "${timeLogObjective.title}".` });
+      setIsLogTimeOpen(false);
+      setTimeLogObjective(null);
+      setNewTimeEntry({ hours: '', notes: '', is_billable: true });
+      refetchObjectives();
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: 'Error', description: err.message });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleAddObjective = async (e: React.FormEvent) => {
@@ -376,24 +417,20 @@ export default function ProjectWorkspacePage() {
 
   return (
     <div className="space-y-0 -mt-2">
-      {/* ── Premium Dark Header ── */}
-      <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-8 pt-8 pb-0 overflow-hidden">
-        {/* Ambient glow blobs */}
-        <div className="absolute top-0 left-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/8 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
-
+      {/* ── All-white Header ── */}
+      <div className="bg-white px-8 pt-8 pb-0">
         {/* Top row */}
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div className="flex items-start gap-5">
             <button
               onClick={() => router.push("/projects")}
-              className="mt-1 h-9 w-9 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/15 transition-all shrink-0"
+              className="mt-1 h-9 w-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all shrink-0"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
             <div className="space-y-2">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-3xl font-black text-white tracking-tight leading-none">{project.project_name}</h1>
+                <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">{project.project_name}</h1>
                 {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) ? (
                   <Select
                     defaultValue={project.status}
@@ -418,36 +455,36 @@ export default function ProjectWorkspacePage() {
                       }
                     }}
                   >
-                    <SelectTrigger className="rounded-full bg-white/10 border-white/10 text-white font-black text-[10px] uppercase h-6 px-3 hover:bg-white/15 transition-all w-auto focus:ring-0">
+                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-slate-50 border-0 text-slate-600 w-auto focus:ring-0 shadow-none">
                       <SelectValue placeholder="Phase" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-[10px] p-1.5">
-                      <SelectItem value="pre-prod" className="py-2 rounded-xl text-[10px] font-black uppercase">Pre-Production</SelectItem>
-                      <SelectItem value="production" className="py-2 rounded-xl text-[10px] font-black uppercase">Production</SelectItem>
-                      <SelectItem value="post-prod" className="py-2 rounded-xl text-[10px] font-black uppercase">Post-Production</SelectItem>
-                      <SelectItem value="release" className="py-2 rounded-xl text-[10px] font-black uppercase">Release</SelectItem>
+                    <SelectContent className="rounded-xl p-1.5 shadow-xl border-0">
+                      <SelectItem value="pre-prod" className="py-2 rounded-lg text-[10px] font-black uppercase">Pre-Production</SelectItem>
+                      <SelectItem value="production" className="py-2 rounded-lg text-[10px] font-black uppercase">Production</SelectItem>
+                      <SelectItem value="post-prod" className="py-2 rounded-lg text-[10px] font-black uppercase">Post-Production</SelectItem>
+                      <SelectItem value="release" className="py-2 rounded-lg text-[10px] font-black uppercase">Release</SelectItem>
                     </SelectContent>
                   </Select>
                 ) : (
-                  <span className="rounded-full bg-white/10 border border-white/10 text-white/70 font-black text-[10px] uppercase h-6 px-3 flex items-center">{project.status}</span>
+                  <span className="rounded-full bg-slate-50 text-slate-500 font-black text-[10px] uppercase h-7 px-3 flex items-center">{project.status}</span>
                 )}
               </div>
-              <div className="flex items-center gap-3 text-sm text-white/40">
-                <span>Client: <span className="text-white/70 font-bold">{project.client_name || '—'}</span></span>
+              <div className="flex items-center gap-3 text-sm text-slate-400">
+                <span>Client: <span className="text-slate-600 font-bold">{project.client_name || '—'}</span></span>
                 <span className="opacity-30">•</span>
-                <span className="font-mono text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded text-white/40">{projectId.slice(0, 8).toUpperCase()}</span>
+                <span className="font-mono text-[10px] bg-slate-50 px-2 py-0.5 rounded text-slate-400">{projectId.slice(0, 8).toUpperCase()}</span>
               </div>
             </div>
           </div>
 
-          {/* Right: Progress + CTA */}
+          {/* Right: Progress ring + CTA */}
           <div className="flex items-center gap-6 shrink-0">
             <div className="text-right hidden sm:block">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 mb-2">Production Velocity</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-300 mb-2">Production Velocity</p>
               <div className="flex items-center gap-3">
                 <div className="relative h-10 w-10">
                   <svg className="h-10 w-10 -rotate-90" viewBox="0 0 36 36">
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" />
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#f1f5f9" strokeWidth="3" />
                     <circle
                       cx="18" cy="18" r="15" fill="none"
                       stroke="hsl(var(--primary))"
@@ -456,16 +493,16 @@ export default function ProjectWorkspacePage() {
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-white">{liveProgress}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-slate-700">{liveProgress}%</span>
                 </div>
                 <div>
-                  <p className="text-lg font-black text-white">{liveProgress}%</p>
-                  <p className="text-[9px] text-white/30 font-bold uppercase">Complete</p>
+                  <p className="text-lg font-black text-slate-900">{liveProgress}%</p>
+                  <p className="text-[9px] text-slate-400 font-bold uppercase">Complete</p>
                 </div>
               </div>
             </div>
             <Button
-              className="h-11 px-6 gap-2 rounded-xl bg-white text-slate-900 hover:bg-white/90 font-black text-xs shadow-lg active:scale-95 transition-all"
+              className="h-11 px-6 gap-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 font-black text-xs active:scale-95 transition-all"
               onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}
             >
               <Plus className="h-4 w-4" />
@@ -474,26 +511,26 @@ export default function ProjectWorkspacePage() {
           </div>
         </div>
 
-        {/* Tab bar — floats at bottom of dark header */}
-        <div className="relative z-10 mt-8">
+        {/* Tab bar — white, bottom-border active indicator */}
+        <div className="mt-8">
           <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-transparent border-0 p-0 h-auto flex flex-wrap gap-1">
+            <TabsList className="bg-transparent p-0 h-auto flex flex-wrap gap-0 border-b border-slate-100 w-full justify-start rounded-none">
               {projectStages?.map(stage => (
                 <TabsTrigger
                   key={stage.id}
                   value={stage.name}
-                  className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-none transition-all"
+                  className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 data-[state=active]:shadow-none transition-all"
                 >
                   {getPhaseIcon(stage.name.toLowerCase())} {stage.name}
                 </TabsTrigger>
               ))}
-              <TabsTrigger value="assets" className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 transition-all">
+              <TabsTrigger value="assets" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
                 <Package className="h-3.5 w-3.5" /> Assets
               </TabsTrigger>
-              <TabsTrigger value="finances" className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 transition-all">
+              <TabsTrigger value="finances" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
                 <Receipt className="h-3.5 w-3.5" /> Finances
               </TabsTrigger>
-              <TabsTrigger value="timeline" className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 transition-all">
+              <TabsTrigger value="timeline" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
                 <Calendar className="h-3.5 w-3.5" /> Timeline
               </TabsTrigger>
             </TabsList>
@@ -541,34 +578,97 @@ export default function ProjectWorkspacePage() {
                   </div>
                 ) : (
                   <div className="divide-y divide-slate-50">
-                    {phaseObjectives(stage.name).map((objective, i) => (
-                      <div key={objective.id} className="flex items-center gap-4 px-8 py-4 hover:bg-slate-50/60 transition-colors group">
-                        <span className="text-[10px] font-black text-slate-300 w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                        <Checkbox
-                          checked={objective.status === 'done' || objective.status === 'Completed'}
-                          onCheckedChange={() => handleToggleObjective(objective.id, objective.status)}
-                          className="h-5 w-5 rounded-md border-2 border-slate-200 data-[state=checked]:border-primary data-[state=checked]:bg-primary shrink-0"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className={cn("font-bold text-sm truncate", (objective.status === 'done' || objective.status === 'Completed') ? 'line-through text-slate-300' : 'text-slate-800')}>
-                            {objective.title}
-                          </p>
-                          <div className="flex items-center gap-3 mt-1">
-                            {objective.department && <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{objective.department}</span>}
-                            {objective.priority && (
-                              <span className={cn("text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded",
-                                objective.priority === 'High' ? 'bg-red-50 text-red-500' :
-                                objective.priority === 'Medium' ? 'bg-amber-50 text-amber-500' :
-                                'bg-slate-100 text-slate-400'
-                              )}>{objective.priority}</span>
-                            )}
+                    {phaseObjectives(stage.name).map((objective, i) => {
+                      const assignee = companyUsers?.find(u => u.id === objective.assignee_id);
+                      const isDone = objective.status === 'done' || objective.status === 'Completed';
+                      const actualHrs = parseFloat(objective.actual_hours || '0');
+                      const estHrs = parseFloat(objective.estimated_hours || '0');
+                      return (
+                        <div key={objective.id} className="flex items-start gap-4 px-8 py-5 hover:bg-slate-50/50 transition-colors group">
+                          {/* Row number */}
+                          <span className="text-[10px] font-black text-slate-300 w-5 pt-0.5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+
+                          {/* Checkbox */}
+                          <Checkbox
+                            checked={isDone}
+                            onCheckedChange={() => handleToggleObjective(objective.id, objective.status)}
+                            className="h-5 w-5 rounded-md mt-0.5 shrink-0"
+                          />
+
+                          {/* Main content */}
+                          <div className="flex-1 min-w-0 space-y-2">
+                            <p className={cn("font-bold text-sm leading-snug", isDone ? 'line-through text-slate-300' : 'text-slate-800')}>
+                              {objective.title}
+                            </p>
+
+                            {/* Meta row */}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {objective.department && <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{objective.department}</span>}
+                              {objective.priority && (
+                                <span className={cn("text-[9px] font-black uppercase px-1.5 py-0.5 rounded",
+                                  objective.priority === 'High' ? 'bg-red-50 text-red-500' :
+                                  objective.priority === 'Medium' ? 'bg-amber-50 text-amber-500' :
+                                  'bg-slate-100 text-slate-400'
+                                )}>{objective.priority}</span>
+                              )}
+                              {actualHrs > 0 && (
+                                <span className="text-[9px] font-black text-primary/70 flex items-center gap-1">
+                                  <Clock className="h-2.5 w-2.5" />{actualHrs}h logged{estHrs > 0 ? ` / ${estHrs}h est` : ''}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Assignee inline selector */}
+                            <div className="flex items-center gap-2">
+                              <Select
+                                value={objective.assignee_id || 'unassigned'}
+                                onValueChange={(val) => handleAssignObjective(objective.id, val === 'unassigned' ? null : val)}
+                              >
+                                <SelectTrigger className="h-7 text-[10px] font-bold w-auto max-w-[180px] bg-transparent border-0 shadow-none px-0 text-slate-400 hover:text-slate-700 focus:ring-0 gap-1.5 pl-0">
+                                  {assignee ? (
+                                    <span className="flex items-center gap-1.5">
+                                      <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[8px] font-black shrink-0">
+                                        {(assignee.fullName || assignee.email || 'U')[0].toUpperCase()}
+                                      </span>
+                                      <span className="truncate">{assignee.fullName || assignee.email?.split('@')[0]}</span>
+                                    </span>
+                                  ) : (
+                                    <span className="flex items-center gap-1.5 text-slate-300">
+                                      <UserPlus className="h-3 w-3" /> Assign
+                                    </span>
+                                  )}
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl border-0 shadow-xl p-1.5 w-52">
+                                  <SelectItem value="unassigned" className="rounded-lg text-[10px] font-bold text-slate-400 italic">Unassigned</SelectItem>
+                                  {companyUsers?.map(user => (
+                                    <SelectItem key={user.id} value={user.id} className="rounded-lg text-xs font-bold">
+                                      <span className="flex items-center gap-2">
+                                        <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[8px] font-black shrink-0">
+                                          {(user.fullName || user.email || 'U')[0].toUpperCase()}
+                                        </span>
+                                        {user.fullName || user.email?.split('@')[0]}
+                                        <span className="text-slate-400 text-[9px] ml-auto">{(user.role_id || '').replace('_', ' ')}</span>
+                                      </span>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+
+                          {/* Right: time log button */}
+                          <div className="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => { setTimeLogObjective(objective); setIsLogTimeOpen(true); }}
+                              className="h-7 px-2.5 rounded-lg bg-slate-50 hover:bg-primary/5 text-slate-400 hover:text-primary flex items-center gap-1.5 text-[10px] font-black uppercase transition-colors"
+                            >
+                              <Clock className="h-3 w-3" /> Log Time
+                            </button>
+                            {isDone && <CheckCircle2 className="h-4 w-4 text-emerald-400" />}
                           </div>
                         </div>
-                        {(objective.status === 'done' || objective.status === 'Completed') && (
-                          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -1080,6 +1180,59 @@ export default function ProjectWorkspacePage() {
             <DialogFooter className="pt-4">
               <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold">
                 {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save Expense Cost"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog: Log Time */}
+      <Dialog open={isLogTimeOpen} onOpenChange={setIsLogTimeOpen}>
+        <DialogContent className="sm:max-w-[450px] rounded-[10px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-primary" />
+              Log Time
+            </DialogTitle>
+            <DialogDescription>
+              Logging time for: <span className="font-bold text-slate-900">{timeLogObjective?.title}</span>
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleLogTime} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Hours Spent</Label>
+              <Input
+                type="number"
+                step="0.1"
+                placeholder="e.g. 2.5"
+                value={newTimeEntry.hours}
+                onChange={(e) => setNewTimeEntry({...newTimeEntry, hours: e.target.value})}
+                required
+                className="rounded-xl"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Notes (Optional)</Label>
+              <Textarea
+                placeholder="What did you work on?"
+                value={newTimeEntry.notes}
+                onChange={(e) => setNewTimeEntry({...newTimeEntry, notes: e.target.value})}
+                className="rounded-xl"
+              />
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <Checkbox
+                id="billable"
+                checked={newTimeEntry.is_billable}
+                onCheckedChange={(checked) => setNewTimeEntry({...newTimeEntry, is_billable: checked as boolean})}
+              />
+              <Label htmlFor="billable" className="text-sm font-medium leading-none cursor-pointer">
+                This time is billable to the client
+              </Label>
+            </div>
+            <DialogFooter className="pt-4">
+              <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold">
+                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save Time Log"}
               </Button>
             </DialogFooter>
           </form>
