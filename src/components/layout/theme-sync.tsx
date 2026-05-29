@@ -47,6 +47,13 @@ export function ThemeSync() {
       root.style.removeProperty('--accent');
     }
 
+    // Handle Dark Mode
+    if (theme?.darkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+
   }, [settings?.theme, profile?.theme_preference, isLoading]);
 
   return null;
