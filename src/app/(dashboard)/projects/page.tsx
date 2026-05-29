@@ -381,11 +381,11 @@ export default function ProjectsPage() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="h-10 px-5 gap-2 rounded-xl border-border bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 font-black text-[10px] uppercase tracking-widest hover:bg-white dark:bg-slate-900 transition-all">
-                <Filter className="h-4 w-4" /> Intelligence Filter
+                <Filter className="h-4 w-4" /> Filter
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="rounded-[10px] w-64 glass-panel border-white/60 dark:border-slate-700/60 p-2">
-              <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-4 py-3">Classification</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="rounded-[10px] w-64 bg-white dark:bg-slate-900 border-border p-2 shadow-xl z-50">
+              <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-4 py-3">Status</DropdownMenuLabel>
               {['all', 'in_progress', 'completed', 'on_hold'].map((status) => (
                 <DropdownMenuCheckboxItem 
                   key={status}
