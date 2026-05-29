@@ -46,7 +46,8 @@ import {
   FileImage,
   FileAudio,
   FolderOpen,
-  ShieldAlert
+  ShieldAlert,
+  LinkIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
