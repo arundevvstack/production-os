@@ -81,10 +81,10 @@ export default function InvoicesPage() {
     orderBy: { created_at: 'desc' }
   });
 
-  // 2. Fetch Leads from Supabase (filtered by company)
-  const { data: leads } = useSupabaseCollection('Prospect', {
+  // 2. Fetch Clients from Supabase (filtered by company)
+  const { data: clients } = useSupabaseCollection('Client', {
     where: companyId ? { company_id: companyId } : undefined,
-    orderBy: { company_name: 'asc' }
+    orderBy: { name: 'asc' }
   });
 
   // 3. Fetch Projects from Supabase (filtered by company)
@@ -276,21 +276,20 @@ export default function InvoicesPage() {
                   <Select 
                     value={newInvoice.client_id} 
                     onValueChange={(val) => {
-                      const lead = leads?.find(l => l.id === val);
-                      setNewInvoice({ ...newInvoice, client_id: val, client_name: lead?.company_name || "" });
-                    }}
+                      const client = clients?.find(l => l.id === val);
+                      if (client) {
+                        setNewInvoice({ ...newInvoice, client_id: val, client_name: client.name || '' });
+                      }}
                   >
                     <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select a client" />
                     </SelectTrigger>
                     <SelectContent>
-                      {leads?.length === 0 ? (
-                        <div className="p-4 text-center text-xs text-muted-foreground">No clients found.</div>
+                      {clients?.length === 0 ? (
+                        <SelectItem value="none" disabled>No clients found</SelectItem>
                       ) : (
-                        leads?.map((lead) => (
-                          <SelectItem key={lead.id} value={lead.id}>
-                            {lead.company_name}
-                          </SelectItem>
+                        clients?.map((client) => (
+                          <SelectItem key={client.id} value={client.id}>{client.name}</SelectItem>
                         ))
                       )}
                     </SelectContent>
@@ -303,14 +302,19 @@ export default function InvoicesPage() {
                     value={newInvoice.project_id} 
                     onValueChange={(val) => {
                       const proj = projects?.find(p => p.id === val);
-                      const lead = leads?.find(l => l.company_name === proj?.client_name);
+                      // Try to auto-select client if known
+                      if (proj && proj.client_name) {
+                        const client = clients?.find(l => l.name === proj?.client_name);
+                        if (client) {
+                          setNewInvoice({ ...newInvoice, project_id: val, project_name: proj.project_name || '', client_id: client.id, client_name: client.name || '' });
+                          return;
+                        }
+                      }
                       setNewInvoice({ 
                         ...newInvoice, 
                         project_id: val,
                         project_name: proj?.project_name || "",
                         project_ref: proj?.project_ref || "",
-                        client_name: proj?.client_name || newInvoice.client_name,
-                        client_id: lead?.id || newInvoice.client_id,
                         total: proj?.budget ? proj.budget.toString() : newInvoice.total
                       });
                     }}
@@ -533,7 +537,7 @@ export default function InvoicesPage() {
                           <div className="flex items-center gap-2">
                             <Building2 className="h-3 w-3 text-muted-foreground" />
                             <span className="font-bold text-sm leading-none">
-                              {leads?.find(l => l.id === inv.client_id)?.company_name || leads?.find(l => l.id === inv.client_id)?.name || 'Unknown Client'}
+                              {clients?.find(l => l.id === inv.client_id)?.name || 'Unknown Client'}
                             </span>
                           </div>
                           {inv.project_id && (
