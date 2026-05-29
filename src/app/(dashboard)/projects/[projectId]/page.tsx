@@ -375,368 +375,469 @@ export default function ProjectWorkspacePage() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="rounded-[10px] bg-white shadow-sm border border-slate-100" onClick={() => router.push("/projects")}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight">{project.project_name}</h1>
-              {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) ? (
-                <Select
-                  defaultValue={project.status}
-                  onValueChange={async (newStatus) => {
-                    const gate = canAdvanceTo(newStatus);
-                    if (!gate.allowed) {
-                      toast({
-                        variant: "destructive",
-                        title: "Pipeline Gate Locked",
-                        description: gate.reason
-                      });
-                      return;
-                    }
-                    
-                    try {
-                      await supabase.from('Project').update({ status: newStatus }).eq('id', projectId);
-                      
-                      // Log activity
-                      await supabase.from('ActivityLog').insert({
-                        company_id: companyId,
-                        user_id: profile?.id || 'system',
-                        user_name: profile?.fullName || 'Manager',
-                        action: 'PROJECT_STAGE_UPDATED',
-                        details: `Advanced project "${project.project_name}" status to ${newStatus.toUpperCase()}.`
-                      });
+    <div className="space-y-0 -mt-2">
+      {/* ── Premium Dark Header ── */}
+      <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-8 pt-8 pb-0 overflow-hidden">
+        {/* Ambient glow blobs */}
+        <div className="absolute top-0 left-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/8 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
-                      toast({
-                        title: "Phase Approved",
-                        description: `Project has successfully advanced to ${newStatus.toUpperCase()}.`
-                      });
-                    } catch (err: any) {
-                      toast({ variant: "destructive", title: "Update Failed", description: err.message });
-                    }
-                  }}
-                >
-                  <SelectTrigger className="rounded-full bg-white font-body font-black text-[10px] uppercase h-7 px-3 border-slate-200 focus:ring-primary/10">
-                    <SelectValue placeholder="Select Phase" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-[10px] p-1.5 font-body">
-                    <SelectItem value="pre-prod" className="py-2 rounded-xl text-[10px] font-black uppercase text-slate-600 focus:bg-primary/5 focus:text-primary">Pre-Production</SelectItem>
-                    <SelectItem value="production" className="py-2 rounded-xl text-[10px] font-black uppercase text-slate-600 focus:bg-primary/5 focus:text-primary">Production</SelectItem>
-                    <SelectItem value="post-prod" className="py-2 rounded-xl text-[10px] font-black uppercase text-slate-600 focus:bg-primary/5 focus:text-primary">Post-Production</SelectItem>
-                    <SelectItem value="release" className="py-2 rounded-xl text-[10px] font-black uppercase text-slate-600 focus:bg-primary/5 focus:text-primary">Release</SelectItem>
-                  </SelectContent>
-                </Select>
-              ) : (
-                <Badge variant="secondary" className="rounded-full bg-white font-bold text-[10px] uppercase">{project.status}</Badge>
-              )}
+        {/* Top row */}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
+          <div className="flex items-start gap-5">
+            <button
+              onClick={() => router.push("/projects")}
+              className="mt-1 h-9 w-9 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/15 transition-all shrink-0"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-3xl font-black text-white tracking-tight leading-none">{project.project_name}</h1>
+                {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) ? (
+                  <Select
+                    defaultValue={project.status}
+                    onValueChange={async (newStatus) => {
+                      const gate = canAdvanceTo(newStatus);
+                      if (!gate.allowed) {
+                        toast({ variant: "destructive", title: "Pipeline Gate Locked", description: gate.reason });
+                        return;
+                      }
+                      try {
+                        await supabase.from('Project').update({ status: newStatus }).eq('id', projectId);
+                        await supabase.from('ActivityLog').insert({
+                          company_id: companyId,
+                          user_id: profile?.id || 'system',
+                          user_name: profile?.fullName || 'Manager',
+                          action: 'PROJECT_STAGE_UPDATED',
+                          details: `Advanced project "${project.project_name}" status to ${newStatus.toUpperCase()}.`
+                        });
+                        toast({ title: "Phase Approved", description: `Project advanced to ${newStatus.toUpperCase()}.` });
+                      } catch (err: any) {
+                        toast({ variant: "destructive", title: "Update Failed", description: err.message });
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="rounded-full bg-white/10 border-white/10 text-white font-black text-[10px] uppercase h-6 px-3 hover:bg-white/15 transition-all w-auto focus:ring-0">
+                      <SelectValue placeholder="Phase" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-[10px] p-1.5">
+                      <SelectItem value="pre-prod" className="py-2 rounded-xl text-[10px] font-black uppercase">Pre-Production</SelectItem>
+                      <SelectItem value="production" className="py-2 rounded-xl text-[10px] font-black uppercase">Production</SelectItem>
+                      <SelectItem value="post-prod" className="py-2 rounded-xl text-[10px] font-black uppercase">Post-Production</SelectItem>
+                      <SelectItem value="release" className="py-2 rounded-xl text-[10px] font-black uppercase">Release</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <span className="rounded-full bg-white/10 border border-white/10 text-white/70 font-black text-[10px] uppercase h-6 px-3 flex items-center">{project.status}</span>
+                )}
+              </div>
+              <div className="flex items-center gap-3 text-sm text-white/40">
+                <span>Client: <span className="text-white/70 font-bold">{project.client_name || '—'}</span></span>
+                <span className="opacity-30">•</span>
+                <span className="font-mono text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded text-white/40">{projectId.slice(0, 8).toUpperCase()}</span>
+              </div>
             </div>
-            <p className="text-muted-foreground text-sm flex items-center gap-2 mt-1">
-              Client: <span className="font-bold text-slate-700">{project.client_name}</span>
-              <span className="opacity-20">•</span>
-              Ref ID: <span className="font-mono text-[10px] uppercase bg-slate-100 px-1.5 py-0.5 rounded">{projectId.slice(0,8)}</span>
-            </p>
+          </div>
+
+          {/* Right: Progress + CTA */}
+          <div className="flex items-center gap-6 shrink-0">
+            <div className="text-right hidden sm:block">
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 mb-2">Production Velocity</p>
+              <div className="flex items-center gap-3">
+                <div className="relative h-10 w-10">
+                  <svg className="h-10 w-10 -rotate-90" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" />
+                    <circle
+                      cx="18" cy="18" r="15" fill="none"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth="3"
+                      strokeDasharray={`${(liveProgress / 100) * 94.2} 94.2`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-white">{liveProgress}%</span>
+                </div>
+                <div>
+                  <p className="text-lg font-black text-white">{liveProgress}%</p>
+                  <p className="text-[9px] text-white/30 font-bold uppercase">Complete</p>
+                </div>
+              </div>
+            </div>
+            <Button
+              className="h-11 px-6 gap-2 rounded-xl bg-white text-slate-900 hover:bg-white/90 font-black text-xs shadow-lg active:scale-95 transition-all"
+              onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}
+            >
+              <Plus className="h-4 w-4" />
+              {activeTab === 'assets' ? 'Upload Asset' : (activeTab === 'finances' ? 'Log Cost' : 'Add Objective')}
+            </Button>
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="text-right hidden sm:block">
-            <p className="text-[10px] font-black uppercase text-primary/60 tracking-[0.2em] mb-1.5">Production Velocity</p>
-            <div className="flex items-center gap-3">
-              <Progress value={liveProgress} className="w-40 h-2 bg-primary/10" />
-              <span className="text-sm font-black text-primary">{liveProgress}%</span>
-            </div>
-          </div>
-          <Button className="rounded-[10px] gap-2 shadow-lg shadow-primary/20 h-12 px-6 font-bold text-xs" onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}>
-            <Plus className="h-4 w-4" /> {activeTab === 'assets' ? 'Register Asset' : (activeTab === 'finances' ? 'Log Cost' : 'Add Objective')}
-          </Button>
+        {/* Tab bar — floats at bottom of dark header */}
+        <div className="relative z-10 mt-8">
+          <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="bg-transparent border-0 p-0 h-auto flex flex-wrap gap-1">
+              {projectStages?.map(stage => (
+                <TabsTrigger
+                  key={stage.id}
+                  value={stage.name}
+                  className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-none transition-all"
+                >
+                  {getPhaseIcon(stage.name.toLowerCase())} {stage.name}
+                </TabsTrigger>
+              ))}
+              <TabsTrigger value="assets" className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 transition-all">
+                <Package className="h-3.5 w-3.5" /> Assets
+              </TabsTrigger>
+              <TabsTrigger value="finances" className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 transition-all">
+                <Receipt className="h-3.5 w-3.5" /> Finances
+              </TabsTrigger>
+              <TabsTrigger value="timeline" className="rounded-t-xl rounded-b-none px-5 py-3 gap-2 text-white/40 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 data-[state=active]:bg-white data-[state=active]:text-slate-900 transition-all">
+                <Calendar className="h-3.5 w-3.5" /> Timeline
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
 
-      <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="bg-white border p-1.5 rounded-[10px] h-auto flex-wrap mb-8 gap-1.5">
-          {projectStages?.map(stage => (
-            <TabsTrigger key={stage.id} value={stage.name} className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
-              {getPhaseIcon(stage.name.toLowerCase())} {stage.name}
-            </TabsTrigger>
-          ))}
-          <TabsTrigger value="assets" className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
-            <Package className="h-3.5 w-3.5" /> Assets
-          </TabsTrigger>
-          <TabsTrigger value="finances" className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
-            <Receipt className="h-3.5 w-3.5" /> Finances
-          </TabsTrigger>
-          <TabsTrigger value="timeline" className="rounded-xl px-5 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-[10px] uppercase tracking-wider">
-            <Calendar className="h-3.5 w-3.5" /> Timeline
-          </TabsTrigger>
-        </TabsList>
+      {/* ── White Tab Content Area ── */}
+      <div className="bg-white min-h-screen">
+        <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
 
         {/* Tab Content: Dynamic Production Phases */}
         {projectStages?.map((stage) => (
-          <TabsContent key={stage.id} value={stage.name} className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-2">
-              <div className="lg:col-span-2 space-y-6">
-                <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white">
-                  <CardHeader className="bg-slate-50/50 flex flex-row items-center justify-between border-b px-8 py-6">
+          <TabsContent key={stage.id} value={stage.name} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
+              {/* Main objectives */}
+              <div className="lg:col-span-2 border-r border-slate-100">
+                <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      {getPhaseIcon(stage.name.toLowerCase())}
+                    </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className="p-1.5 bg-primary/10 rounded-lg text-primary">{getPhaseIcon(stage.name.toLowerCase())}</div>
-                        <CardTitle className="text-xl capitalize">{stage.name} Objectives</CardTitle>
-                      </div>
-                      <CardDescription>Assign and track key deliverables for this phase.</CardDescription>
+                      <h3 className="font-black text-slate-900 capitalize">{stage.name}</h3>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{phaseObjectives(stage.name).length} objectives · {phaseProgress(stage.name)}% complete</p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Link href={`/projects/${projectId}/approvals`}>
-                        <Button size="sm" variant="outline" className="hidden sm:flex rounded-xl font-bold bg-white text-slate-700 border-slate-200 shadow-sm hover:bg-slate-50 gap-2">
-                          <CheckCircle2 className="h-4 w-4" /> Review Assets
-                        </Button>
-                      </Link>
-                      <Button size="sm" className="rounded-xl font-bold bg-primary text-white shadow-xl shadow-primary/20 hover:bg-primary/90 gap-2" onClick={() => setIsAddObjectiveOpen(true)}>
-                        <Plus className="h-4 w-4 mr-2" /> Add Objective
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Link href={`/projects/${projectId}/approvals`}>
+                      <Button size="sm" variant="outline" className="rounded-xl font-bold bg-white text-slate-700 border-slate-200 shadow-sm hover:bg-slate-50 gap-2 h-9">
+                        <CheckCircle2 className="h-3.5 w-3.5" /> Review
                       </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    {phaseObjectives(stage.name).length === 0 ? (
-                      <div className="text-center py-24 text-muted-foreground space-y-4">
-                        <Target className="h-12 w-12 mx-auto opacity-10" />
-                        <p className="text-sm font-medium">No objectives set up for this phase.</p>
-                      </div>
-                    ) : (
-                      <div className="divide-y">
-                        {phaseObjectives(stage.name).map((objective) => (
-                          <div key={objective.id} className="flex items-center gap-4 px-8 py-5 hover:bg-slate-50 transition-colors group">
-                            <Checkbox 
-                              checked={objective.status === 'done'} 
-                              onCheckedChange={() => handleToggleObjective(objective.id, objective.status)}
-                              className="h-5 w-5 rounded-md border-2 border-primary data-[state=checked]:bg-primary"
-                            />
-                            <div className="flex-1">
-                              <p className={`font-bold text-sm ${objective.status === 'done' || objective.status === 'Completed' ? 'line-through text-muted-foreground' : 'text-slate-800'}`}>
-                                {objective.title}
-                              </p>
-                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Assigned: {objective.assignedTo || 'Unassigned'}</p>
-                            </div>
+                    </Link>
+                    <Button size="sm" className="rounded-xl font-bold gap-2 h-9" onClick={() => setIsAddObjectiveOpen(true)}>
+                      <Plus className="h-3.5 w-3.5" /> Add
+                    </Button>
+                  </div>
+                </div>
+
+                {phaseObjectives(stage.name).length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-24 gap-4 text-slate-300">
+                    <Target className="h-10 w-10" />
+                    <p className="text-sm font-bold text-slate-400">No objectives for this phase yet</p>
+                    <Button size="sm" variant="outline" className="rounded-xl" onClick={() => setIsAddObjectiveOpen(true)}>Add First Objective</Button>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-slate-50">
+                    {phaseObjectives(stage.name).map((objective, i) => (
+                      <div key={objective.id} className="flex items-center gap-4 px-8 py-4 hover:bg-slate-50/60 transition-colors group">
+                        <span className="text-[10px] font-black text-slate-300 w-5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                        <Checkbox
+                          checked={objective.status === 'done' || objective.status === 'Completed'}
+                          onCheckedChange={() => handleToggleObjective(objective.id, objective.status)}
+                          className="h-5 w-5 rounded-md border-2 border-slate-200 data-[state=checked]:border-primary data-[state=checked]:bg-primary shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className={cn("font-bold text-sm truncate", (objective.status === 'done' || objective.status === 'Completed') ? 'line-through text-slate-300' : 'text-slate-800')}>
+                            {objective.title}
+                          </p>
+                          <div className="flex items-center gap-3 mt-1">
+                            {objective.department && <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{objective.department}</span>}
+                            {objective.priority && (
+                              <span className={cn("text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded",
+                                objective.priority === 'High' ? 'bg-red-50 text-red-500' :
+                                objective.priority === 'Medium' ? 'bg-amber-50 text-amber-500' :
+                                'bg-slate-100 text-slate-400'
+                              )}>{objective.priority}</span>
+                            )}
                           </div>
-                        ))}
+                        </div>
+                        {(objective.status === 'done' || objective.status === 'Completed') && (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                        )}
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Progress Summary Card */}
-              <div className="space-y-6">
-                <Card className="border-none shadow-sm rounded-[10px] bg-white p-8 space-y-6">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-black uppercase text-primary/60 tracking-[0.2em]">Phase Progress</span>
-                    <h3 className="text-3xl font-black capitalize">{stage.name}</h3>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-end">
-                      <span className="text-[10px] text-slate-400 font-bold uppercase">Objectives Finished</span>
-                      <span className="text-base font-black text-primary">{phaseProgress(stage.name)}%</span>
-                    </div>
-                    <Progress value={phaseProgress(stage.name)} className="h-2 bg-slate-100" />
-                  </div>
-                  <div className="pt-4 border-t space-y-3">
-                    <div className="flex justify-between text-xs font-medium">
-                      <span className="text-slate-400">Total Phase Objectives</span>
-                      <span className="font-bold text-slate-700">{phaseObjectives(stage.name).length}</span>
-                    </div>
-                    <div className="flex justify-between text-xs font-medium">
-                      <span className="text-slate-400">Completed Checklist</span>
-                      <span className="font-bold text-slate-700">{completedPhaseObjectives(stage.name)}</span>
+              {/* Phase sidebar */}
+              <div className="p-8 space-y-6">
+                {/* Circular progress */}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="relative h-24 w-24">
+                    <svg className="h-24 w-24 -rotate-90" viewBox="0 0 36 36">
+                      <circle cx="18" cy="18" r="14" fill="none" stroke="#f1f5f9" strokeWidth="3" />
+                      <circle cx="18" cy="18" r="14" fill="none"
+                        stroke={phaseProgress(stage.name) === 100 ? '#10b981' : 'hsl(var(--primary))'}
+                        strokeWidth="3"
+                        strokeDasharray={`${(phaseProgress(stage.name) / 100) * 87.96} 87.96`}
+                        strokeLinecap="round"
+                        className="transition-all duration-700"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xl font-black text-slate-900">{phaseProgress(stage.name)}%</span>
                     </div>
                   </div>
-                </Card>
+                  <div className="text-center">
+                    <p className="text-xs font-black text-slate-700 capitalize">{stage.name}</p>
+                    <p className="text-[10px] text-slate-400 font-bold">{completedPhaseObjectives(stage.name)} of {phaseObjectives(stage.name).length} done</p>
+                  </div>
+                </div>
+
+                {/* Stage info */}
+                <div className="space-y-3 pt-4 border-t border-slate-100">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</span>
+                    <span className={cn("text-[10px] font-black uppercase px-2 py-0.5 rounded-full",
+                      stage.status === 'active' ? 'bg-emerald-50 text-emerald-600' :
+                      stage.status === 'completed' ? 'bg-primary/10 text-primary' :
+                      'bg-slate-100 text-slate-500'
+                    )}>{stage.status || 'pending'}</span>
+                  </div>
+                  {stage.start_date && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Start</span>
+                      <span className="text-xs font-bold text-slate-700">{new Date(stage.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                    </div>
+                  )}
+                  {stage.end_date && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Due</span>
+                      <span className="text-xs font-bold text-slate-700">{new Date(stage.end_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </TabsContent>
         ))}
 
-        {/* 🎬 ASSETS TABCONTENT (Phase 1 to 6 - Media Asset Operating System) */}
-        <TabsContent value="assets" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        {/* 🎬 ASSETS TAB */}
+        <TabsContent value="assets" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
           {!hasMediaAccess ? (
-            <div className="text-center py-20 px-4">
-              <div className="p-4 bg-rose-50 rounded-full text-rose-500 w-16 h-16 flex items-center justify-center mx-auto shadow-sm">
-                <ShieldAlert className="h-8 w-8" />
+            <div className="flex flex-col items-center justify-center py-24 gap-4">
+              <div className="h-16 w-16 rounded-2xl bg-rose-50 flex items-center justify-center">
+                <ShieldAlert className="h-8 w-8 text-rose-400" />
               </div>
-              <h2 className="text-2xl font-black text-slate-800 tracking-tight mt-6">Financial Role Restriction</h2>
-              <p className="text-slate-500 font-medium max-w-sm mx-auto mt-2">Accounts profiles are securely blocked from browsing creative video files and folders.</p>
+              <h2 className="text-xl font-black text-slate-800">Access Restricted</h2>
+              <p className="text-slate-400 font-medium max-w-sm text-center text-sm">Accounts profiles are blocked from browsing creative media files.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-2">
-              <div className="lg:col-span-2 space-y-6">
-                
-                {/* Video Annotation Preview Player */}
-                {selectedAssetForReview && selectedAssetForReview.file_type === 'Video' && (
-                  <Card className="border-none shadow-xl rounded-[10px] bg-slate-900 text-white overflow-hidden p-8 space-y-6">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-                      <div>
-                        <Badge className="bg-rose-500 text-white border-none font-bold text-[9px] uppercase px-2.5 py-0.5">Live review</Badge>
-                        <h3 className="font-black text-xl mt-1.5">{selectedAssetForReview.name}</h3>
-                      </div>
-                      <Button variant="ghost" className="text-slate-400 hover:text-white rounded-xl h-8 px-3" onClick={() => setSelectedAssetForReview(null)}>Close Player</Button>
-                    </div>
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-0">
+              {/* Main content area */}
+              <div className="lg:col-span-3 border-r border-slate-100">
 
-                    {/* Interactive Video Player */}
-                    <div className="relative aspect-video bg-black rounded-[10px] overflow-hidden flex items-center justify-center border border-slate-800 group">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="flex items-center gap-3">
-                          <Button size="icon" className="h-10 w-10 bg-rose-500 text-white rounded-full"><Play className="h-5 w-5 fill-white" /></Button>
-                          <div className="flex-1 bg-white/20 h-1.5 rounded-full overflow-hidden relative">
-                            <div className="bg-rose-500 h-full w-[40%] rounded-full"></div>
-                          </div>
-                          <span className="text-xs font-mono">00:48 / 02:30</span>
-                        </div>
-                      </div>
-                      <Monitor className="h-16 w-16 text-slate-800 animate-pulse" />
-                    </div>
-
-                    {/* Annotations Timeline */}
-                    <div className="space-y-4 pt-4 border-t border-slate-800">
-                      <h4 className="font-bold text-sm tracking-widest uppercase text-slate-400 flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4" /> Timeline feedback
-                      </h4>
-                      <div className="space-y-3 max-h-[180px] overflow-y-auto pr-2 divide-y divide-slate-800">
-                        {mockAnnotations.map((ann, idx) => (
-                          <div key={idx} className="pt-3 flex items-start gap-4 text-xs font-body">
-                            <span className="font-mono font-black text-rose-500 bg-rose-950 px-2 py-0.5 rounded">{ann.timestamp}</span>
-                            <div className="flex-1 space-y-1">
-                              <p className="font-bold text-slate-300">{ann.comment}</p>
-                              <p className="text-[10px] text-slate-500 font-bold uppercase">Added by: {ann.author}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Add Annotation Form */}
-                      <form onSubmit={handleAddAnnotation} className="flex gap-3 pt-4 border-t border-slate-800 items-end">
-                        <div className="w-16 space-y-1.5">
-                          <Label className="text-[9px] uppercase tracking-wider text-slate-400">Min</Label>
-                          <Input maxLength={2} value={newAnnotation.minutes} onChange={(e) => setNewAnnotation({...newAnnotation, minutes: e.target.value})} className="bg-slate-800 border-slate-700 text-white rounded-lg h-9 text-center font-mono" />
-                        </div>
-                        <span className="text-xl pb-1 font-mono text-slate-600">:</span>
-                        <div className="w-16 space-y-1.5">
-                          <Label className="text-[9px] uppercase tracking-wider text-slate-400">Sec</Label>
-                          <Input maxLength={2} value={newAnnotation.seconds} onChange={(e) => setNewAnnotation({...newAnnotation, seconds: e.target.value})} className="bg-slate-800 border-slate-700 text-white rounded-lg h-9 text-center font-mono" />
-                        </div>
-                        <div className="flex-1 space-y-1.5">
-                          <Label className="text-[9px] uppercase tracking-wider text-slate-400">Annotation detail</Label>
-                          <Input placeholder="Reduce brightness, add subtitle tag..." value={newAnnotation.text} onChange={(e) => setNewAnnotation({...newAnnotation, text: e.target.value})} className="bg-slate-800 border-slate-700 text-white rounded-xl h-9 text-sm" />
-                        </div>
-                        <Button type="submit" size="sm" className="h-9 bg-rose-500 hover:bg-rose-600 rounded-xl font-bold">Add Tag</Button>
-                      </form>
-                    </div>
-                  </Card>
-                )}
-
-                {/* Storage Directories Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {/* Folder tabs */}
+                <div className="grid grid-cols-4 border-b border-slate-100">
                   {[
-                    { id: "all", label: "All Assets" },
-                    { id: "pre-prod", label: "Pre-Production" },
-                    { id: "production", label: "Production" },
-                    { id: "post-prod", label: "Post-Production" }
+                    { id: "all", label: "All Assets", icon: FolderOpen, color: "text-slate-600", activeBg: "bg-slate-900 text-white" },
+                    { id: "pre-prod", label: "Pre-Production", icon: FileText, color: "text-blue-500", activeBg: "bg-blue-600 text-white" },
+                    { id: "production", label: "Production", icon: Camera, color: "text-rose-500", activeBg: "bg-rose-600 text-white" },
+                    { id: "post-prod", label: "Post-Production", icon: Scissors, color: "text-violet-500", activeBg: "bg-violet-600 text-white" },
                   ].map(f => (
-                    <Button 
-                      key={f.id} 
+                    <button
+                      key={f.id}
                       onClick={() => setSelectedFolderFilter(f.id)}
                       className={cn(
-                        "h-16 rounded-[10px] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-3 border transition-all",
-                        selectedFolderFilter === f.id 
-                          ? "bg-slate-900 text-white border-slate-900 shadow-md" 
-                          : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                        "flex flex-col items-center gap-1.5 py-5 px-4 text-center border-b-2 transition-all font-bold text-[10px] uppercase tracking-widest",
+                        selectedFolderFilter === f.id
+                          ? "border-slate-900 text-slate-900 bg-slate-50"
+                          : "border-transparent text-slate-400 hover:text-slate-600 hover:bg-slate-50/50"
                       )}
                     >
-                      <FolderOpen className="h-4 w-4 shrink-0" /> {f.label}
-                    </Button>
+                      <f.icon className={cn("h-5 w-5", selectedFolderFilter === f.id ? "text-slate-900" : f.color)} />
+                      <span>{f.label}</span>
+                    </button>
                   ))}
                 </div>
 
-                {/* Assets Grid list */}
-                <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
-                  <CardHeader className="bg-slate-50/50 flex flex-row items-center justify-between border-b px-8 py-6">
-                    <div>
-                      <CardTitle className="text-lg">Structured Storage Vault</CardTitle>
-                      <CardDescription>Drag and drop production packages, audio cuts, and deliverables.</CardDescription>
-                    </div>
-                    <Button variant="outline" size="sm" className="rounded-xl font-bold text-xs" onClick={() => setIsAddAssetOpen(true)}>
-                      <UploadCloud className="h-4 w-4 mr-2" /> Upload Item
-                    </Button>
-                  </CardHeader>
-                  <CardContent className="p-8">
-                    {assets?.length === 0 ? (
-                      <div className="text-center py-16 text-muted-foreground italic text-sm">
-                        No files registered in directory. Upload scripts or video packages to get started.
+                {/* Video review player */}
+                {selectedAssetForReview && selectedAssetForReview.file_type === 'Video' && (
+                  <div className="mx-6 mt-6 rounded-2xl bg-slate-900 text-white overflow-hidden">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+                      <div className="flex items-center gap-3">
+                        <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+                        <span className="text-xs font-black uppercase tracking-widest text-white/60">Live Review</span>
+                        <span className="font-black text-white text-sm">{selectedAssetForReview.name}</span>
                       </div>
-                    ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {assets?.map((asset) => (
-                          <Card key={asset.id} className="border border-slate-100 hover:border-slate-300 transition-all rounded-[10px] overflow-hidden bg-white p-5 flex gap-4 items-center group">
-                            <div className="h-14 w-14 bg-slate-50 rounded-[10px] flex items-center justify-center group-hover:bg-primary/5 transition-colors">
-                              {getFileIcon(asset.file_type)}
+                      <button onClick={() => setSelectedAssetForReview(null)} className="text-white/30 hover:text-white text-xs font-bold transition-colors">Close ×</button>
+                    </div>
+                    <div className="relative aspect-video bg-black flex items-center justify-center group cursor-pointer">
+                      <Monitor className="h-12 w-12 text-slate-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-5">
+                        <div className="flex items-center gap-3">
+                          <button className="h-9 w-9 bg-rose-500 rounded-full flex items-center justify-center"><Play className="h-4 w-4 text-white fill-white" /></button>
+                          <div className="flex-1 bg-white/20 h-1 rounded-full"><div className="bg-rose-500 h-full w-[40%] rounded-full" /></div>
+                          <span className="text-xs font-mono text-white/60">00:48 / 02:30</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-5 space-y-3 border-t border-slate-800">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5" /> Timeline Feedback</p>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {mockAnnotations.map((ann, i) => (
+                          <div key={i} className="flex items-start gap-3 text-xs">
+                            <span className="font-mono font-black text-rose-400 bg-rose-950 px-2 py-0.5 rounded shrink-0">{ann.timestamp}</span>
+                            <div>
+                              <p className="text-slate-300 font-medium">{ann.comment}</p>
+                              <p className="text-slate-600 text-[10px] font-bold uppercase mt-0.5">{ann.author}</p>
                             </div>
-                            <div className="flex-1 space-y-1 overflow-hidden">
-                              <h4 className="font-bold text-sm text-slate-800 truncate leading-snug">{asset.name}</h4>
-                              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{(asset.file_size / 1000000).toFixed(1)} MB • {asset.file_type}</p>
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                              {asset.file_type === 'Video' && (
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="h-8 text-[9px] font-black uppercase tracking-widest gap-1.5 rounded-lg text-rose-500 hover:bg-rose-50"
-                                  onClick={() => setSelectedAssetForReview(asset)}
-                                >
-                                  <Play className="h-3.5 w-3.5" /> Review
-                                </Button>
-                              )}
-                              <a href={asset.url} target="_blank" rel="noopener noreferrer">
-                                <Button variant="ghost" size="sm" className="h-8 text-[9px] font-black uppercase tracking-widest gap-1.5 rounded-lg text-slate-600 hover:bg-slate-50">
-                                  <Download className="h-3.5 w-3.5" /> Open
-                                </Button>
-                              </a>
-                            </div>
-                          </Card>
+                          </div>
                         ))}
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
+                      <form onSubmit={handleAddAnnotation} className="flex gap-2 pt-3 border-t border-slate-800">
+                        <input maxLength={2} placeholder="mm" value={newAnnotation.minutes} onChange={e => setNewAnnotation({ ...newAnnotation, minutes: e.target.value })} className="w-12 bg-slate-800 border border-slate-700 text-white rounded-lg h-8 text-center text-xs font-mono" />
+                        <span className="text-slate-600 font-mono self-center">:</span>
+                        <input maxLength={2} placeholder="ss" value={newAnnotation.seconds} onChange={e => setNewAnnotation({ ...newAnnotation, seconds: e.target.value })} className="w-12 bg-slate-800 border border-slate-700 text-white rounded-lg h-8 text-center text-xs font-mono" />
+                        <input placeholder="Add feedback note..." value={newAnnotation.text} onChange={e => setNewAnnotation({ ...newAnnotation, text: e.target.value })} className="flex-1 bg-slate-800 border border-slate-700 text-white rounded-lg h-8 px-3 text-xs" />
+                        <button type="submit" className="h-8 px-4 bg-rose-500 hover:bg-rose-600 text-white text-xs font-black rounded-lg transition-colors">Tag</button>
+                      </form>
+                    </div>
+                  </div>
+                )}
+
+                {/* Assets grid */}
+                <div className="p-6">
+                  {assets?.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-24 gap-5 text-slate-300">
+                      <div className="h-20 w-20 rounded-2xl bg-slate-50 flex items-center justify-center">
+                        <UploadCloud className="h-10 w-10 text-slate-300" />
+                      </div>
+                      <div className="text-center">
+                        <p className="font-black text-slate-500 text-sm">No assets uploaded yet</p>
+                        <p className="text-slate-400 text-xs mt-1">Upload scripts, video packages, audio cuts, and deliverables</p>
+                      </div>
+                      <button onClick={() => setIsAddAssetOpen(true)} className="h-10 px-6 bg-slate-900 text-white text-xs font-black rounded-xl hover:bg-slate-800 transition-colors">
+                        Upload First Asset
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                      {assets?.map((asset) => (
+                        <div key={asset.id} className="group relative bg-white border border-slate-100 hover:border-slate-200 rounded-2xl overflow-hidden transition-all hover:shadow-md">
+                          {/* Thumbnail / type indicator */}
+                          <div className={cn(
+                            "h-28 flex items-center justify-center",
+                            asset.file_type === 'Video' ? 'bg-gradient-to-br from-rose-50 to-rose-100' :
+                            asset.file_type === 'Image' ? 'bg-gradient-to-br from-indigo-50 to-indigo-100' :
+                            asset.file_type === 'Audio' ? 'bg-gradient-to-br from-amber-50 to-amber-100' :
+                            'bg-gradient-to-br from-slate-50 to-slate-100'
+                          )}>
+                            {getFileIcon(asset.file_type)}
+                            {asset.file_type === 'Video' && (
+                              <button onClick={() => setSelectedAssetForReview(asset)} className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
+                                <div className="h-10 w-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                                  <Play className="h-4 w-4 text-rose-500 fill-rose-500" />
+                                </div>
+                              </button>
+                            )}
+                          </div>
+                          {/* Meta */}
+                          <div className="p-4">
+                            <p className="font-black text-sm text-slate-800 truncate">{asset.name}</p>
+                            <div className="flex items-center justify-between mt-2">
+                              <span className={cn(
+                                "text-[9px] font-black uppercase px-2 py-0.5 rounded-full",
+                                asset.file_type === 'Video' ? 'bg-rose-50 text-rose-500' :
+                                asset.file_type === 'Image' ? 'bg-indigo-50 text-indigo-500' :
+                                asset.file_type === 'Audio' ? 'bg-amber-50 text-amber-500' :
+                                'bg-slate-100 text-slate-500'
+                              )}>{asset.file_type}</span>
+                              <span className="text-[10px] text-slate-400 font-bold">{(asset.file_size / 1000000).toFixed(1)} MB</span>
+                            </div>
+                          </div>
+                          <div className="px-4 pb-4 flex gap-2">
+                            {asset.file_type === 'Video' && (
+                              <button onClick={() => setSelectedAssetForReview(asset)} className="flex-1 h-7 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
+                                <Play className="h-3 w-3" /> Review
+                              </button>
+                            )}
+                            <a href={asset.url} target="_blank" rel="noopener noreferrer" className="flex-1">
+                              <button className="w-full h-7 bg-slate-50 hover:bg-slate-100 text-slate-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
+                                <Download className="h-3 w-3" /> Open
+                              </button>
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Media Storage Capacity card */}
-              <div className="space-y-6">
-                <Card className="border-none shadow-sm rounded-[10px] bg-white p-8 space-y-6">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-black uppercase text-indigo-500/60 tracking-[0.2em]">Storage Governance</span>
-                    <h3 className="text-xl font-black">Quota & Compliance</h3>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-end text-xs">
-                      <span className="text-slate-400 font-bold">Storage Pool used</span>
-                      <span className="font-black text-slate-700">1.4 GB / 25 GB</span>
+              {/* Sidebar */}
+              <div className="p-6 space-y-6">
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">Storage Governance</p>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-2">
+                        <span className="text-slate-500">Pool Used</span>
+                        <span className="text-slate-800">1.4 GB / 25 GB</span>
+                      </div>
+                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full" style={{ width: '6%' }} />
+                      </div>
                     </div>
-                    <Progress value={6} className="h-2 bg-slate-100" />
+                    <div className="space-y-2.5 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-slate-400 font-medium">Total Assets</span>
+                        <span className="font-black text-slate-700">{assets?.length || 0}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400 font-medium">Download Log</span>
+                        <span className="font-black text-emerald-500">Active</span>
+                      </div>
+                    </div>
                   </div>
+                </div>
 
-                  <div className="pt-4 border-t space-y-3 text-xs">
-                    <div className="flex justify-between font-medium">
-                      <span className="text-slate-400">Total assets uploaded</span>
-                      <span className="font-bold text-slate-700">{assets?.length || 0}</span>
-                    </div>
-                    <div className="flex justify-between font-medium">
-                      <span className="text-slate-400">Download tracking log</span>
-                      <span className="font-bold text-emerald-500">Active</span>
-                    </div>
+                <div className="pt-4 border-t border-slate-100">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">By Type</p>
+                  <div className="space-y-2">
+                    {['Video', 'Image', 'Audio', 'Document'].map(type => {
+                      const count = assets?.filter(a => a.file_type === type).length || 0;
+                      return (
+                        <div key={type} className="flex items-center gap-3">
+                          <div className={cn(
+                            "h-7 w-7 rounded-lg flex items-center justify-center shrink-0",
+                            type === 'Video' ? 'bg-rose-50' : type === 'Image' ? 'bg-indigo-50' : type === 'Audio' ? 'bg-amber-50' : 'bg-slate-50'
+                          )}>
+                            {type === 'Video' && <FileVideo className="h-3.5 w-3.5 text-rose-400" />}
+                            {type === 'Image' && <FileImage className="h-3.5 w-3.5 text-indigo-400" />}
+                            {type === 'Audio' && <FileAudio className="h-3.5 w-3.5 text-amber-400" />}
+                            {type === 'Document' && <FileText className="h-3.5 w-3.5 text-slate-400" />}
+                          </div>
+                          <div className="flex-1 flex justify-between items-center">
+                            <span className="text-xs font-bold text-slate-600">{type}</span>
+                            <span className="text-xs font-black text-slate-800">{count}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                </Card>
+                </div>
+
+                <button
+                  onClick={() => setIsAddAssetOpen(true)}
+                  className="w-full h-11 rounded-xl bg-slate-900 text-white text-xs font-black hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+                >
+                  <UploadCloud className="h-4 w-4" /> Upload Asset
+                </button>
               </div>
             </div>
           )}
@@ -825,9 +926,9 @@ export default function ProjectWorkspacePage() {
           <TimelineEngine objectives={objectives || []} startDate={project?.created_at} />
         </TabsContent>
   
-      </Tabs>
+        </Tabs>
 
-      {/* Dialog: Add Objective */}
+      {/* Dialogs */}
       <Dialog open={isAddObjectiveOpen} onOpenChange={setIsAddObjectiveOpen}>
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
@@ -985,6 +1086,7 @@ export default function ProjectWorkspacePage() {
         </DialogContent>
       </Dialog>
 
+      </div>
     </div>
   );
 }
