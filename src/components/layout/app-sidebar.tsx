@@ -120,12 +120,12 @@ export function AppSidebar() {
                             <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={cn(
                               "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                               isActive 
-                                ? "bg-primary/10 text-primary hover:bg-primary/15" 
-                                : "hover:bg-secondary/50 text-primary/80 hover:text-primary"
+                                ? "bg-primary/10 text-black hover:bg-primary/15" 
+                                : "hover:bg-secondary/50 text-black/80 hover:text-black"
                             )}>
                             <Link href={item.url} className="flex items-center gap-3 w-full">
                                 {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                                <item.icon className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-primary" : "text-muted-foreground")} />
+                                <item.icon className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-black" : "text-black/60")} />
                                 <span className={cn("text-[13px] tracking-tight", isActive ? "font-black" : "font-medium")}>{item.title}</span>
                             </Link>
                             </SidebarMenuButton>
@@ -144,12 +144,12 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild isActive={pathname?.startsWith('/settings') && !pathname?.includes('/rbac')} tooltip="Global Settings" className={cn(
                       "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                       (pathname?.startsWith('/settings') && !pathname?.includes('/rbac'))
-                        ? "bg-primary/10 text-primary hover:bg-primary/15"
-                        : "hover:bg-secondary/50 text-primary/80 hover:text-primary"
+                        ? "bg-primary/10 text-black hover:bg-primary/15"
+                        : "hover:bg-secondary/50 text-black/80 hover:text-black"
                   )}>
                       <Link href="/settings" className="flex items-center gap-3 w-full">
                           {(pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                          <Settings2 className={cn("size-4 transition-transform group-hover/btn:scale-110", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "text-primary" : "text-muted-foreground")} />
+                          <Settings2 className={cn("size-4 transition-transform group-hover/btn:scale-110", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "text-black" : "text-black/60")} />
                           <span className={cn("text-[13px] tracking-tight", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "font-black" : "font-medium")}>Preferences</span>
                       </Link>
                   </SidebarMenuButton>
@@ -160,12 +160,12 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild isActive={pathname?.includes('/rbac')} tooltip="Access Control" className={cn(
                       "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                       pathname?.includes('/rbac')
-                        ? "bg-primary/10 text-primary hover:bg-primary/15"
-                        : "hover:bg-secondary/50 text-primary/80 hover:text-primary"
+                        ? "bg-primary/10 text-black hover:bg-primary/15"
+                        : "hover:bg-secondary/50 text-black/80 hover:text-black"
                   )}>
                       <Link href="/settings/rbac" className="flex items-center gap-3 w-full">
                           {pathname?.includes('/rbac') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                          <ShieldCheck className={cn("size-4 transition-transform group-hover/btn:scale-110", pathname?.includes('/rbac') ? "text-primary" : "text-muted-foreground")} />
+                          <ShieldCheck className={cn("size-4 transition-transform group-hover/btn:scale-110", pathname?.includes('/rbac') ? "text-black" : "text-black/60")} />
                           <span className={cn("text-[13px] tracking-tight", pathname?.includes('/rbac') ? "font-black" : "font-medium")}>Access Control</span>
                       </Link>
                   </SidebarMenuButton>
@@ -173,8 +173,8 @@ export function AppSidebar() {
                 )}
 
                 <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleLogout} tooltip="Log Out" className="h-7 rounded-lg px-3 hover:bg-accent/10 hover:text-accent text-primary/80 font-normal group transition-colors">
-                    <LogOut className="size-4 text-muted-foreground/80 transition-transform group-hover:translate-x-1" />
+                <SidebarMenuButton onClick={handleLogout} tooltip="Log Out" className="h-7 rounded-lg px-3 hover:bg-accent/10 hover:text-accent text-black/80 font-normal group transition-colors">
+                    <LogOut className="size-4 text-black/60 transition-transform group-hover:translate-x-1" />
                     <span className="text-[13px]">Log Out</span>
                 </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -195,7 +195,7 @@ export function AppSidebar() {
           </Avatar>
           {state !== "collapsed" && (
             <div className="flex flex-col min-w-0">
-              <span className="text-[13px] font-black tracking-tight truncate text-primary leading-none">{profile?.fullName}</span>
+              <span className="text-[13px] font-black tracking-tight truncate text-black leading-none">{profile?.fullName}</span>
               <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-wider">
                 <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]" /> {company?.name || 'Workspace'}
               </span>
