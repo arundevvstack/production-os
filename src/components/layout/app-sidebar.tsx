@@ -216,8 +216,8 @@ export function AppSidebar() {
               {state !== "collapsed" && (
                 <div className="flex flex-col min-w-0 flex-1">
                   <span className="text-[13px] font-black tracking-tight truncate text-black leading-none">{profile?.fullName}</span>
-                  <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-wider">
-                    <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]" /> {company?.name || 'Workspace'}
+                  <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-normal">
+                    <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">{company?.name || 'Workspace'}</span>
                   </span>
                 </div>
               )}
