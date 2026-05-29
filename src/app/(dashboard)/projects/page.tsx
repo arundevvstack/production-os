@@ -92,6 +92,7 @@ export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [wizardStep, setWizardStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [projectToArchive, setProjectToArchive] = useState<any>(null);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
@@ -220,6 +221,7 @@ export default function ProjectsPage() {
       setNewProject({ project_name: "", client_name: "", budget: "", deadline: "", service_category: "", service: "", project_type: "Normal Production" });
       setSelectedTemplate("None");
       setSelectedLeadId(null);
+      setWizardStep(1);
       setIsCreateOpen(false);
       reloadProjects();
       broadcastTableUpdate('Project');
@@ -303,201 +305,328 @@ export default function ProjectsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <Dialog open={isCreateOpen} onOpenChange={(open) => { setIsCreateOpen(open); if (!open) setWizardStep(1); }}>
             <DialogTrigger asChild>
               <Button className="h-12 px-6 gap-3 rounded-[10px] bg-slate-900 hover:bg-slate-800 text-white font-black shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
                 <Plus className="h-5 w-5" /> New Project
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px] rounded-[10px] border-slate-200 bg-white p-0 overflow-hidden shadow-2xl">
-              <div className="bg-white border-b border-slate-100 p-8 text-slate-900 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-12 opacity-50 rotate-12">
-                  <Sparkles className="h-32 w-32 text-slate-100" />
+            <DialogContent className="sm:max-w-[620px] rounded-2xl border-0 bg-white p-0 overflow-hidden shadow-2xl">
+              
+              {/* Wizard Header */}
+              <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
                 </div>
                 <DialogHeader className="relative z-10">
-                  <DialogTitle className="text-3xl font-black tracking-tight flex items-center gap-3 text-slate-900">
-                    <div className="h-10 w-10 rounded-[10px] bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
-                      <Plus className="h-6 w-6 text-white" />
-                    </div>
-                    New Project
-                  </DialogTitle>
-                  <DialogDescription className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-2">
-                    Enter project details below
-                  </DialogDescription>
+                  <div className="flex items-center justify-between mb-4">
+                    <DialogTitle className="text-lg font-black tracking-tight text-white flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
+                        <Sparkles className="h-4 w-4 text-white" />
+                      </div>
+                      New Project
+                    </DialogTitle>
+                    <span className="text-xs font-bold text-white/40 uppercase tracking-widest">Step {wizardStep} of 3</span>
+                  </div>
+                  {/* Step indicators */}
+                  <div className="flex gap-2 items-center">
+                    {[
+                      { n: 1, label: "Pipeline" },
+                      { n: 2, label: "Details" },
+                      { n: 3, label: "Review" }
+                    ].map((s, i) => (
+                      <div key={s.n} className="flex items-center gap-2 flex-1">
+                        <div className={cn(
+                          "flex items-center gap-2 flex-1",
+                          wizardStep >= s.n ? "opacity-100" : "opacity-40"
+                        )}>
+                          <div className={cn(
+                            "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-300 shrink-0",
+                            wizardStep > s.n ? "bg-emerald-400 text-white" :
+                            wizardStep === s.n ? "bg-white text-slate-900" :
+                            "bg-white/10 text-white"
+                          )}>
+                            {wizardStep > s.n ? <CheckCircle2 className="h-3.5 w-3.5" /> : s.n}
+                          </div>
+                          <span className={cn("text-[10px] font-black uppercase tracking-widest transition-colors", wizardStep === s.n ? "text-white" : "text-white/40")}>{s.label}</span>
+                        </div>
+                        {i < 2 && <div className={cn("h-px flex-1 transition-all duration-300", wizardStep > s.n ? "bg-emerald-400/60" : "bg-white/10")} />}
+                      </div>
+                    ))}
+                  </div>
                 </DialogHeader>
               </div>
-              
-              <form onSubmit={handleCreateProject} className="p-8 space-y-6 bg-white">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Service Category</Label>
-                    <Select 
-                      value={newProject.service_category} 
-                      onValueChange={(val) => setNewProject({...newProject, service_category: val, service: ""})}
-                    >
-                      <SelectTrigger className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm">
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
-                        {CONTENT_VERTICALS.map(v => (
-                          <SelectItem key={v.id} value={v.name} className="text-xs font-bold rounded-xl m-1">{v.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+
+              {/* Step 1: Pipeline & Category */}
+              {wizardStep === 1 && (
+                <div className="p-7 space-y-5">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Choose Workflow Pipeline</p>
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { value: "AI Production", icon: Sparkles, label: "AI Production", desc: "8 stages · AI-assisted", color: "text-primary", bg: "bg-primary/5 border-primary/20", activeBg: "bg-primary/10 border-primary" },
+                        { value: "Hybrid Production", icon: Layers, label: "Hybrid", desc: "6 stages · Mixed workflow", color: "text-amber-500", bg: "bg-amber-50 border-amber-100", activeBg: "bg-amber-50 border-amber-400" },
+                        { value: "Normal Production", icon: Film, label: "Standard", desc: "5 stages · Traditional", color: "text-slate-500", bg: "bg-slate-50 border-slate-200", activeBg: "bg-slate-100 border-slate-400" },
+                      ].map(p => (
+                        <button
+                          key={p.value}
+                          type="button"
+                          onClick={() => setNewProject(prev => ({ ...prev, project_type: p.value }))}
+                          className={cn(
+                            "relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer text-center",
+                            newProject.project_type === p.value ? p.activeBg + " shadow-md" : p.bg + " hover:shadow-sm"
+                          )}
+                        >
+                          {newProject.project_type === p.value && (
+                            <div className="absolute top-2 right-2 h-4 w-4 rounded-full bg-emerald-500 flex items-center justify-center">
+                              <CheckCircle2 className="h-3 w-3 text-white" />
+                            </div>
+                          )}
+                          <p.icon className={cn("h-6 w-6", p.color)} />
+                          <div>
+                            <p className="text-xs font-black text-slate-800">{p.label}</p>
+                            <p className="text-[9px] text-slate-400 font-medium mt-0.5">{p.desc}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Service</Label>
-                    <Select 
-                      disabled={!newProject.service_category}
-                      value={newProject.service} 
-                      onValueChange={(val) => setNewProject({...newProject, service: val})}
-                    >
-                      <SelectTrigger className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm">
-                        <div className="flex items-center gap-2">
-                          <ListTree className="h-3 w-3 text-muted-foreground" />
-                          <SelectValue placeholder={newProject.service_category ? "Select service" : "Select category first"} />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
-                        {CONTENT_VERTICALS.find(v => v.name === newProject.service_category)?.services.map(s => (
-                          <SelectItem key={s} value={s} className="text-xs font-bold rounded-xl m-1">{s}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Workflow Pipeline (Project Type)</Label>
-                  <Select 
-                    value={newProject.project_type} 
-                    onValueChange={(val) => setNewProject({...newProject, project_type: val})}
-                  >
-                    <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-slate-50 shadow-inner font-black text-slate-800">
-                      <div className="flex items-center gap-3">
-                        <Cpu className="h-4 w-4 text-primary" />
-                        <SelectValue placeholder="Select Pipeline" />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent className="rounded-[10px] bg-white border border-slate-200 shadow-xl z-[100]">
-                      <SelectItem value="AI Production" className="text-xs font-bold rounded-xl m-1 py-3"><div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-primary" /> AI Production Pipeline</div></SelectItem>
-                      <SelectItem value="Hybrid Production" className="text-xs font-bold rounded-xl m-1 py-3"><div className="flex items-center gap-2"><Layers className="h-4 w-4 text-amber-500" /> Hybrid Production Pipeline</div></SelectItem>
-                      <SelectItem value="Normal Production" className="text-xs font-bold rounded-xl m-1 py-3"><div className="flex items-center gap-2"><Film className="h-4 w-4 text-slate-500" /> Standard Production Pipeline</div></SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Pipeline Preview Panel */}
+                  {/* Pipeline stage preview */}
                   {newProject.project_type && ENTERPRISE_TEMPLATES[newProject.project_type] && (() => {
                     const tmpl = ENTERPRISE_TEMPLATES[newProject.project_type];
-                    const totalObjs = tmpl.stages.reduce((acc, s) => acc + s.objectives.length, 0);
-                    const defaultDays = DEFAULT_TIMELINE_DAYS[newProject.project_type];
                     return (
-                      <div className="mt-3 rounded-[10px] border border-slate-100 bg-slate-50/80 p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Auto-Generated Workspace</p>
-                          <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-bold text-slate-400">{tmpl.stages.length} Stages</span>
-                            <span className="text-[10px] font-bold text-slate-400">{totalObjs} Objectives</span>
-                            {!newProject.deadline && <span className="text-[10px] font-bold text-amber-500">{defaultDays}d default timeline</span>}
-                          </div>
-                        </div>
-                        <div className="space-y-1.5">
+                      <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-3">Workspace Preview · {tmpl.stages.length} Stages</p>
+                        <div className="grid grid-cols-2 gap-1.5">
                           {tmpl.stages.map((stage, i) => (
                             <div key={stage.name} className="flex items-center gap-2">
-                              <div className="h-5 w-5 rounded-md bg-white border border-slate-200 flex items-center justify-center shrink-0">
-                                <span className="text-[9px] font-black text-slate-500">{i + 1}</span>
-                              </div>
-                              <div className="flex-1 flex items-center justify-between">
-                                <span className="text-xs font-bold text-slate-700">{stage.name}</span>
-                                <span className="text-[10px] text-slate-400 font-medium">{stage.objectives.length} tasks</span>
-                              </div>
+                              <span className="h-5 w-5 rounded-md bg-white border border-slate-200 flex items-center justify-center text-[9px] font-black text-slate-400 shrink-0">{i + 1}</span>
+                              <span className="text-xs font-bold text-slate-600 truncate">{stage.name}</span>
+                              <span className="text-[9px] text-slate-400 ml-auto shrink-0">{stage.objectives.length}t</span>
                             </div>
                           ))}
                         </div>
-                        <p className="text-[9px] text-slate-400 font-medium pt-1 border-t border-slate-100">
-                          All stages, objectives, timelines, and dependency chains will be created automatically.
-                        </p>
                       </div>
                     );
                   })()}
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Project Name</Label>
-                    <Input 
-                      id="name" 
-                      placeholder="Project Alpha..." 
-                      value={newProject.project_name}
-                      onChange={(e) => setNewProject({...newProject, project_name: e.target.value})}
-                      required
-                      className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm focus:ring-primary/10 font-bold"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Client</Label>
-                    <div className="relative">
-                      <input
-                        list="client-list"
-                        type="text"
-                        placeholder="Type to search clients..."
-                        value={newProject.client_name}
-                        onChange={(e) => {
-                          const typed = e.target.value;
-                          setNewProject(prev => ({ ...prev, client_name: typed }));
-                          // Auto-fill from leads when an exact match is found
-                          const lead = leads?.find(l => l.company_name === typed);
-                          if (lead) {
-                            setSelectedLeadId(lead.id);
-                            setNewProject(prev => ({
-                              ...prev,
-                              client_name: typed,
-                              service_category: lead.service_vertical || prev.service_category,
-                              service: lead.sub_vertical || prev.service,
-                              budget: lead.deal_value ? lead.deal_value.toString() : prev.budget
-                            }));
-                          }
-                        }}
-                        className="h-12 w-full rounded-[10px] border border-slate-200 bg-white shadow-sm font-bold px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40"
-                      />
-                      <datalist id="client-list">
-                        {leads?.map(l => l.company_name).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).map(name => (
-                          <option key={name} value={name} />
-                        ))}
-                      </datalist>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Service Category</Label>
+                      <Select value={newProject.service_category} onValueChange={(val) => setNewProject({ ...newProject, service_category: val, service: "" })}>
+                        <SelectTrigger className="h-11 rounded-xl border-slate-200 bg-white shadow-sm text-sm">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-xl z-[200]">
+                          {CONTENT_VERTICALS.map(v => (
+                            <SelectItem key={v.id} value={v.name} className="text-xs font-bold rounded-lg m-0.5">{v.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Service</Label>
+                      <Select disabled={!newProject.service_category} value={newProject.service} onValueChange={(val) => setNewProject({ ...newProject, service: val })}>
+                        <SelectTrigger className="h-11 rounded-xl border-slate-200 bg-white shadow-sm text-sm">
+                          <SelectValue placeholder={newProject.service_category ? "Select service" : "Pick category first"} />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-xl z-[200]">
+                          {CONTENT_VERTICALS.find(v => v.name === newProject.service_category)?.services.map(s => (
+                            <SelectItem key={s} value={s} className="text-xs font-bold rounded-lg m-0.5">{s}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Budget</Label>
-                    <Input 
-                      id="budget" 
-                      type="number"
-                      placeholder="0.00" 
-                      value={newProject.budget}
-                      onChange={(e) => setNewProject({...newProject, budget: e.target.value})}
-                      className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm font-black"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Deadline</Label>
-                    <Input 
-                      id="deadline" 
-                      type="date"
-                      value={newProject.deadline}
-                      onChange={(e) => setNewProject({...newProject, deadline: e.target.value})}
-                      className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm font-bold"
-                    />
+                  <div className="flex justify-end pt-1">
+                    <Button
+                      type="button"
+                      onClick={() => setWizardStep(2)}
+                      className="h-11 px-8 gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black shadow-lg"
+                    >
+                      Next <ArrowRight className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
+              )}
 
-                <Button type="submit" disabled={isSubmitting} className="w-full h-14 bg-slate-900 hover:bg-slate-800 text-white font-black rounded-[10px] shadow-xl shadow-slate-900/20 active:scale-98 transition-all mt-4">
-                  {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Create Project"}
-                </Button>
-              </form>
+              {/* Step 2: Project Details */}
+              {wizardStep === 2 && (
+                <div className="p-7 space-y-5">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Project Information</p>
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Project Name <span className="text-red-400">*</span></Label>
+                        <Input
+                          placeholder="e.g. Diwali Campaign 2025"
+                          value={newProject.project_name}
+                          onChange={(e) => setNewProject({ ...newProject, project_name: e.target.value })}
+                          className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-bold text-slate-800 focus:ring-primary/10"
+                          autoFocus
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Client <span className="text-red-400">*</span></Label>
+                        <div className="relative">
+                          <input
+                            list="client-list-wiz"
+                            type="text"
+                            placeholder="Type to search or add a client..."
+                            value={newProject.client_name}
+                            onChange={(e) => {
+                              const typed = e.target.value;
+                              setNewProject(prev => ({ ...prev, client_name: typed }));
+                              const lead = leads?.find(l => l.company_name === typed);
+                              if (lead) {
+                                setSelectedLeadId(lead.id);
+                                setNewProject(prev => ({
+                                  ...prev,
+                                  client_name: typed,
+                                  service_category: lead.service_vertical || prev.service_category,
+                                  service: lead.sub_vertical || prev.service,
+                                  budget: lead.deal_value ? lead.deal_value.toString() : prev.budget
+                                }));
+                              }
+                            }}
+                            className="h-12 w-full rounded-xl border border-slate-200 bg-white shadow-sm font-bold px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40"
+                          />
+                          <datalist id="client-list-wiz">
+                            {leads?.map(l => l.company_name).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).map(name => (
+                              <option key={name} value={name} />
+                            ))}
+                          </datalist>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Budget (₹)</Label>
+                          <Input
+                            type="number"
+                            placeholder="0"
+                            value={newProject.budget}
+                            onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
+                            className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-black text-slate-800"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Deadline</Label>
+                          <Input
+                            type="date"
+                            value={newProject.deadline}
+                            onChange={(e) => setNewProject({ ...newProject, deadline: e.target.value })}
+                            className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-bold text-slate-800"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between pt-1">
+                    <Button type="button" variant="ghost" onClick={() => setWizardStep(1)} className="h-11 px-6 rounded-xl font-bold text-slate-500 hover:text-slate-900">
+                      ← Back
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        if (!newProject.project_name.trim() || !newProject.client_name.trim()) {
+                          toast({ variant: "destructive", title: "Required", description: "Please fill in Project Name and Client." });
+                          return;
+                        }
+                        setWizardStep(3);
+                      }}
+                      className="h-11 px-8 gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black shadow-lg"
+                    >
+                      Review <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Review & Launch */}
+              {wizardStep === 3 && (
+                <form onSubmit={handleCreateProject} className="p-7 space-y-5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Review & Launch</p>
+                  
+                  {/* Summary card */}
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 p-5 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Project Name</p>
+                        <p className="text-sm font-black text-slate-900 mt-1">{newProject.project_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Client</p>
+                        <p className="text-sm font-black text-slate-900 mt-1">{newProject.client_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Pipeline</p>
+                        <p className="text-sm font-bold text-slate-700 mt-1 flex items-center gap-1.5">
+                          {newProject.project_type === "AI Production" && <Sparkles className="h-3.5 w-3.5 text-primary" />}
+                          {newProject.project_type === "Hybrid Production" && <Layers className="h-3.5 w-3.5 text-amber-500" />}
+                          {newProject.project_type === "Normal Production" && <Film className="h-3.5 w-3.5 text-slate-500" />}
+                          {newProject.project_type}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Category</p>
+                        <p className="text-sm font-bold text-slate-700 mt-1">{newProject.service_category || <span className="text-slate-300">—</span>}</p>
+                      </div>
+                      {newProject.budget && (
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Budget</p>
+                          <p className="text-sm font-black text-emerald-600 mt-1">₹{Number(newProject.budget).toLocaleString('en-IN')}</p>
+                        </div>
+                      )}
+                      {newProject.deadline && (
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Deadline</p>
+                          <p className="text-sm font-bold text-slate-700 mt-1">{new Date(newProject.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Workspace that will be auto-created */}
+                    {ENTERPRISE_TEMPLATES[newProject.project_type] && (() => {
+                      const tmpl = ENTERPRISE_TEMPLATES[newProject.project_type];
+                      const totalObjs = tmpl.stages.reduce((acc, s) => acc + s.objectives.length, 0);
+                      return (
+                        <div className="pt-3 border-t border-slate-200">
+                          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">Auto-Created Workspace</p>
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-1.5">
+                              <div className="h-2 w-2 rounded-full bg-primary" />
+                              <span className="text-xs font-bold text-slate-600">{tmpl.stages.length} Stages</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <div className="h-2 w-2 rounded-full bg-emerald-400" />
+                              <span className="text-xs font-bold text-slate-600">{totalObjs} Objectives</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <div className="h-2 w-2 rounded-full bg-amber-400" />
+                              <span className="text-xs font-bold text-slate-600">Dependency chains</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Button type="button" variant="ghost" onClick={() => setWizardStep(2)} className="h-11 px-6 rounded-xl font-bold text-slate-500 hover:text-slate-900">
+                      ← Back
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="h-11 px-8 gap-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-black shadow-lg shadow-primary/30 active:scale-95 transition-all"
+                    >
+                      {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Sparkles className="h-4 w-4" /> Launch Project</>}
+                    </Button>
+                  </div>
+                </form>
+              )}
             </DialogContent>
           </Dialog>
         </div>
