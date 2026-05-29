@@ -1166,7 +1166,7 @@ export default function CRMPage() {
           defaultValues={leadToPromoteToPilot ? {
             client_name: leadToPromoteToPilot.company_name,
             project_name: `Pilot Video Creation - ${leadToPromoteToPilot.company_name}`,
-            project_type: 'Pilot Production', 
+            service_category: 'Pilot Production', 
             lead_id: leadToPromoteToPilot.id
           } : undefined}
           onSuccess={(projectId?: string) => {

@@ -443,6 +443,8 @@ export default function ProjectsPage() {
 
 function ProjectCard({ project, view, index, onArchive, companyUsers }: { project: any, view: ViewMode, index: number, onArchive: (p: any) => void, companyUsers?: any[] | null }) {
   const isEven = index % 2 === 0;
+  const isPilot = project.project_name?.toLowerCase().includes('pilot') || project.project_category?.toLowerCase().includes('pilot') || project.project_type === 'Pilot Production';
+  const displayType = project.project_type === 'Pilot Production' ? 'Normal Production' : project.project_type;
 
   if (view === 'grid') {
     return (
@@ -452,9 +454,21 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <Film className="h-20 w-20" />
           </div>
           <div className="flex justify-between items-start relative z-10">
-            <Badge className="h-6 px-3 rounded-full bg-white/20 backdrop-blur-xl border-none text-[8px] font-black uppercase tracking-[0.05em] text-white">
-              {project.status?.replace('_', ' ')}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge className="h-6 px-3 rounded-full bg-white/20 backdrop-blur-xl border-none text-[8px] font-black uppercase tracking-[0.05em] text-white">
+                {project.status?.replace('_', ' ')}
+              </Badge>
+              {isPilot && (
+                <Badge className="h-6 px-3 rounded-full bg-white/20 backdrop-blur-xl border-none text-[8px] font-black uppercase tracking-[0.05em] text-white shadow-sm">
+                  Pilot
+                </Badge>
+              )}
+              {displayType && (
+                <Badge className="h-6 px-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-[8px] font-black uppercase tracking-[0.05em] text-white">
+                  {displayType}
+                </Badge>
+              )}
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-10 w-10 text-white/60 hover:text-white hover:bg-white/10 rounded-[10px] backdrop-blur-xl border border-white/20">
@@ -558,9 +572,21 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                   <Calendar className="h-3.5 w-3.5 text-slate-400" />
                   <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest">{project.deadline || 'TBD'}</span>
                 </div>
-                <Badge variant="outline" className={cn("text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none", project.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-primary/10 text-primary')}>
-                  {project.status?.replace('_', ' ')}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className={cn("text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none", project.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-primary/10 text-primary')}>
+                    {project.status?.replace('_', ' ')}
+                  </Badge>
+                  {isPilot && (
+                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none text-fuchsia-700 bg-fuchsia-100">
+                      Pilot
+                    </Badge>
+                  )}
+                  {displayType && (
+                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border border-slate-200 text-slate-500 bg-white">
+                      {displayType}
+                    </Badge>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-2.5 pt-4 border-t border-slate-100">
@@ -619,9 +645,21 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
               
               <div className="hidden sm:flex flex-col gap-2 pl-10 border-l border-slate-100/50">
                 <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Status</span>
-                <Badge className="w-fit text-[10px] font-black uppercase bg-slate-900 text-white border-none py-1.5 px-4 rounded-xl">
-                  {project.status?.replace('_', ' ')}
-                </Badge>
+                <div className="flex flex-col gap-2">
+                  <Badge className="w-fit text-[10px] font-black uppercase bg-slate-900 text-white border-none py-1.5 px-4 rounded-xl">
+                    {project.status?.replace('_', ' ')}
+                  </Badge>
+                  {isPilot && (
+                    <Badge variant="outline" className="w-fit text-[9px] font-black uppercase border-none bg-fuchsia-100 text-fuchsia-700 py-1 px-3 rounded-xl">
+                      Pilot
+                    </Badge>
+                  )}
+                  {displayType && (
+                    <Badge variant="outline" className="w-fit text-[9px] font-black uppercase border-slate-200 text-slate-500 py-1 px-3 rounded-xl">
+                      {displayType}
+                    </Badge>
+                  )}
+                </div>
               </div>
             </div>
           </div>
