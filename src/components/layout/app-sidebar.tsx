@@ -93,22 +93,24 @@ export function AppSidebar() {
 
     setIsUploadingAvatar(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${uid}-${Math.random()}.${fileExt}`;
-      const filePath = `${uid}/${fileName}`;
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('uid', uid);
 
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file);
+      const res = await fetch('/api/v1/user/avatar', {
+        method: 'POST',
+        body: formData,
+      });
 
-      if (uploadError) throw uploadError;
+      const data = await res.json();
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to upload avatar');
+      }
+
+      toast({ title: "Avatar Updated", description: "Your profile picture has been updated." });
       
-      await supabase.from('User').update({ avatar: publicUrl }).eq('id', uid);
-      toast({ title: "Avatar Updated", description: "Your profile picture has been updated. Please refresh if needed." });
+      // The useTenant hook will automatically reflect the change via Supabase realtime subscription.
     } catch (error: any) {
       toast({ variant: "destructive", title: "Upload Failed", description: error.message });
     } finally {
