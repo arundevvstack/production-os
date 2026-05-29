@@ -331,7 +331,7 @@ export default function ProjectsPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
             <Input 
               placeholder="Search projects..." 
-              className="pl-11 h-12 rounded-[10px] border-white/60 bg-white/40 backdrop-blur-xl focus:bg-white focus:ring-primary/20 transition-all shadow-premium"
+              className="pl-11 h-12 rounded-[10px] border-white/60 dark:border-slate-700/60 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl focus:bg-white dark:bg-slate-900 focus:ring-primary/20 transition-all shadow-premium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -348,7 +348,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Toolbar Section */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white/40 backdrop-blur-xl p-2 rounded-[10px] border border-white/60 shadow-premium gap-4 mx-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl p-2 rounded-[10px] border border-white/60 dark:border-slate-700/60 shadow-premium gap-4 mx-2">
         <div className="flex items-center gap-1.5 p-1 bg-muted/50 rounded-[10px]">
           {[
             { id: 'grid', icon: LayoutGrid, label: 'Grid' },
@@ -362,7 +362,7 @@ export default function ProjectsPage() {
               onClick={() => setViewMode(mode.id as ViewMode)}
               className={cn(
                 "h-9 px-6 gap-2 rounded-xl transition-all duration-500", 
-                viewMode === mode.id ? "bg-white shadow-md text-foreground font-black" : "text-muted-foreground font-bold hover:bg-white/50"
+                viewMode === mode.id ? "bg-white dark:bg-slate-900 shadow-md text-foreground font-black" : "text-muted-foreground font-bold hover:bg-white/50 dark:bg-slate-900/50"
               )}
             >
               <mode.icon className="h-4 w-4" /> 
@@ -380,11 +380,11 @@ export default function ProjectsPage() {
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-10 px-5 gap-2 rounded-xl border-border bg-white/50 font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all">
+              <Button variant="outline" className="h-10 px-5 gap-2 rounded-xl border-border bg-white/50 dark:bg-slate-900/50 font-black text-[10px] uppercase tracking-widest hover:bg-white dark:bg-slate-900 transition-all">
                 <Filter className="h-4 w-4" /> Intelligence Filter
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="rounded-[10px] w-64 glass-panel border-white/60 p-2">
+            <DropdownMenuContent align="end" className="rounded-[10px] w-64 glass-panel border-white/60 dark:border-slate-700/60 p-2">
               <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-4 py-3">Classification</DropdownMenuLabel>
               {['all', 'in_progress', 'completed', 'on_hold'].map((status) => (
                 <DropdownMenuCheckboxItem 
@@ -404,7 +404,7 @@ export default function ProjectsPage() {
       {/* Main Content Area */}
       <div className="min-h-[500px] px-2 pb-12">
         {filteredProjects.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-32 bg-white/20 backdrop-blur-md rounded-[4rem] border-2 border-dashed border-white/60">
+          <div className="flex flex-col items-center justify-center py-32 bg-white/20 backdrop-blur-md rounded-[4rem] border-2 border-dashed border-white/60 dark:border-slate-700/60">
             <div className="h-20 w-20 rounded-[10px] bg-muted flex items-center justify-center mb-6">
               <Archive className="h-8 w-8 text-slate-300" />
             </div>
@@ -433,7 +433,7 @@ export default function ProjectsPage() {
       </div>
 
       <AlertDialog open={!!projectToArchive} onOpenChange={(open) => !open && setProjectToArchive(null)}>
-        <AlertDialogContent className="rounded-[10px] glass-panel border-white/60 p-12">
+        <AlertDialogContent className="rounded-[10px] glass-panel border-white/60 dark:border-slate-700/60 p-12">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-3xl font-black tracking-tight text-foreground">Decommission Unit?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed pt-2">
@@ -486,7 +486,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                   <MoreVertical className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="rounded-[10px] bg-white border border-border shadow-xl p-2 w-52 z-[100]">
+              <DropdownMenuContent align="end" className="rounded-[10px] bg-white dark:bg-slate-900 border border-border shadow-xl p-2 w-52 z-[100]">
                 <DropdownMenuItem asChild className="rounded-xl m-1 py-3 font-bold cursor-pointer">
                   <Link href={`/projects/${project.id}`} className="gap-3">
                     <ExternalLink className="h-4 w-4" /> View Details
@@ -524,7 +524,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
               <span className="text-[10px] font-black text-foreground/80 uppercase tracking-wider">{project.deadline || 'TBD'}</span>
             </div>
             <div className="flex -space-x-3">
-              <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-border">
+              <Avatar className="h-8 w-8 border-2 border-white dark:border-slate-800 shadow-xl ring-1 ring-border">
                 <AvatarFallback className="text-[8px] font-black bg-primary text-white">{(project.project_name || 'P').charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
@@ -542,7 +542,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
         index > 0 ? "mt-12 md:-mt-16 relative z-10" : "relative z-10"
       )}>
         <div className="absolute left-6 md:left-[50%] -translate-x-[50%] z-20">
-          <div className="h-12 w-12 rounded-[10px] bg-white border-4 border-slate-50 flex items-center justify-center shadow-premium group">
+          <div className="h-12 w-12 rounded-[10px] bg-white dark:bg-slate-900 border-4 border-slate-50 flex items-center justify-center shadow-premium group">
             <div className={cn("h-4 w-4 rounded-full shadow-lg transition-transform duration-500 group-hover:scale-125", project.progress === 100 ? "bg-emerald-500 shadow-emerald-200" : "bg-primary shadow-primary/20")} />
           </div>
         </div>
@@ -570,7 +570,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                       <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="rounded-[10px] bg-white border border-border shadow-xl p-2 z-[100]">
+                  <DropdownMenuContent align="end" className="rounded-[10px] bg-white dark:bg-slate-900 border border-border shadow-xl p-2 z-[100]">
                     <DropdownMenuItem className="text-accent font-bold gap-3 rounded-xl m-1 py-3 cursor-pointer focus:bg-accent/10" onClick={() => onArchive(project)}>
                       <Archive className="h-4 w-4" /> Archive Project
                     </DropdownMenuItem>
@@ -593,7 +593,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                     </Badge>
                   )}
                   {displayType && (
-                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border border-border text-muted-foreground bg-white">
+                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border border-border text-muted-foreground bg-white dark:bg-slate-900">
                       {displayType}
                     </Badge>
                   )}
@@ -617,13 +617,13 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
   }
 
   return (
-    <Card className="premium-card group border border-white/60 shadow-premium rounded-[15px] bg-white/50 backdrop-blur-2xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-0.5 overflow-hidden relative">
+    <Card className="premium-card group border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[15px] bg-white/50 dark:bg-slate-900/50 backdrop-blur-2xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-0.5 overflow-hidden relative">
       <div className={cn("absolute left-0 top-0 bottom-0 w-1.5 transition-all group-hover:w-2.5 z-10", getProgressColor(project.progress || 0, 'bg'))} />
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row md:items-stretch">
           <Link 
             href={`/projects/${project.id}`} 
-            className="px-8 py-6 md:w-[35%] flex flex-col justify-center gap-3 relative group-hover:bg-white/40 transition-colors"
+            className="px-8 py-6 md:w-[35%] flex flex-col justify-center gap-3 relative group-hover:bg-white/40 dark:bg-slate-900/40 transition-colors"
           >
             <div className="flex items-center gap-4">
               <h3 className="font-black text-xl tracking-tight text-foreground group-hover:text-foreground transition-colors truncate">
@@ -693,7 +693,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                       const user = companyUsers?.find(u => u.id === member.user_id);
                       const name = user?.fullName || user?.full_name || user?.email || 'Unknown';
                       return (
-                        <Avatar key={member.id} className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-border transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title={`${name} (${member.role})`}>
+                        <Avatar key={member.id} className="h-8 w-8 border-2 border-white dark:border-slate-800 shadow-xl ring-1 ring-border transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title={`${name} (${member.role})`}>
                           <AvatarFallback className="text-[8px] font-black bg-primary text-white">
                             {name.charAt(0).toUpperCase()}
                           </AvatarFallback>
@@ -701,7 +701,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                       );
                     })
                   ) : (
-                    <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-border transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title="Unassigned">
+                    <Avatar className="h-8 w-8 border-2 border-white dark:border-slate-800 shadow-xl ring-1 ring-border transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title="Unassigned">
                       <AvatarFallback className="text-[8px] font-black bg-secondary text-muted-foreground">?</AvatarFallback>
                     </Avatar>
                   )}
@@ -712,11 +712,11 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <div className="flex items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-12 w-12 rounded-[10px] hover:bg-white text-muted-foreground hover:text-foreground transition-all shadow-sm">
+                  <Button variant="ghost" size="icon" className="h-12 w-12 rounded-[10px] hover:bg-white dark:bg-slate-900 text-muted-foreground hover:text-foreground transition-all shadow-sm">
                     <MoreVertical className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="rounded-[10px] w-64 bg-white border border-border p-2 shadow-2xl z-[100]">
+                <DropdownMenuContent align="end" className="rounded-[10px] w-64 bg-white dark:bg-slate-900 border border-border p-2 shadow-2xl z-[100]">
                   <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-5 py-4">Options</DropdownMenuLabel>
                   <DropdownMenuItem asChild className="rounded-xl m-1 py-3.5 font-bold cursor-pointer transition-all">
                     <Link href={`/projects/${project.id}`} className="flex items-center gap-4">

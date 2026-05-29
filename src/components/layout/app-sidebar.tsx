@@ -180,12 +180,12 @@ export function AppSidebar() {
                             <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={cn(
                               "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                               isActive 
-                                ? "bg-primary/10 text-black hover:bg-primary/15" 
-                                : "hover:bg-secondary/50 text-black/80 hover:text-black"
+                                ? "bg-primary/10 text-black dark:text-white hover:bg-primary/15" 
+                                : "hover:bg-secondary/50 text-black dark:text-white/80 hover:text-black dark:text-white"
                             )}>
                             <Link href={item.url} className="flex items-center gap-3 w-full">
                                 {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                                <item.icon className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-black" : "text-black/60")} />
+                                <item.icon className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
                                 <span className={cn("text-[13px] tracking-tight", isActive ? "font-black" : "font-medium")}>{item.title}</span>
                             </Link>
                             </SidebarMenuButton>
@@ -205,7 +205,7 @@ export function AppSidebar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className={cn(
-              "flex items-center gap-3 p-3 rounded-[10px] bg-white/40 backdrop-blur-3xl border border-white/60 hover:bg-white/60 transition-all cursor-pointer group shadow-premium relative overflow-hidden",
+              "flex items-center gap-3 p-3 rounded-[10px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/60 dark:border-slate-700/60 hover:bg-white/60 transition-all cursor-pointer group shadow-premium relative overflow-hidden",
               state === "collapsed" ? "justify-center p-2" : ""
             )}>
               {isUploadingAvatar && (
@@ -213,7 +213,7 @@ export function AppSidebar() {
                   <Loader2 className="h-4 w-4 animate-spin text-primary" />
                 </div>
               )}
-              <Avatar className="h-10 w-10 ring-2 ring-white/80 shrink-0 shadow-lg group-hover:ring-primary/40 transition-all">
+              <Avatar className="h-10 w-10 ring-2 ring-white dark:ring-slate-900/80 shrink-0 shadow-lg group-hover:ring-primary/40 transition-all">
                 <AvatarImage src={profile?.avatar} />
                 <AvatarFallback className="bg-primary text-white text-[10px] font-black">
                   {profile?.fullName?.substring(0, 2).toUpperCase() || 'U'}
@@ -221,7 +221,7 @@ export function AppSidebar() {
               </Avatar>
               {state !== "collapsed" && (
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[13px] font-black tracking-tight truncate text-black leading-none">{profile?.fullName}</span>
+                  <span className="text-[13px] font-black tracking-tight truncate text-black dark:text-white leading-none">{profile?.fullName}</span>
                   <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-normal">
                     <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">{company?.name || 'Workspace'}</span>
                   </span>
@@ -229,7 +229,7 @@ export function AppSidebar() {
               )}
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-[12px] p-2 bg-white/90 backdrop-blur-3xl border-white/60 shadow-premium">
+          <DropdownMenuContent align="end" className="w-56 rounded-[12px] p-2 bg-white/90 backdrop-blur-3xl border-white/60 dark:border-slate-700/60 shadow-premium">
             <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-wider text-muted-foreground">My Account</DropdownMenuLabel>
             
             <DropdownMenuItem className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary" onClick={() => fileInputRef.current?.click()}>

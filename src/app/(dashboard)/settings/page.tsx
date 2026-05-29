@@ -138,6 +138,24 @@ function AccountCenterContent() {
     }
   }, [tenantProfile, company, settings]);
 
+  useEffect(() => {
+    // Instant Live Preview
+    const root = document.documentElement;
+    if (themeColors.primary) {
+      const hsl = hexToHsl(themeColors.primary);
+      if (hsl) root.style.setProperty('--primary', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+    }
+    if (themeColors.accent) {
+      const hsl = hexToHsl(themeColors.accent);
+      if (hsl) root.style.setProperty('--accent', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+    }
+    if (themeColors.darkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [themeColors]);
+
   const modulesList = [
     { id: "dashboard", name: "Dashboard", desc: "Workspace overview and task summary", icon: LayoutGrid, isCore: true },
     { id: "projects", name: "Project Management", desc: "Production workflows, budgets, and schedules", icon: Film, isCore: true },
@@ -212,8 +230,6 @@ function AccountCenterContent() {
       toast({ variant: "destructive", title: "Theme Save Failed", description: error.message });
     } else {
       toast({ title: "Branding Updated", description: "Your personal theme preferences have been saved." });
-      // Force reload to apply theme immediately
-      window.location.reload();
     }
   };
 
@@ -314,7 +330,7 @@ function AccountCenterContent() {
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-        <TabsList className="bg-white/50 border p-1 h-auto flex-wrap gap-1 rounded-[10px]">
+        <TabsList className="bg-white/50 dark:bg-slate-900/50 border p-1 h-auto flex-wrap gap-1 rounded-[10px]">
           <TabsTrigger value="profile" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
             <UserIcon className="h-4 w-4" /> Profile
           </TabsTrigger>
@@ -353,11 +369,11 @@ function AccountCenterContent() {
                     onChange={handleImageUpload}
                   />
                   <Avatar className={cn(
-                    "h-24 w-24 ring-4 ring-white shadow-xl transition-all",
+                    "h-24 w-24 ring-4 ring-white dark:ring-slate-900 shadow-xl transition-all",
                     isUploading && "opacity-50"
                   )}>
                     <AvatarImage src={profileData.avatar} />
-                    <AvatarFallback className="text-2xl font-bold bg-white text-foreground">
+                    <AvatarFallback className="text-2xl font-bold bg-white dark:bg-slate-900 text-foreground">
                       {profileData.name.substring(0,2).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -420,7 +436,7 @@ function AccountCenterContent() {
           <Card className="border-none shadow-soft rounded-[10px] overflow-hidden">
             <CardHeader className="bg-primary/5 pb-8">
               <div className="flex items-center gap-4">
-                <div className="h-16 w-16 bg-white rounded-[10px] flex items-center justify-center text-foreground shadow-sm">
+                <div className="h-16 w-16 bg-white dark:bg-slate-900 rounded-[10px] flex items-center justify-center text-foreground shadow-sm">
                   <Palette className="h-8 w-8" />
                 </div>
                 <div>
@@ -442,7 +458,7 @@ function AccountCenterContent() {
                         "p-4 rounded-[10px] border-2 transition-all text-left flex flex-col gap-3 group relative",
                         themeColors.primary === preset.primary && themeColors.accent === preset.accent
                           ? "border-primary bg-primary/5 shadow-md"
-                          : "border-border hover:border-border bg-white"
+                          : "border-border hover:border-border bg-white dark:bg-slate-900"
                       )}
                     >
                       <div className="flex gap-1.5">
@@ -572,7 +588,7 @@ function AccountCenterContent() {
           <Card className="border-none shadow-soft rounded-[10px] overflow-hidden">
             <CardHeader className="bg-primary/5 pb-8">
               <div className="flex items-center gap-4">
-                <div className="h-16 w-16 bg-white rounded-[10px] flex items-center justify-center text-foreground shadow-sm">
+                <div className="h-16 w-16 bg-white dark:bg-slate-900 rounded-[10px] flex items-center justify-center text-foreground shadow-sm">
                   <Building2 className="h-8 w-8" />
                 </div>
                 <div>
@@ -744,7 +760,7 @@ function AccountCenterContent() {
                 return (
                   <div key={mod.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-[10px]">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-white rounded-lg"><mod.icon className="h-5 w-5 text-foreground" /></div>
+                      <div className="p-2 bg-white dark:bg-slate-900 rounded-lg"><mod.icon className="h-5 w-5 text-foreground" /></div>
                       <div>
                         <h4 className="font-bold text-sm">{mod.name}</h4>
                         <p className="text-[10px] text-muted-foreground">{mod.desc || 'Modular media utility'}</p>
@@ -772,4 +788,41 @@ export default function AccountCenterPage() {
       <AccountCenterContent />
     </Suspense>
   );
+}
+
+/**
+ * Utility to convert a Hex color string to an HSL object.
+ * Returns null if the hex input is invalid.
+ */
+function hexToHsl(hex: string): { h: number; s: number; l: number } | null {
+  if (typeof hex !== 'string') return null;
+  hex = hex.replace(/^#/, '');
+  if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('');
+  }
+  if (hex.length !== 6) return null;
+
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100)
+  };
 }
