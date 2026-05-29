@@ -104,19 +104,19 @@ export class AIRouter {
       // Route to specific provider (Mocked API calls for now)
       switch (activeProvider) {
         case 'OpenAI':
-          resultUrls = ['https://placeholder.co/generated-openai-img.png'];
+          resultUrls = [];
           costCredits = 0.04;
           break;
         case 'Runway':
-          resultUrls = ['https://placeholder.co/generated-runway-vid.mp4'];
+          resultUrls = [];
           costCredits = 0.50;
           break;
         case 'Midjourney':
-          resultUrls = ['https://placeholder.co/generated-mj-img.png'];
+          resultUrls = [];
           costCredits = 0.05;
           break;
         case 'Kling':
-          resultUrls = ['https://placeholder.co/generated-kling-vid.mp4'];
+          resultUrls = [];
           costCredits = 0.60;
           break;
         default:

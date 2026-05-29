@@ -311,10 +311,7 @@ const OPPORTUNITY_BOARDS = [
   }
 ];
 
-const MOCK_COMMENTS = [
-  { id: "c1", user: "Arun Dev", text: "Luxury Real Estate CGI is seeing a massive budget increase in Bangalore. Let's build a dedicated proposal template for real estate developers.", timestamp: new Date(Date.now() - 3600000).toISOString() },
-  { id: "c2", user: "Sales AI Assistant", text: "Auto-Scored prestige heights luxury homes as 'Premium Opportunity'. Ideal pricing suggestion generated: ₹8,00,000.", timestamp: new Date(Date.now() - 1800000).toISOString() }
-];
+
 
 const DEMAND_FORECAST_DATA = [
   { name: "Week 1", "AI Ads": 40, "CGI walkthroughs": 24, "Social reels": 60 },
@@ -335,7 +332,7 @@ export default function MarketIntelligenceOS() {
   
   // Collaborative notes states
   const [researchNotes, setResearchNotes] = useState("Focus heavily on Wayanad resort gaps. Outdated landscape drone shots are extremely common, and offering dynamic vertical cinematic reels with localized AI narration will close deals easily.");
-  const [comments, setComments] = useState(MOCK_COMMENTS);
+  const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState("");
   
   // Discovered leads states

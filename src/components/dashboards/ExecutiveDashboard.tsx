@@ -48,15 +48,7 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
         </Card>
       </div>
 
-      {/* Placeholder for complex charts (Gantt, Burnout radar, etc) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <Card className="p-6 border-none shadow-lg rounded-3xl bg-white border border-slate-100 min-h-[300px] flex items-center justify-center">
-            <p className="text-sm font-black text-slate-300 tracking-widest uppercase">Profitability Chart Placeholder</p>
-        </Card>
-        <Card className="p-6 border-none shadow-lg rounded-3xl bg-white border border-slate-100 min-h-[300px] flex items-center justify-center">
-            <p className="text-sm font-black text-slate-300 tracking-widest uppercase">Workload Forecasting Placeholder</p>
-        </Card>
-      </div>
+
     </div>
   );
 }

@@ -84,7 +84,7 @@ export function AppSidebar() {
     }
   };
 
-  const logoUrl = PlaceHolderImages.find(img => img.id === 'app-logo')?.imageUrl || "https://picsum.photos/seed/logo/200/200";
+  const logoUrl = PlaceHolderImages.find(img => img.id === 'app-logo')?.imageUrl || "";
 
   if (isLoading) {
     return (

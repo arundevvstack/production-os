@@ -45,7 +45,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { PIPELINE_STAGES } from "@/lib/mock-data";
+import { PIPELINE_STAGES } from "@/lib/constants";
 
 export default function ClientPortfolioPage({ params }: { params: Promise<{ clientId: string }> }) {
   const { clientId } = use(params);
