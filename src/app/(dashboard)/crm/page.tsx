@@ -36,6 +36,7 @@ import { useTenant } from "@/hooks/use-tenant";
 import { useSupabaseCollection, broadcastTableUpdate } from "@/supabase/hooks/use-collection";
 import { supabase } from "@/supabase/client";
 import { PIPELINE_STAGES } from "@/lib/constants";
+import { CreateProjectWizard } from "@/components/projects/create-project-wizard";
 import { 
   Dialog, 
   DialogContent, 
@@ -1157,55 +1158,25 @@ export default function CRMPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Dialog: Promote to Pilot Video Project */}
-      <Dialog open={!!leadToPromoteToPilot} onOpenChange={(open) => !open && setLeadToPromoteToPilot(null)}>
-        <DialogContent className="sm:max-w-[460px] rounded-[10px] p-0 border border-slate-100 bg-white shadow-2xl">
-          <div className="relative p-8 pb-6 border-b border-slate-100">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/20 to-transparent" />
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-fuchsia-500/5 rounded-full blur-3xl pointer-events-none" />
-            <DialogHeader className="relative">
-              <DialogTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
-                <div className="h-10 w-10 rounded-[10px] bg-fuchsia-50 border border-fuchsia-100 flex items-center justify-center">
-                  <Sparkles className="h-5 w-5 text-fuchsia-500" />
-                </div>
-                Pilot Video Activation
-              </DialogTitle>
-              <DialogDescription className="text-slate-500 text-xs mt-1">
-                This will create a new pilot project for <strong className="text-slate-800">{leadToPromoteToPilot?.company_name}</strong>. Assign a producer or manager to take charge.
-              </DialogDescription>
-            </DialogHeader>
-          </div>
-          <form onSubmit={handlePilotProjectSubmit} className="p-8 space-y-5">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Primary Assignee</Label>
-              <Select 
-                value={pilotProjectAssignee} 
-                onValueChange={setPilotProjectAssignee}
-              >
-                <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
-                  <SelectValue placeholder="Select Assignee (Optional)" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
-                  {companyUsers?.map(user => (
-                    <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-xl m-1 cursor-pointer">
-                      {user.fullName || user.email} <span className="text-[10px] text-slate-400 font-normal uppercase ml-1">({user.role_id?.replace('_', ' ') || 'User'})</span>
-                    </SelectItem>
-                  ))}
-                  <SelectItem value="Unassigned" className="text-xs italic text-slate-400 rounded-xl m-1 cursor-pointer">Leave Unassigned</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => setLeadToPromoteToPilot(null)} className="rounded-[10px] h-11 font-black text-xs uppercase tracking-widest text-slate-600 bg-white">Cancel</Button>
-              <Button type="submit" disabled={isSubmitting} className="rounded-[10px] h-11 font-black text-xs uppercase tracking-widest bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-xl shadow-fuchsia-600/20 transition-all">
-                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                Create Project
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <CreateProjectWizard 
+          isOpen={!!leadToPromoteToPilot}
+          onOpenChange={(open: boolean) => {
+            if (!open) setLeadToPromoteToPilot(null);
+          }}
+          defaultValues={leadToPromoteToPilot ? {
+            client_name: leadToPromoteToPilot.company_name,
+            project_name: `Pilot Video Creation - ${leadToPromoteToPilot.company_name}`,
+            project_type: 'Pilot Production', 
+            lead_id: leadToPromoteToPilot.id
+          } : undefined}
+          onSuccess={(projectId?: string) => {
+            setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToPilot?.id ? { ...l, stage: 'pilot_video' } : l));
+            setLeadToPromoteToPilot(null);
+            if (projectId) {
+              router.push(`/projects/${projectId}`);
+            }
+          }}
+        />
     </div>
   );
 }
