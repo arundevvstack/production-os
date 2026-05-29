@@ -30,11 +30,8 @@ import {
   Lock,
   AlertTriangle,
   TrendingDown,
-  Star,
   Building2,
-  PieChart as PieChartIcon,
-  BarChart2,
-  CircleDot
+  BarChart2
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -190,7 +187,6 @@ export default function DashboardPage() {
     return allProjects.filter(p => p.status === 'in_progress').slice(0, 4);
   }, [allProjects]);
 
-  // Per-user project count (used in SUPER_ADMIN dashboard crew roster)
   const userProjectMap = useMemo(() => {
     const map: Record<string, number> = {};
     if (!allProjects) return map;
@@ -212,20 +208,16 @@ export default function DashboardPage() {
 
   // 1. SUPER_ADMIN / OWNER Command Center
   if (roleId === 'SUPER_ADMIN' || isSuperAdmin) {
-    // --- Additional computed data for the rich dashboard ---
     const netProfit = stats.revenue - stats.grossExpenses;
     const profitMargin = stats.revenue > 0 ? ((netProfit / stats.revenue) * 100).toFixed(1) : '0.0';
-    const completedProjects = allProjects?.filter(p => p.status === 'completed').length || 0;
     const overdueProjects = allProjects?.filter(p => {
       if (!p.deadline || p.status === 'completed') return false;
       return new Date(p.deadline) < new Date();
     }).length || 0;
-    const crmWon = prospects?.filter(p => p.stage === 'won').reduce((s, p) => s + (p.deal_value || 0), 0) || 0;
+    const crmWon = prospects?.filter(p => p.stage === 'won').reduce((s: number, p: any) => s + (p.deal_value || 0), 0) || 0;
     const crmActive = prospects?.filter(p => !['won','lost'].includes(p.stage || ''));
-
     const approvedUsers = companyUsers?.filter(u => u.status === 'approved') || [];
 
-    // Status helpers
     const statusColor = (s: string) => {
       if (s === 'in_progress') return 'bg-primary/10 text-primary';
       if (s === 'completed') return 'bg-emerald-50 text-emerald-600';
@@ -250,7 +242,7 @@ export default function DashboardPage() {
 
     return (
       <div className="space-y-8 font-body">
-        {/* ═══ HEADER ═══ */}
+        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
@@ -265,16 +257,14 @@ export default function DashboardPage() {
               <Building2 className="h-4 w-4 text-foreground" /> {company?.name || 'Operational'} · Enterprise Command Center
             </p>
           </div>
-          <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground">
-            <span className="px-3 py-1.5 bg-white border rounded-full shadow-sm">{format(new Date(), 'EEE, dd MMM yyyy')}</span>
-          </div>
+          <span className="px-3 py-1.5 bg-white border rounded-full shadow-sm text-xs font-bold text-muted-foreground">{format(new Date(), 'EEE, dd MMM yyyy')}</span>
         </div>
 
-        {/* ═══ ROW 1: 6 KPI TILES ═══ */}
+        {/* 6 KPI Tiles */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
             { label: 'Gross Revenue', value: `₹${stats.revenue.toLocaleString()}`, icon: IndianRupee, color: 'text-emerald-600', bg: 'bg-emerald-50', sub: `${profitMargin}% margin` },
-            { label: 'Net Profit', value: `₹${netProfit.toLocaleString()}`, icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50', sub: netProfit >= 0 ? 'Positive' : 'Deficit' },
+            { label: 'Net Profit', value: `₹${netProfit.toLocaleString()}`, icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50', sub: netProfit >= 0 ? 'Positive cashflow' : 'Deficit' },
             { label: 'CRM Pipeline', value: `₹${stats.crmPipeline.toLocaleString()}`, icon: Target, color: 'text-violet-600', bg: 'bg-violet-50', sub: `${crmActive?.length || 0} active leads` },
             { label: 'Total Projects', value: `${allProjects?.length || 0}`, icon: Briefcase, color: 'text-primary', bg: 'bg-primary/10', sub: `${stats.activeProjects} in progress` },
             { label: 'Crew Force', value: `${companyUsers?.length || 0}`, icon: Users, color: 'text-amber-600', bg: 'bg-amber-50', sub: `${stats.pendingUsers} pending` },
@@ -293,9 +283,8 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* ═══ ROW 2: PROJECT HEALTH TABLE + CRM PIPELINE ═══ */}
+        {/* Project Health Table + CRM Pipeline */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Project Health Table */}
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
             <CardHeader className="border-b p-6 flex flex-row items-center justify-between">
               <div>
@@ -303,9 +292,9 @@ export default function DashboardPage() {
                   <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Briefcase className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  Active Project Health
+                  Project Health
                 </CardTitle>
-                <CardDescription className="text-muted-foreground font-medium text-xs mt-1">Status, deadlines, budget, and progress for all running workspaces.</CardDescription>
+                <CardDescription className="text-muted-foreground font-medium text-xs mt-1">Status, deadlines, budget and progress for all workspaces.</CardDescription>
               </div>
               <Link href="/projects">
                 <Button variant="ghost" size="sm" className="h-8 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-primary/5">
@@ -343,10 +332,7 @@ export default function DashboardPage() {
                           </td>
                           <td className="px-4 py-4">
                             {p.deadline ? (
-                              <span className={`flex items-center gap-1 font-black ${
-                                isOverdue(p.deadline, p.status) ? 'text-accent' :
-                                isDeadlineSoon(p.deadline) ? 'text-amber-600' : 'text-foreground'
-                              }`}>
+                              <span className={`flex items-center gap-1 font-black ${isOverdue(p.deadline, p.status) ? 'text-accent' : isDeadlineSoon(p.deadline) ? 'text-amber-600' : 'text-foreground'}`}>
                                 {isOverdue(p.deadline, p.status) && <AlertTriangle className="h-3 w-3" />}
                                 {isDeadlineSoon(p.deadline) && !isOverdue(p.deadline, p.status) && <Clock className="h-3 w-3" />}
                                 {format(new Date(p.deadline), 'dd MMM yy')}
@@ -356,19 +342,11 @@ export default function DashboardPage() {
                           <td className="px-4 py-4">
                             <span className="font-black text-foreground">₹{(p.budget || 0).toLocaleString()}</span>
                           </td>
-                          <td className="px-4 py-4 min-w-[120px]">
+                          <td className="px-4 py-4 min-w-[110px]">
                             <div className="space-y-1">
-                              <div className="flex justify-between">
-                                <span className="text-[10px] font-black text-muted-foreground">{p.progress || 0}%</span>
-                              </div>
+                              <span className="text-[10px] font-black text-muted-foreground">{p.progress || 0}%</span>
                               <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                                <div
-                                  className="h-full rounded-full transition-all"
-                                  style={{
-                                    width: `${p.progress || 0}%`,
-                                    background: (p.progress || 0) >= 80 ? '#10b981' : (p.progress || 0) >= 50 ? 'hsl(var(--primary))' : '#f59e0b'
-                                  }}
-                                />
+                                <div className="h-full rounded-full transition-all" style={{ width: `${p.progress || 0}%`, background: (p.progress || 0) >= 80 ? '#10b981' : (p.progress || 0) >= 50 ? 'hsl(var(--primary))' : '#f59e0b' }} />
                               </div>
                             </div>
                           </td>
@@ -388,7 +366,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* CRM Pipeline Card */}
+          {/* CRM Pipeline */}
           <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
             <CardHeader className="border-b p-6">
               <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
@@ -400,7 +378,6 @@ export default function DashboardPage() {
               <CardDescription className="text-muted-foreground font-medium text-xs mt-1">Active lead value and conversion funnel.</CardDescription>
             </CardHeader>
             <CardContent className="p-6 space-y-4">
-              {/* Pipeline summary */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 rounded-[10px] bg-violet-50 border border-violet-100">
                   <p className="text-[9px] font-black text-violet-500 uppercase tracking-wider">Pipeline Value</p>
@@ -411,17 +388,14 @@ export default function DashboardPage() {
                   <p className="text-lg font-black text-emerald-700 mt-0.5">₹{crmWon.toLocaleString()}</p>
                 </div>
               </div>
-              {/* Stage breakdown */}
               {(['new', 'proposal', 'negotiation', 'won', 'lost'] as const).map(stage => {
-                const count = prospects?.filter(p => p.stage === stage).length || 0;
-                const val = prospects?.filter(p => p.stage === stage).reduce((s, p) => s + (p.deal_value || 0), 0) || 0;
-                const stageColor: Record<string, string> = {
-                  new: 'bg-blue-500', proposal: 'bg-primary', negotiation: 'bg-amber-500', won: 'bg-emerald-500', lost: 'bg-muted-foreground'
-                };
+                const count = prospects?.filter((p: any) => p.stage === stage).length || 0;
+                const val = prospects?.filter((p: any) => p.stage === stage).reduce((s: number, p: any) => s + (p.deal_value || 0), 0) || 0;
+                const dot: Record<string, string> = { new: 'bg-blue-500', proposal: 'bg-primary', negotiation: 'bg-amber-500', won: 'bg-emerald-500', lost: 'bg-muted-foreground' };
                 return (
                   <div key={stage} className="flex items-center justify-between py-2 border-b border-dashed last:border-0">
                     <div className="flex items-center gap-2">
-                      <div className={`h-2 w-2 rounded-full ${stageColor[stage]}`} />
+                      <div className={`h-2 w-2 rounded-full ${dot[stage]}`} />
                       <span className="text-[11px] font-black uppercase tracking-wider text-foreground capitalize">{stage}</span>
                       <span className="text-[10px] text-muted-foreground font-medium">({count})</span>
                     </div>
@@ -438,26 +412,24 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* ═══ ROW 3: CREW ROSTER + REVENUE CHART + AUDIT LOGS ═══ */}
+        {/* Crew Roster + Revenue Chart + Audit Logs */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Crew Roster */}
           <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
-            <CardHeader className="border-b p-6 flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
-                  <div className="h-7 w-7 rounded-lg bg-amber-100 flex items-center justify-center">
-                    <Users className="h-3.5 w-3.5 text-amber-600" />
-                  </div>
-                  Crew Roster
-                </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground font-medium mt-1">All approved members &amp; their active workloads.</CardDescription>
-              </div>
+            <CardHeader className="border-b p-6">
+              <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
+                <div className="h-7 w-7 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <Users className="h-3.5 w-3.5 text-amber-600" />
+                </div>
+                Crew Roster
+              </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground font-medium mt-1">Approved members and their active workloads.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               {approvedUsers.length === 0 ? (
                 <p className="p-8 text-center text-xs font-bold text-muted-foreground uppercase tracking-wider">No crew members yet.</p>
               ) : (
-                <div className="divide-y max-h-[360px] overflow-y-auto custom-scrollbar">
+                <div className="divide-y max-h-[300px] overflow-y-auto custom-scrollbar">
                   {approvedUsers.map((member) => {
                     const name = member.fullName || member.full_name || member.email?.split('@')[0] || 'Crew';
                     const projCount = userProjectMap[member.id] || 0;
@@ -465,7 +437,6 @@ export default function DashboardPage() {
                     return (
                       <div key={member.id} className="p-4 flex items-center gap-3 hover:bg-muted/30 transition-colors">
                         <Avatar className="h-9 w-9 shrink-0">
-                          {member.avatar_url && <img src={member.avatar_url} alt={name} className="rounded-full object-cover" />}
                           <AvatarFallback className="bg-primary/10 text-foreground text-[10px] font-black">
                             {name.substring(0, 2).toUpperCase()}
                           </AvatarFallback>
@@ -483,30 +454,23 @@ export default function DashboardPage() {
                   })}
                 </div>
               )}
-              {/* Pending clearances */}
               {stats.pendingUsers > 0 && (
-                <div className="p-4 border-t bg-accent/5">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-accent">Pending Clearances ({stats.pendingUsers})</span>
-                  </div>
-                  <div className="space-y-2">
-                    {companyUsers?.filter(u => u.status === 'pending').map((member) => {
-                      const dispName = member.fullName || member.full_name || member.email?.split('@')[0] || 'New Crew';
-                      return (
-                        <div key={member.id} className="flex items-center justify-between p-2 rounded-lg bg-white border">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <Avatar className="h-7 w-7 shrink-0">
-                              <AvatarFallback className="bg-accent/10 text-accent text-[9px] font-black">{dispName.substring(0, 2).toUpperCase()}</AvatarFallback>
-                            </Avatar>
-                            <p className="text-[11px] font-black text-foreground truncate">{dispName}</p>
-                          </div>
-                          <Button onClick={() => handleApproveUser(member.id)} className="h-7 px-3 rounded-lg text-[9px] font-black bg-emerald-600 hover:bg-emerald-500 text-white shrink-0">
-                            Approve
-                          </Button>
+                <div className="p-4 border-t bg-accent/5 space-y-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-accent block">Pending Clearances ({stats.pendingUsers})</span>
+                  {companyUsers?.filter(u => u.status === 'pending').map((member) => {
+                    const dispName = member.fullName || member.full_name || member.email?.split('@')[0] || 'New Crew';
+                    return (
+                      <div key={member.id} className="flex items-center justify-between p-2 rounded-lg bg-white border">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Avatar className="h-7 w-7 shrink-0">
+                            <AvatarFallback className="bg-accent/10 text-accent text-[9px] font-black">{dispName.substring(0, 2).toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                          <p className="text-[11px] font-black text-foreground truncate">{dispName}</p>
                         </div>
-                      );
-                    })}
-                  </div>
+                        <Button onClick={() => handleApproveUser(member.id)} className="h-7 px-3 rounded-lg text-[9px] font-black bg-emerald-600 hover:bg-emerald-500 text-white shrink-0">Approve</Button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
@@ -530,7 +494,7 @@ export default function DashboardPage() {
                   <p className="text-xl font-black text-emerald-600">₹{stats.revenue.toLocaleString()}</p>
                 </div>
                 <div>
-                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Total Expenses</p>
+                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Expenses</p>
                   <p className="text-xl font-black text-accent">₹{stats.grossExpenses.toLocaleString()}</p>
                 </div>
               </div>
@@ -549,7 +513,6 @@ export default function DashboardPage() {
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
-              {/* Pending invoices alert */}
               {stats.pendingInvoices > 0 && (
                 <div className="mt-3 p-3 rounded-[10px] bg-amber-50 border border-amber-100 flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
@@ -579,6 +542,29 @@ export default function DashboardPage() {
               ) : (
                 <div className="space-y-3 max-h-[320px] overflow-y-auto custom-scrollbar pr-1">
                   {activityLogs?.map((log) => (
+                    <div key={log.id} className="text-xs space-y-1.5 p-3 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md transition-all group relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
+                      <div className="flex justify-between items-center pl-2">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">{log.user_name}</span>
+                        <span className="text-[10px] font-bold text-primary/70">{format(new Date(log.created_at), 'HH:mm · MMM d')}</span>
+                      </div>
+                      <p className="font-black text-foreground pl-2 text-[11px]">{log.action}</p>
+                      {log.details && <p className="text-[10px] text-muted-foreground font-medium pl-2">{log.details}</p>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. MANAGER Command Center
+  if (roleId === 'MANAGER') {
+    return (
+      <div className="space-y-8 font-body">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
