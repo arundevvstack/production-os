@@ -26,170 +26,7 @@ import Image from "next/image";
 // ----------------------------------------------------
 // Mock Roster Data for High-Fidelity Cold Starts (Phases 1-13)
 // ----------------------------------------------------
-const MOCK_TALENTS = [
-  {
-    id: "mock_t1",
-    full_name: "Aparna Balamurali",
-    stage_name: "Aparna",
-    category: "Actor",
-    sub_category: "Lead Actress",
-    gender: "Female",
-    age: 28,
-    location: "Kochi, Kerala",
-    languages: "Malayalam, Tamil, English",
-    skills: "Method Acting, Classical Dance, Playback Singing",
-    experience: "8 Years",
-    day_rate: 150000,
-    followers: 2400000,
-    engagement_rate: 0.084,
-    instagram: "@aparna.balamurali",
-    youtube: "Aparna Official",
-    linkedin: "aparna-balamurali-actor",
-    rating: 4.9,
-    agency_name: "Central Casting Kochi",
-    email: "aparna@centralcasting.in",
-    phone: "+91 98460 12345",
-    tags: ["National Award Winner", "Sought-after", "Brand Ambassador"],
-    portfolio_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400&h=500",
-    video_url: "https://www.youtube.com/watch?v=mock1",
-    notes: "Excellent punctuality. Highly recommended for commercial campaigns."
-  },
-  {
-    id: "mock_t2",
-    full_name: "Tovino Thomas",
-    stage_name: "Tovino",
-    category: "Actor",
-    sub_category: "Lead Actor",
-    gender: "Male",
-    age: 35,
-    location: "Kochi, Kerala",
-    languages: "Malayalam, English, Tamil",
-    skills: "Action Sequences, Stunts, Visual Comedy",
-    experience: "12 Years",
-    day_rate: 350000,
-    followers: 7800000,
-    engagement_rate: 0.112,
-    instagram: "@tovinothomas",
-    youtube: "Tovino Thomas Network",
-    linkedin: "tovino-thomas-official",
-    rating: 5.0,
-    agency_name: "DP Creative Talents",
-    email: "tovino@dpmedia.in",
-    phone: "+91 98950 54321",
-    tags: ["Superhero Lead", "Pan-Indian Appeal", "Highly Professional"],
-    portfolio_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400&h=500",
-    video_url: "https://www.youtube.com/watch?v=mock2",
-    notes: "Outstanding dramatic range. Ideal for premium cinematic advertisements."
-  },
-  {
-    id: "mock_t3",
-    full_name: "Malavika Mohanan",
-    stage_name: "Malavika",
-    category: "Model",
-    sub_category: "High Fashion",
-    gender: "Female",
-    age: 30,
-    location: "Mumbai, Maharashtra",
-    languages: "Malayalam, Hindi, English",
-    skills: "Ramp Walk, Styling, Camera Posing",
-    experience: "7 Years",
-    day_rate: 200000,
-    followers: 3900000,
-    engagement_rate: 0.065,
-    instagram: "@malavikamohanan_",
-    youtube: "Malavika Diaries",
-    linkedin: "malavika-mohanan",
-    rating: 4.8,
-    agency_name: "Mumbai Elite Models",
-    email: "malavika@elitemodels.in",
-    phone: "+91 91234 56789",
-    tags: ["Ethnic Premium", "Youth Icon", "Trendy"],
-    portfolio_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400&h=500",
-    video_url: "https://www.youtube.com/watch?v=mock3",
-    notes: "Photogenic mastery. Brought massive client satisfaction on last jewelry shoot."
-  },
-  {
-    id: "mock_t4",
-    full_name: "Sujith Bhakthan",
-    stage_name: "Sujith",
-    category: "Influencer",
-    sub_category: "Travel & Lifestyle Vlogger",
-    gender: "Male",
-    age: 39,
-    location: "Trivandrum, Kerala",
-    languages: "Malayalam, English, Hindi",
-    skills: "Vlogging, Culinary Reviewing, Storytelling",
-    experience: "10 Years",
-    day_rate: 120000,
-    followers: 1800000,
-    engagement_rate: 0.098,
-    instagram: "@techtraveleat",
-    youtube: "Tech Travel Eat",
-    linkedin: "sujith-bhakthan",
-    rating: 4.7,
-    agency_name: "DP Creative Talents",
-    email: "sujith@dpmedia.in",
-    phone: "+91 97440 98765",
-    tags: ["High Social Reach", "Regional Trust", "Vlogger"],
-    portfolio_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400&h=500",
-    video_url: "https://www.youtube.com/watch?v=mock4",
-    notes: "High conversion rates. Connects beautifully with mass audiences."
-  },
-  {
-    id: "mock_t5",
-    full_name: "Anjali Menon",
-    stage_name: "Anjali",
-    category: "Voice Artist",
-    sub_category: "Narrator & Dubbing",
-    gender: "Female",
-    age: 34,
-    location: "Kochi, Kerala",
-    languages: "Malayalam, English, Tamil",
-    skills: "Voice Modulation, Singing, Accent Adaptability",
-    experience: "6 Years",
-    day_rate: 45000,
-    followers: 150000,
-    engagement_rate: 0.041,
-    instagram: "@anjali.voice",
-    youtube: "Anjali Dubs",
-    linkedin: "anjali-menon-voice",
-    rating: 4.9,
-    agency_name: "Central Casting Kochi",
-    email: "anjali@centralcasting.in",
-    phone: "+91 95670 11223",
-    tags: ["Warm Tone", "Quick turnaround", "Versatile"],
-    portfolio_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400&h=500",
-    video_url: "https://www.youtube.com/watch?v=mock5",
-    notes: "Highly cooperative. Completed a detailed 30-minute voiceover project in under 24 hours."
-  },
-  {
-    id: "mock_t6",
-    full_name: "Madhu Ambat",
-    stage_name: "Madhu",
-    category: "Cinematographer",
-    sub_category: "Director of Photography",
-    gender: "Male",
-    age: 62,
-    location: "Chennai, Tamil Nadu",
-    languages: "Tamil, English, Malayalam",
-    skills: "Anamorphic Lighting, Cinematic Framing, Drone Director",
-    experience: "35 Years",
-    day_rate: 180000,
-    followers: 95000,
-    engagement_rate: 0.035,
-    instagram: "@madhuambat",
-    youtube: "Madhu CineMastery",
-    linkedin: "madhu-ambat-dop",
-    rating: 5.0,
-    agency_name: "DP Creative Talents",
-    email: "madhu@dpmedia.in",
-    phone: "+91 94440 55667",
-    tags: ["Legendary DoP", "National Award Winner", "Camera Craftsmanship"],
-    portfolio_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400&h=500",
-    video_url: "https://www.youtube.com/watch?v=mock6",
-    notes: "Unmatched expertise. Essential for absolute premium cinematic campaigns."
-  }
-];
+
 
 // ----------------------------------------------------
 // Mock Casting Calls & Requirements (Phase 6)
@@ -366,7 +203,7 @@ export default function TalentNetworkPage() {
       notes: "Newly registered Supabase profile."
     }));
 
-    return [...dbList, ...bridgedTalents, ...MOCK_TALENTS];
+    return [...dbList, ...bridgedTalents];
   }, [dbTalents, bridgedTalents]);
 
   // UI State Management
@@ -380,7 +217,7 @@ export default function TalentNetworkPage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("All");
   const [genderFilter, setGenderFilter] = useState("All");
-  const [selectedTalentDetail, setSelectedTalentDetail] = useState<any>(MOCK_TALENTS[0]);
+  const [selectedTalentDetail, setSelectedTalentDetail] = useState<any>(null);
 
   // Dynamic Lists State (Phase 6, 10, 11, 16)
   const [castingCalls, setCastingCalls] = useState(INITIAL_CASTING_CALLS);
@@ -418,7 +255,7 @@ export default function TalentNetworkPage() {
   });
 
   const [newBookingForm, setNewBookingForm] = useState({
-    talentId: MOCK_TALENTS[0].id,
+    talentId: "",
     projectId: "c_1",
     dates: "2026-06-12 to 2026-06-15",
     dayRate: "150000"

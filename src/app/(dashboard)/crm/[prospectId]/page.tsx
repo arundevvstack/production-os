@@ -31,7 +31,7 @@ import { useSupabaseCollection } from "@/supabase/hooks/use-collection";
 import { supabase } from "@/supabase/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PIPELINE_STAGES } from "@/lib/mock-data";
+import { PIPELINE_STAGES } from "@/lib/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";

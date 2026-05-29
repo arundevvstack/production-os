@@ -834,12 +834,9 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
               <span className="text-[10px] font-black text-slate-700 uppercase tracking-wider">{project.deadline || 'TBD'}</span>
             </div>
             <div className="flex -space-x-3">
-              {[1,2,3].map(i => (
-                <Avatar key={i} className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100">
-                  <AvatarImage src={`https://picsum.photos/seed/${project.id+i}/80/80`} />
-                  <AvatarFallback className="text-[8px] font-black bg-primary text-white">U</AvatarFallback>
-                </Avatar>
-              ))}
+              <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100">
+                <AvatarFallback className="text-[8px] font-black bg-primary text-white">{project.name.charAt(0).toUpperCase()}</AvatarFallback>
+              </Avatar>
             </div>
           </div>
         </CardContent>
@@ -977,12 +974,9 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
               <div className="hidden lg:flex flex-col space-y-2">
                 <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Assigned crew</span>
                 <div className="flex -space-x-3">
-                  {[1,2,3,4].map(i => (
-                    <Avatar key={i} className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0">
-                      <AvatarImage src={`https://picsum.photos/seed/${project.id+i}/100/100`} />
-                      <AvatarFallback className="text-[8px] font-black bg-primary text-white">U</AvatarFallback>
-                    </Avatar>
-                  ))}
+                  <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0">
+                    <AvatarFallback className="text-[8px] font-black bg-primary text-white">{project.name.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
                 </div>
               </div>
             </div>

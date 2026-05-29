@@ -229,7 +229,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
                    <div className="text-[8px] font-black text-primary/40 text-center uppercase leading-none">
                      Digital<br/>Verified<br/>Stamp
                    </div>
-                   <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/stamp/100/100')] bg-contain bg-no-repeat opacity-10" />
+
                 </div>
               </div>
             </div>

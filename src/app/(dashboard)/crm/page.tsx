@@ -35,7 +35,7 @@ import { Input } from "@/components/ui/input";
 import { useTenant } from "@/hooks/use-tenant";
 import { useSupabaseCollection, broadcastTableUpdate } from "@/supabase/hooks/use-collection";
 import { supabase } from "@/supabase/client";
-import { PIPELINE_STAGES } from "@/lib/mock-data";
+import { PIPELINE_STAGES } from "@/lib/constants";
 import { 
   Dialog, 
   DialogContent, 
