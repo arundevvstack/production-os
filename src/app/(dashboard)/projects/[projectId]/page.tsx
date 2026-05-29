@@ -897,10 +897,8 @@ export default function ProjectWorkspacePage() {
                             >
                               <LinkIcon className="h-3 w-3" /> Edit Link
                             </button>
-                            <a href={asset.url} target="_blank" rel="noopener noreferrer" className="flex-1">
-                              <button className="w-full h-7 bg-slate-50 hover:bg-slate-100 text-slate-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
-                                <Download className="h-3 w-3" /> Open
-                              </button>
+                            <a href={asset.url || '#'} target="_blank" rel="noopener noreferrer" className="flex-1 w-full h-7 bg-slate-50 hover:bg-slate-100 text-slate-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
+                              <Download className="h-3 w-3" /> Open
                             </a>
                           </div>
                         </div>
