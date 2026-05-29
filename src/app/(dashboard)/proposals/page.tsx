@@ -503,6 +503,7 @@ function ProposalsContent() {
       proposal_title: generatedDraft.proposal_title,
       client: generatedDraft.client,
       proposal_type: aiInputs.proposal_type,
+      lead_id: aiInputs.leadId || "",
       client_email: selectedLead?.email || "",
       client_phone: "",
       client_gstin: selectedLead?.gstin || "",
@@ -559,9 +560,7 @@ function ProposalsContent() {
     const { data, error } = await supabase.from('Proposal').insert({
       id: newId,
       company_id: companyId,
-      lead_id: aiInputs.leadId || null,
       title: generatedDraft.proposal_title,
-      client_name: generatedDraft.client,
       proposal_number: uniqueNumber,
       content: JSON.stringify(defaultAdvancedJSON), 
       status: 'draft',
@@ -650,7 +649,6 @@ function ProposalsContent() {
     // Write back JSON string to DB
     const { error } = await supabase.from('Proposal').update({
       title: updatedContent.proposal_title,
-      client_name: updatedContent.client,
       status: status,
       content: JSON.stringify(updatedContent)
     }).eq('id', editingProposal.id);
@@ -667,14 +665,15 @@ function ProposalsContent() {
       }));
 
       // CRM Sync stage mapping based on status
-      if (editingProposal.lead_id) {
+      const leadId = editingProposal.parsedContent?.lead_id;
+      if (leadId) {
         let crmStage = 'proposal_draft';
         if (status === 'sent') crmStage = 'proposal_sent';
         else if (status === 'negotiation') crmStage = 'negotiation';
         else if (status === 'approved' || status === 'signed' || status === 'won') crmStage = 'won';
         else if (status === 'rejected' || status === 'lost') crmStage = 'lost';
 
-        await supabase.from('Prospect').update({ stage: crmStage }).eq('id', editingProposal.lead_id);
+        await supabase.from('Prospect').update({ stage: crmStage }).eq('id', leadId);
       }
 
       toast({ title: "Document Synchronized", description: "Ledger and CRM pipelines updated." });
@@ -909,8 +908,9 @@ function ProposalsContent() {
     toast({ title: "Contract Executed!", description: `Digital fingerprint logged: ${certSerial}` });
 
     // 1. Move CRM stage to won
-    if (editingProposal.lead_id) {
-      await supabase.from('Prospect').update({ stage: 'won' }).eq('id', editingProposal.lead_id);
+    const leadId = editingProposal.parsedContent?.lead_id;
+    if (leadId) {
+      await supabase.from('Prospect').update({ stage: 'won' }).eq('id', leadId);
     }
 
     // 2. Fetch counts to build formatted unique Refs
@@ -933,7 +933,7 @@ function ProposalsContent() {
       company_id: companyId,
       project_name: `${editingProposal.title} - Campaign`,
       project_ref: prjRef,
-      client_name: editingProposal.client_name,
+      client_name: editingProposal.parsedContent?.client || "Unknown Client",
       status: 'in_progress',
       progress: 5,
       budget: totalVal,
@@ -945,8 +945,8 @@ function ProposalsContent() {
     await supabase.from('Invoice').insert({
       id: invId,
       company_id: companyId,
-      client_name: editingProposal.client_name,
-      client_id: editingProposal.lead_id || null,
+      client_name: editingProposal.parsedContent?.client || "Unknown Client",
+      client_id: editingProposal.parsedContent?.lead_id || null,
       project_id: prjId,
       project_name: `${editingProposal.title} - Campaign`,
       project_ref: prjRef,
