@@ -359,7 +359,7 @@ export default function DashboardPage() {
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-teal-50 text-teal-500 rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Active Objectives</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Active Tasks</span>
                 <span className="text-2xl font-black text-slate-800">{companyObjectives.filter(t => t.status !== 'done').length || 0} tasks</span>
               </div>
             </CardContent>
@@ -469,7 +469,7 @@ export default function DashboardPage() {
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-teal-50 text-teal-500 rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Assigned Objectives</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Assigned Tasks</span>
                 <span className="text-2xl font-black text-slate-800">{objectivesFeed.length} active</span>
               </div>
             </CardContent>
@@ -498,12 +498,12 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="p-6 border-b">
-              <CardTitle className="text-lg font-black text-slate-800">My Objective Backlog</CardTitle>
+              <CardTitle className="text-lg font-black text-slate-800">My Task Backlog</CardTitle>
               <CardDescription className="text-slate-400 font-medium">Clear assigned milestones inside production roadmaps.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               {objectivesFeed.length === 0 ? (
-                <p className="text-center py-12 text-slate-400 font-bold uppercase tracking-wider text-xs">All objectives completed successfully!</p>
+                <p className="text-center py-12 text-slate-400 font-bold uppercase tracking-wider text-xs">All tasks completed successfully!</p>
               ) : (
                 <div className="divide-y divide-slate-100">
                   {objectivesFeed.map((t) => (

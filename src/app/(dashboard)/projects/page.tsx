@@ -885,7 +885,7 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="rounded-[10px] bg-white border border-slate-100 shadow-xl p-2 z-[100]">
                     <DropdownMenuItem className="text-rose-600 font-bold gap-3 rounded-xl m-1 py-3 cursor-pointer focus:bg-rose-50" onClick={() => onArchive(project)}>
-                      <Archive className="h-4 w-4" /> Decommission
+                      <Archive className="h-4 w-4" /> Archive Project
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -903,7 +903,7 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
 
               <div className="space-y-2.5 pt-4 border-t border-slate-100">
                 <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-400">
-                  <span className="flex items-center gap-1.5"><Zap className={cn("h-3 w-3", project.color?.replace('bg-', 'text-') || 'text-amber-500')} /> Progression</span>
+                  <span className="flex items-center gap-1.5"><Zap className={cn("h-3 w-3", project.color?.replace('bg-', 'text-') || 'text-amber-500')} /> Progress</span>
                   <span className="text-slate-800">{project.progress}%</span>
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
@@ -946,7 +946,7 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
                 <div className="flex justify-between items-end">
                   <div className="flex items-center gap-2 text-slate-400">
                     <Layers className="h-4 w-4" />
-                    <span className="text-[9px] font-black uppercase tracking-normal">Efficiency index</span>
+                    <span className="text-[9px] font-black uppercase tracking-normal">Progress</span>
                   </div>
                   <span className="text-xl font-black text-primary">{project.progress || 0}%</span>
                 </div>
@@ -956,7 +956,7 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
               </div>
               
               <div className="hidden sm:flex flex-col gap-2 pl-10 border-l border-slate-100/50">
-                <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Operational Stage</span>
+                <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Status</span>
                 <Badge className="w-fit text-[10px] font-black uppercase bg-slate-900 text-white border-none py-1.5 px-4 rounded-xl">
                   {project.status?.replace('_', ' ')}
                 </Badge>

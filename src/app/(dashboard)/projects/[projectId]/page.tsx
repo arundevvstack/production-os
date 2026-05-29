@@ -531,7 +531,7 @@ export default function ProjectWorkspacePage() {
               onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}
             >
               <Plus className="h-4 w-4" />
-              {activeTab === 'assets' ? 'Upload Asset' : (activeTab === 'finances' ? 'Log Cost' : 'Add Objective')}
+              {activeTab === 'assets' ? 'Upload Asset' : (activeTab === 'finances' ? 'Log Cost' : 'Add Task')}
             </Button>
           </div>
         </div>
@@ -580,7 +580,7 @@ export default function ProjectWorkspacePage() {
                     </div>
                     <div>
                       <h3 className="font-black text-slate-900 capitalize">{stage.name}</h3>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{phaseObjectives(stage.name).length} objectives · {phaseProgress(stage.name)}% complete</p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{phaseObjectives(stage.name).length} tasks · {phaseProgress(stage.name)}% complete</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -590,7 +590,7 @@ export default function ProjectWorkspacePage() {
                       </Button>
                     </Link>
                     <Button size="sm" className="rounded-xl font-bold gap-2 h-9" onClick={() => setIsAddObjectiveOpen(true)}>
-                      <Plus className="h-3.5 w-3.5" /> Add
+                      <Plus className="h-4 w-4" /> Add Task
                     </Button>
                   </div>
                 </div>
@@ -598,8 +598,8 @@ export default function ProjectWorkspacePage() {
                 {phaseObjectives(stage.name).length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-24 gap-4 text-slate-300">
                     <Target className="h-10 w-10" />
-                    <p className="text-sm font-bold text-slate-400">No objectives for this phase yet</p>
-                    <Button size="sm" variant="outline" className="rounded-xl" onClick={() => setIsAddObjectiveOpen(true)}>Add First Objective</Button>
+                    <p className="text-sm font-bold text-slate-400">No tasks for this phase yet</p>
+                    <Button size="sm" variant="outline" className="rounded-xl" onClick={() => setIsAddObjectiveOpen(true)}>Add First Task</Button>
                   </div>
                 ) : (
                   <div className="divide-y divide-slate-50">
@@ -1063,13 +1063,13 @@ export default function ProjectWorkspacePage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-              Add Phase Objective
+              Add Task
             </DialogTitle>
             <DialogDescription>Assign objectives and milestone dates to crew members.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleAddObjective} className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Objective Title</Label>
+              <Label>Task Title</Label>
               <Input placeholder="e.g. Rough Cut Assembly and Editing check" value={newObjective.title} onChange={(e) => setNewObjective({...newObjective, title: e.target.value})} required className="rounded-xl" />
             </div>
             <div className="space-y-2">
@@ -1090,7 +1090,7 @@ export default function ProjectWorkspacePage() {
             </div>
             <DialogFooter className="pt-4">
               <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold">
-                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save Objective"}
+                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save Task"}
               </Button>
             </DialogFooter>
           </form>
