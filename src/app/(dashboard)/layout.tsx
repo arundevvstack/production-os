@@ -8,7 +8,6 @@ import { Loader2 } from "lucide-react";
 import { useTenant } from "@/hooks/use-tenant";
 import { useRouter } from "next/navigation";
 import { ThemeSync } from "@/components/layout/theme-sync";
-import { LiveTimer } from "@/components/tracker/LiveTimer";
 
 export default function DashboardLayout({
   children,
@@ -76,7 +75,6 @@ export default function DashboardLayout({
                 </div>
             </main>
         </SidebarInset>
-        <LiveTimer />
     </SidebarProvider>
   );
 }

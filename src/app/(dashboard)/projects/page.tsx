@@ -107,7 +107,8 @@ export default function ProjectsPage() {
     deadline: "",
     service_category: "",
     service: "",
-    project_type: "Normal Production"
+    project_type: "Normal Production",
+    assignee_id: "none"
   });
 
   // Fetch Projects from Supabase
@@ -126,6 +127,11 @@ export default function ProjectsPage() {
   const { data: clients } = useSupabaseCollection('Client', {
     where: { company_id: companyId },
     orderBy: { name: 'asc' }
+  });
+
+  // Fetch Users for Assignee Dropdown
+  const { data: companyUsers } = useSupabaseCollection('User', {
+    where: { company_id: companyId }
   });
 
   // Combine names for autocomplete
@@ -213,6 +219,7 @@ export default function ProjectsPage() {
         body: JSON.stringify({
           company_id: companyId,
           user_id: profile?.id,
+          assignee_id: newProject.assignee_id === 'none' ? undefined : newProject.assignee_id,
           project_name: newProject.project_name,
           client_name: newProject.client_name,
           budget: newProject.budget,
@@ -233,7 +240,7 @@ export default function ProjectsPage() {
         description: `${newProject.project_name} has been created with all stages and objectives pre-loaded.`,
       });
 
-      setNewProject({ project_name: "", client_name: "", budget: "", deadline: "", service_category: "", service: "", project_type: "Normal Production" });
+      setNewProject({ project_name: "", client_name: "", budget: "", deadline: "", service_category: "", service: "", project_type: "Normal Production", assignee_id: "none" });
       setSelectedTemplate("None");
       setSelectedLeadId(null);
       setWizardStep(1);
@@ -560,6 +567,22 @@ export default function ProjectsPage() {
                             className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-bold text-slate-800"
                           />
                         </div>
+                      </div>
+                      <div className="mt-4">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Project Manager (Assignee)</Label>
+                        <Select value={newProject.assignee_id} onValueChange={(val) => setNewProject({ ...newProject, assignee_id: val })}>
+                          <SelectTrigger className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-bold text-sm text-slate-800">
+                            <SelectValue placeholder="Select Assignee (Optional)" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-xl z-[200]">
+                            <SelectItem value="none" className="text-xs font-bold rounded-lg m-0.5 text-slate-500">Unassigned (Self)</SelectItem>
+                            {companyUsers?.map((user: any) => (
+                              <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-lg m-0.5 text-slate-800">
+                                {user.full_name || user.email}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </div>
