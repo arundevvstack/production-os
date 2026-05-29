@@ -498,6 +498,30 @@ export default function ProjectWorkspacePage() {
                 ) : (
                   <span className="rounded-full bg-slate-50 text-slate-500 font-black text-[10px] uppercase h-7 px-3 flex items-center">{project.status}</span>
                 )}
+                {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) ? (
+                  <Select
+                    defaultValue={project.project_type || "Normal Production"}
+                    onValueChange={async (newType) => {
+                      try {
+                        await supabase.from('Project').update({ project_type: newType }).eq('id', projectId);
+                        toast({ title: "Pipeline Updated", description: `Project pipeline changed to ${newType}.` });
+                      } catch (err: any) {
+                        toast({ variant: "destructive", title: "Update Failed", description: err.message });
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-white border border-slate-200 text-slate-600 w-auto focus:ring-0 shadow-sm hover:bg-slate-50">
+                      <SelectValue placeholder="Pipeline" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl p-1.5 shadow-xl border-0">
+                      <SelectItem value="Normal Production" className="py-2 rounded-lg text-[10px] font-black uppercase">Standard</SelectItem>
+                      <SelectItem value="Hybrid Production" className="py-2 rounded-lg text-[10px] font-black uppercase">Hybrid</SelectItem>
+                      <SelectItem value="AI Production" className="py-2 rounded-lg text-[10px] font-black uppercase">AI Pipeline</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <span className="rounded-full bg-white border border-slate-200 text-slate-500 font-black text-[10px] uppercase h-7 px-3 flex items-center shadow-sm">{project.project_type || "Normal Production"}</span>
+                )}
               </div>
               <div className="flex items-center gap-3 text-sm text-slate-400">
                 <span>Client: <span className="text-slate-600 font-bold">{project.client_name || '—'}</span></span>
