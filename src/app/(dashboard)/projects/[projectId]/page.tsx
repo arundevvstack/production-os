@@ -62,6 +62,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -115,6 +125,7 @@ export default function ProjectWorkspacePage() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pipelineChangeTarget, setPipelineChangeTarget] = useState<string | null>(null);
 
   // Video Player Annotation State
   const [selectedAssetForReview, setSelectedAssetForReview] = useState<any>(null);
@@ -215,6 +226,28 @@ export default function ProjectWorkspacePage() {
   const netProfit = totalRevenueBase - totalExpenses;
 
   // --- ACTIONS ---
+    const handlePipelineChangeConfirm = async () => {
+    if (!pipelineChangeTarget || !projectId) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/v1/projects/${projectId}/change-pipeline`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newType: pipelineChangeTarget, user_id: profile?.id })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || "Failed to change pipeline");
+      
+      toast({ title: "Pipeline Updated", description: `Project workspace reset to ${pipelineChangeTarget}.` });
+      window.location.reload(); // Hard reload to clear old workspace state completely
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Update Failed", description: err.message });
+    } finally {
+      setIsSubmitting(false);
+      setPipelineChangeTarget(null);
+    }
+  };
+
   const handleToggleObjective = async (objectiveId: string, currentStatus: string) => {
     if (!projectId) return;
     const newStatus = currentStatus === 'done' || currentStatus === 'Completed' ? 'Pending' : 'Completed';
@@ -441,10 +474,35 @@ export default function ProjectWorkspacePage() {
         <h2 className="text-2xl font-bold">Workspace Not Found</h2>
         <p className="text-muted-foreground mb-4">The requested project could not be accessed.</p>
         <Link href="/projects"><Button variant="outline" className="rounded-xl">Back to Pipeline</Button></Link>
-      </div>
-    );
-  }
-
+  
+      {/* Pipeline Change Confirmation */}
+      <AlertDialog open={!!pipelineChangeTarget} onOpenChange={(open) => !open && setPipelineChangeTarget(null)}>
+        <AlertDialogContent className="rounded-2xl border-0 shadow-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-black text-rose-600 flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5" /> Change Pipeline Type?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600">
+              Changing to <strong>{pipelineChangeTarget}</strong> will permanently delete all current stages, tasks, dependencies, and progress in this workspace. It will generate a completely fresh workspace based on the new template.
+              <br/><br/>
+              This action cannot be undone. Are you sure you want to reset the project workspace?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-xl border-slate-200">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handlePipelineChangeConfirm}
+              className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Yes, Reset Workspace'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
   return (
     <div className="space-y-0 -mt-4 -mx-4 md:-mt-8 md:-mx-8 lg:-mt-12 lg:-mx-12 bg-white min-h-[calc(100vh-2rem)]">
       {/* ── All-white Header ── */}
