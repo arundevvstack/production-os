@@ -258,7 +258,7 @@ function AccountCenterContent() {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${uid}-${Math.random()}.${fileExt}`;
-      const filePath = `profile/${fileName}`;
+      const filePath = `${uid}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
