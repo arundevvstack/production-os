@@ -173,9 +173,9 @@ export function AppSidebar() {
                 )}
 
                 <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleLogout} tooltip="Terminate Session" className="h-7 rounded-lg px-3 hover:bg-rose-500/10 hover:text-rose-600 text-slate-700 font-normal group transition-colors">
+                <SidebarMenuButton onClick={handleLogout} tooltip="Log Out" className="h-7 rounded-lg px-3 hover:bg-rose-500/10 hover:text-rose-600 text-slate-700 font-normal group transition-colors">
                     <LogOut className="size-4 text-slate-600 transition-transform group-hover:translate-x-1" />
-                    <span className="text-[13px]">Terminate</span>
+                    <span className="text-[13px]">Log Out</span>
                 </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>

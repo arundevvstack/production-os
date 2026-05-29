@@ -19,23 +19,23 @@ export default function CommandCenter() {
             >
                 <h1 className="text-4xl font-bold tracking-tight text-foreground flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full bg-neon-cyan animate-pulse" />
-                    Executive Command Center
+                    Command Center
                 </h1>
-                <p className="text-muted-foreground mt-2 text-sm">Global Infrastructure Observability & AI Governance</p>
+                <p className="text-muted-foreground mt-2 text-sm">Global System Health & AI Settings</p>
             </motion.div>
 
             {/* Top Row: Core Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <TelemetryCard 
-                    title="Active Tenants" 
+                    title="Active Companies" 
                     value={telemetry.active_tenants.toLocaleString()} 
                     description="Across 3 global regions" 
                     trend="neutral" 
                 />
                 <TelemetryCard 
-                    title="Distributed Queue Depth" 
+                    title="Queue Depth" 
                     value={telemetry.queue_depth} 
-                    description="Pending distributed jobs" 
+                    description="Pending jobs" 
                     trend={telemetry.queue_depth > 30 ? 'up' : 'down'} 
                 />
                 <TelemetryCard 
@@ -59,7 +59,7 @@ export default function CommandCenter() {
                     <div className="absolute top-4 left-4 z-10 flex gap-2">
                         <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground bg-background/80 backdrop-blur-md px-3 py-1 rounded-full border border-border shadow-sm">
                             <div className={`w-2 h-2 rounded-full ${telemetry.incident_active ? 'bg-destructive animate-pulse' : 'bg-neon-emerald'}`} />
-                            Global AI Routing Topology
+                            Global AI Provider Topology
                         </span>
                     </div>
                     <div className="w-full h-full relative z-10">
@@ -68,7 +68,7 @@ export default function CommandCenter() {
                 </div>
                 
                 <div className="col-span-1 bg-card border border-border shadow-sm rounded-xl p-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Autonomous Remediation Log</h3>
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Auto Fix Activity</h3>
                     <div className="space-y-4">
                         {[1, 2, 3].map((i) => (
                             <div key={i} className="flex gap-3 text-sm border-l-2 border-neon-amber/50 pl-3 py-1">
