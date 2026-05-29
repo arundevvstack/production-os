@@ -174,7 +174,7 @@ export default function ApprovalsPage() {
       <div className="w-full md:w-[400px] flex flex-col bg-white h-[50vh] md:h-full z-20 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
         <div className="p-6 border-b border-border bg-muted/50 flex items-center justify-between">
           <div>
-            <h2 className="font-black text-lg text-primary tracking-tight">Review & Annotate</h2>
+            <h2 className="font-black text-lg text-foreground tracking-tight">Review & Annotate</h2>
             <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">Client Feedback Loop</p>
           </div>
           <div className="flex gap-2">
@@ -191,13 +191,13 @@ export default function ApprovalsPage() {
           {comments.map((comment) => (
             <div key={comment.id} className="flex gap-3 group">
               <Avatar className="h-8 w-8 ring-2 ring-white shadow-sm">
-                <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-black">
+                <AvatarFallback className="bg-primary/10 text-foreground text-[10px] font-black">
                   {comment.user?.full_name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase text-primary">{comment.user?.full_name || 'User'}</span>
+                  <span className="text-[10px] font-black uppercase text-foreground">{comment.user?.full_name || 'User'}</span>
                   {comment.timestamp && (
                     <Badge variant="outline" 
                       className="cursor-pointer hover:bg-primary hover:text-white transition-colors text-[9px] bg-muted"
@@ -224,7 +224,7 @@ export default function ApprovalsPage() {
                 placeholder="Add a comment at current timestamp..." 
                 className="h-12 rounded-full pl-12 bg-muted border-border font-medium pr-4"
               />
-              <div className="absolute left-1 top-1 h-10 w-10 bg-primary/10 text-primary flex items-center justify-center rounded-full font-mono font-black text-xs">
+              <div className="absolute left-1 top-1 h-10 w-10 bg-primary/10 text-foreground flex items-center justify-center rounded-full font-mono font-black text-xs">
                 {formatTime(currentTime)}
               </div>
             </div>

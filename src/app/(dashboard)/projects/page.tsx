@@ -304,7 +304,7 @@ export default function ProjectsPage() {
   if (isTenantLoading || isProjectsLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -313,7 +313,7 @@ export default function ProjectsPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div className="space-y-1">
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-primary">Production <span className="text-gradient">Projects</span></h1>
+          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-foreground">Production <span className="text-gradient">Projects</span></h1>
           <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
             <Film className="h-4 w-4" /> Global content lifecycle
           </p>
@@ -321,7 +321,7 @@ export default function ProjectsPage() {
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <div className="relative w-full sm:w-72 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
             <Input 
               placeholder="Search projects..." 
               className="pl-11 h-12 rounded-[10px] border-white/60 bg-white/40 backdrop-blur-xl focus:bg-white focus:ring-primary/20 transition-all shadow-premium"
@@ -351,7 +351,7 @@ export default function ProjectsPage() {
               onClick={() => setViewMode(mode.id as ViewMode)}
               className={cn(
                 "h-9 px-6 gap-2 rounded-xl transition-all duration-500", 
-                viewMode === mode.id ? "bg-white shadow-md text-primary font-black" : "text-muted-foreground font-bold hover:bg-white/50"
+                viewMode === mode.id ? "bg-white shadow-md text-foreground font-black" : "text-muted-foreground font-bold hover:bg-white/50"
               )}
             >
               <mode.icon className="h-4 w-4" /> 
@@ -362,7 +362,7 @@ export default function ProjectsPage() {
         
         <div className="flex items-center gap-3 pr-2">
           {statusFilter !== 'all' && (
-            <Badge variant="secondary" className="h-10 rounded-xl px-4 bg-primary/10 text-primary border-none font-black text-[10px] uppercase tracking-widest flex gap-2">
+            <Badge variant="secondary" className="h-10 rounded-xl px-4 bg-primary/10 text-foreground border-none font-black text-[10px] uppercase tracking-widest flex gap-2">
               Status: {statusFilter.replace('_', ' ')}
               <X className="h-3 w-3 cursor-pointer" onClick={() => setStatusFilter('all')} />
             </Badge>
@@ -398,7 +398,7 @@ export default function ProjectsPage() {
               <Archive className="h-8 w-8 text-slate-300" />
             </div>
             <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-xs">Zero operational units detected</p>
-            <Button variant="link" className="mt-4 text-primary font-black uppercase tracking-widest text-[10px]" onClick={() => setIsCreateOpen(true)}>Initialize Primary Protocol</Button>
+            <Button variant="link" className="mt-4 text-foreground font-black uppercase tracking-widest text-[10px]" onClick={() => setIsCreateOpen(true)}>Initialize Primary Protocol</Button>
           </div>
         ) : (
           <div className={cn(
@@ -424,9 +424,9 @@ export default function ProjectsPage() {
       <AlertDialog open={!!projectToArchive} onOpenChange={(open) => !open && setProjectToArchive(null)}>
         <AlertDialogContent className="rounded-[10px] glass-panel border-white/60 p-12">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-3xl font-black tracking-tight text-primary">Decommission Unit?</AlertDialogTitle>
+            <AlertDialogTitle className="text-3xl font-black tracking-tight text-foreground">Decommission Unit?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed pt-2">
-              Proceeding will move <span className="font-black text-primary">"{projectToArchive?.project_name}"</span> to the high-security archive vault. Primary operations will be suspended.
+              Proceeding will move <span className="font-black text-foreground">"{projectToArchive?.project_name}"</span> to the high-security archive vault. Primary operations will be suspended.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-8">
@@ -496,7 +496,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
           <div className="space-y-3">
             <div className="flex justify-between items-end">
               <span className="text-[9px] font-black text-muted-foreground uppercase tracking-normal">Health Index</span>
-              <span className="text-lg font-black text-primary leading-none">{project.progress || 0}%</span>
+              <span className="text-lg font-black text-foreground leading-none">{project.progress || 0}%</span>
             </div>
             <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
                <div 
@@ -510,7 +510,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
               <div className="h-8 w-8 rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
                 <Clock className="h-4 w-4" />
               </div>
-              <span className="text-[10px] font-black text-primary/80 uppercase tracking-wider">{project.deadline || 'TBD'}</span>
+              <span className="text-[10px] font-black text-foreground/80 uppercase tracking-wider">{project.deadline || 'TBD'}</span>
             </div>
             <div className="flex -space-x-3">
               <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-border">
@@ -550,7 +550,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                      <Briefcase className="h-3 w-3" /> {project.client_name}
                    </p>
                    <Link href={`/projects/${project.id}`}>
-                     <h4 className="font-black text-xl tracking-tight text-primary group-hover:text-primary transition-colors leading-tight line-clamp-2">{project.project_name}</h4>
+                     <h4 className="font-black text-xl tracking-tight text-foreground group-hover:text-foreground transition-colors leading-tight line-clamp-2">{project.project_name}</h4>
                    </Link>
                 </div>
                 <DropdownMenu>
@@ -570,10 +570,10 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-xl border border-border">
                   <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-[10px] font-black text-primary/80 uppercase tracking-widest">{project.deadline || 'TBD'}</span>
+                  <span className="text-[10px] font-black text-foreground/80 uppercase tracking-widest">{project.deadline || 'TBD'}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={cn("text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none", project.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-primary/10 text-primary')}>
+                  <Badge variant="outline" className={cn("text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none", project.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-primary/10 text-foreground')}>
                     {project.status?.replace('_', ' ')}
                   </Badge>
                   {isPilot && (
@@ -592,7 +592,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
               <div className="space-y-2.5 pt-4 border-t border-border">
                 <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                   <span className="flex items-center gap-1.5"><Zap className={cn("h-3 w-3", project.color?.replace('bg-', 'text-') || 'text-accent')} /> Progress</span>
-                  <span className="text-primary">{project.progress}%</span>
+                  <span className="text-foreground">{project.progress}%</span>
                 </div>
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
                    <div className={cn("h-full transition-all duration-1000 shadow-md", project.color || "bg-primary")} style={{ width: `${project.progress}%` }} />
@@ -615,10 +615,10 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
           >
             <div className={cn("absolute left-0 top-0 bottom-0 w-2 transition-all group-hover:w-3", project.color?.replace('bg-', 'bg-') || 'bg-primary')} />
             <div className="flex items-center gap-4">
-              <h3 className="font-black text-xl tracking-tight text-primary group-hover:text-primary transition-colors truncate">
+              <h3 className="font-black text-xl tracking-tight text-foreground group-hover:text-foreground transition-colors truncate">
                 {project.project_name}
               </h3>
-              <div className="h-8 w-8 rounded-xl bg-muted flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-2 text-primary">
+              <div className="h-8 w-8 rounded-xl bg-muted flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-2 text-foreground">
                 <ArrowRight className="h-4 w-4" />
               </div>
             </div>
@@ -636,7 +636,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                     <Layers className="h-4 w-4" />
                     <span className="text-[9px] font-black uppercase tracking-normal">Progress</span>
                   </div>
-                  <span className="text-xl font-black text-primary">{project.progress || 0}%</span>
+                  <span className="text-xl font-black text-foreground">{project.progress || 0}%</span>
                 </div>
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
                   <div className={cn("h-full transition-all duration-1000 shadow-md", project.color?.replace('bg-', 'bg-') || 'bg-primary')} style={{ width: `${project.progress || 0}%` }} />
@@ -670,7 +670,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                 <span className="text-[9px] uppercase font-black text-muted-foreground tracking-normal">Deadline</span>
                 <div className="flex items-center gap-2.5">
                   <Calendar className="h-4 w-4 text-accent shrink-0" />
-                  <span className="text-sm font-black text-primary truncate">{project.deadline || 'TBD'}</span>
+                  <span className="text-sm font-black text-foreground truncate">{project.deadline || 'TBD'}</span>
                 </div>
               </div>
               
@@ -701,7 +701,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <div className="flex items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-12 w-12 rounded-[10px] hover:bg-white text-muted-foreground hover:text-primary transition-all shadow-sm">
+                  <Button variant="ghost" size="icon" className="h-12 w-12 rounded-[10px] hover:bg-white text-muted-foreground hover:text-foreground transition-all shadow-sm">
                     <MoreVertical className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -709,7 +709,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                   <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-5 py-4">Options</DropdownMenuLabel>
                   <DropdownMenuItem asChild className="rounded-xl m-1 py-3.5 font-bold cursor-pointer transition-all">
                     <Link href={`/projects/${project.id}`} className="flex items-center gap-4">
-                      <ExternalLink className="h-4 w-4 text-primary" /> View Details
+                      <ExternalLink className="h-4 w-4 text-foreground" /> View Details
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-muted/50 my-1 mx-2" />

@@ -35,7 +35,7 @@ export default function PendingApprovalPage() {
       <div className="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center mb-6">
         <ShieldAlert className="h-8 w-8" />
       </div>
-      <h1 className="text-2xl font-black text-primary tracking-tight mb-3">Your account is waiting for approval</h1>
+      <h1 className="text-2xl font-black text-foreground tracking-tight mb-3">Your account is waiting for approval</h1>
       <p className="text-muted-foreground font-medium max-w-md mb-8">
         Your registration was successful. An administrator is currently reviewing your account. You will receive access once you have been cleared.
       </p>

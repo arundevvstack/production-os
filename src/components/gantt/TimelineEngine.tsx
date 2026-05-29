@@ -87,8 +87,8 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
     <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
       <div className="flex items-center justify-between bg-white p-4 rounded-[10px] border border-border shadow-sm">
         <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-primary" />
-          <h3 className="font-black text-primary tracking-tight uppercase">Dynamic Timeline Engine</h3>
+          <Calendar className="h-5 w-5 text-foreground" />
+          <h3 className="font-black text-foreground tracking-tight uppercase">Dynamic Timeline Engine</h3>
         </div>
         <div className="flex gap-2">
           <Badge variant="outline" className="bg-muted font-bold uppercase tracking-wider text-[10px]">
@@ -112,7 +112,7 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
                 return (
                   <div key={i} className={cn(
                     "flex-none w-14 border-r border-border/50 flex flex-col items-center justify-center py-2 relative",
-                    isToday ? "bg-primary/5 text-primary" : "text-muted-foreground"
+                    isToday ? "bg-primary/5 text-foreground" : "text-muted-foreground"
                   )}>
                     <span className="text-[9px] font-black uppercase">{d.toLocaleDateString('en-US', { weekday: 'short' })}</span>
                     <span className={cn("text-xs font-bold", isToday && "bg-primary text-white h-5 w-5 rounded-full flex items-center justify-center mt-0.5")}>
@@ -151,7 +151,7 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
                     {/* Track Label */}
                     <div className="sticky left-0 w-[250px] bg-muted z-20 flex items-center px-4 border-r border-border/50 h-full group-hover:bg-muted">
                       <div className="truncate pr-4 flex flex-col justify-center w-full">
-                        <span className="text-xs font-bold text-primary/80 truncate">{obj.title}</span>
+                        <span className="text-xs font-bold text-foreground/80 truncate">{obj.title}</span>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[8px] font-black uppercase text-muted-foreground tracking-wider">
                             {obj.phase.replace('-', ' ')}

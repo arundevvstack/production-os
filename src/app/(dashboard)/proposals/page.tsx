@@ -1105,21 +1105,21 @@ function ProposalsContent() {
     const taxableSubtotal = Math.max(0, subtotal - content.discount_amount);
 
     return (
-      <div className="min-h-screen text-primary flex flex-col p-0 space-y-6 antialiased font-sans transition-all duration-300">
+      <div className="min-h-screen text-foreground flex flex-col p-0 space-y-6 antialiased font-sans transition-all duration-300">
         
         {/* Executive Header Command bar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border/80 pb-6 shrink-0 bg-white p-6 rounded-2xl shadow-sm shadow-zinc-100">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => { setEditingProposal(null); reloadProposals(); }} 
-              className="p-3 rounded-xl border border-border bg-muted text-muted-foreground hover:text-primary hover:bg-muted transition shadow-sm"
+              className="p-3 rounded-xl border border-border bg-muted text-muted-foreground hover:text-foreground hover:bg-muted transition shadow-sm"
               title="Close to Pipeline"
             >
               <X className="h-4 w-4" />
             </button>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-black text-primary tracking-tight">{editingProposal.title}</h1>
+                <h1 className="text-2xl font-black text-foreground tracking-tight">{editingProposal.title}</h1>
                 <Badge className={cn("px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border shadow-sm",
                   editingProposal.status === 'signed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
                   editingProposal.status === 'sent' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-destructive/10 text-destructive border-red-200'
@@ -1141,7 +1141,7 @@ function ProposalsContent() {
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'editor' ? 'bg-white text-primary shadow-sm border border-border/40' : 'text-muted-foreground hover:text-primary'
+                  activeBuilderTab === 'editor' ? 'bg-white text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Edit3 className="h-3.5 w-3.5 mr-2 text-destructive" /> Proposal Builder
@@ -1151,7 +1151,7 @@ function ProposalsContent() {
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'pricing' ? 'bg-white text-primary shadow-sm border border-border/40' : 'text-muted-foreground hover:text-primary'
+                  activeBuilderTab === 'pricing' ? 'bg-white text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <DollarSign className="h-3.5 w-3.5 mr-2 text-emerald-500" /> Pricing & Taxes
@@ -1161,7 +1161,7 @@ function ProposalsContent() {
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'client_portal' ? 'bg-white text-primary shadow-sm border border-border/40' : 'text-muted-foreground hover:text-primary'
+                  activeBuilderTab === 'client_portal' ? 'bg-white text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Eye className="h-3.5 w-3.5 mr-2 text-accent" /> Client View
@@ -1202,7 +1202,7 @@ function ProposalsContent() {
                       <div className={cn("absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white transition-all duration-300",
                         stage.active ? "bg-destructive shadow-[0_0_6px_rgba(239,68,68,0.5)]" : "bg-secondary"
                       )} />
-                      <span className="text-xs font-bold block tracking-tight text-primary">{stage.label}</span>
+                      <span className="text-xs font-bold block tracking-tight text-foreground">{stage.label}</span>
                       <span className="text-xs text-muted-foreground block">{stage.desc}</span>
                     </div>
                   ))}
@@ -1229,7 +1229,7 @@ function ProposalsContent() {
                       <div key={app.key} className="flex flex-col gap-2 p-3 bg-muted rounded-xl border border-border/50">
                         <div className="flex items-center justify-between">
                           <div>
-                            <span className="text-xs font-bold text-primary block">{app.label}</span>
+                            <span className="text-xs font-bold text-foreground block">{app.label}</span>
                             <span className="text-[10px] text-muted-foreground font-semibold">
                               {status.approved ? `Approved by ${status.signed_by}` : 'Pending review'}
                             </span>
@@ -1294,8 +1294,8 @@ function ProposalsContent() {
                   {content.version_history.map((ver: VersionRecord, idx: number) => (
                     <div key={idx} className="p-3 bg-muted rounded-xl border border-border/50 flex flex-col gap-1 shadow-sm">
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-primary">{ver.version} - Iteration</span>
-                        <Badge className="bg-secondary text-primary/80 text-[10px] border-none font-bold">
+                        <span className="text-xs font-bold text-foreground">{ver.version} - Iteration</span>
+                        <Badge className="bg-secondary text-foreground/80 text-[10px] border-none font-bold">
                           {ver.created_by}
                         </Badge>
                       </div>
@@ -1324,7 +1324,7 @@ function ProposalsContent() {
                   </div>
                 )}
                 <div className="flex items-center justify-between border-b border-border/80 pb-4">
-                  <h2 className="text-lg font-black text-primary tracking-tight flex items-center gap-2">
+                  <h2 className="text-lg font-black text-foreground tracking-tight flex items-center gap-2">
                     <Edit3 className="h-5 w-5 text-destructive" /> Proposal Builder
                   </h2>
                   <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Apple Whitespace layout</span>
@@ -1339,7 +1339,7 @@ function ProposalsContent() {
                         const copy = { ...content, proposal_title: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
+                      className="border-border bg-muted rounded-xl text-foreground font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1350,7 +1350,7 @@ function ProposalsContent() {
                         const copy = { ...content, client: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
+                      className="border-border bg-muted rounded-xl text-foreground font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
@@ -1365,7 +1365,7 @@ function ProposalsContent() {
                         const copy = { ...content, client_gstin: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
+                      className="border-border bg-muted rounded-xl text-foreground font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1377,7 +1377,7 @@ function ProposalsContent() {
                         const copy = { ...content, client_address: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
+                      className="border-border bg-muted rounded-xl text-foreground font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
@@ -1390,7 +1390,7 @@ function ProposalsContent() {
                         key={idx}
                         onClick={() => setActiveSectionIdx(idx)}
                         className={cn("px-4 py-2 text-xs font-bold uppercase rounded-xl border tracking-wider transition shrink-0 shadow-sm h-9",
-                          activeSectionIdx === idx ? 'bg-primary text-white border-primary' : 'bg-white border-border text-muted-foreground/80 hover:text-primary hover:bg-muted'
+                          activeSectionIdx === idx ? 'bg-primary text-white border-primary' : 'bg-white border-border text-muted-foreground/80 hover:text-foreground hover:bg-muted'
                         )}
                       >
                         {idx + 1}. {sec.title.slice(0, 15)}...
@@ -1409,7 +1409,7 @@ function ProposalsContent() {
                             secs[activeSectionIdx].title = e.target.value;
                             setEditingProposal({ ...editingProposal, parsedContent: { ...content, sections: secs } });
                           }}
-                          className="bg-white border-border rounded-lg text-sm font-bold text-primary max-w-[200px] h-8 focus-visible:ring-border"
+                          className="bg-white border-border rounded-lg text-sm font-bold text-foreground max-w-[200px] h-8 focus-visible:ring-border"
                         />
                       </div>
 
@@ -1420,7 +1420,7 @@ function ProposalsContent() {
                           secs[activeSectionIdx].content = e.target.value;
                           setEditingProposal({ ...editingProposal, parsedContent: { ...content, sections: secs } });
                         }}
-                        className="bg-white border-border rounded-xl min-h-[250px] text-primary/80 font-medium leading-relaxed text-sm p-4 custom-scrollbar focus-visible:ring-border"
+                        className="bg-white border-border rounded-xl min-h-[250px] text-foreground/80 font-medium leading-relaxed text-sm p-4 custom-scrollbar focus-visible:ring-border"
                       />
                     </div>
                   )}
@@ -1431,7 +1431,7 @@ function ProposalsContent() {
             {activeBuilderTab === 'pricing' && (
               <div className="space-y-6 flex-1">
                 <div className="flex items-center justify-between border-b border-border/80 pb-4">
-                  <h2 className="text-lg font-black text-primary tracking-tight flex items-center gap-2">
+                  <h2 className="text-lg font-black text-foreground tracking-tight flex items-center gap-2">
                     <Building2 className="h-5 w-5 text-emerald-500" /> Pricing & Taxes
                   </h2>
                   <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full">GST ACTIVE</span>
@@ -1443,19 +1443,19 @@ function ProposalsContent() {
                   <div className="grid grid-cols-3 gap-3">
                     <Button 
                       onClick={() => applyServiceTemplate('video_production')} 
-                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-primary/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
                       <Zap className="h-4 w-4 text-accent" /> Brand Commercial
                     </Button>
                     <Button 
                       onClick={() => applyServiceTemplate('ai_commercials')} 
-                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-primary/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
                       <BrainCircuit className="h-4 w-4 text-accent" /> Neural AI Spot
                     </Button>
                     <Button 
                       onClick={() => applyServiceTemplate('cgi_3d')} 
-                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-primary/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
                       <Layers className="h-4 w-4 text-accent" /> CGI & Unreal 3D
                     </Button>
@@ -1478,7 +1478,7 @@ function ProposalsContent() {
                           <Input 
                             value={item.name} 
                             onChange={(e) => updateLineItem(item.id, 'name', e.target.value)}
-                            className="bg-transparent border-none p-0 text-sm font-bold text-primary focus-visible:ring-0 flex-1 h-auto"
+                            className="bg-transparent border-none p-0 text-sm font-bold text-foreground focus-visible:ring-0 flex-1 h-auto"
                           />
                           <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => removeLineItem(item.id)}>
                             <Trash2 className="h-3.5 w-3.5" />
@@ -1490,7 +1490,7 @@ function ProposalsContent() {
                             <Input 
                               value={item.category} 
                               onChange={(e) => updateLineItem(item.id, 'category', e.target.value)}
-                              className="bg-white border-border rounded-lg text-xs text-primary font-bold h-8 focus-visible:ring-border"
+                              className="bg-white border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                           <div className="space-y-1">
@@ -1499,7 +1499,7 @@ function ProposalsContent() {
                               type="number"
                               value={item.quantity} 
                               onChange={(e) => updateLineItem(item.id, 'quantity', parseInt(e.target.value) || 1)}
-                              className="bg-white border-border rounded-lg text-xs text-primary font-bold h-8 focus-visible:ring-border"
+                              className="bg-white border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                           <div className="space-y-1">
@@ -1508,7 +1508,7 @@ function ProposalsContent() {
                               type="number"
                               value={item.unit_price} 
                               onChange={(e) => updateLineItem(item.id, 'unit_price', parseFloat(e.target.value) || 0)}
-                              className="bg-white border-border rounded-lg text-xs text-primary font-bold h-8 focus-visible:ring-border"
+                              className="bg-white border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                         </div>
@@ -1531,7 +1531,7 @@ function ProposalsContent() {
                       <SelectTrigger className="rounded-xl border-border bg-muted text-xs font-bold text-zinc-850 h-11 focus-visible:ring-border">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white text-primary rounded-xl shadow-lg border-border">
+                      <SelectContent className="bg-white text-foreground rounded-xl shadow-lg border-border">
                         <SelectItem value="Intra-state" className="focus:bg-muted rounded-lg py-2">Intra-state (9% CGST + 9% SGST)</SelectItem>
                         <SelectItem value="Inter-state" className="focus:bg-muted rounded-lg py-2">Inter-state (18% IGST)</SelectItem>
                         <SelectItem value="Export" className="focus:bg-muted rounded-lg py-2">Export / SEZ (0%)</SelectItem>
@@ -1548,7 +1548,7 @@ function ProposalsContent() {
                         const copy = { ...content, discount_amount: parseFloat(e.target.value) || 0 };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
+                      className="border-border bg-muted rounded-xl text-foreground font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
@@ -1563,7 +1563,7 @@ function ProposalsContent() {
                         const copy = { ...content, payment_terms: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
+                      className="border-border bg-muted rounded-xl text-foreground font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1575,7 +1575,7 @@ function ProposalsContent() {
                         const copy = { ...content, due_date: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
+                      className="border-border bg-muted rounded-xl text-foreground font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
@@ -1589,7 +1589,7 @@ function ProposalsContent() {
                         <span className="text-xs font-bold text-zinc-850 block">{m.title}</span>
                         <div className="flex items-center justify-between text-xs font-bold">
                           <span className="text-muted-foreground">Weight: {m.percentage}%</span>
-                          <span className="text-primary font-black">₹{m.amount.toLocaleString()}</span>
+                          <span className="text-foreground font-black">₹{m.amount.toLocaleString()}</span>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed font-medium">{m.trigger_condition}</p>
                       </div>
@@ -1603,7 +1603,7 @@ function ProposalsContent() {
                   <Textarea 
                     value={content.terms_conditions}
                     onChange={(e) => setEditingProposal({ ...editingProposal, parsedContent: { ...content, terms_conditions: e.target.value } })}
-                    className="border-border bg-muted rounded-xl text-primary/80 text-sm min-h-[80px] p-3"
+                    className="border-border bg-muted rounded-xl text-foreground/80 text-sm min-h-[80px] p-3"
                   />
                 </div>
               </div>
@@ -1616,7 +1616,7 @@ function ProposalsContent() {
                   <div className="flex items-center gap-3">
                     <Globe className="h-6 w-6 text-accent" />
                     <div>
-                      <span className="text-xs font-black text-primary block">Client View</span>
+                      <span className="text-xs font-black text-foreground block">Client View</span>
                       <span className="text-xs text-muted-foreground block">Secure client view page</span>
                     </div>
                   </div>
@@ -1631,7 +1631,7 @@ function ProposalsContent() {
                       <div className="h-6 w-1 bg-destructive rounded-full" />
                       <span className="text-xs font-bold uppercase text-destructive tracking-wider block">Define Perspective</span>
                     </div>
-                    <h2 className="text-3xl font-black text-primary tracking-tight leading-none pt-2">{content.proposal_title}</h2>
+                    <h2 className="text-3xl font-black text-foreground tracking-tight leading-none pt-2">{content.proposal_title}</h2>
                     <p className="text-muted-foreground text-xs font-medium">Prepared exclusively for {content.client}</p>
                   </div>
 
@@ -1641,8 +1641,8 @@ function ProposalsContent() {
                     <div className="space-y-2.5">
                       {content.line_items.map((item: LineItem, idx: number) => (
                         <div key={idx} className="flex items-center justify-between text-xs font-bold py-1.5 border-b border-border">
-                          <span className="text-primary/80">{item.name} <strong className="text-muted-foreground font-bold">x{item.quantity}</strong></span>
-                          <span className="text-primary font-black">₹{(item.unit_price * item.quantity).toLocaleString()}</span>
+                          <span className="text-foreground/80">{item.name} <strong className="text-muted-foreground font-bold">x{item.quantity}</strong></span>
+                          <span className="text-foreground font-black">₹{(item.unit_price * item.quantity).toLocaleString()}</span>
                         </div>
                       ))}
                     </div>
@@ -1652,7 +1652,7 @@ function ProposalsContent() {
                   <div className="p-4 bg-muted rounded-xl space-y-2 border border-zinc-150 text-xs font-bold text-muted-foreground/80">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
-                      <span className="text-primary">₹{subtotal.toLocaleString()}</span>
+                      <span className="text-foreground">₹{subtotal.toLocaleString()}</span>
                     </div>
                     {content.discount_amount > 0 && (
                       <div className="flex justify-between text-destructive">
@@ -1678,7 +1678,7 @@ function ProposalsContent() {
                         <span>₹{(taxableSubtotal * 0.18).toLocaleString()}</span>
                       </div>
                     )}
-                    <div className="flex justify-between text-sm font-black text-primary border-t border-border pt-2 mt-1">
+                    <div className="flex justify-between text-sm font-black text-foreground border-t border-border pt-2 mt-1">
                       <span>Total Value (Inc. Tax):</span>
                       <span className="text-destructive text-lg">₹{computedFinancials.total.toLocaleString()}</span>
                     </div>
@@ -1686,7 +1686,7 @@ function ProposalsContent() {
 
                   {/* Terms and conditions signature lock */}
                   <div className="text-xs text-zinc-650 bg-muted border border-zinc-250 p-4 rounded-xl leading-relaxed">
-                    <strong className="text-primary/80 block mb-1">Terms of Agreement:</strong>
+                    <strong className="text-foreground/80 block mb-1">Terms of Agreement:</strong>
                     {content.terms_conditions}
                   </div>
                 </div>
@@ -1701,21 +1701,21 @@ function ProposalsContent() {
                           <UserCheck className="h-5 w-5" />
                         </div>
                         <div>
-                          <h4 className="text-sm font-black text-primary block">Verified Signature</h4>
+                          <h4 className="text-sm font-black text-foreground block">Verified Signature</h4>
                           <span className="text-xs text-muted-foreground block">Legal authorization certificate issued.</span>
                         </div>
                       </div>
 
                       <div className="p-4 bg-white rounded-xl border border-border space-y-2 text-xs text-zinc-650 font-bold">
                         <div className="flex justify-between"><span className="text-muted-foreground">Signatory:</span><span className="text-emerald-700 font-black">{content.client_signature.name}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Timestamp:</span><span className="text-primary">{new Date(content.client_signature.signed_at || '').toLocaleString()}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Audit Node IP:</span><span className="text-primary">{content.client_signature.ip_address}</span></div>
-                        <div className="flex justify-between"><span className="text-muted-foreground">Certificate ID:</span><span className="text-primary">{content.client_signature.certificate_id}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Timestamp:</span><span className="text-foreground">{new Date(content.client_signature.signed_at || '').toLocaleString()}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Audit Node IP:</span><span className="text-foreground">{content.client_signature.ip_address}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Certificate ID:</span><span className="text-foreground">{content.client_signature.certificate_id}</span></div>
                       </div>
                     </CardContent>
                   </Card>
                 ) : (
-                  <Card className="bg-muted border border-border rounded-2xl shadow-sm text-primary">
+                  <Card className="bg-muted border border-border rounded-2xl shadow-sm text-foreground">
                     <CardContent className="p-6 space-y-4">
                       <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
                         <Lock className="h-3.5 w-3.5" /> Sign Proposal
@@ -1729,7 +1729,7 @@ function ProposalsContent() {
                           placeholder="Type full legal name to authorize..."
                           value={signatureName}
                           onChange={(e) => setSignatureName(e.target.value)}
-                          className="bg-white border-border rounded-xl h-11 text-xs font-bold text-primary focus-visible:ring-border"
+                          className="bg-white border-border rounded-xl h-11 text-xs font-bold text-foreground focus-visible:ring-border"
                         />
                         <Button 
                           onClick={handleClientDigitalSignature}
@@ -1760,7 +1760,7 @@ function ProposalsContent() {
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex flex-col">
                     <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-wider">Win Probability</span>
-                    <span className="text-xl font-black text-primary">{winProbability}%</span>
+                    <span className="text-xl font-black text-foreground">{winProbability}%</span>
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-wider">Profit Margin</span>
@@ -1794,8 +1794,8 @@ function ProposalsContent() {
                 <div className="space-y-2 pt-1">
                   {activeStaffing.map((staff, idx) => (
                     <div key={idx} className="flex items-center justify-between text-xs py-2 border-b border-border">
-                      <span className="font-bold text-primary/80">{staff.role} <strong className="text-muted-foreground">x{staff.count}</strong></span>
-                      <span className="font-black text-primary">₹{staff.day_rate.toLocaleString()}/day</span>
+                      <span className="font-bold text-foreground/80">{staff.role} <strong className="text-muted-foreground">x{staff.count}</strong></span>
+                      <span className="font-black text-foreground">₹{staff.day_rate.toLocaleString()}/day</span>
                     </div>
                   ))}
                 </div>
@@ -1837,10 +1837,10 @@ function ProposalsContent() {
                       comm.is_client ? 'bg-accent/10 border-accent/20' : 'bg-muted border-zinc-150'
                     )}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className={cn("font-black", comm.is_client ? 'text-accent' : 'text-primary')}>{comm.user}</span>
+                        <span className={cn("font-black", comm.is_client ? 'text-accent' : 'text-foreground')}>{comm.user}</span>
                         <span className="text-[10px] text-muted-foreground">{new Date(comm.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
-                      <p className="text-primary/80 font-bold">{comm.text}</p>
+                      <p className="text-foreground/80 font-bold">{comm.text}</p>
                     </div>
                   ))}
                 </div>
@@ -1853,7 +1853,7 @@ function ProposalsContent() {
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') addComment(activeBuilderTab === 'client_portal');
                     }}
-                    className="bg-muted border-border rounded-xl text-xs h-9 text-primary focus-visible:ring-border"
+                    className="bg-muted border-border rounded-xl text-xs h-9 text-foreground focus-visible:ring-border"
                   />
                   <Button 
                     onClick={() => addComment(activeBuilderTab === 'client_portal')}
@@ -1869,9 +1869,9 @@ function ProposalsContent() {
 
         {/* Dialog for creating a new version */}
         <Dialog open={isVersionDialogOpen} onOpenChange={setIsVersionDialogOpen}>
-          <DialogContent className="bg-white text-primary border border-border rounded-2xl shadow-xl max-w-md">
+          <DialogContent className="bg-white text-foreground border border-border rounded-2xl shadow-xl max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-lg font-black text-primary">Initiate New Version</DialogTitle>
+              <DialogTitle className="text-lg font-black text-foreground">Initiate New Version</DialogTitle>
               <DialogDescription className="text-muted-foreground text-xs">
                 Saves the current pricing and sections as a historical snapshot before creating a new working iteration.
               </DialogDescription>
@@ -1883,7 +1883,7 @@ function ProposalsContent() {
                   placeholder="e.g. Adjusted VFX margins and sound designs..." 
                   value={versionDescription}
                   onChange={(e) => setVersionDescription(e.target.value)}
-                  className="bg-muted border-zinc-255 rounded-xl h-11 text-primary focus-visible:ring-border"
+                  className="bg-muted border-zinc-255 rounded-xl h-11 text-foreground focus-visible:ring-border"
                 />
               </div>
             </div>
@@ -1907,13 +1907,13 @@ function ProposalsContent() {
   }) || [];
 
   return (
-    <div className="space-y-8 text-primary min-h-screen p-0 antialiased font-sans transition-all duration-300">
+    <div className="space-y-8 text-foreground min-h-screen p-0 antialiased font-sans transition-all duration-300">
       
       {/* Cinematic Command Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border relative">
         <div className="absolute -top-4 -left-4 w-72 h-32 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
         <div>
-          <h1 className="text-3xl font-black text-primary tracking-tight leading-none">Proposals</h1>
+          <h1 className="text-3xl font-black text-foreground tracking-tight leading-none">Proposals</h1>
           <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider mt-2">Create and manage your client proposals easily.</p>
         </div>
         
@@ -1922,7 +1922,7 @@ function ProposalsContent() {
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Search proposals..." 
-              className="pl-9 h-10 rounded-xl bg-white border-border text-primary shadow-sm placeholder:text-muted-foreground focus-visible:ring-border"
+              className="pl-9 h-10 rounded-xl bg-white border-border text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:ring-border"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -1935,14 +1935,14 @@ function ProposalsContent() {
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[800px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] flex flex-col bg-white">
-              <div className="text-primary flex flex-col flex-1 min-h-0 bg-white">
+              <div className="text-foreground flex flex-col flex-1 min-h-0 bg-white">
                 <div className="p-8 border-b border-zinc-150 shrink-0">
                   <div className="flex items-center gap-4">
                     <div className="h-12 w-12 bg-destructive rounded-[10px] flex items-center justify-center shadow-lg">
                       <BrainCircuit className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl font-black text-primary">AI Proposal Builder</DialogTitle>
+                      <DialogTitle className="text-2xl font-black text-foreground">AI Proposal Builder</DialogTitle>
                       <DialogDescription className="text-muted-foreground text-xs font-bold uppercase tracking-wider mt-0.5">Generate custom client proposals instantly using AI.</DialogDescription>
                     </div>
                   </div>
@@ -1965,7 +1965,7 @@ function ProposalsContent() {
                               placeholder="Search clients, leads, opportunities..."
                               value={clientSearchQuery}
                               onChange={(e) => setClientSearchQuery(e.target.value)}
-                              className="bg-transparent border-none text-xs text-primary focus:outline-none focus:ring-0 flex-1 placeholder:text-muted-foreground"
+                              className="bg-transparent border-none text-xs text-foreground focus:outline-none focus:ring-0 flex-1 placeholder:text-muted-foreground"
                             />
                           </div>
 
@@ -1990,7 +1990,7 @@ function ProposalsContent() {
                                     }}
                                     className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-primary">{c.company_name}</span>
+                                    <span className="font-bold text-foreground">{c.company_name}</span>
                                     <Badge className="bg-emerald-500/10 text-emerald-600 text-[7px] border-none">CLIENT</Badge>
                                   </div>
                                 ))}
@@ -2017,7 +2017,7 @@ function ProposalsContent() {
                                     }}
                                     className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-primary">{c.company_name}</span>
+                                    <span className="font-bold text-foreground">{c.company_name}</span>
                                     <Badge className="bg-accent/10 text-accent text-[7px] border-none">{c.stage?.toUpperCase()}</Badge>
                                   </div>
                                 ))}
@@ -2044,7 +2044,7 @@ function ProposalsContent() {
                                     }}
                                     className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-primary">{c.company_name}</span>
+                                    <span className="font-bold text-foreground">{c.company_name}</span>
                                     <Badge className="bg-accent/10 text-accent text-[7px] border-none">LEAD</Badge>
                                   </div>
                                 ))}
@@ -2071,7 +2071,7 @@ function ProposalsContent() {
                                     }}
                                     className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-primary">{c.company_name}</span>
+                                    <span className="font-bold text-foreground">{c.company_name}</span>
                                     <Badge className="bg-muted text-muted-foreground text-[9px] border-none">PROSPECT</Badge>
                                   </div>
                                 ))}
@@ -2088,10 +2088,10 @@ function ProposalsContent() {
                             value={aiInputs.proposal_type} 
                             onValueChange={(val: any) => setAIInputs({...aiInputs, proposal_type: val})}
                           >
-                            <SelectTrigger className="bg-muted border-border rounded-xl h-11 text-primary">
+                            <SelectTrigger className="bg-muted border-border rounded-xl h-11 text-foreground">
                               <SelectValue placeholder="Proposal vs Quote" />
                             </SelectTrigger>
-                            <SelectContent className="bg-white border-border text-primary rounded-xl">
+                            <SelectContent className="bg-white border-border text-foreground rounded-xl">
                               <SelectItem value="proposal" className="focus:bg-muted rounded-lg cursor-pointer">Proposal (Detailed)</SelectItem>
                               <SelectItem value="quote" className="focus:bg-muted rounded-lg cursor-pointer">Quick Quote</SelectItem>
                             </SelectContent>
@@ -2099,17 +2099,17 @@ function ProposalsContent() {
                         </div>
                         <div className="space-y-2">
                           <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Service Type</Label>
-                          <Input placeholder="e.g. Brand Commercial Production" value={aiInputs.service_vertical} onChange={(e) => setAIInputs({...aiInputs, service_vertical: e.target.value})} className="bg-muted border-border rounded-xl h-11 text-primary" />
+                          <Input placeholder="e.g. Brand Commercial Production" value={aiInputs.service_vertical} onChange={(e) => setAIInputs({...aiInputs, service_vertical: e.target.value})} className="bg-muted border-border rounded-xl h-11 text-foreground" />
                         </div>
                         <div className="space-y-2">
                           <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Industry</Label>
-                          <Input placeholder="e.g. Luxury Real Estate" value={aiInputs.client_type} onChange={(e) => setAIInputs({...aiInputs, client_type: e.target.value})} className="bg-muted border-border rounded-xl h-11 text-primary" />
+                          <Input placeholder="e.g. Luxury Real Estate" value={aiInputs.client_type} onChange={(e) => setAIInputs({...aiInputs, client_type: e.target.value})} className="bg-muted border-border rounded-xl h-11 text-foreground" />
                         </div>
                       </div>
 
                       <div className="space-y-2 shrink-0">
                         <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Proposal Scope & Description</Label>
-                        <Textarea placeholder="Outline the client goals, targeted parameters, and delivery constraints..." value={aiInputs.project_description} onChange={(e) => setAIInputs({...aiInputs, project_description: e.target.value})} className="bg-muted border-border rounded-xl min-h-[100px] text-primary" />
+                        <Textarea placeholder="Outline the client goals, targeted parameters, and delivery constraints..." value={aiInputs.project_description} onChange={(e) => setAIInputs({...aiInputs, project_description: e.target.value})} className="bg-muted border-border rounded-xl min-h-[100px] text-foreground" />
                       </div>
                     </div>
                   ) : (
@@ -2132,7 +2132,7 @@ function ProposalsContent() {
                           ))}
                         </aside>
                         <main className="flex-1 bg-muted/50 rounded-[10px] border border-border p-8 overflow-y-auto custom-scrollbar">
-                          <h2 className="text-2xl font-black text-primary mb-6">{generatedDraft?.sections[activeSectionIdx]?.title}</h2>
+                          <h2 className="text-2xl font-black text-foreground mb-6">{generatedDraft?.sections[activeSectionIdx]?.title}</h2>
                           <div className="text-sm leading-relaxed text-muted-foreground/80 whitespace-pre-line font-medium leading-7">{generatedDraft?.sections[activeSectionIdx]?.content}</div>
                         </main>
                       </div>
@@ -2148,7 +2148,7 @@ function ProposalsContent() {
                     </Button>
                   ) : (
                     <div className="flex gap-4">
-                      <Button onClick={() => setGenerationStep('input')} variant="outline" className="flex-1 border-border text-primary hover:bg-muted rounded-[10px] h-14 font-black uppercase text-xs font-bold">Back</Button>
+                      <Button onClick={() => setGenerationStep('input')} variant="outline" className="flex-1 border-border text-foreground hover:bg-muted rounded-[10px] h-14 font-black uppercase text-xs font-bold">Back</Button>
                       <Button onClick={handleCreateProposal} disabled={isSubmitting} className="flex-[2] bg-destructive hover:bg-destructive h-14 rounded-[10px] font-black uppercase text-xs tracking-widest gap-3 shadow-xl">
                         {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <FileCheck className="h-5 w-5" />}
                         Save Proposal
@@ -2170,7 +2170,7 @@ function ProposalsContent() {
               <span>Total Proposals</span>
               <Target className="h-4 w-4 text-destructive" />
             </div>
-            <div className="text-2xl font-black text-primary">{proposals?.length || 0}</div>
+            <div className="text-2xl font-black text-foreground">{proposals?.length || 0}</div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Total bids created</p>
           </CardContent>
         </Card>
@@ -2180,7 +2180,7 @@ function ProposalsContent() {
               <span>Total Value</span>
               <DollarSign className="h-4 w-4 text-emerald-500" />
             </div>
-            <div className="text-2xl font-black text-primary">
+            <div className="text-2xl font-black text-foreground">
               ₹{statsOverview.totalVal.toLocaleString()}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Total estimated value</p>
@@ -2192,7 +2192,7 @@ function ProposalsContent() {
               <span>Pending Approvals</span>
               <Clock className="h-4 w-4 text-accent" />
             </div>
-            <div className="text-2xl font-black text-primary">
+            <div className="text-2xl font-black text-foreground">
               {statsOverview.pending}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Awaiting final approvals</p>
@@ -2204,7 +2204,7 @@ function ProposalsContent() {
               <span>Approved Proposals</span>
               <ShieldCheck className="h-4 w-4 text-emerald-500" />
             </div>
-            <div className="text-2xl font-black text-primary">
+            <div className="text-2xl font-black text-foreground">
               {statsOverview.signed}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Approved and signed contracts</p>
@@ -2216,7 +2216,7 @@ function ProposalsContent() {
       <div className="space-y-4">
         {filteredProposals.length === 0 ? (
           <Card className="border-2 border-dashed border-border p-24 text-center rounded-[10px] bg-white shadow-sm">
-            <BrainCircuit className="h-16 w-16 mx-auto mb-6 opacity-10 text-primary" />
+            <BrainCircuit className="h-16 w-16 mx-auto mb-6 opacity-10 text-foreground" />
             <p className="font-black uppercase tracking-widest text-xs text-muted-foreground">No proposals found.</p>
             <Button variant="link" className="mt-4 font-bold text-destructive hover:text-destructive animate-pulse" onClick={() => setIsAddOpen(true)}>Create with AI</Button>
           </Card>
@@ -2238,7 +2238,7 @@ function ProposalsContent() {
                       </div>
                       <div>
                         <div className="flex items-center gap-3">
-                          <h3 className="font-bold text-xl group-hover:text-destructive transition-colors text-primary">{prop.title}</h3>
+                          <h3 className="font-bold text-xl group-hover:text-destructive transition-colors text-foreground">{prop.title}</h3>
                           <Badge className={cn("px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border shadow-sm",
                             prop.status === 'signed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
                             prop.status === 'sent' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-destructive/10 text-destructive border-red-200'
@@ -2262,11 +2262,11 @@ function ProposalsContent() {
                     <div className="flex gap-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="flex-1 rounded-xl border-border hover:bg-muted text-primary/80 bg-white h-11 gap-2">
+                          <Button variant="outline" className="flex-1 rounded-xl border-border hover:bg-muted text-foreground/80 bg-white h-11 gap-2">
                             <Share2 className="h-4 w-4" /> Share
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl w-64 p-2 bg-white border border-border text-primary/80 shadow-xl">
+                        <DropdownMenuContent align="end" className="rounded-xl w-64 p-2 bg-white border border-border text-foreground/80 shadow-xl">
                           <DropdownMenuLabel className="text-xs uppercase font-bold text-muted-foreground tracking-wider px-3 py-2">Share Channels</DropdownMenuLabel>
                           <DropdownMenuItem onClick={() => handleShareWhatsApp(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-muted">
                             <MessageSquare className="h-4 w-4 text-emerald-500" /> Share via WhatsApp
@@ -2291,9 +2291,9 @@ function ProposalsContent() {
       </div>
 
       <AlertDialog open={!!proposalToDelete} onOpenChange={(open) => !open && setProposalToDelete(null)}>
-        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-primary shadow-xl">
+        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-foreground shadow-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-primary">Delete Proposal Record?</AlertDialogTitle>
+            <AlertDialogTitle className="text-foreground">Delete Proposal Record?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground font-medium">Permanently remove "{proposalToDelete?.title}"? This will delete all history snapshots and cannot be undone.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

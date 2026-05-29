@@ -474,7 +474,7 @@ export default function CRMPage() {
     return (
       <div className="flex h-full items-center justify-center h-[80vh]">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin text-foreground" />
           <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Initializing CRM...</p>
         </div>
       </div>
@@ -488,7 +488,7 @@ export default function CRMPage() {
           <Lock className="h-12 w-12" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-black text-primary tracking-tight">Security Clearance Blocked</h2>
+          <h2 className="text-2xl font-black text-foreground tracking-tight">Security Clearance Blocked</h2>
           <p className="text-muted-foreground font-medium max-w-sm">You do not possess the required credentials to access the Corporate Growth pipeline.</p>
         </div>
         <Link href="/dashboard">
@@ -503,7 +503,7 @@ export default function CRMPage() {
   if (isLeadsLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -520,7 +520,7 @@ export default function CRMPage() {
             <div className="h-8 w-1 bg-destructive rounded-full shadow-lg shadow-red-500/30" />
             <span className="text-[10px] font-black uppercase tracking-[0.25em] text-destructive">DP Media OS</span>
           </div>
-          <h1 className="text-4xl font-black text-primary tracking-tight leading-none">Leads</h1>
+          <h1 className="text-4xl font-black text-foreground tracking-tight leading-none">Leads</h1>
           <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-2">Track potential projects and manage client relations.</p>
         </div>
         
@@ -529,7 +529,7 @@ export default function CRMPage() {
             <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Find a lead..." 
-              className="pl-10 h-11 rounded-[10px] bg-white border border-border text-primary placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm"
+              className="pl-10 h-11 rounded-[10px] bg-white border border-border text-foreground placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -541,12 +541,12 @@ export default function CRMPage() {
                 <Plus className="h-4 w-4" /> Add Lead
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[460px] rounded-[10px] p-0 border border-border bg-white text-primary shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <DialogContent className="sm:max-w-[460px] rounded-[10px] p-0 border border-border bg-white text-foreground shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
               <div className="relative p-8 pb-6 border-b border-border">
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/20 to-transparent" />
                 <div className="absolute -top-8 -right-8 w-32 h-32 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
                 <DialogHeader className="relative">
-                  <DialogTitle className="flex items-center gap-3 text-2xl font-black text-primary">
+                  <DialogTitle className="flex items-center gap-3 text-2xl font-black text-foreground">
                     <div className="h-10 w-10 rounded-[10px] bg-destructive/10 border border-red-100 flex items-center justify-center">
                       <Sparkles className="h-5 w-5 text-destructive" />
                     </div>
@@ -564,10 +564,10 @@ export default function CRMPage() {
                     value={newLead.lead_type} 
                     onValueChange={(val) => setNewLead(prev => ({...prev, lead_type: val}))}
                   >
-                    <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
+                    <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-foreground shadow-sm">
                       <SelectValue placeholder="Select Type" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
+                    <SelectContent className="bg-white border-border text-foreground rounded-[10px] shadow-xl">
                       <SelectItem value="Prospect" className="text-xs font-bold rounded-xl m-1 cursor-pointer">Prospect</SelectItem>
                       <SelectItem value="Client" className="text-xs font-bold rounded-xl m-1 cursor-pointer">Client (Direct Onboard)</SelectItem>
                     </SelectContent>
@@ -601,7 +601,7 @@ export default function CRMPage() {
                         }));
                       }
                     }}
-                    className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
+                    className="rounded-[10px] h-11 bg-muted border-border text-foreground placeholder:text-muted-foreground shadow-sm"
                     required
                   />
                   <datalist id="company-names">
@@ -618,7 +618,7 @@ export default function CRMPage() {
                       placeholder="John Doe" 
                       value={newLead.contact_person}
                       onChange={(e) => setNewLead(prev => ({...prev, contact_person: e.target.value}))}
-                      className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
+                      className="rounded-[10px] h-11 bg-muted border-border text-foreground placeholder:text-muted-foreground shadow-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -628,7 +628,7 @@ export default function CRMPage() {
                       placeholder="john@doe.com" 
                       value={newLead.email}
                       onChange={(e) => setNewLead(prev => ({...prev, email: e.target.value}))}
-                      className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
+                      className="rounded-[10px] h-11 bg-muted border-border text-foreground placeholder:text-muted-foreground shadow-sm"
                     />
                   </div>
                 </div>
@@ -639,7 +639,7 @@ export default function CRMPage() {
                     placeholder="+91 99999 99999" 
                     value={newLead.phone}
                     onChange={(e) => setNewLead(prev => ({...prev, phone: e.target.value, whatsapp: e.target.value}))}
-                    className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
+                    className="rounded-[10px] h-11 bg-muted border-border text-foreground placeholder:text-muted-foreground shadow-sm"
                   />
                 </div>
 
@@ -652,10 +652,10 @@ export default function CRMPage() {
                           value={newLead.service_vertical} 
                           onValueChange={(val) => setNewLead(prev => ({...prev, service_vertical: val, sub_vertical: ""}))}
                         >
-                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-foreground shadow-sm">
                             <SelectValue placeholder="Select Vertical" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
+                          <SelectContent className="bg-white border-border text-foreground rounded-[10px] shadow-xl">
                             {CONTENT_VERTICALS.map(v => (
                               <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-destructive/10 focus:text-destructive rounded-xl cursor-pointer">{v.name}</SelectItem>
                             ))}
@@ -670,10 +670,10 @@ export default function CRMPage() {
                           value={newLead.sub_vertical} 
                           onValueChange={(val) => setNewLead(prev => ({...prev, sub_vertical: val}))}
                         >
-                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary disabled:opacity-40 shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-foreground disabled:opacity-40 shadow-sm">
                             <SelectValue placeholder={newLead.service_vertical ? "Select Service" : "Select Category First"} />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
+                          <SelectContent className="bg-white border-border text-foreground rounded-[10px] shadow-xl">
                             {activeVertical?.services.map(s => (
                               <SelectItem key={s} value={s} className="text-xs focus:bg-destructive/10 focus:text-destructive rounded-xl cursor-pointer">{s}</SelectItem>
                             ))}
@@ -690,16 +690,16 @@ export default function CRMPage() {
                           placeholder="25000" 
                           value={newLead.deal_value}
                           onChange={(e) => setNewLead(prev => ({...prev, deal_value: e.target.value}))}
-                          className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
+                          className="rounded-[10px] h-11 bg-muted border-border text-foreground placeholder:text-muted-foreground shadow-sm"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Status</Label>
                         <Select onValueChange={(val) => setNewLead(prev => ({...prev, stage: val}))} value={newLead.stage}>
-                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-foreground shadow-sm">
                             <SelectValue placeholder="Select Stage" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
+                          <SelectContent className="bg-white border-border text-foreground rounded-[10px] shadow-xl">
                             {PIPELINE_STAGES.filter(s => !['won', 'lost', 'client'].includes(s.id)).map(s => (
                               <SelectItem key={s.id} value={s.id} className="text-xs focus:bg-destructive/10 focus:text-destructive rounded-xl cursor-pointer">{s.name}</SelectItem>
                             ))}
@@ -714,7 +714,7 @@ export default function CRMPage() {
                         placeholder="Enter Prospect Details..." 
                         value={newLead.notes}
                         onChange={(e) => setNewLead(prev => ({...prev, notes: e.target.value}))}
-                        className="rounded-[10px] bg-muted border-border text-primary text-sm shadow-sm"
+                        className="rounded-[10px] bg-muted border-border text-foreground text-sm shadow-sm"
                       />
                     </div>
                   </>
@@ -729,10 +729,10 @@ export default function CRMPage() {
                           value={newLead.industry} 
                           onValueChange={(val) => setNewLead(prev => ({...prev, industry: val}))}
                         >
-                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-foreground shadow-sm">
                             <SelectValue placeholder="Select Industry" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl max-h-[200px] overflow-y-auto">
+                          <SelectContent className="bg-white border-border text-foreground rounded-[10px] shadow-xl max-h-[200px] overflow-y-auto">
                             <SelectItem value="Luxury & Lifestyle" className="text-xs rounded-xl m-1 cursor-pointer">Luxury & Lifestyle</SelectItem>
                             <SelectItem value="Tech & SaaS" className="text-xs rounded-xl m-1 cursor-pointer">Tech & SaaS</SelectItem>
                             <SelectItem value="Gaming & Esports" className="text-xs rounded-xl m-1 cursor-pointer">Gaming & Esports</SelectItem>
@@ -748,7 +748,7 @@ export default function CRMPage() {
                           placeholder="GSTIN Code" 
                           value={newLead.gstin}
                           onChange={(e) => setNewLead(prev => ({...prev, gstin: e.target.value}))}
-                          className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
+                          className="rounded-[10px] h-11 bg-muted border-border text-foreground placeholder:text-muted-foreground shadow-sm"
                         />
                       </div>
                     </div>
@@ -759,7 +759,7 @@ export default function CRMPage() {
                         placeholder="Corporate Billing Address" 
                         value={newLead.billing_address}
                         onChange={(e) => setNewLead(prev => ({...prev, billing_address: e.target.value}))}
-                        className="rounded-[10px] bg-muted border-border text-primary text-sm shadow-sm"
+                        className="rounded-[10px] bg-muted border-border text-foreground text-sm shadow-sm"
                       />
                     </div>
 
@@ -769,10 +769,10 @@ export default function CRMPage() {
                         value={newLead.template} 
                         onValueChange={(val) => setNewLead(prev => ({...prev, template: val}))}
                       >
-                        <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
+                        <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-foreground shadow-sm">
                           <SelectValue placeholder="Select Onboarding Template" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
+                        <SelectContent className="bg-white border-border text-foreground rounded-[10px] shadow-xl">
                           <SelectItem value="Brand Identity" className="text-xs rounded-xl m-1 cursor-pointer">Brand Identity</SelectItem>
                           <SelectItem value="AI TVC" className="text-xs rounded-xl m-1 cursor-pointer">AI TVC</SelectItem>
                           <SelectItem value="Corporate Film" className="text-xs rounded-xl m-1 cursor-pointer">Corporate Film</SelectItem>
@@ -796,7 +796,7 @@ export default function CRMPage() {
           <Button 
             variant="outline" 
             onClick={() => setShowAnalytics(!showAnalytics)} 
-            className="gap-2 rounded-[10px] h-11 px-5 font-black text-xs uppercase tracking-wider border-border bg-white text-muted-foreground/80 hover:text-primary hover:bg-muted hover:border-border shadow-sm transition-all"
+            className="gap-2 rounded-[10px] h-11 px-5 font-black text-xs uppercase tracking-wider border-border bg-white text-muted-foreground/80 hover:text-foreground hover:bg-muted hover:border-border shadow-sm transition-all"
           >
             <BarChart3 className="h-4 w-4 text-destructive" /> 
             {showAnalytics ? "Hide Insights" : "Pipeline Insights"}
@@ -811,9 +811,9 @@ export default function CRMPage() {
           <div className="bg-white p-5 rounded-[10px] border border-border shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-50">
               <h3 className="text-xs font-black uppercase text-muted-foreground tracking-wider flex items-center gap-1.5">
-                <Target className="h-4 w-4 text-primary" /> Sales Funnel Conversion
+                <Target className="h-4 w-4 text-foreground" /> Sales Funnel Conversion
               </h3>
-              <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] font-black uppercase">Active stages</Badge>
+              <Badge variant="secondary" className="bg-primary/5 text-foreground text-[8px] font-black uppercase">Active stages</Badge>
             </div>
             <div className="space-y-3 pt-1">
               {PIPELINE_STAGES.filter(s => s.id !== 'won').map(stage => {
@@ -872,7 +872,7 @@ export default function CRMPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex flex-col">
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Weighted Value</span>
-                        <span className="text-2xl font-black text-primary">₹{Math.round(weightedSum).toLocaleString()}</span>
+                        <span className="text-2xl font-black text-foreground">₹{Math.round(weightedSum).toLocaleString()}</span>
                       </div>
                       <div className="flex flex-col items-end">
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Blended Win Rate</span>
@@ -950,9 +950,9 @@ export default function CRMPage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Pipeline Leads</span>
-              <Target className="h-4 w-4 text-primary" />
+              <Target className="h-4 w-4 text-foreground" />
             </div>
-            <div className="text-2xl font-black font-headline text-primary">{filteredLeads.length}</div>
+            <div className="text-2xl font-black font-headline text-foreground">{filteredLeads.length}</div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Active CRM opportunities</p>
           </CardContent>
         </Card>
@@ -962,7 +962,7 @@ export default function CRMPage() {
               <span>Pipeline Value</span>
               <IndianRupee className="h-4 w-4 text-emerald-500" />
             </div>
-            <div className="text-2xl font-black font-headline text-primary">
+            <div className="text-2xl font-black font-headline text-foreground">
               ₹{filteredLeads.reduce((sum, l) => sum + (l.deal_value || 0), 0).toLocaleString()}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Estimated project contracts</p>
@@ -974,7 +974,7 @@ export default function CRMPage() {
               <span>Negotiations</span>
               <Building2 className="h-4 w-4 text-accent" />
             </div>
-            <div className="text-2xl font-black font-headline text-primary">
+            <div className="text-2xl font-black font-headline text-foreground">
               {filteredLeads.filter(l => ['proposal', 'negotiation'].includes(l.stage || '')).length}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Critical discussion phase</p>
@@ -986,7 +986,7 @@ export default function CRMPage() {
               <span>Realtime Sync</span>
               <Zap className="h-4 w-4 text-accent animate-pulse" />
             </div>
-            <div className="text-sm font-black text-primary/80 flex items-center gap-1.5 mt-1">
+            <div className="text-sm font-black text-foreground/80 flex items-center gap-1.5 mt-1">
               <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block"></span>
               Live Ledger Connected
             </div>
@@ -1031,7 +1031,7 @@ export default function CRMPage() {
                         <CardContent className="p-5 space-y-4">
                           <div className="flex items-start justify-between gap-2">
                             <Link href={`/crm/${lead.id}`} className="flex-1">
-                              <span className="text-sm font-bold leading-tight group-hover:text-primary transition-colors block line-clamp-2">{lead.company_name}</span>
+                              <span className="text-sm font-bold leading-tight group-hover:text-foreground transition-colors block line-clamp-2">{lead.company_name}</span>
                             </Link>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -1058,7 +1058,7 @@ export default function CRMPage() {
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="bg-muted" />
-                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-muted-foreground/80 focus:text-primary/80 focus:bg-muted" onClick={() => setLeadToArchive(lead)}>
+                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-muted-foreground/80 focus:text-foreground/80 focus:bg-muted" onClick={() => setLeadToArchive(lead)}>
                                   <Archive className="h-3.5 w-3.5" /> Archive Lead
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="bg-muted" />
@@ -1071,7 +1071,7 @@ export default function CRMPage() {
                           
                           <div className="space-y-2">
                             <div className="flex flex-col gap-1">
-                              <div className="flex items-center gap-2 text-[10px] text-primary font-black uppercase tracking-tighter">
+                              <div className="flex items-center gap-2 text-[10px] text-foreground font-black uppercase tracking-tighter">
                                 <Zap className="h-3.5 w-3.5 text-accent" />
                                 <span className="truncate">{lead.service_vertical || 'General Production'}</span>
                               </div>
@@ -1084,13 +1084,13 @@ export default function CRMPage() {
                           </div>
 
                           <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                            <div className="flex items-center gap-1 text-primary font-black text-xs bg-primary/5 px-2 py-1 rounded-lg">
+                            <div className="flex items-center gap-1 text-foreground font-black text-xs bg-primary/5 px-2 py-1 rounded-lg">
                               <IndianRupee className="h-3 w-3" />
                               <span>{(lead.deal_value || 0).toLocaleString()}</span>
                             </div>
                             <Link href={`/crm/${lead.id}`}>
                               <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-primary/10 group/btn transition-colors">
-                                <ArrowRight className="h-4 w-4 text-slate-300 group-hover/btn:text-primary" />
+                                <ArrowRight className="h-4 w-4 text-slate-300 group-hover/btn:text-foreground" />
                               </Button>
                             </Link>
                           </div>
@@ -1106,7 +1106,7 @@ export default function CRMPage() {
                         setIsAddOpen(true);
                       }}
                     >
-                      <div className="flex flex-col items-center gap-1 text-slate-300 group-hover:text-primary">
+                      <div className="flex flex-col items-center gap-1 text-slate-300 group-hover:text-foreground">
                         <Plus className="h-5 w-5" />
                         <span className="text-[9px] font-black uppercase tracking-[0.2em]">Quick Add Lead</span>
                       </div>

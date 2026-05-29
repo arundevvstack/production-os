@@ -773,7 +773,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
         
         <div className="absolute top-6 left-6 z-10">
           <a href="/creators">
-            <Button className="bg-white border border-border text-primary hover:bg-muted rounded-full h-10 px-4 text-xs gap-1.5 shadow-sm font-bold transition">
+            <Button className="bg-white border border-border text-foreground hover:bg-muted rounded-full h-10 px-4 text-xs gap-1.5 shadow-sm font-bold transition">
               <ArrowLeft className="h-4 w-4" /> Back to Creators
             </Button>
           </a>
@@ -791,12 +791,12 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               <div className="flex flex-col items-center text-center space-y-4">
                 <Avatar className="h-32 w-32 border-4 border-white shadow-lg ring-4 ring-border">
                   <AvatarImage src={creator.avatarUrl} className="object-cover" />
-                  <AvatarFallback className="bg-muted text-primary font-bold">{creator.stageName[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-muted text-foreground font-bold">{creator.stageName[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-center gap-1.5">
-                    <h2 className="text-xl font-bold text-primary tracking-tight">{creator.fullName}</h2>
+                    <h2 className="text-xl font-bold text-foreground tracking-tight">{creator.fullName}</h2>
                     {creator.verifiedLevel === "Premium" && (
                       <Badge className="bg-destructive/10 text-red-650 border-none text-[8px] font-bold uppercase py-0.5 px-2 rounded-full">Premium</Badge>
                     )}
@@ -814,7 +814,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               <div className="grid grid-cols-2 gap-4 border-t border-b border-slate-150 py-5 text-center text-xs">
                 <div className="border-r border-slate-150 space-y-1">
                   <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest block">Reach</span>
-                  <strong className="text-primary font-black text-sm">{(creator.followers / 1000000).toFixed(1)}M</strong>
+                  <strong className="text-foreground font-black text-sm">{(creator.followers / 1000000).toFixed(1)}M</strong>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest block">Engagement</span>
@@ -826,13 +826,13 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               <div className="space-y-3.5 text-xs text-slate-650 font-bold">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Day Rate</span>
-                  <strong className="text-primary">
+                  <strong className="text-foreground">
                     {creator.privacy?.hideDayRate ? "🔒 Quote Required" : `₹${creator.dayRate.toLocaleString()}`}
                   </strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Languages</span>
-                  <strong className="text-primary">{creator.languages.join(", ")}</strong>
+                  <strong className="text-foreground">{creator.languages.join(", ")}</strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Availability</span>
@@ -854,7 +854,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                     variant="outline"
                     onClick={handleSaveProfile}
                     className={`border-border bg-white hover:bg-muted font-bold h-10 rounded-full text-xs gap-1.5 shadow-sm transition ${
-                      isSaved ? "text-destructive border-destructive/30" : "text-primary/80"
+                      isSaved ? "text-destructive border-destructive/30" : "text-foreground/80"
                     }`}
                   >
                     <Bookmark className="h-4 w-4" /> {isSaved ? "Saved" : "Save"}
@@ -862,7 +862,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   <Button 
                     variant="outline"
                     onClick={handleShareProfile}
-                    className="border-border bg-white hover:bg-muted font-bold h-10 rounded-full text-xs gap-1.5 text-primary/80 shadow-sm transition"
+                    className="border-border bg-white hover:bg-muted font-bold h-10 rounded-full text-xs gap-1.5 text-foreground/80 shadow-sm transition"
                   >
                     <Share2 className="h-4 w-4" /> Share
                   </Button>
@@ -872,7 +872,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 <Button 
                   onClick={handleDownloadPdf}
                   variant="ghost"
-                  className="w-full border border-border text-primary/80 hover:bg-muted font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
+                  className="w-full border border-border text-foreground/80 hover:bg-muted font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
                 >
                   <FileDown className="h-4 w-4 text-red-650" /> Download PDF Portfolio
                 </Button>
@@ -881,7 +881,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 <Button 
                   onClick={() => setIsEditOpen(true)}
                   variant="outline"
-                  className="w-full border border-border text-primary/80 hover:bg-muted font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
+                  className="w-full border border-border text-foreground/80 hover:bg-muted font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
                 >
                   <UserCheck className="h-4 w-4 text-red-650" /> Edit Profile Details
                 </Button>
@@ -909,7 +909,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               <h3 className="font-bold text-xs uppercase tracking-widest text-red-650 flex items-center gap-1">
                 <Sparkles className="h-4.5 w-4.5 text-destructive animate-pulse" /> AI Profile Insights
               </h3>
-              <div className="space-y-3 text-[11px] font-bold text-primary/80">
+              <div className="space-y-3 text-[11px] font-bold text-foreground/80">
                 <div className="p-3 bg-white border border-border rounded-2xl flex gap-2">
                   <Info className="h-4 w-4 shrink-0 text-destructive" />
                   <p className="leading-snug">Add measurements to improve your casting visibility by 40%.</p>
@@ -942,11 +942,11 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
           {/* Tab Menu Options */}
           <Tabs defaultValue="reels" className="space-y-6">
             <TabsList className="bg-muted border border-border p-1 rounded-full shadow-sm">
-              <TabsTrigger value="reels" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Videos</TabsTrigger>
-              <TabsTrigger value="gallery" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Lookbook</TabsTrigger>
-              <TabsTrigger value="measurements" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Measurements</TabsTrigger>
-              <TabsTrigger value="preferences" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Preferences</TabsTrigger>
-              <TabsTrigger value="about" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">About</TabsTrigger>
+              <TabsTrigger value="reels" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm transition">Videos</TabsTrigger>
+              <TabsTrigger value="gallery" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm transition">Lookbook</TabsTrigger>
+              <TabsTrigger value="measurements" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm transition">Measurements</TabsTrigger>
+              <TabsTrigger value="preferences" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm transition">Preferences</TabsTrigger>
+              <TabsTrigger value="about" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm transition">About</TabsTrigger>
             </TabsList>
 
             {/* Reels Tab */}
@@ -966,7 +966,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                     <div className="flex items-center gap-3">
                       <PlayCircle className={`h-8 w-8 ${activeReelUrl === reel.url ? "text-destructive" : "text-muted-foreground"}`} />
                       <div>
-                        <h4 className="font-bold text-xs text-primary">{reel.title}</h4>
+                        <h4 className="font-bold text-xs text-foreground">{reel.title}</h4>
                         <span className="text-[10px] text-muted-foreground font-bold">{reel.duration} mins</span>
                       </div>
                     </div>
@@ -994,48 +994,48 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 {creator.privacy?.hideMeasurements ? (
                   <div className="flex flex-col items-center justify-center py-6 text-center space-y-2">
                     <ShieldAlert className="h-10 w-10 text-red-650 animate-pulse" />
-                    <span className="text-xs font-bold text-primary">Measurements are private</span>
+                    <span className="text-xs font-bold text-foreground">Measurements are private</span>
                     <p className="text-[10px] text-slate-450 max-w-sm font-medium">
                       This creator has kept their measurements private. Please contact our managers to view them.
                     </p>
                   </div>
                 ) : (
-                  <CardContent className="p-0 grid grid-cols-2 md:grid-cols-3 gap-6 font-bold text-xs text-primary">
+                  <CardContent className="p-0 grid grid-cols-2 md:grid-cols-3 gap-6 font-bold text-xs text-foreground">
                     <div className="space-y-1">
                       <span className="text-[9px] text-slate-405 block uppercase">Height</span>
-                      <strong className="text-primary text-sm">{creator.measurements.height}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.height}</strong>
                     </div>
                     <div className="space-y-1">
                       <span className="text-[9px] text-slate-405 block uppercase">Weight</span>
-                      <strong className="text-primary text-sm">{creator.measurements.weight}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.weight}</strong>
                     </div>
                     <div className="space-y-1">
                       <span className="text-[9px] text-slate-405 block uppercase">Chest</span>
-                      <strong className="text-primary text-sm">{creator.measurements.chest}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.chest}</strong>
                     </div>
                     <div className="space-y-1 border-t border-border pt-3 md:border-t-0 md:pt-0">
                       <span className="text-[9px] text-slate-405 block uppercase">Waist</span>
-                      <strong className="text-primary text-sm">{creator.measurements.waist}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.waist}</strong>
                     </div>
                     <div className="space-y-1 border-t border-border pt-3 md:border-t-0 md:pt-0">
                       <span className="text-[9px] text-slate-405 block uppercase">Hip</span>
-                      <strong className="text-primary text-sm">{creator.measurements.hip}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.hip}</strong>
                     </div>
                     <div className="space-y-1 border-t border-border pt-3 md:border-t-0 md:pt-0">
                       <span className="text-[9px] text-slate-405 block uppercase">Shoe Size</span>
-                      <strong className="text-primary text-sm">{creator.measurements.shoeSize}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.shoeSize}</strong>
                     </div>
                     <div className="space-y-1 border-t border-border pt-3">
                       <span className="text-[9px] text-slate-405 block uppercase">Hair Color</span>
-                      <strong className="text-primary text-sm">{creator.measurements.hairColor}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.hairColor}</strong>
                     </div>
                     <div className="space-y-1 border-t border-border pt-3">
                       <span className="text-[9px] text-slate-405 block uppercase">Skin Tone</span>
-                      <strong className="text-primary text-sm">{creator.measurements.skinTone}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.skinTone}</strong>
                     </div>
                     <div className="space-y-1 border-t border-border pt-3">
                       <span className="text-[9px] text-slate-405 block uppercase">Tattoos</span>
-                      <strong className="text-primary text-sm">{creator.measurements.tattoos}</strong>
+                      <strong className="text-foreground text-sm">{creator.measurements.tattoos}</strong>
                     </div>
                   </CardContent>
                 )}
@@ -1084,7 +1084,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   <h4 className="text-xs font-bold uppercase tracking-widest text-red-650">Skills</h4>
                   <div className="flex flex-wrap gap-2">
                     {creator.skills.map((s: string) => (
-                      <Badge key={s} className="bg-muted border border-border text-primary/80 font-bold text-[9px] py-1 px-3 rounded-full">
+                      <Badge key={s} className="bg-muted border border-border text-foreground/80 font-bold text-[9px] py-1 px-3 rounded-full">
                         {s}
                       </Badge>
                     ))}
@@ -1112,7 +1112,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
       <Dialog open={isBookOpen} onOpenChange={setIsBookOpen}>
         <DialogContent className="bg-white text-[#1d1d1f] border-border rounded-3xl p-6 max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-primary leading-tight flex items-center gap-1">
+            <DialogTitle className="text-base font-bold text-foreground leading-tight flex items-center gap-1">
               <Zap className="h-5 w-5 text-red-650" /> Send Booking Request
             </DialogTitle>
             <DialogDescription className="text-muted-foreground text-xs font-bold leading-normal">
@@ -1127,7 +1127,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 type="text" 
                 value={bookingForm.projectName}
                 onChange={(e) => setBookingForm({ ...bookingForm, projectName: e.target.value })}
-                className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
+                className="bg-muted border border-border text-foreground rounded-xl text-xs h-10 font-bold"
                 placeholder="e.g. Pulse Energy Summer TVC"
                 required
               />
@@ -1140,7 +1140,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   type="date" 
                   value={bookingForm.shootDate}
                   onChange={(e) => setBookingForm({ ...bookingForm, shootDate: e.target.value })}
-                  className="bg-muted border border-border text-primary/80 rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-foreground/80 rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
@@ -1151,7 +1151,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   type="text" 
                   value={bookingForm.location}
                   onChange={(e) => setBookingForm({ ...bookingForm, location: e.target.value })}
-                  className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-foreground rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
@@ -1164,7 +1164,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   type="number" 
                   value={bookingForm.budget}
                   onChange={(e) => setBookingForm({ ...bookingForm, budget: e.target.value })}
-                  className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-foreground rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
@@ -1175,7 +1175,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   type="text" 
                   value={bookingForm.deliverables}
                   onChange={(e) => setBookingForm({ ...bookingForm, deliverables: e.target.value })}
-                  className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-foreground rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
@@ -1213,7 +1213,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
             </div>
 
             <DialogFooter className="pt-4 gap-2">
-              <Button type="button" variant="ghost" onClick={() => setIsBookOpen(false)} className="rounded-full border border-border hover:bg-muted text-xs font-bold bg-white text-primary/80 h-10 shadow-sm transition">
+              <Button type="button" variant="ghost" onClick={() => setIsBookOpen(false)} className="rounded-full border border-border hover:bg-muted text-xs font-bold bg-white text-foreground/80 h-10 shadow-sm transition">
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting} className="bg-destructive hover:bg-destructive text-white rounded-full text-xs font-bold h-10 px-5 shadow shadow-red-500/10 transition">
@@ -1226,9 +1226,9 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
       {/* PDF Lookbook Share Preview Modal (Phase 6) */}
       <Dialog open={isPdfOpen} onOpenChange={setIsPdfOpen}>
-        <DialogContent className="bg-white text-primary border-border rounded-3xl p-6 max-w-sm font-sans">
+        <DialogContent className="bg-white text-foreground border-border rounded-3xl p-6 max-w-sm font-sans">
           <DialogHeader className="border-b border-border pb-3">
-            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-primary">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-foreground">
               <FileDown className="h-5 w-5 text-red-650" /> PDF Portfolio Lookbook
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-450 font-bold">
@@ -1243,7 +1243,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 <AvatarFallback>{creator.stageName[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <h4 className="text-primary font-bold leading-tight">{creator.fullName}</h4>
+                <h4 className="text-foreground font-bold leading-tight">{creator.fullName}</h4>
                 <span className="text-[10px] text-red-605 font-bold uppercase tracking-widest">{creator.category}</span>
               </div>
             </div>
@@ -1257,7 +1257,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
             
             {/* Share QR Simulation */}
             <div className="flex items-center justify-center p-3 bg-white border border-border rounded-2xl gap-3">
-              <QrCode className="h-12 w-12 text-primary shrink-0" />
+              <QrCode className="h-12 w-12 text-foreground shrink-0" />
               <div className="text-[9px] text-muted-foreground font-medium">
                 Scan QR to view interactive digital reel and lock bookings on DP Media OS.
               </div>
@@ -1274,9 +1274,9 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
       {/* Profile Sharing Infrastructure Modal (Phase 6) */}
       <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
-        <DialogContent className="bg-white text-primary border-border rounded-3xl p-6 max-w-sm font-sans">
+        <DialogContent className="bg-white text-foreground border-border rounded-3xl p-6 max-w-sm font-sans">
           <DialogHeader className="border-b border-border pb-3">
-            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-primary">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-foreground">
               <Share2 className="h-5 w-5 text-red-650" /> Share Creator Profile
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-450 font-bold">
@@ -1321,7 +1321,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   });
                 }}
                 variant="outline"
-                className="w-full border border-border hover:bg-muted text-primary/80 rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition bg-white"
+                className="w-full border border-border hover:bg-muted text-foreground/80 rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition bg-white"
               >
                 <Check className="h-4 w-4 text-red-650" /> Copy Profile Link
               </Button>
@@ -1329,7 +1329,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Profile QR Code */}
             <div className="border border-slate-150 p-4 bg-muted rounded-2xl flex flex-col items-center gap-2 text-center">
-              <QrCode className="h-20 w-20 text-primary" />
+              <QrCode className="h-20 w-20 text-foreground" />
               <span className="text-[9px] text-muted-foreground font-medium">
                 Direct QR Code to mobile portfolio lookbook.
               </span>
@@ -1337,7 +1337,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
           </div>
 
           <DialogFooter>
-            <Button onClick={() => setIsShareOpen(false)} variant="ghost" className="w-full border border-border text-primary/80 hover:bg-muted rounded-full text-xs font-bold h-10 transition bg-white shadow-sm">
+            <Button onClick={() => setIsShareOpen(false)} variant="ghost" className="w-full border border-border text-foreground/80 hover:bg-muted rounded-full text-xs font-bold h-10 transition bg-white shadow-sm">
               Close
             </Button>
           </DialogFooter>
@@ -1346,9 +1346,9 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
       {/* Edit Profile Details Modal (Phase 1, 2, 3, 4) */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="bg-white text-primary border-border rounded-3xl p-6 max-w-2xl max-h-[90vh] overflow-y-auto font-sans">
+        <DialogContent className="bg-white text-foreground border-border rounded-3xl p-6 max-w-2xl max-h-[90vh] overflow-y-auto font-sans">
           <DialogHeader className="border-b border-border pb-3">
-            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-primary">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-foreground">
               <UserCheck className="h-5 w-5 text-red-650" /> Edit Talent Profile Details
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-450 font-bold">
@@ -1621,7 +1621,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               
               <div className="space-y-2">
                 <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Comfortable With</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-primary/80 font-bold">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-foreground/80 font-bold">
                   {[
                     "Western Wear", "Traditional Wear", "Corporate Ads", 
                     "Action Sequences", "Night Shoots", "Live Hosting", 
@@ -1650,7 +1650,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
               <div className="space-y-2 pt-2">
                 <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Not Comfortable With</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-primary/80 font-bold">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-foreground/80 font-bold">
                   {[
                     "Smoking Scenes", "Alcohol Promotions", "Political Campaigns", 
                     "Religious Campaigns", "Intimate Scenes", "Late Night Shoots", 
@@ -1681,7 +1681,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
             {/* Section 5: Creator Privacy & Protection Controls */}
             <div className="space-y-4">
               <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Creator Privacy Controls</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px] text-primary/80 font-bold">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px] text-foreground/80 font-bold">
                 
                 {/* Hide Measurements */}
                 <label className="flex items-center gap-2 cursor-pointer bg-muted border border-slate-150 p-2.5 rounded-xl hover:bg-muted transition shadow-sm">
@@ -1828,7 +1828,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
             </div>
 
             <DialogFooter className="pt-4 border-t border-border gap-2">
-              <Button type="button" variant="ghost" onClick={() => setIsEditOpen(false)} className="rounded-full border border-border hover:bg-muted text-xs font-bold bg-white text-primary/80 h-11 transition shadow-sm">
+              <Button type="button" variant="ghost" onClick={() => setIsEditOpen(false)} className="rounded-full border border-border hover:bg-muted text-xs font-bold bg-white text-foreground/80 h-11 transition shadow-sm">
                 Cancel
               </Button>
               <Button type="submit" className="bg-destructive hover:bg-destructive text-white rounded-full text-xs font-bold h-11 px-6 shadow shadow-red-500/10 transition">

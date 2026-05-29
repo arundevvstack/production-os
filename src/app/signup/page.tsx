@@ -77,7 +77,7 @@ export default function SignupPage() {
                 <Logo />
               </div>
 
-              <h1 className="text-3xl font-black text-primary tracking-tight leading-tight">
+              <h1 className="text-3xl font-black text-foreground tracking-tight leading-tight">
                 Create your account
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
@@ -88,7 +88,7 @@ export default function SignupPage() {
             {/* Signup Form */}
             <form onSubmit={handleSignup} className="space-y-5">
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-primary/80 ml-1" htmlFor="email">
+                <Label className="text-sm font-semibold text-foreground/80 ml-1" htmlFor="email">
                   Email Address
                 </Label>
                 <Input
@@ -98,12 +98,12 @@ export default function SignupPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 rounded-xl border-border bg-muted focus:bg-white text-primary placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium transition"
+                  className="h-12 rounded-xl border-border bg-muted focus:bg-white text-foreground placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium transition"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-primary/80 ml-1" htmlFor="password">
+                <Label className="text-sm font-semibold text-foreground/80 ml-1" htmlFor="password">
                   Password
                 </Label>
                 <div className="relative">
@@ -114,13 +114,13 @@ export default function SignupPage() {
                     placeholder="At least 8 characters"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 rounded-xl border-border bg-muted focus:bg-white text-primary placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium w-full pr-12 transition"
+                    className="h-12 rounded-xl border-border bg-muted focus:bg-white text-foreground placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium w-full pr-12 transition"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

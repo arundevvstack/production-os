@@ -79,7 +79,7 @@ export default function ShowcasePage() {
       <section className="py-24 bg-muted dark:bg-primary relative">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-primary dark:text-zinc-50 mb-4">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground dark:text-zinc-50 mb-4">
               Autonomous Orchestration Topology
             </h2>
             <p className="text-muted-foreground/80 dark:text-muted-foreground max-w-2xl mx-auto">
@@ -117,7 +117,7 @@ export default function ShowcasePage() {
 
             {/* Incident Response Panel */}
             <div className="w-80 border-l border-border dark:border-primary bg-muted/50 dark:bg-primary/50 backdrop-blur-md p-6 flex flex-col relative z-20">
-              <h3 className="font-semibold text-primary dark:text-zinc-100 mb-6 flex items-center gap-2">
+              <h3 className="font-semibold text-foreground dark:text-zinc-100 mb-6 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-emerald-500" />
                 Incident Engine
               </h3>
@@ -160,7 +160,7 @@ export default function ShowcasePage() {
       <section className="py-24 border-t border-border dark:border-primary bg-white dark:bg-primary/50">
         <div className="container mx-auto px-4 max-w-7xl">
            <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-primary dark:text-zinc-50 mb-4">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground dark:text-zinc-50 mb-4">
               Digital Twin Executive View
             </h2>
             <p className="text-muted-foreground/80 dark:text-muted-foreground max-w-2xl mx-auto">
@@ -172,7 +172,7 @@ export default function ShowcasePage() {
             <Card className="bg-muted dark:bg-primary border-border dark:border-primary">
               <CardContent className="p-6">
                 <div className="text-sm font-medium text-muted-foreground mb-2">Platform MRR Forecast</div>
-                <div className="text-3xl font-bold text-primary dark:text-zinc-50 mb-4">$4.2M</div>
+                <div className="text-3xl font-bold text-foreground dark:text-zinc-50 mb-4">$4.2M</div>
                 <div className="h-2 w-full bg-secondary dark:bg-primary rounded-full overflow-hidden">
                   <div className="h-full bg-accent w-[78%]"></div>
                 </div>
@@ -183,7 +183,7 @@ export default function ShowcasePage() {
             <Card className="bg-muted dark:bg-primary border-border dark:border-primary">
               <CardContent className="p-6">
                 <div className="text-sm font-medium text-muted-foreground mb-2">Infrastructure COGS</div>
-                <div className="text-3xl font-bold text-primary dark:text-zinc-50 mb-4">
+                <div className="text-3xl font-bold text-foreground dark:text-zinc-50 mb-4">
                   $0.014 <span className="text-lg text-muted-foreground font-normal">/ render</span>
                 </div>
                 <div className="h-2 w-full bg-secondary dark:bg-primary rounded-full overflow-hidden">
@@ -196,7 +196,7 @@ export default function ShowcasePage() {
             <Card className="bg-muted dark:bg-primary border-border dark:border-primary">
               <CardContent className="p-6">
                 <div className="text-sm font-medium text-muted-foreground mb-2">Global Churn Risk</div>
-                <div className="text-3xl font-bold text-primary dark:text-zinc-50 mb-4">
+                <div className="text-3xl font-bold text-foreground dark:text-zinc-50 mb-4">
                   1.2<span className="text-lg text-muted-foreground font-normal">%</span>
                 </div>
                 <div className="h-2 w-full bg-secondary dark:bg-primary rounded-full overflow-hidden">
@@ -220,7 +220,7 @@ function MetricCard({ title, value, icon, suffix = "", isFloat = false }: { titl
           {icon}
           {title}
         </div>
-        <div className="text-4xl md:text-5xl font-bold text-primary dark:text-zinc-50 flex items-baseline tracking-tight">
+        <div className="text-4xl md:text-5xl font-bold text-foreground dark:text-zinc-50 flex items-baseline tracking-tight">
           <AnimatedCounter 
             value={value} 
             format={(v) => isFloat ? v.toFixed(2) : Math.round(v).toLocaleString()} 
@@ -248,7 +248,7 @@ function IncidentLog({ active, time, title, desc, type }: { active: boolean, tim
     >
       <div className={`absolute -left-[5px] top-1.5 w-2 h-2 rounded-full ${active ? colors[type] : 'bg-secondary dark:bg-zinc-700'}`} />
       <div className="text-xs font-mono text-muted-foreground mb-1">{time}</div>
-      <div className={`text-sm font-semibold mb-0.5 ${active ? 'text-primary dark:text-zinc-100' : 'text-muted-foreground'}`}>{title}</div>
+      <div className={`text-sm font-semibold mb-0.5 ${active ? 'text-foreground dark:text-zinc-100' : 'text-muted-foreground'}`}>{title}</div>
       <div className="text-xs text-muted-foreground leading-relaxed">{desc}</div>
     </motion.div>
   );

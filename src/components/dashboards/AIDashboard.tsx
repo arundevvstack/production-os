@@ -7,7 +7,7 @@ export function AIDashboard({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-black tracking-tight text-primary">AI Operations</h2>
+        <h2 className="text-2xl font-black tracking-tight text-foreground">AI Operations</h2>
         <p className="text-sm font-medium text-muted-foreground">Monitor render queues, prompt generation, and GPU compute.</p>
       </div>
 
@@ -26,7 +26,7 @@ export function AIDashboard({ companyId }: { companyId: string }) {
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Render Queue</p>
                 <Activity className="h-4 w-4 text-emerald-500" />
             </div>
-            <h3 className="text-3xl font-black text-primary">14 Jobs</h3>
+            <h3 className="text-3xl font-black text-foreground">14 Jobs</h3>
             <p className="text-xs font-bold mt-4 text-muted-foreground">Processing in background...</p>
         </Card>
 
@@ -35,7 +35,7 @@ export function AIDashboard({ companyId }: { companyId: string }) {
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Generations (24h)</p>
                 <ImageIcon className="h-4 w-4 text-accent" />
             </div>
-            <h3 className="text-3xl font-black text-primary">1,240</h3>
+            <h3 className="text-3xl font-black text-foreground">1,240</h3>
             <p className="text-xs font-bold mt-4 text-emerald-500">+12% vs yesterday</p>
         </Card>
 
@@ -44,7 +44,7 @@ export function AIDashboard({ companyId }: { companyId: string }) {
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Failed / Retries</p>
                 <Zap className="h-4 w-4 text-accent" />
             </div>
-            <h3 className="text-3xl font-black text-primary">3</h3>
+            <h3 className="text-3xl font-black text-foreground">3</h3>
             <p className="text-xs font-bold mt-4 text-muted-foreground">API connection timeouts</p>
         </Card>
       </div>

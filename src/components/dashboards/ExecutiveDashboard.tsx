@@ -8,7 +8,7 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-black tracking-tight text-primary">Executive Overview</h2>
+        <h2 className="text-2xl font-black tracking-tight text-foreground">Executive Overview</h2>
         <p className="text-sm font-medium text-muted-foreground">Real-time enterprise analytics and health metrics.</p>
       </div>
 
@@ -23,9 +23,9 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
         <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
             <div className="flex justify-between items-start mb-2">
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resource Utilization</p>
-                <Users className="h-4 w-4 text-primary" />
+                <Users className="h-4 w-4 text-foreground" />
             </div>
-            <h3 className="text-3xl font-black text-primary">87%</h3>
+            <h3 className="text-3xl font-black text-foreground">87%</h3>
             <div className="w-full bg-muted h-2 rounded-full mt-4 overflow-hidden">
                 <div className="bg-primary h-full w-[87%] rounded-full" />
             </div>
@@ -36,7 +36,7 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Production Efficiency</p>
                 <Clock className="h-4 w-4 text-accent" />
             </div>
-            <h3 className="text-3xl font-black text-primary">92%</h3>
+            <h3 className="text-3xl font-black text-foreground">92%</h3>
             <p className="text-xs font-bold mt-4 text-muted-foreground">Tasks completed on time</p>
         </Card>
 

@@ -75,7 +75,7 @@ export default function ResetPasswordPage() {
           <div className="mx-auto h-12 w-12 bg-destructive/10 rounded-2xl flex items-center justify-center text-destructive mb-4 shadow-sm">
             <ShieldCheck className="h-6 w-6" />
           </div>
-          <h1 className="text-xl font-black text-primary tracking-tight">Create New Passcode</h1>
+          <h1 className="text-xl font-black text-foreground tracking-tight">Create New Passcode</h1>
           <p className="text-xs text-muted-foreground font-bold mt-1">Set a secure, new password for your account.</p>
         </div>
 
@@ -102,13 +102,13 @@ export default function ResetPasswordPage() {
                     required 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-muted border-border h-11 text-xs rounded-xl focus:border-destructive text-primary font-bold w-full pr-10"
+                    className="bg-muted border-border h-11 text-xs rounded-xl focus:border-destructive text-foreground font-bold w-full pr-10"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
@@ -126,7 +126,7 @@ export default function ResetPasswordPage() {
                     required 
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="bg-muted border-border h-11 text-xs rounded-xl focus:border-destructive text-primary font-bold w-full pr-10"
+                    className="bg-muted border-border h-11 text-xs rounded-xl focus:border-destructive text-foreground font-bold w-full pr-10"
                   />
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default function ResetPasswordPage() {
 
         {!completed && (
           <div className="px-8 py-4 bg-muted text-center border-t border-border">
-            <Link href="/login" className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors">&larr; Back to Login</Link>
+            <Link href="/login" className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors">&larr; Back to Login</Link>
           </div>
         )}
       </div>

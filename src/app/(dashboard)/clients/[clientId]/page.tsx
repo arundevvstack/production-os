@@ -177,7 +177,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
   if (isTenantLoading || isClientLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -185,7 +185,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
   if (!client) {
     return (
       <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-primary">Partner Profile Not Found</h2>
+        <h2 className="text-2xl font-bold text-foreground">Partner Profile Not Found</h2>
         <Button variant="link" onClick={() => router.push("/clients")} className="mt-2">Return to Directory</Button>
       </div>
     );
@@ -200,9 +200,9 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-primary">{client.company_name}</h1>
+            <h1 className="text-3xl font-bold text-foreground">{client.company_name}</h1>
             <div className="flex items-center gap-3 mt-1">
-              <Badge className="bg-primary/10 text-primary border-none text-[10px] font-bold uppercase tracking-widest">{client.industry}</Badge>
+              <Badge className="bg-primary/10 text-foreground border-none text-[10px] font-bold uppercase tracking-widest">{client.industry}</Badge>
               <span className="text-muted-foreground text-xs font-medium flex items-center gap-1">
                 <MapPin className="h-3 w-3" /> {client.location || 'Registry Focus'}
               </span>
@@ -221,8 +221,8 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
         <Card className="border-none shadow-sm rounded-[10px] bg-white border-l-4 border-l-primary">
           <CardContent className="pt-6">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Active Work</p>
-            <h4 className="text-2xl font-black text-primary">{activeProjectsStats.count} Projects</h4>
-            <p className="text-[9px] text-primary font-bold mt-1">₹{activeProjectsStats.totalValue.toLocaleString()} Aggregate Value</p>
+            <h4 className="text-2xl font-black text-foreground">{activeProjectsStats.count} Projects</h4>
+            <p className="text-[9px] text-foreground font-bold mt-1">₹{activeProjectsStats.totalValue.toLocaleString()} Aggregate Value</p>
           </CardContent>
         </Card>
         
@@ -264,37 +264,37 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
             <CardContent className="p-8 space-y-6">
               <div className="space-y-5">
                 <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0 shadow-sm border border-primary/5">
+                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
                     <User className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Primary Liaison</p>
-                    <p className="font-bold text-sm text-primary">{client.contact_person || 'Liaison Unassigned'}</p>
+                    <p className="font-bold text-sm text-foreground">{client.contact_person || 'Liaison Unassigned'}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0 shadow-sm border border-primary/5">
+                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
                     <Mail className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Communication</p>
-                    <p className="font-bold text-sm text-primary truncate max-w-[200px]">{client.email || 'No email provided'}</p>
+                    <p className="font-bold text-sm text-foreground truncate max-w-[200px]">{client.email || 'No email provided'}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0 shadow-sm border border-primary/5">
+                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
                     <CreditCard className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">GSTIN Registry</p>
-                    <p className="font-mono font-bold text-xs uppercase text-primary/80">{client.gstin || 'PENDING RECORD'}</p>
+                    <p className="font-mono font-bold text-xs uppercase text-foreground/80">{client.gstin || 'PENDING RECORD'}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4 pt-2">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0 shadow-sm border border-primary/5">
+                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
@@ -307,7 +307,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               <div className="pt-6 border-t space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Vertical Focus</span>
-                  <Badge variant="secondary" className="rounded-lg text-[9px] font-black bg-primary/5 text-primary border-none">
+                  <Badge variant="secondary" className="rounded-lg text-[9px] font-black bg-primary/5 text-foreground border-none">
                     {client.service_vertical || 'General Media'}
                   </Badge>
                 </div>
@@ -327,7 +327,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               Generate a high-premium production strategy tailored for {client.company_name}.
             </p>
             <Link href={`/proposals?source=crm&leadId=${clientId}&companyName=${encodeURIComponent(client.company_name)}&vertical=${encodeURIComponent(client.service_vertical || '')}&industry=${encodeURIComponent(client.industry || '')}`} className="block pt-2">
-              <Button className="w-full bg-white text-primary hover:bg-muted font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
+              <Button className="w-full bg-white text-foreground hover:bg-muted font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
                 Initialize Architect
               </Button>
             </Link>
@@ -345,7 +345,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
             <TabsContent value="history" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {isProjectsLoading ? (
-                <div className="py-24 flex justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>
+                <div className="py-24 flex justify-center"><Loader2 className="h-10 w-10 animate-spin text-foreground opacity-20" /></div>
               ) : projectAnalytics.length === 0 ? (
                 <div className="py-32 text-center bg-white rounded-[10px] border-2 border-dashed border-border px-8">
                   <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
@@ -360,13 +360,13 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                     <Card key={proj.id} className="border-none shadow-sm hover:shadow-md transition-all rounded-[10px] overflow-hidden group bg-white border border-slate-50 flex flex-col">
                       <CardHeader className="bg-muted/50 pb-6 pt-8 px-8 border-b border-white/50">
                         <div className="flex justify-between items-start mb-4">
-                          <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary bg-white px-3">
+                          <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-foreground bg-white px-3">
                             {proj.status?.replace('_', ' ')}
                           </Badge>
-                          <span className="text-[10px] font-black text-primary bg-primary/5 px-2 py-0.5 rounded-full">{proj.progress}%</span>
+                          <span className="text-[10px] font-black text-foreground bg-primary/5 px-2 py-0.5 rounded-full">{proj.progress}%</span>
                         </div>
                         <Link href={`/projects/${proj.id}`}>
-                          <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors cursor-pointer leading-tight">{proj.project_name}</CardTitle>
+                          <CardTitle className="text-xl font-bold group-hover:text-foreground transition-colors cursor-pointer leading-tight">{proj.project_name}</CardTitle>
                         </Link>
                       </CardHeader>
                       <CardContent className="p-8 space-y-8 flex-1 flex flex-col justify-between">
@@ -383,7 +383,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                           <div className="grid grid-cols-2 gap-4">
                             <div className="bg-muted/80 p-4 rounded-[10px] border border-white">
                               <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Billed</p>
-                              <p className="text-sm font-bold text-primary">₹{proj.billed.toLocaleString()}</p>
+                              <p className="text-sm font-bold text-foreground">₹{proj.billed.toLocaleString()}</p>
                             </div>
                             <div className="bg-muted/80 p-4 rounded-[10px] border border-white">
                               <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Burn</p>
@@ -438,7 +438,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                             <span className="text-[10px] font-black text-accent bg-accent/10 px-2 py-0.5 rounded-full">CRM Opportunity</span>
                           </div>
                           <Link href={`/crm/${lead.id}`}>
-                            <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors cursor-pointer leading-tight">
+                            <CardTitle className="text-xl font-bold group-hover:text-foreground transition-colors cursor-pointer leading-tight">
                               {lead.service_vertical || 'General Opportunity'}
                             </CardTitle>
                           </Link>
@@ -452,7 +452,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                             <div className="bg-muted/80 p-5 rounded-[10px] border border-white flex justify-between items-center">
                               <div>
                                 <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Current Focus</p>
-                                <p className="text-sm font-bold text-primary">{lead.industry || 'Media'}</p>
+                                <p className="text-sm font-bold text-foreground">{lead.industry || 'Media'}</p>
                               </div>
                               <div className="text-right">
                                 <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Deal Projection</p>
@@ -504,15 +504,15 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                         </thead>
                         <tbody className="divide-y">
                           {isInvoicesLoading ? (
-                            <tr><td colSpan={5} className="text-center py-16"><Loader2 className="h-8 w-8 animate-spin mx-auto text-primary opacity-20" /></td></tr>
+                            <tr><td colSpan={5} className="text-center py-16"><Loader2 className="h-8 w-8 animate-spin mx-auto text-foreground opacity-20" /></td></tr>
                           ) : invoices?.length === 0 ? (
                             <tr><td colSpan={5} className="px-10 py-24 text-center text-muted-foreground italic text-xs font-bold uppercase tracking-widest opacity-40">No Billing Records Generated.</td></tr>
                           ) : (
                             invoices?.map((inv) => (
                               <tr key={inv.id} className="hover:bg-muted/50 transition-colors group">
-                                <td className="px-10 py-6 font-mono font-bold text-primary">{inv.invoice_number}</td>
+                                <td className="px-10 py-6 font-mono font-bold text-foreground">{inv.invoice_number}</td>
                                 <td className="px-10 py-6 text-muted-foreground font-bold text-xs uppercase tracking-tighter">{inv.issue_date}</td>
-                                <td className="px-10 py-6 font-black text-primary text-xs">₹{inv.total?.toLocaleString()}</td>
+                                <td className="px-10 py-6 font-black text-foreground text-xs">₹{inv.total?.toLocaleString()}</td>
                                 <td className="px-10 py-6">
                                   <Badge variant={inv.payment_status === 'paid' ? 'default' : 'secondary'} className={cn("text-[9px] font-black uppercase px-3 py-1 border-none", inv.payment_status !== 'paid' && "bg-accent/10 text-accent")}>
                                     {inv.payment_status}
@@ -520,7 +520,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                                 </td>
                                 <td className="px-10 py-6 text-right">
                                   <Link href={`/invoices/${inv.id}`}>
-                                    <Button variant="ghost" size="icon" className="h-9 w-9 text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-primary/5 hover:bg-primary hover:text-white rounded-xl">
+                                    <Button variant="ghost" size="icon" className="h-9 w-9 text-foreground opacity-0 group-hover:opacity-100 transition-opacity bg-primary/5 hover:bg-primary hover:text-white rounded-xl">
                                       <ExternalLink className="h-4 w-4" />
                                     </Button>
                                   </Link>

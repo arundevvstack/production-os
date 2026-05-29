@@ -19,7 +19,7 @@ export function StatCard({ title, value, description, icon: Icon, trend, classNa
     <Card className={cn("overflow-hidden border-none shadow-sm bg-white", className)}>
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+          <div className="p-2.5 rounded-xl bg-primary/10 text-foreground">
             <Icon className="h-5 w-5" />
           </div>
           {trend && (

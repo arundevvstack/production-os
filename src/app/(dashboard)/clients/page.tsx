@@ -581,7 +581,7 @@ export default function ClientsPage() {
             <div className="h-8 w-1 bg-destructive rounded-full shadow-lg shadow-red-500/30" />
             <span className="text-[10px] font-black uppercase tracking-[0.25em] text-destructive">DP Media OS</span>
           </div>
-          <h1 className="text-4xl font-black text-primary tracking-tight leading-none">Clients Intelligence Hub</h1>
+          <h1 className="text-4xl font-black text-foreground tracking-tight leading-none">Clients Intelligence Hub</h1>
           <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-2">Unified Relationship Directory & Pipeline</p>
         </div>
         
@@ -590,7 +590,7 @@ export default function ClientsPage() {
             <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Filter company profiles..." 
-              className="pl-10 h-11 w-64 rounded-[10px] bg-white border border-border text-primary placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm" 
+              className="pl-10 h-11 w-64 rounded-[10px] bg-white border border-border text-foreground placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -624,7 +624,7 @@ export default function ClientsPage() {
                 <Icon className="h-4 w-4" />
               </div>
             </div>
-            <div className="text-2xl font-black text-primary tracking-tight">{value}</div>
+            <div className="text-2xl font-black text-foreground tracking-tight">{value}</div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">{sub}</p>
             <div className={cn("absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500",
               color === 'red' ? 'bg-destructive' : color === 'indigo' ? 'bg-accent' : 'bg-emerald-500'
@@ -647,7 +647,7 @@ export default function ClientsPage() {
               "flex items-center gap-2 px-5 h-9 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200",
               activeTab === id
                 ? 'bg-destructive text-white shadow-md shadow-red-500/20'
-                : 'text-muted-foreground hover:text-primary hover:bg-secondary/80'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary/80'
             )}
           >
             <Icon className={cn("h-3.5 w-3.5", id === 'intelligence_hub' && activeTab === id && 'animate-pulse')} />
@@ -686,7 +686,7 @@ export default function ClientsPage() {
                         {client.industry || 'Media'}
                       </span>
                     </div>
-                    <h3 className="font-black text-xl text-primary group-hover:text-destructive transition-colors tracking-tight">
+                    <h3 className="font-black text-xl text-foreground group-hover:text-destructive transition-colors tracking-tight">
                       {client.company_name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-1.5">
@@ -708,7 +708,7 @@ export default function ClientsPage() {
                         <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
                           <User className="h-3 w-3 text-muted-foreground" />
                         </div>
-                        <span className="text-xs text-muted-foreground/80">PoC: <span className="font-bold text-primary">{client.contact_person || 'Unassigned'}</span></span>
+                        <span className="text-xs text-muted-foreground/80">PoC: <span className="font-bold text-foreground">{client.contact_person || 'Unassigned'}</span></span>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
@@ -735,7 +735,7 @@ export default function ClientsPage() {
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="rounded-[10px] w-48 bg-white border border-border text-primary/80 shadow-lg">
+                      <DropdownMenuContent align="end" className="rounded-[10px] w-48 bg-white border border-border text-foreground/80 shadow-lg">
                         <DropdownMenuItem asChild className="rounded-xl hover:bg-muted cursor-pointer">
                           <Link href={`/clients/${client.id}`} className="gap-2"><ExternalLink className="h-3.5 w-3.5 text-muted-foreground" /> Portfolio View</Link>
                         </DropdownMenuItem>
@@ -781,7 +781,7 @@ export default function ClientsPage() {
                         {prospect.industry || 'Media'}
                       </span>
                     </div>
-                    <h3 className="font-black text-xl text-primary tracking-tight">
+                    <h3 className="font-black text-xl text-foreground tracking-tight">
                       {prospect.company_name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-1.5">
@@ -795,7 +795,7 @@ export default function ClientsPage() {
                     <div className="pt-2 space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Projected Contract</span>
-                        <span className="text-sm font-black text-primary">₹{prospect.deal_value?.toLocaleString()}</span>
+                        <span className="text-sm font-black text-foreground">₹{prospect.deal_value?.toLocaleString()}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">PoC</span>
@@ -815,7 +815,7 @@ export default function ClientsPage() {
                   <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-border">
                     <button
                       onClick={() => { setSelectedHubCompany(prospect.company_name); setActiveTab('intelligence_hub'); }}
-                      className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 hover:text-primary bg-muted hover:bg-muted border border-border hover:border-border rounded-xl h-9 px-4 transition-all"
+                      className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 hover:text-foreground bg-muted hover:bg-muted border border-border hover:border-border rounded-xl h-9 px-4 transition-all"
                     >
                       <Sparkles className="h-3.5 w-3.5 text-destructive" /> Enter Hub
                     </button>
@@ -842,7 +842,7 @@ export default function ClientsPage() {
             <div className="absolute -top-16 -right-8 w-48 h-48 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 relative">
               <div>
-                <h2 className="text-xl font-black text-primary tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-destructive" /> Matrix Relationship Cockpit
                 </h2>
                 <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Cross-Module Pipeline Graph Integrations</p>
@@ -853,7 +853,7 @@ export default function ClientsPage() {
                   value={selectedHubCompany}
                   onSelect={(c) => setSelectedHubCompany(c.company_name)}
                   placeholder="Select Client Organization..."
-                  className="bg-white border border-border text-primary rounded-[10px] h-11"
+                  className="bg-white border border-border text-foreground rounded-[10px] h-11"
                   showOnboardOption={false}
                 />
               </div>
@@ -885,7 +885,7 @@ export default function ClientsPage() {
                         <MapPin className="h-4.5 w-4.5 text-destructive shrink-0 mt-0.5" />
                         <div>
                           <span className="text-[9px] font-black uppercase text-muted-foreground block leading-none">Billing Address</span>
-                          <span className="font-bold text-primary block mt-1">{selectedHubGraph.masterProfile?.billing_address || "Registry context pending update."}</span>
+                          <span className="font-bold text-foreground block mt-1">{selectedHubGraph.masterProfile?.billing_address || "Registry context pending update."}</span>
                         </div>
                       </div>
                       
@@ -901,7 +901,7 @@ export default function ClientsPage() {
                         <Activity className="h-4.5 w-4.5 text-destructive shrink-0 mt-0.5" />
                         <div>
                           <span className="text-[9px] font-black uppercase text-muted-foreground block leading-none">Onboarded Category</span>
-                          <span className="font-bold text-primary block mt-1">{selectedHubGraph.masterProfile?.service_vertical || "General Media"}</span>
+                          <span className="font-bold text-foreground block mt-1">{selectedHubGraph.masterProfile?.service_vertical || "General Media"}</span>
                         </div>
                       </div>
                     </div>
@@ -960,7 +960,7 @@ export default function ClientsPage() {
                       {selectedHubGraph.contacts.map((contact, idx) => (
                         <div key={idx} className="p-3 bg-muted hover:bg-muted/50 rounded-xl border border-border space-y-1.5 shadow-sm transition">
                           <div className="flex items-center justify-between text-[11px] font-black">
-                            <span className="text-primary flex items-center gap-1.5"><User className="h-3 w-3 text-muted-foreground" /> {contact.name}</span>
+                            <span className="text-foreground flex items-center gap-1.5"><User className="h-3 w-3 text-muted-foreground" /> {contact.name}</span>
                             <Badge className="bg-secondary text-muted-foreground/80 border-none text-[8px] font-bold">{contact.role}</Badge>
                           </div>
                           <div className="flex items-center gap-2 text-[9px] text-muted-foreground font-medium">
@@ -974,7 +974,7 @@ export default function ClientsPage() {
                     <div className="p-4 bg-muted rounded-xl border border-border/60 space-y-2.5 shrink-0">
                       <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Add Organization Contact</span>
                       <p className="text-[9px] text-muted-foreground leading-relaxed font-medium">New contacts can be registered directly through a new opportunity linked to this organization profile.</p>
-                      <Button onClick={() => setIsQuickOppOpen(true)} className="w-full bg-secondary hover:bg-secondary border border-border text-primary/80 text-[9px] font-black uppercase tracking-wider rounded-xl h-8.5 shadow-sm transition">
+                      <Button onClick={() => setIsQuickOppOpen(true)} className="w-full bg-secondary hover:bg-secondary border border-border text-foreground/80 text-[9px] font-black uppercase tracking-wider rounded-xl h-8.5 shadow-sm transition">
                         Launch Lead Form
                       </Button>
                     </div>
@@ -1004,8 +1004,8 @@ export default function ClientsPage() {
                         selectedHubGraph.activeOpps.map((opp) => (
                           <div key={opp.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border flex items-center justify-between gap-3 shadow-sm transition">
                             <div className="space-y-1">
-                              <span className="text-xs font-bold text-primary block">{opp.service_vertical}</span>
-                              <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">Budget: <strong className="text-primary/80">₹{opp.deal_value?.toLocaleString()}</strong></span>
+                              <span className="text-xs font-bold text-foreground block">{opp.service_vertical}</span>
+                              <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">Budget: <strong className="text-foreground/80">₹{opp.deal_value?.toLocaleString()}</strong></span>
                             </div>
                             <Badge className="bg-accent/10 text-accent border border-accent/20 text-[8px] font-black uppercase">{opp.stage}</Badge>
                           </div>
@@ -1036,7 +1036,7 @@ export default function ClientsPage() {
                         selectedHubGraph.relatedProposals.map((prop) => (
                           <div key={prop.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border flex items-center justify-between gap-3 shadow-sm transition">
                             <div className="space-y-1">
-                              <span className="text-xs font-bold text-primary block">{prop.title}</span>
+                              <span className="text-xs font-bold text-foreground block">{prop.title}</span>
                               <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">{prop.proposal_number}</span>
                             </div>
                             <Badge className={cn("px-1.5 py-0.5 rounded text-[8px] font-black uppercase border",
@@ -1069,7 +1069,7 @@ export default function ClientsPage() {
                         selectedHubGraph.relatedProjects.map((proj) => (
                           <div key={proj.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border space-y-3.5 shadow-sm transition">
                             <div className="flex justify-between items-center">
-                              <span className="text-xs font-bold text-primary">{proj.project_name}</span>
+                              <span className="text-xs font-bold text-foreground">{proj.project_name}</span>
                               <Badge className="bg-white border border-border text-muted-foreground text-[8px] font-bold uppercase">{proj.status}</Badge>
                             </div>
                             
@@ -1112,8 +1112,8 @@ export default function ClientsPage() {
                         selectedHubGraph.relatedInvoices.map((inv) => (
                           <div key={inv.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border flex items-center justify-between gap-3 shadow-sm transition">
                             <div className="space-y-1">
-                              <span className="text-xs font-bold text-primary block">{inv.invoice_number}</span>
-                              <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">Total: <strong className="text-primary/80">₹{inv.total?.toLocaleString()}</strong></span>
+                              <span className="text-xs font-bold text-foreground block">{inv.invoice_number}</span>
+                              <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">Total: <strong className="text-foreground/80">₹{inv.total?.toLocaleString()}</strong></span>
                             </div>
                             <Badge className={inv.payment_status === 'paid' ? "bg-emerald-50 text-emerald-600 border border-emerald-100 text-[8px] font-black" : "bg-destructive/10 text-destructive border-red-100 text-[8px] font-black"}>
                               {inv.payment_status}
@@ -1139,9 +1139,9 @@ export default function ClientsPage() {
 
       {/* QUICK ADD OPPORTUNITY MODAL (HUB ACCESSORY) */}
       <Dialog open={isQuickOppOpen} onOpenChange={setIsQuickOppOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-[10px] bg-white border border-slate-250 text-primary shadow-2xl">
+        <DialogContent className="sm:max-w-[425px] rounded-[10px] bg-white border border-slate-250 text-foreground shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-2xl font-black text-primary">
+            <DialogTitle className="flex items-center gap-2 text-2xl font-black text-foreground">
               <Sparkles className="h-6 w-6 text-destructive" />
               Create Sales Lead
             </DialogTitle>
@@ -1156,10 +1156,10 @@ export default function ClientsPage() {
                 value={quickOpp.service_vertical} 
                 onValueChange={(val) => setQuickOpp({...quickOpp, service_vertical: val, sub_vertical: CONTENT_VERTICALS.find(v => v.name === val)?.services[0] || ""})}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-primary">
+                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-foreground">
                   <SelectValue placeholder="Select vertical" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-border text-primary/80">
+                <SelectContent className="bg-white border border-border text-foreground/80">
                   {CONTENT_VERTICALS.map(v => (
                     <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-destructive focus:text-white">{v.name}</SelectItem>
                   ))}
@@ -1173,10 +1173,10 @@ export default function ClientsPage() {
                 value={quickOpp.sub_vertical} 
                 onValueChange={(val) => setQuickOpp({...quickOpp, sub_vertical: val})}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-primary">
+                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-foreground">
                   <SelectValue placeholder="Select service" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-border text-primary/80">
+                <SelectContent className="bg-white border border-border text-foreground/80">
                   {CONTENT_VERTICALS.find(v => v.name === quickOpp.service_vertical)?.services.map(s => (
                     <SelectItem key={s} value={s} className="text-xs focus:bg-destructive focus:text-white">{s}</SelectItem>
                   ))}
@@ -1192,16 +1192,16 @@ export default function ClientsPage() {
                   placeholder="250000" 
                   value={quickOpp.deal_value}
                   onChange={(e) => setQuickOpp({...quickOpp, deal_value: e.target.value})}
-                  className="rounded-xl h-11 bg-white border-border text-primary"
+                  className="rounded-xl h-11 bg-white border-border text-foreground"
                 />
               </div>
               <div className="space-y-2">
                 <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Stage</Label>
                 <Select onValueChange={(val) => setQuickOpp({...quickOpp, stage: val})} value={quickOpp.stage}>
-                  <SelectTrigger className="rounded-xl h-11 bg-white border-border text-primary">
+                  <SelectTrigger className="rounded-xl h-11 bg-white border-border text-foreground">
                     <SelectValue placeholder="Select stage" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-border text-primary/80">
+                  <SelectContent className="bg-white border border-border text-foreground/80">
                     <SelectItem value="lead" className="text-xs focus:bg-destructive focus:text-white">Lead</SelectItem>
                     <SelectItem value="contact" className="text-xs focus:bg-destructive focus:text-white">Contacted</SelectItem>
                     <SelectItem value="proposal" className="text-xs focus:bg-destructive focus:text-white">Proposal Sent</SelectItem>
@@ -1222,16 +1222,16 @@ export default function ClientsPage() {
 
       {/* ORIGINAL ONBOARD CLIENT DIALOG (FULLY PRESERVED) */}
       <Dialog open={isOnboardOpen} onOpenChange={(open) => !open && resetOnboarding()}>
-        <DialogContent className="sm:max-w-[1000px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] max-h-[900px] flex flex-col bg-white text-primary">
+        <DialogContent className="sm:max-w-[1000px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] max-h-[900px] flex flex-col bg-white text-foreground">
           <div className="flex flex-col flex-1 min-h-0 bg-[#F8FAFC]">
             {/* Header - Fixed Height */}
-            <div className="p-8 border-b border-border bg-white flex items-center justify-between shrink-0 text-primary">
+            <div className="p-8 border-b border-border bg-white flex items-center justify-between shrink-0 text-foreground">
               <div className="flex items-center gap-4">
                 <div className="h-12 w-12 bg-destructive rounded-[10px] flex items-center justify-center text-white shadow-lg">
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-2xl font-black text-primary">Add New Client</DialogTitle>
+                  <DialogTitle className="text-2xl font-black text-foreground">Add New Client</DialogTitle>
                   <DialogDescription className="text-muted-foreground text-xs mt-0.5">Enter client details and select services.</DialogDescription>
                 </div>
               </div>
@@ -1254,16 +1254,16 @@ export default function ClientsPage() {
                         value={newClient.company_name}
                         onChange={(e) => setNewClient({...newClient, company_name: e.target.value})}
                         required
-                        className="rounded-xl h-12 bg-white border-border text-primary"
+                        className="rounded-xl h-12 bg-white border-border text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="industry" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Industry</Label>
                       <Select onValueChange={(val) => setNewClient({...newClient, industry: val})} value={newClient.industry}>
-                        <SelectTrigger className="rounded-xl h-12 bg-white border-border text-primary">
+                        <SelectTrigger className="rounded-xl h-12 bg-white border-border text-foreground">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="bg-white border border-slate-250 text-primary/80">
+                        <SelectContent className="bg-white border border-slate-250 text-foreground/80">
                           {INDUSTRIES.map(i => <SelectItem key={i} value={i} className="text-xs focus:bg-destructive focus:text-white">{i}</SelectItem>)}
                         </SelectContent>
                       </Select>
@@ -1277,7 +1277,7 @@ export default function ClientsPage() {
                           placeholder="e.g. Sarah Jenkins" 
                           value={newClient.contact_person}
                           onChange={(e) => setNewClient({...newClient, contact_person: e.target.value})}
-                          className="rounded-xl h-12 pl-10 bg-white border-border text-primary"
+                          className="rounded-xl h-12 pl-10 bg-white border-border text-foreground"
                         />
                       </div>
                     </div>
@@ -1291,7 +1291,7 @@ export default function ClientsPage() {
                           placeholder="poc@client.com" 
                           value={newClient.email}
                           onChange={(e) => setNewClient({...newClient, email: e.target.value})}
-                          className="rounded-xl h-12 pl-10 bg-white border-border text-primary"
+                          className="rounded-xl h-12 pl-10 bg-white border-border text-foreground"
                         />
                       </div>
                     </div>
@@ -1302,7 +1302,7 @@ export default function ClientsPage() {
                         placeholder="e.g. 22AAAAA0000A1Z5" 
                         value={newClient.gstin}
                         onChange={(e) => setNewClient({...newClient, gstin: e.target.value})}
-                        className="rounded-xl h-12 uppercase font-mono bg-white border-border text-primary"
+                        className="rounded-xl h-12 uppercase font-mono bg-white border-border text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
@@ -1312,7 +1312,7 @@ export default function ClientsPage() {
                         placeholder="Complete billing address for invoices..." 
                         value={newClient.billing_address}
                         onChange={(e) => setNewClient({...newClient, billing_address: e.target.value})}
-                        className="rounded-xl min-h-[100px] bg-white border-border text-primary"
+                        className="rounded-xl min-h-[100px] bg-white border-border text-foreground"
                       />
                     </div>
                   </div>
@@ -1339,7 +1339,7 @@ export default function ClientsPage() {
                                 <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center text-white", vertical.color)}>
                                   <vertical.icon className="h-4 w-4" />
                                 </div>
-                                <span className="text-[9px] font-black leading-tight uppercase tracking-tight text-primary">{vertical.name}</span>
+                                <span className="text-[9px] font-black leading-tight uppercase tracking-tight text-foreground">{vertical.name}</span>
                               </div>
                             </Card>
                           ))}
@@ -1388,9 +1388,9 @@ export default function ClientsPage() {
                   <aside className="w-80 border-l border-border bg-white flex flex-col shrink-0 min-h-0 overflow-hidden">
                     <div className="p-6 border-b border-border shrink-0">
                       <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Scope Synthesis</h4>
-                      <p className="text-xs font-bold text-primary">Client Profile Summary</p>
+                      <p className="text-xs font-bold text-foreground">Client Profile Summary</p>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6 custom-scrollbar min-h-0 text-primary/80">
+                    <div className="flex-1 overflow-y-auto p-6 custom-scrollbar min-h-0 text-foreground/80">
                       <div className="space-y-6">
                         {totalServicesCount === 0 ? (
                            <div className="text-center py-12 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">No services defined</div>
@@ -1468,7 +1468,7 @@ export default function ClientsPage() {
 
       {/* Cascading Archive Alert Dialog */}
       <AlertDialog open={!!clientToArchive} onOpenChange={(open) => !open && setClientToArchive(null)}>
-        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-primary shadow-2xl">
+        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-foreground shadow-2xl">
           <AlertDialogHeader>
             <div className="h-12 w-12 bg-destructive/10 rounded-[10px] flex items-center justify-center text-destructive mb-4">
               <Archive className="h-6 w-6" />

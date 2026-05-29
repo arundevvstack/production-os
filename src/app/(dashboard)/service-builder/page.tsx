@@ -115,7 +115,7 @@ export default function ServiceBuilderPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary">Service Builder</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground">Service Builder</h1>
         <p className="text-muted-foreground flex items-center gap-2">
           <Zap className="h-4 w-4 text-accent" /> Architect your production scope and generate a professional project brief.
         </p>
@@ -194,12 +194,12 @@ export default function ServiceBuilderPage() {
                           <div className="flex-1">
                             <p className={cn(
                               "text-xs font-bold transition-colors",
-                              isSelected ? "text-primary" : "text-muted-foreground/80 group-hover:text-primary"
+                              isSelected ? "text-foreground" : "text-muted-foreground/80 group-hover:text-foreground"
                             )}>
                               {service}
                             </p>
                           </div>
-                          {isSelected && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                          {isSelected && <CheckCircle2 className="h-4 w-4 text-foreground" />}
                         </div>
                       );
                     })}
@@ -276,7 +276,7 @@ export default function ServiceBuilderPage() {
                   <span className="text-xl font-black text-accent">{totalSelectedCount}</span>
                 </div>
                 <Button 
-                  className="w-full h-14 rounded-[10px] bg-white text-primary hover:bg-muted font-black uppercase text-xs tracking-widest gap-3 shadow-xl"
+                  className="w-full h-14 rounded-[10px] bg-white text-foreground hover:bg-muted font-black uppercase text-xs tracking-widest gap-3 shadow-xl"
                   onClick={handleLaunchProject}
                 >
                   Confirm Brief & Launch <ChevronRight className="h-4 w-4" />

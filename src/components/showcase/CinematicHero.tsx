@@ -39,7 +39,7 @@ export function CinematicHero({ onRunSimulation }: { onRunSimulation: () => void
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary dark:text-zinc-50 mb-6 leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground dark:text-zinc-50 mb-6 leading-tight">
             The Autonomous Operating System <br className="hidden md:block" />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-500 dark:from-blue-400 dark:to-emerald-400">
               For AI-Native Creative Infrastructure
@@ -59,7 +59,7 @@ export function CinematicHero({ onRunSimulation }: { onRunSimulation: () => void
               onClick={handleRun}
               disabled={isSimulating}
               size="lg"
-              className="h-14 px-8 text-lg rounded-full shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] bg-primary hover:bg-primary text-white dark:bg-muted dark:text-primary dark:hover:bg-white transition-all duration-300 gap-3 group"
+              className="h-14 px-8 text-lg rounded-full shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] bg-primary hover:bg-primary text-white dark:bg-muted dark:text-foreground dark:hover:bg-white transition-all duration-300 gap-3 group"
             >
               {isSimulating ? (
                 <>

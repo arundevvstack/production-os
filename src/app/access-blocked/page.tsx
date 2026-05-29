@@ -35,7 +35,7 @@ export default function AccessBlockedPage() {
       <div className="w-16 h-16 bg-destructive/10 text-destructive rounded-full flex items-center justify-center mb-6">
         <Ban className="h-8 w-8" />
       </div>
-      <h1 className="text-2xl font-black text-primary tracking-tight mb-3">Access Suspended</h1>
+      <h1 className="text-2xl font-black text-foreground tracking-tight mb-3">Access Suspended</h1>
       <p className="text-muted-foreground font-medium max-w-md mb-8">
         Your access to MediaOS has been suspended by an administrator. Please contact support if you believe this is an error.
       </p>

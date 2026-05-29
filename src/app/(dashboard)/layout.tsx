@@ -52,7 +52,7 @@ export default function DashboardLayout({
   if (isLoading || !user || (profile?.status === 'suspended') || (profile?.status === 'pending' && !isSuperAdmin) || profile?.role_id === 'TALENT' || profile?.role_id === 'CLIENT') {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -66,7 +66,7 @@ export default function DashboardLayout({
                 <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 text-muted-foreground/80" />
                 <div className="flex items-center gap-2 ml-2">
                     <div className="h-9 w-9 bg-primary rounded-xl flex items-center justify-center text-white font-black text-[10px] shadow-lg shadow-primary/20">DP</div>
-                    <span className="font-black text-sm tracking-tight text-primary">Media<span className="text-primary">OS</span></span>
+                    <span className="font-black text-sm tracking-tight text-foreground">Media<span className="text-foreground">OS</span></span>
                 </div>
             </header>
             <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto custom-scrollbar relative z-0">
