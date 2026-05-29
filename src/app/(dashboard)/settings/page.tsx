@@ -351,7 +351,6 @@ function AccountCenterContent() {
                     ref={fileInputRef} 
                     accept="image/*"
                     onChange={handleImageUpload}
-                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                   <Avatar className={cn(
                     "h-24 w-24 ring-4 ring-white shadow-xl transition-all",
@@ -362,18 +361,16 @@ function AccountCenterContent() {
                       {profileData.name.substring(0,2).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
-                  {tenantProfile?.role_id !== 'EMPLOYEE' && (
-                    <div className={cn(
-                      "absolute inset-0 bg-black/40 rounded-full flex items-center justify-center transition-opacity",
-                      isUploading ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                    )}>
-                      {isUploading ? (
-                        <Loader2 className="h-6 w-6 text-white animate-spin" />
-                      ) : (
-                        <Camera className="h-6 w-6 text-white" />
-                      )}
-                    </div>
-                  )}
+                  <div className={cn(
+                    "absolute inset-0 bg-black/40 rounded-full flex items-center justify-center transition-opacity",
+                    isUploading ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  )}>
+                    {isUploading ? (
+                      <Loader2 className="h-6 w-6 text-white animate-spin" />
+                    ) : (
+                      <Camera className="h-6 w-6 text-white" />
+                    )}
+                  </div>
                 </div>
                 <div>
                   <CardTitle className="text-2xl font-bold">{profileData.name || "User"}</CardTitle>
@@ -392,7 +389,6 @@ function AccountCenterContent() {
                     onChange={(e) => setProfileData({...profileData, name: e.target.value})} 
                     className="rounded-xl" 
                     placeholder="Enter your name"
-                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                 </div>
                 <div className="space-y-2">
@@ -402,7 +398,6 @@ function AccountCenterContent() {
                     onChange={(e) => setProfileData({...profileData, avatar: e.target.value})} 
                     className="rounded-xl" 
                     placeholder="https://..."
-                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
@@ -412,13 +407,10 @@ function AccountCenterContent() {
                     onChange={(e) => setProfileData({...profileData, bio: e.target.value})} 
                     className="rounded-xl" 
                     placeholder="Tell us about yourself"
-                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                 </div>
               </div>
-              {tenantProfile?.role_id !== 'EMPLOYEE' && (
-                <Button onClick={handleSaveProfile} className="rounded-xl px-8 font-bold">Save Profile</Button>
-              )}
+              <Button onClick={handleSaveProfile} className="rounded-xl px-8 font-bold">Save Profile</Button>
             </CardContent>
           </Card>
         </TabsContent>
