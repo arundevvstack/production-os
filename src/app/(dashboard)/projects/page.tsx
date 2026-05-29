@@ -121,6 +121,20 @@ export default function ProjectsPage() {
     orderBy: { company_name: 'asc' }
   });
 
+  // Fetch actual Clients
+  const { data: clients } = useSupabaseCollection('Client', {
+    where: { company_id: companyId },
+    orderBy: { name: 'asc' }
+  });
+
+  // Combine names for autocomplete
+  const combinedClientNames = useMemo(() => {
+    const names = new Set<string>();
+    leads?.forEach(l => { if (l.company_name) names.add(l.company_name); });
+    clients?.forEach(c => { if (c.name) names.add(c.name); });
+    return Array.from(names).sort();
+  }, [leads, clients]);
+
   // Filter Logic
   const filteredProjects = useMemo(() => {
     if (!projects) return [];
@@ -474,7 +488,7 @@ export default function ProjectsPage() {
                           <input
                             list="client-list-wiz"
                             type="text"
-                            placeholder="Type to search or add a client..."
+                            placeholder="Type to search clients, leads, or add a custom name..."
                             value={newProject.client_name}
                             onChange={(e) => {
                               const typed = e.target.value;
@@ -494,7 +508,7 @@ export default function ProjectsPage() {
                             className="h-12 w-full rounded-xl border border-slate-200 bg-white shadow-sm font-bold px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40"
                           />
                           <datalist id="client-list-wiz">
-                            {leads?.map(l => l.company_name).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).map(name => (
+                            {combinedClientNames.map(name => (
                               <option key={name} value={name} />
                             ))}
                           </datalist>
