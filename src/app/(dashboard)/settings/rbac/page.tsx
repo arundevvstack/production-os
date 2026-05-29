@@ -332,22 +332,30 @@ export default function RBACPage() {
 
         {/* Right Side: Role Matrix */}
         <div className="space-y-6">
-          <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-primary text-white relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 relative z-10">
-              <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
-                <Lock className="h-5 w-5 text-foreground" /> Active Access Matrix
+          <Card className="border border-white/60 shadow-premium rounded-[10px] overflow-hidden bg-white/40 backdrop-blur-2xl relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+            <CardHeader className="p-6 relative z-10 border-b border-white/40">
+              <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2 text-foreground">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Lock className="h-4 w-4 text-primary" />
+                </div>
+                Active Access Matrix
               </CardTitle>
-              <CardDescription className="text-muted-foreground font-medium">Standardized SaaS roles automatically enforced at both routing and database triggers.</CardDescription>
+              <CardDescription className="text-muted-foreground font-medium mt-2">
+                Standardized SaaS roles automatically enforced at both routing and database triggers.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="p-6 space-y-6 relative z-10 pt-0">
+            <CardContent className="p-6 space-y-4 relative z-10">
               {ENTERPRISE_ROLES.map((role) => (
-                <div key={role.id} className="p-4 rounded-[10px] bg-white/5 border border-white/10 hover:border-white/20 transition-all space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-black tracking-wider uppercase text-slate-300">{role.name}</span>
-                    <Badge className="bg-primary/20 text-foreground text-[8px] font-black border-none tracking-widest uppercase">{role.id}</Badge>
+                <div key={role.id} className="p-4 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 space-y-2 group relative overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
+                  <div className="flex items-center justify-between pl-2">
+                    <span className="text-xs font-black tracking-wider uppercase text-foreground">{role.name}</span>
+                    <Badge className="bg-primary/10 text-primary text-[9px] font-black border-none tracking-widest uppercase group-hover:bg-primary/20 transition-colors">
+                      {role.id.replace('_', ' ')}
+                    </Badge>
                   </div>
-                  <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">{role.description}</p>
+                  <p className="text-[11px] text-muted-foreground font-medium leading-relaxed pl-2">{role.description}</p>
                 </div>
               ))}
             </CardContent>
