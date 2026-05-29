@@ -257,7 +257,7 @@ export default function DashboardPage() {
               <Building2 className="h-4 w-4 text-foreground" /> {company?.name || 'Operational'} · Enterprise Command Center
             </p>
           </div>
-          <span className="px-3 py-1.5 bg-white border rounded-full shadow-sm text-xs font-bold text-muted-foreground">{format(new Date(), 'EEE, dd MMM yyyy')}</span>
+          <span className="px-3 py-1.5 bg-white dark:bg-slate-900 border rounded-full shadow-sm text-xs font-bold text-muted-foreground">{format(new Date(), 'EEE, dd MMM yyyy')}</span>
         </div>
 
         {/* 6 KPI Tiles */}
@@ -270,7 +270,7 @@ export default function DashboardPage() {
             { label: 'Crew Force', value: `${companyUsers?.length || 0}`, icon: Users, color: 'text-amber-600', bg: 'bg-amber-50', sub: `${stats.pendingUsers} pending` },
             { label: 'Overdue', value: `${overdueProjects}`, icon: AlertTriangle, color: overdueProjects > 0 ? 'text-accent' : 'text-muted-foreground', bg: overdueProjects > 0 ? 'bg-accent/10' : 'bg-muted', sub: overdueProjects > 0 ? 'Needs attention' : 'All on track' },
           ].map((kpi) => (
-            <Card key={kpi.label} className="border-none shadow-premium rounded-[12px] bg-white hover:-translate-y-0.5 transition-all duration-300">
+            <Card key={kpi.label} className="border-none shadow-premium rounded-[12px] bg-white dark:bg-slate-900 hover:-translate-y-0.5 transition-all duration-300">
               <CardContent className="p-5">
                 <div className={`h-9 w-9 rounded-[10px] ${kpi.bg} flex items-center justify-center mb-3`}>
                   <kpi.icon className={`h-5 w-5 ${kpi.color}`} />
@@ -285,7 +285,7 @@ export default function DashboardPage() {
 
         {/* Project Health Table + CRM Pipeline */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+          <Card className="lg:col-span-2 border-none shadow-premium rounded-[12px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="border-b p-6 flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
@@ -367,7 +367,7 @@ export default function DashboardPage() {
           </Card>
 
           {/* CRM Pipeline */}
-          <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+          <Card className="border-none shadow-premium rounded-[12px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="border-b p-6">
               <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
                 <div className="h-7 w-7 rounded-lg bg-violet-100 flex items-center justify-center">
@@ -415,7 +415,7 @@ export default function DashboardPage() {
         {/* Crew Roster + Revenue Chart + Audit Logs */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Crew Roster */}
-          <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+          <Card className="border-none shadow-premium rounded-[12px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="border-b p-6">
               <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
                 <div className="h-7 w-7 rounded-lg bg-amber-100 flex items-center justify-center">
@@ -460,7 +460,7 @@ export default function DashboardPage() {
                   {companyUsers?.filter(u => u.status === 'pending').map((member) => {
                     const dispName = member.fullName || member.full_name || member.email?.split('@')[0] || 'New Crew';
                     return (
-                      <div key={member.id} className="flex items-center justify-between p-2 rounded-lg bg-white border">
+                      <div key={member.id} className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-900 border">
                         <div className="flex items-center gap-2 min-w-0">
                           <Avatar className="h-7 w-7 shrink-0">
                             <AvatarFallback className="bg-accent/10 text-accent text-[9px] font-black">{dispName.substring(0, 2).toUpperCase()}</AvatarFallback>
@@ -477,7 +477,7 @@ export default function DashboardPage() {
           </Card>
 
           {/* Revenue Chart */}
-          <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+          <Card className="border-none shadow-premium rounded-[12px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="p-6 border-b">
               <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
                 <div className="h-7 w-7 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -526,9 +526,9 @@ export default function DashboardPage() {
           </Card>
 
           {/* Audit Logs */}
-          <Card className="border border-white/60 shadow-premium rounded-[12px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+          <Card className="border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[12px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 pb-4 border-b border-white/40 relative z-10">
+            <CardHeader className="p-6 pb-4 border-b border-white/40 dark:border-slate-700/40 relative z-10">
               <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
                 <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Activity className="h-3.5 w-3.5 text-primary" />
@@ -542,7 +542,7 @@ export default function DashboardPage() {
               ) : (
                 <div className="space-y-3 max-h-[320px] overflow-y-auto custom-scrollbar pr-1">
                   {activityLogs?.map((log) => (
-                    <div key={log.id} className="text-xs space-y-1.5 p-3 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md transition-all group relative overflow-hidden">
+                    <div key={log.id} className="text-xs space-y-1.5 p-3 rounded-[10px] bg-white/60 dark:bg-slate-900/60 border border-white/60 dark:border-slate-700/60 hover:shadow-md transition-all group relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
                       <div className="flex justify-between items-center pl-2">
                         <span className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">{log.user_name}</span>
@@ -579,7 +579,7 @@ export default function DashboardPage() {
 
         {/* Manager KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
@@ -588,7 +588,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
@@ -597,7 +597,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Users className="h-6 w-6" /></div>
               <div>
@@ -606,7 +606,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><UserCheck className="h-6 w-6" /></div>
               <div>
@@ -619,7 +619,7 @@ export default function DashboardPage() {
 
         {/* Manager Workspace Active Projects */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
+          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="p-6 border-b">
               <CardTitle className="text-lg font-black text-foreground">Operational Focus Units</CardTitle>
             </CardHeader>
@@ -651,9 +651,9 @@ export default function DashboardPage() {
           </Card>
 
           {/* Pending crew panel for managers */}
-          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+          <Card className="border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[10px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 border-b border-white/40 relative z-10">
+            <CardHeader className="p-6 border-b border-white/40 dark:border-slate-700/40 relative z-10">
               <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <UserCheck className="h-4 w-4 text-primary" />
@@ -667,7 +667,7 @@ export default function DashboardPage() {
               ) : (
                 <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
                   {companyUsers?.filter(u => u.status === 'pending').map((member) => (
-                    <div key={member.id} className="flex justify-between items-center p-3 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md transition-all group relative overflow-hidden">
+                    <div key={member.id} className="flex justify-between items-center p-3 rounded-[10px] bg-white/60 dark:bg-slate-900/60 border border-white/60 dark:border-slate-700/60 hover:shadow-md transition-all group relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
                       <div className="min-w-0 pl-2">
                         <p className="text-xs font-black text-foreground truncate">{member.fullName}</p>
@@ -703,7 +703,7 @@ export default function DashboardPage() {
 
         {/* Employee KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
@@ -712,7 +712,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
@@ -721,7 +721,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Calendar className="h-6 w-6" /></div>
               <div>
@@ -734,7 +734,7 @@ export default function DashboardPage() {
 
         {/* Employee Assigned Objectives backlogs */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
+          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="p-6 border-b">
               <CardTitle className="text-lg font-black text-foreground">My Task Backlog</CardTitle>
               <CardDescription className="text-muted-foreground font-medium">Clear assigned milestones inside production roadmaps.</CardDescription>
@@ -761,7 +761,7 @@ export default function DashboardPage() {
           </Card>
 
           {/* Pending Reviews Panel */}
-          <Card className="border-none shadow-premium rounded-[10px] bg-white overflow-hidden relative">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden relative">
             <CardHeader className="p-6 relative z-10 border-b border-border bg-muted">
               <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
                 <Activity className="h-5 w-5 text-foreground" /> Pending Asset Reviews
@@ -812,7 +812,7 @@ export default function DashboardPage() {
 
         {/* Accounts KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-emerald-50 text-emerald-600 rounded-[10px]"><IndianRupee className="h-6 w-6" /></div>
               <div>
@@ -821,7 +821,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Layers className="h-6 w-6" /></div>
               <div>
@@ -830,7 +830,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Receipt className="h-6 w-6" /></div>
               <div>
@@ -839,7 +839,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><TrendingUp className="h-6 w-6" /></div>
               <div>
@@ -852,7 +852,7 @@ export default function DashboardPage() {
 
         {/* Financial Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] overflow-hidden bg-white">
+          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] overflow-hidden bg-white dark:bg-slate-900">
             <CardHeader className="px-8 pt-8">
               <CardTitle className="text-xl font-black tracking-tight text-foreground">Revenue Ledger</CardTitle>
               <CardDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Global billing performance</CardDescription>
@@ -875,9 +875,9 @@ export default function DashboardPage() {
           </Card>
 
           {/* Secure lock warning for accounts */}
-          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+          <Card className="border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[10px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 border-b border-white/40 relative z-10">
+            <CardHeader className="p-6 border-b border-white/40 dark:border-slate-700/40 relative z-10">
               <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Lock className="h-4 w-4 text-primary" />
@@ -919,7 +919,7 @@ export default function DashboardPage() {
 
         {/* Marketing KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Target className="h-6 w-6" /></div>
               <div>
@@ -928,7 +928,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
@@ -937,7 +937,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><FileText className="h-6 w-6" /></div>
               <div>
@@ -946,7 +946,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
+          <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-emerald-50 text-emerald-600 rounded-[10px]"><CheckCircle2 className="h-6 w-6" /></div>
               <div>
@@ -959,7 +959,7 @@ export default function DashboardPage() {
 
         {/* Sales Funnel List */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
+          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="p-6 border-b">
               <CardTitle className="text-lg font-black text-foreground">Growth Opportunities</CardTitle>
               <CardDescription className="text-muted-foreground font-medium">Latest incoming prospects in the sales pipeline.</CardDescription>
@@ -992,9 +992,9 @@ export default function DashboardPage() {
           </Card>
 
           {/* Secure lock warning for sales */}
-          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+          <Card className="border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[10px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 border-b border-white/40 relative z-10">
+            <CardHeader className="p-6 border-b border-white/40 dark:border-slate-700/40 relative z-10">
               <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Lock className="h-4 w-4 text-primary" />

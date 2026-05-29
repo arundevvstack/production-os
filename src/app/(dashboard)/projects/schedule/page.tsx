@@ -227,7 +227,7 @@ export default function ProductionSchedulePage() {
         <div className="flex items-center gap-3">
           {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) && (
             <>
-              <Button variant="outline" className="rounded-[10px] border-border bg-white shadow-sm font-bold text-xs h-12" onClick={() => setIsNewResourceOpen(true)}>
+              <Button variant="outline" className="rounded-[10px] border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-xs h-12" onClick={() => setIsNewResourceOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" /> Register Item
               </Button>
               <Button className="rounded-[10px] shadow-lg shadow-primary/20 font-bold text-xs h-12 gap-2" onClick={() => setIsBookResourceOpen(true)}>
@@ -240,7 +240,7 @@ export default function ProductionSchedulePage() {
 
       {/* Utilization Heatmaps / Stats Panels */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-2">
-        <Card className="premium-card bg-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
+        <Card className="premium-card bg-white dark:bg-slate-900 shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
           <div className="space-y-2">
             <p className="text-[10px] font-black uppercase text-muted-foreground tracking-wider">Utilization index</p>
             <div className="h-1 w-8 bg-primary rounded-full"></div>
@@ -254,7 +254,7 @@ export default function ProductionSchedulePage() {
           </div>
         </Card>
 
-        <Card className="premium-card bg-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
+        <Card className="premium-card bg-white dark:bg-slate-900 shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
           <div className="space-y-2">
             <p className="text-[10px] font-black uppercase text-muted-foreground tracking-wider">Inventory Pool</p>
             <div className="h-1 w-8 bg-accent rounded-full"></div>
@@ -268,7 +268,7 @@ export default function ProductionSchedulePage() {
           </p>
         </Card>
 
-        <Card className="premium-card bg-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
+        <Card className="premium-card bg-white dark:bg-slate-900 shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
           <div className="space-y-2">
             <p className="text-[10px] font-black uppercase text-muted-foreground tracking-wider">Servicing & Maintenance</p>
             <div className="h-1 w-8 bg-accent rounded-full"></div>
@@ -309,7 +309,7 @@ export default function ProductionSchedulePage() {
 
           <div className="space-y-4">
             {bookings?.length === 0 ? (
-              <Card className="border-2 border-dashed flex flex-col items-center justify-center p-24 text-muted-foreground bg-white rounded-[10px]">
+              <Card className="border-2 border-dashed flex flex-col items-center justify-center p-24 text-muted-foreground bg-white dark:bg-slate-900 rounded-[10px]">
                 <CalendarIcon className="h-12 w-12 mb-4 opacity-15" />
                 <p className="font-bold text-sm uppercase tracking-widest text-muted-foreground">No scheduled gear reservations.</p>
                 <Button variant="link" className="mt-2 text-foreground font-bold text-xs" onClick={() => setIsBookResourceOpen(true)}>Book first item</Button>
@@ -319,7 +319,7 @@ export default function ProductionSchedulePage() {
                 const linkedResource = resources?.find(r => r.id === booking.resource_id);
                 const linkedProject = projects?.find(p => p.id === booking.project_id);
                 return (
-                  <Card key={booking.id} className="border-none shadow-sm hover:shadow-md transition-all overflow-hidden rounded-[10px] bg-white">
+                  <Card key={booking.id} className="border-none shadow-sm hover:shadow-md transition-all overflow-hidden rounded-[10px] bg-white dark:bg-slate-900">
                     <div className="flex flex-col sm:flex-row">
                       <div className="bg-muted p-6 sm:w-48 flex flex-col justify-center items-center text-center border-r border-border">
                         <span className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-1.5">
@@ -374,7 +374,7 @@ export default function ProductionSchedulePage() {
             <Sliders className="h-6 w-6 text-accent" /> Resource Pool
           </h3>
 
-          <Card className="border-none shadow-xl rounded-[10px] bg-white overflow-hidden p-6">
+          <Card className="border-none shadow-xl rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden p-6">
             <div className="divide-y divide-slate-100">
               {resources?.length === 0 ? (
                 <div className="py-12 text-center text-xs text-muted-foreground italic">No registered assets.</div>

@@ -20,7 +20,7 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
             <p className="text-xs font-bold mt-4 opacity-90">+3% from last month</p>
         </Card>
 
-        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
+        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white dark:bg-slate-900 border border-border">
             <div className="flex justify-between items-start mb-2">
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resource Utilization</p>
                 <Users className="h-4 w-4 text-foreground" />
@@ -31,7 +31,7 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
             </div>
         </Card>
 
-        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
+        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white dark:bg-slate-900 border border-border">
             <div className="flex justify-between items-start mb-2">
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Production Efficiency</p>
                 <Clock className="h-4 w-4 text-accent" />

@@ -590,7 +590,7 @@ export default function ClientsPage() {
             <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Filter company profiles..." 
-              className="pl-10 h-11 w-64 rounded-[10px] bg-white border border-border text-foreground placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm" 
+              className="pl-10 h-11 w-64 rounded-[10px] bg-white dark:bg-slate-900 border border-border text-foreground placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -611,7 +611,7 @@ export default function ClientsPage() {
         ].map(({ label, value, sub, icon: Icon, color }) => (
           <div key={label} className={cn(
             "relative overflow-hidden rounded-[10px] p-5 border transition-all duration-300 hover:scale-[1.02] group",
-            "bg-white border-border hover:border-border shadow-sm shadow-slate-100/50 hover:shadow-md"
+            "bg-white dark:bg-slate-900 border-border hover:border-border shadow-sm shadow-slate-100/50 hover:shadow-md"
           )}>
             <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none",
               color === 'red' ? 'bg-destructive/5' : color === 'indigo' ? 'bg-accent/5' : 'bg-emerald-500/5'
@@ -671,7 +671,7 @@ export default function ClientsPage() {
             existingClients.map((client) => {
               const activeProj = projects?.filter(p => p.client_name === client.company_name && p.status === 'in_progress') || [];
               const companyProposals = proposals?.filter(p => p.client_name === client.company_name) || [];              return (
-                <div key={client.id} className="group relative rounded-[10px] overflow-hidden border border-border bg-white flex flex-col transition-all duration-300 hover:border-destructive/20 hover:shadow-xl hover:shadow-slate-200/50">
+                <div key={client.id} className="group relative rounded-[10px] overflow-hidden border border-border bg-white dark:bg-slate-900 flex flex-col transition-all duration-300 hover:border-destructive/20 hover:shadow-xl hover:shadow-slate-200/50">
                   {/* Top gradient accent */}
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   {/* BG glow on hover */}
@@ -735,7 +735,7 @@ export default function ClientsPage() {
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="rounded-[10px] w-48 bg-white border border-border text-foreground/80 shadow-lg">
+                      <DropdownMenuContent align="end" className="rounded-[10px] w-48 bg-white dark:bg-slate-900 border border-border text-foreground/80 shadow-lg">
                         <DropdownMenuItem asChild className="rounded-xl hover:bg-muted cursor-pointer">
                           <Link href={`/clients/${client.id}`} className="gap-2"><ExternalLink className="h-3.5 w-3.5 text-muted-foreground" /> Portfolio View</Link>
                         </DropdownMenuItem>
@@ -769,7 +769,7 @@ export default function ClientsPage() {
               const masterPartner = leads?.find(l => l.company_name === prospect.company_name && (l.stage === 'client' || l.stage === 'won'));
 
               return (
-                <div key={prospect.id} className="group relative rounded-[10px] overflow-hidden border border-border bg-white flex flex-col transition-all duration-300 hover:border-accent/20 hover:shadow-xl hover:shadow-slate-200/50">
+                <div key={prospect.id} className="group relative rounded-[10px] overflow-hidden border border-border bg-white dark:bg-slate-900 flex flex-col transition-all duration-300 hover:border-accent/20 hover:shadow-xl hover:shadow-slate-200/50">
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute -top-12 -right-12 w-40 h-40 bg-accent/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   <div className="relative p-6 pb-5">
@@ -837,7 +837,7 @@ export default function ClientsPage() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           
           {/* Quick Select Client Bar */}
-          <div className="relative overflow-hidden rounded-[10px] border border-border bg-white shadow-sm p-6">
+          <div className="relative overflow-hidden rounded-[10px] border border-border bg-white dark:bg-slate-900 shadow-sm p-6">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
             <div className="absolute -top-16 -right-8 w-48 h-48 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 relative">
@@ -853,7 +853,7 @@ export default function ClientsPage() {
                   value={selectedHubCompany}
                   onSelect={(c) => setSelectedHubCompany(c.company_name)}
                   placeholder="Select Client Organization..."
-                  className="bg-white border border-border text-foreground rounded-[10px] h-11"
+                  className="bg-white dark:bg-slate-900 border border-border text-foreground rounded-[10px] h-11"
                   showOnboardOption={false}
                 />
               </div>
@@ -868,7 +868,7 @@ export default function ClientsPage() {
               <div className="xl:col-span-4 flex flex-col gap-6">
                 
                 {/* Org Card */}
-                <Card className="bg-white border border-border rounded-2xl shadow-premium overflow-hidden relative group hover:border-destructive/20 transition-all duration-300">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-premium overflow-hidden relative group hover:border-destructive/20 transition-all duration-300">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-indigo-500" />
                   <CardContent className="p-6 space-y-5">
                     <div className="flex items-center justify-between">
@@ -909,7 +909,7 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* 📊 Premium Client Engagement & Sentiment Index (Intelligence Upgrade) */}
-                <Card className="bg-white border border-border rounded-2xl shadow-premium overflow-hidden hover:border-destructive/20 transition-all duration-300">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-premium overflow-hidden hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 space-y-4">
                     <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
                       <Sparkles className="h-4 w-4" /> Sentiment & Risk Matrix
@@ -950,7 +950,7 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* Contacts Registry */}
-                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[260px] hover:border-destructive/20 transition-all duration-300">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[260px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5 mb-4 shrink-0">
                       <Users className="h-4 w-4" /> Contacts Registry
@@ -986,7 +986,7 @@ export default function ClientsPage() {
               <div className="xl:col-span-4 flex flex-col gap-6">
                 
                 {/* Opportunities Pipeline */}
-                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <div className="flex justify-between items-center shrink-0 mb-4">
                       <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
@@ -1016,7 +1016,7 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* Proposals Ledger */}
-                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <div className="flex justify-between items-center shrink-0 mb-4">
                       <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
@@ -1056,7 +1056,7 @@ export default function ClientsPage() {
               <div className="xl:col-span-4 flex flex-col gap-6">
                 
                 {/* Active Projects */}
-                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5 mb-4 shrink-0">
                       <Briefcase className="h-4 w-4" /> Production Workspaces ({selectedHubGraph.relatedProjects.length})
@@ -1070,7 +1070,7 @@ export default function ClientsPage() {
                           <div key={proj.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border space-y-3.5 shadow-sm transition">
                             <div className="flex justify-between items-center">
                               <span className="text-xs font-bold text-foreground">{proj.project_name}</span>
-                              <Badge className="bg-white border border-border text-muted-foreground text-[8px] font-bold uppercase">{proj.status}</Badge>
+                              <Badge className="bg-white dark:bg-slate-900 border border-border text-muted-foreground text-[8px] font-bold uppercase">{proj.status}</Badge>
                             </div>
                             
                             <div className="space-y-1">
@@ -1094,7 +1094,7 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* Ledger & Invoices */}
-                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <div className="flex justify-between items-center mb-4 shrink-0">
                       <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
@@ -1128,7 +1128,7 @@ export default function ClientsPage() {
 
             </div>
           ) : (
-            <Card className="border-2 border-dashed border-border p-24 text-center rounded-2xl bg-white shadow-premium">
+            <Card className="border-2 border-dashed border-border p-24 text-center rounded-2xl bg-white dark:bg-slate-900 shadow-premium">
               <Sparkles className="h-14 w-14 mx-auto mb-5 text-destructive opacity-20 animate-pulse" />
               <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Search and Select an organization above to activate Matrix Hub</p>
             </Card>
@@ -1139,7 +1139,7 @@ export default function ClientsPage() {
 
       {/* QUICK ADD OPPORTUNITY MODAL (HUB ACCESSORY) */}
       <Dialog open={isQuickOppOpen} onOpenChange={setIsQuickOppOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-[10px] bg-white border border-slate-250 text-foreground shadow-2xl">
+        <DialogContent className="sm:max-w-[425px] rounded-[10px] bg-white dark:bg-slate-900 border border-slate-250 text-foreground shadow-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-2xl font-black text-foreground">
               <Sparkles className="h-6 w-6 text-destructive" />
@@ -1156,10 +1156,10 @@ export default function ClientsPage() {
                 value={quickOpp.service_vertical} 
                 onValueChange={(val) => setQuickOpp({...quickOpp, service_vertical: val, sub_vertical: CONTENT_VERTICALS.find(v => v.name === val)?.services[0] || ""})}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-foreground">
+                <SelectTrigger className="rounded-xl h-11 bg-white dark:bg-slate-900 border-border text-foreground">
                   <SelectValue placeholder="Select vertical" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-border text-foreground/80">
+                <SelectContent className="bg-white dark:bg-slate-900 border border-border text-foreground/80">
                   {CONTENT_VERTICALS.map(v => (
                     <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-destructive focus:text-white">{v.name}</SelectItem>
                   ))}
@@ -1173,10 +1173,10 @@ export default function ClientsPage() {
                 value={quickOpp.sub_vertical} 
                 onValueChange={(val) => setQuickOpp({...quickOpp, sub_vertical: val})}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-foreground">
+                <SelectTrigger className="rounded-xl h-11 bg-white dark:bg-slate-900 border-border text-foreground">
                   <SelectValue placeholder="Select service" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-border text-foreground/80">
+                <SelectContent className="bg-white dark:bg-slate-900 border border-border text-foreground/80">
                   {CONTENT_VERTICALS.find(v => v.name === quickOpp.service_vertical)?.services.map(s => (
                     <SelectItem key={s} value={s} className="text-xs focus:bg-destructive focus:text-white">{s}</SelectItem>
                   ))}
@@ -1192,16 +1192,16 @@ export default function ClientsPage() {
                   placeholder="250000" 
                   value={quickOpp.deal_value}
                   onChange={(e) => setQuickOpp({...quickOpp, deal_value: e.target.value})}
-                  className="rounded-xl h-11 bg-white border-border text-foreground"
+                  className="rounded-xl h-11 bg-white dark:bg-slate-900 border-border text-foreground"
                 />
               </div>
               <div className="space-y-2">
                 <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Stage</Label>
                 <Select onValueChange={(val) => setQuickOpp({...quickOpp, stage: val})} value={quickOpp.stage}>
-                  <SelectTrigger className="rounded-xl h-11 bg-white border-border text-foreground">
+                  <SelectTrigger className="rounded-xl h-11 bg-white dark:bg-slate-900 border-border text-foreground">
                     <SelectValue placeholder="Select stage" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-border text-foreground/80">
+                  <SelectContent className="bg-white dark:bg-slate-900 border border-border text-foreground/80">
                     <SelectItem value="lead" className="text-xs focus:bg-destructive focus:text-white">Lead</SelectItem>
                     <SelectItem value="contact" className="text-xs focus:bg-destructive focus:text-white">Contacted</SelectItem>
                     <SelectItem value="proposal" className="text-xs focus:bg-destructive focus:text-white">Proposal Sent</SelectItem>
@@ -1222,10 +1222,10 @@ export default function ClientsPage() {
 
       {/* ORIGINAL ONBOARD CLIENT DIALOG (FULLY PRESERVED) */}
       <Dialog open={isOnboardOpen} onOpenChange={(open) => !open && resetOnboarding()}>
-        <DialogContent className="sm:max-w-[1000px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] max-h-[900px] flex flex-col bg-white text-foreground">
+        <DialogContent className="sm:max-w-[1000px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] max-h-[900px] flex flex-col bg-white dark:bg-slate-900 text-foreground">
           <div className="flex flex-col flex-1 min-h-0 bg-[#F8FAFC]">
             {/* Header - Fixed Height */}
-            <div className="p-8 border-b border-border bg-white flex items-center justify-between shrink-0 text-foreground">
+            <div className="p-8 border-b border-border bg-white dark:bg-slate-900 flex items-center justify-between shrink-0 text-foreground">
               <div className="flex items-center gap-4">
                 <div className="h-12 w-12 bg-destructive rounded-[10px] flex items-center justify-center text-white shadow-lg">
                   <Sparkles className="h-6 w-6" />
@@ -1254,16 +1254,16 @@ export default function ClientsPage() {
                         value={newClient.company_name}
                         onChange={(e) => setNewClient({...newClient, company_name: e.target.value})}
                         required
-                        className="rounded-xl h-12 bg-white border-border text-foreground"
+                        className="rounded-xl h-12 bg-white dark:bg-slate-900 border-border text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="industry" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Industry</Label>
                       <Select onValueChange={(val) => setNewClient({...newClient, industry: val})} value={newClient.industry}>
-                        <SelectTrigger className="rounded-xl h-12 bg-white border-border text-foreground">
+                        <SelectTrigger className="rounded-xl h-12 bg-white dark:bg-slate-900 border-border text-foreground">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="bg-white border border-slate-250 text-foreground/80">
+                        <SelectContent className="bg-white dark:bg-slate-900 border border-slate-250 text-foreground/80">
                           {INDUSTRIES.map(i => <SelectItem key={i} value={i} className="text-xs focus:bg-destructive focus:text-white">{i}</SelectItem>)}
                         </SelectContent>
                       </Select>
@@ -1277,7 +1277,7 @@ export default function ClientsPage() {
                           placeholder="e.g. Sarah Jenkins" 
                           value={newClient.contact_person}
                           onChange={(e) => setNewClient({...newClient, contact_person: e.target.value})}
-                          className="rounded-xl h-12 pl-10 bg-white border-border text-foreground"
+                          className="rounded-xl h-12 pl-10 bg-white dark:bg-slate-900 border-border text-foreground"
                         />
                       </div>
                     </div>
@@ -1291,7 +1291,7 @@ export default function ClientsPage() {
                           placeholder="poc@client.com" 
                           value={newClient.email}
                           onChange={(e) => setNewClient({...newClient, email: e.target.value})}
-                          className="rounded-xl h-12 pl-10 bg-white border-border text-foreground"
+                          className="rounded-xl h-12 pl-10 bg-white dark:bg-slate-900 border-border text-foreground"
                         />
                       </div>
                     </div>
@@ -1302,7 +1302,7 @@ export default function ClientsPage() {
                         placeholder="e.g. 22AAAAA0000A1Z5" 
                         value={newClient.gstin}
                         onChange={(e) => setNewClient({...newClient, gstin: e.target.value})}
-                        className="rounded-xl h-12 uppercase font-mono bg-white border-border text-foreground"
+                        className="rounded-xl h-12 uppercase font-mono bg-white dark:bg-slate-900 border-border text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
@@ -1312,7 +1312,7 @@ export default function ClientsPage() {
                         placeholder="Complete billing address for invoices..." 
                         value={newClient.billing_address}
                         onChange={(e) => setNewClient({...newClient, billing_address: e.target.value})}
-                        className="rounded-xl min-h-[100px] bg-white border-border text-foreground"
+                        className="rounded-xl min-h-[100px] bg-white dark:bg-slate-900 border-border text-foreground"
                       />
                     </div>
                   </div>
@@ -1330,7 +1330,7 @@ export default function ClientsPage() {
                               className={cn(
                                 "cursor-pointer transition-all duration-300 border-2 rounded-[10px] group shrink-0 w-40 h-32 flex items-center justify-center text-center p-4",
                                 selectedVerticalId === vertical.id 
-                                  ? "border-destructive shadow-md bg-white" 
+                                  ? "border-destructive shadow-md bg-white dark:bg-slate-900" 
                                   : "border-transparent hover:border-border bg-white/70"
                               )}
                               onClick={() => setSelectedVerticalId(vertical.id)}
@@ -1358,7 +1358,7 @@ export default function ClientsPage() {
                                 <div 
                                   key={service}
                                   className={cn(
-                                    "flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer bg-white",
+                                    "flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer bg-white dark:bg-slate-900",
                                     isSelected 
                                       ? "bg-destructive/10 border-red-200 shadow-sm" 
                                       : "border-border hover:border-border"
@@ -1385,7 +1385,7 @@ export default function ClientsPage() {
                     </div>
                   </div>
 
-                  <aside className="w-80 border-l border-border bg-white flex flex-col shrink-0 min-h-0 overflow-hidden">
+                  <aside className="w-80 border-l border-border bg-white dark:bg-slate-900 flex flex-col shrink-0 min-h-0 overflow-hidden">
                     <div className="p-6 border-b border-border shrink-0">
                       <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Scope Synthesis</h4>
                       <p className="text-xs font-bold text-foreground">Client Profile Summary</p>
@@ -1431,7 +1431,7 @@ export default function ClientsPage() {
             </div>
 
             {/* Footer - Fixed Height */}
-            <div className="p-8 border-t border-border shrink-0 bg-white flex items-center justify-between">
+            <div className="p-8 border-t border-border shrink-0 bg-white dark:bg-slate-900 flex items-center justify-between">
               {onboardStep === 'info' ? (
                 <>
                   <Button variant="ghost" onClick={() => setIsOnboardOpen(false)} className="rounded-xl font-bold text-muted-foreground hover:text-muted-foreground/80">Cancel</Button>
@@ -1468,7 +1468,7 @@ export default function ClientsPage() {
 
       {/* Cascading Archive Alert Dialog */}
       <AlertDialog open={!!clientToArchive} onOpenChange={(open) => !open && setClientToArchive(null)}>
-        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-foreground shadow-2xl">
+        <AlertDialogContent className="rounded-[10px] bg-white dark:bg-slate-900 border border-border text-foreground shadow-2xl">
           <AlertDialogHeader>
             <div className="h-12 w-12 bg-destructive/10 rounded-[10px] flex items-center justify-center text-destructive mb-4">
               <Archive className="h-6 w-6" />
@@ -1486,7 +1486,7 @@ export default function ClientsPage() {
       </AlertDialog>
 
       <AlertDialog open={!!clientToPermanentDelete} onOpenChange={(open) => !open && setClientToPermanentDelete(null)}>
-        <AlertDialogContent className="rounded-[10px] p-8 max-w-md border-0 bg-white">
+        <AlertDialogContent className="rounded-[10px] p-8 max-w-md border-0 bg-white dark:bg-slate-900">
           <AlertDialogHeader>
             <div className="h-12 w-12 bg-destructive/10 rounded-[10px] flex items-center justify-center text-destructive mb-4">
               <Trash2 className="h-6 w-6" />

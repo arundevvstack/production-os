@@ -196,7 +196,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="rounded-xl bg-white shadow-sm border" onClick={() => router.push("/clients")}>
+          <Button variant="ghost" size="icon" className="rounded-xl bg-white dark:bg-slate-900 shadow-sm border" onClick={() => router.push("/clients")}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
@@ -218,7 +218,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <Card className="border-none shadow-sm rounded-[10px] bg-white border-l-4 border-l-primary">
+        <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 border-l-4 border-l-primary">
           <CardContent className="pt-6">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Active Work</p>
             <h4 className="text-2xl font-black text-foreground">{activeProjectsStats.count} Projects</h4>
@@ -257,7 +257,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Sidebar Context */}
         <aside className="lg:col-span-4 space-y-6">
-          <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white">
+          <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white dark:bg-slate-900">
             <CardHeader className="bg-muted/50 border-b pb-6 px-8">
               <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Classification Details</CardTitle>
             </CardHeader>
@@ -327,7 +327,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               Generate a high-premium production strategy tailored for {client.company_name}.
             </p>
             <Link href={`/proposals?source=crm&leadId=${clientId}&companyName=${encodeURIComponent(client.company_name)}&vertical=${encodeURIComponent(client.service_vertical || '')}&industry=${encodeURIComponent(client.industry || '')}`} className="block pt-2">
-              <Button className="w-full bg-white text-foreground hover:bg-muted font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
+              <Button className="w-full bg-white dark:bg-slate-900 text-foreground hover:bg-muted font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
                 Initialize Architect
               </Button>
             </Link>
@@ -347,7 +347,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               {isProjectsLoading ? (
                 <div className="py-24 flex justify-center"><Loader2 className="h-10 w-10 animate-spin text-foreground opacity-20" /></div>
               ) : projectAnalytics.length === 0 ? (
-                <div className="py-32 text-center bg-white rounded-[10px] border-2 border-dashed border-border px-8">
+                <div className="py-32 text-center bg-white dark:bg-slate-900 rounded-[10px] border-2 border-dashed border-border px-8">
                   <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
                     <Briefcase className="h-8 w-8" />
                   </div>
@@ -357,10 +357,10 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {projectAnalytics.map((proj) => (
-                    <Card key={proj.id} className="border-none shadow-sm hover:shadow-md transition-all rounded-[10px] overflow-hidden group bg-white border border-slate-50 flex flex-col">
+                    <Card key={proj.id} className="border-none shadow-sm hover:shadow-md transition-all rounded-[10px] overflow-hidden group bg-white dark:bg-slate-900 border border-slate-50 flex flex-col">
                       <CardHeader className="bg-muted/50 pb-6 pt-8 px-8 border-b border-white/50">
                         <div className="flex justify-between items-start mb-4">
-                          <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-foreground bg-white px-3">
+                          <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-foreground bg-white dark:bg-slate-900 px-3">
                             {proj.status?.replace('_', ' ')}
                           </Badge>
                           <span className="text-[10px] font-black text-foreground bg-primary/5 px-2 py-0.5 rounded-full">{proj.progress}%</span>
@@ -381,11 +381,11 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white">
+                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white dark:border-slate-800">
                               <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Billed</p>
                               <p className="text-sm font-bold text-foreground">₹{proj.billed.toLocaleString()}</p>
                             </div>
-                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white">
+                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white dark:border-slate-800">
                               <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Burn</p>
                               <p className="text-sm font-bold text-accent">₹{proj.burn.toLocaleString()}</p>
                             </div>
@@ -394,7 +394,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                         <div className="pt-6 border-t flex justify-between items-center">
                           <div className="flex -space-x-2">
                             {[1, 2, 3].map(i => (
-                              <div key={i} className="h-7 w-7 rounded-full border-2 border-white bg-muted flex items-center justify-center overflow-hidden shadow-sm">
+                              <div key={i} className="h-7 w-7 rounded-full border-2 border-white dark:border-slate-800 bg-muted flex items-center justify-center overflow-hidden shadow-sm">
                                 <Building2 className="h-3.5 w-3.5 opacity-20" />
                               </div>
                             ))}
@@ -414,7 +414,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
             <TabsContent value="pipeline" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {pipelineStats.items.length === 0 ? (
-                <div className="py-32 text-center bg-white rounded-[10px] border-2 border-dashed border-border px-8">
+                <div className="py-32 text-center bg-white dark:bg-slate-900 rounded-[10px] border-2 border-dashed border-border px-8">
                   <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
                     <Target className="h-8 w-8" />
                   </div>
@@ -429,7 +429,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                   {pipelineStats.items.map((lead) => {
                     const stage = PIPELINE_STAGES.find(s => s.id === lead.stage);
                     return (
-                      <Card key={lead.id} className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white border border-slate-50 flex flex-col">
+                      <Card key={lead.id} className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white dark:bg-slate-900 border border-slate-50 flex flex-col">
                         <CardHeader className="bg-accent/10/30 pb-6 pt-8 px-8">
                           <div className="flex justify-between items-start mb-4">
                             <Badge className={cn("text-[9px] font-black uppercase tracking-widest border-none px-3", stage?.color || 'bg-muted text-muted-foreground/80')}>
@@ -449,7 +449,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                               <span className="flex items-center gap-2"><Clock className="h-3.5 w-3.5" /> Pipeline Status</span>
                               <span>Est. Value</span>
                             </div>
-                            <div className="bg-muted/80 p-5 rounded-[10px] border border-white flex justify-between items-center">
+                            <div className="bg-muted/80 p-5 rounded-[10px] border border-white dark:border-slate-800 flex justify-between items-center">
                               <div>
                                 <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Current Focus</p>
                                 <p className="text-sm font-bold text-foreground">{lead.industry || 'Media'}</p>
@@ -489,7 +489,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                   </Alert>
                 )}
 
-                <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white">
+                <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white dark:bg-slate-900">
                   <CardContent className="p-0">
                     <div className="overflow-x-auto custom-scrollbar">
                       <table className="w-full text-sm">

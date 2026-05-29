@@ -156,7 +156,7 @@ export function UnifiedClientSelector({
         </Button>
         
         {open && (
-          <div className="absolute top-[calc(100%+4px)] left-0 w-full z-[100] bg-white rounded-[10px] shadow-xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+          <div className="absolute top-[calc(100%+4px)] left-0 w-full z-[100] bg-white dark:bg-slate-900 rounded-[10px] shadow-xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-100">
             <Command>
             <CommandInput placeholder="Search registry..." className="h-10 text-xs font-medium" />
             <CommandList className="max-h-[300px] overflow-y-auto overflow-x-hidden">

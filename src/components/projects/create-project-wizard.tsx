@@ -164,7 +164,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[620px] rounded-2xl border-0 bg-white p-0 overflow-hidden shadow-2xl">
+      <DialogContent className="sm:max-w-[620px] rounded-2xl border-0 bg-white dark:bg-slate-900 p-0 overflow-hidden shadow-2xl">
         {/* Wizard Header */}
         <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white overflow-hidden">
           <div className="absolute inset-0 opacity-10">
@@ -173,7 +173,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
           <DialogHeader className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <DialogTitle className="text-lg font-black tracking-tight text-white flex items-center gap-3">
-                <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
+                <div className="h-8 w-8 rounded-xl bg-white/10 dark:bg-slate-900/10 border border-white/20 dark:border-slate-700/20 flex items-center justify-center">
                   <Sparkles className="h-4 w-4 text-white" />
                 </div>
                 New Project
@@ -195,14 +195,14 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     <div className={cn(
                       "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-300 shrink-0",
                       wizardStep > s.n ? "bg-emerald-400 text-white" :
-                      wizardStep === s.n ? "bg-white text-foreground" :
-                      "bg-white/10 text-white"
+                      wizardStep === s.n ? "bg-white dark:bg-slate-900 text-foreground" :
+                      "bg-white/10 dark:bg-slate-900/10 text-white"
                     )}>
                       {wizardStep > s.n ? <CheckCircle2 className="h-3.5 w-3.5" /> : s.n}
                     </div>
                     <span className={cn("text-[10px] font-black uppercase tracking-widest transition-colors", wizardStep === s.n ? "text-white" : "text-white/40")}>{s.label}</span>
                   </div>
-                  {i < 2 && <div className={cn("h-px flex-1 transition-all duration-300", wizardStep > s.n ? "bg-emerald-400/60" : "bg-white/10")} />}
+                  {i < 2 && <div className={cn("h-px flex-1 transition-all duration-300", wizardStep > s.n ? "bg-emerald-400/60" : "bg-white/10 dark:bg-slate-900/10")} />}
                 </div>
               ))}
             </div>
@@ -253,7 +253,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                   <div className="grid grid-cols-2 gap-1.5">
                     {tmpl.stages.map((stage, i) => (
                       <div key={stage.name} className="flex items-center gap-2">
-                        <span className="h-5 w-5 rounded-md bg-white border border-border flex items-center justify-center text-[9px] font-black text-muted-foreground shrink-0">{i + 1}</span>
+                        <span className="h-5 w-5 rounded-md bg-white dark:bg-slate-900 border border-border flex items-center justify-center text-[9px] font-black text-muted-foreground shrink-0">{i + 1}</span>
                         <span className="text-xs font-bold text-muted-foreground/80 truncate">{stage.name}</span>
                         <span className="text-[9px] text-muted-foreground ml-auto shrink-0">{stage.objectives.length}t</span>
                       </div>
@@ -267,10 +267,10 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               <div>
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Service Category</Label>
                 <Select value={newProject.service_category} onValueChange={(val) => setNewProject({ ...newProject, service_category: val, service: "" })}>
-                  <SelectTrigger className="h-11 rounded-xl border-border bg-white shadow-sm text-sm">
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm text-sm">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl bg-white border border-border shadow-xl z-[200]">
+                  <SelectContent className="rounded-xl bg-white dark:bg-slate-900 border border-border shadow-xl z-[200]">
                     {CONTENT_VERTICALS.map(v => (
                       <SelectItem key={v.id} value={v.name} className="text-xs font-bold rounded-lg m-0.5">{v.name}</SelectItem>
                     ))}
@@ -280,10 +280,10 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               <div>
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Service</Label>
                 <Select disabled={!newProject.service_category} value={newProject.service} onValueChange={(val) => setNewProject({ ...newProject, service: val })}>
-                  <SelectTrigger className="h-11 rounded-xl border-border bg-white shadow-sm text-sm">
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm text-sm">
                     <SelectValue placeholder={newProject.service_category ? "Select service" : "Pick category first"} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl bg-white border border-border shadow-xl z-[200]">
+                  <SelectContent className="rounded-xl bg-white dark:bg-slate-900 border border-border shadow-xl z-[200]">
                     {CONTENT_VERTICALS.find(v => v.name === newProject.service_category)?.services.map(s => (
                       <SelectItem key={s} value={s} className="text-xs font-bold rounded-lg m-0.5">{s}</SelectItem>
                     ))}
@@ -316,7 +316,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     placeholder="e.g. Diwali Campaign 2025"
                     value={newProject.project_name}
                     onChange={(e) => setNewProject({ ...newProject, project_name: e.target.value })}
-                    className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-foreground focus:ring-primary/10"
+                    className="h-12 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-foreground focus:ring-primary/10"
                     autoFocus
                   />
                 </div>
@@ -333,10 +333,10 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                         const typed = e.target.value;
                         setNewProject(prev => ({ ...prev, client_name: typed }));
                       }}
-                      className="h-12 w-full rounded-xl border border-border bg-white shadow-sm font-bold text-sm text-foreground focus-visible:ring-primary/20 focus-visible:border-primary/40"
+                      className="h-12 w-full rounded-xl border border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-sm text-foreground focus-visible:ring-primary/20 focus-visible:border-primary/40"
                     />
                     {isClientDropdownOpen && (
-                      <div className="absolute top-full left-0 w-full mt-2 bg-white border border-border shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
+                      <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-slate-900 border border-border shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
                         {combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).length === 0 ? (
                           <div className="px-3 py-4 text-xs font-bold text-muted-foreground text-center">
                             Press Enter to use custom name
@@ -385,7 +385,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                       placeholder="0"
                       value={newProject.budget}
                       onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
-                      className="h-12 rounded-xl border-border bg-white shadow-sm font-black text-foreground"
+                      className="h-12 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm font-black text-foreground"
                     />
                   </div>
                   <div>
@@ -394,17 +394,17 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                       type="date"
                       value={newProject.deadline}
                       onChange={(e) => setNewProject({ ...newProject, deadline: e.target.value })}
-                      className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-foreground"
+                      className="h-12 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-foreground"
                     />
                   </div>
                 </div>
                 <div className="mt-4">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Project Manager (Assignee)</Label>
                   <Select value={newProject.assignee_id} onValueChange={(val) => setNewProject({ ...newProject, assignee_id: val })}>
-                    <SelectTrigger className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-sm text-foreground">
+                    <SelectTrigger className="h-12 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-sm text-foreground">
                       <SelectValue placeholder="Select Assignee (Optional)" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl bg-white border border-border shadow-xl z-[200]">
+                    <SelectContent className="rounded-xl bg-white dark:bg-slate-900 border border-border shadow-xl z-[200]">
                       <SelectItem value="none" className="text-xs font-bold rounded-lg m-0.5 text-muted-foreground">Unassigned (Self)</SelectItem>
                       {companyUsers?.map((user: any) => (
                         <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-lg m-0.5 text-foreground">

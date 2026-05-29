@@ -129,7 +129,7 @@ export default function ApprovalsPage() {
       {/* LEFT: Video Player */}
       <div className="flex-1 flex flex-col relative h-[50vh] md:h-full border-r border-border">
         <div className="absolute top-4 left-4 z-10">
-          <Button variant="secondary" size="sm" onClick={() => router.back()} className="rounded-full shadow-lg bg-white/90 backdrop-blur-md">
+          <Button variant="secondary" size="sm" onClick={() => router.back()} className="rounded-full shadow-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Workspace
           </Button>
         </div>
@@ -149,13 +149,13 @@ export default function ApprovalsPage() {
             
             {/* Custom Video Controls overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent flex items-center gap-4">
-              <Button size="icon" variant="ghost" className="text-white hover:bg-white/20 rounded-full h-12 w-12" onClick={togglePlay}>
+              <Button size="icon" variant="ghost" className="text-white hover:bg-white/20 dark:bg-slate-900/20 rounded-full h-12 w-12" onClick={togglePlay}>
                 {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-1" />}
               </Button>
               <div className="text-white font-mono font-black text-xl drop-shadow-md">
                 {formatTime(currentTime)}
               </div>
-              <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden cursor-pointer">
+              <div className="flex-1 h-2 bg-white/20 dark:bg-slate-900/20 rounded-full overflow-hidden cursor-pointer">
                  <div 
                    className="h-full bg-primary" 
                    style={{ width: `${videoRef.current?.duration ? (currentTime / videoRef.current.duration) * 100 : 0}%` }} 
@@ -171,7 +171,7 @@ export default function ApprovalsPage() {
       </div>
 
       {/* RIGHT: Comments & Annotations */}
-      <div className="w-full md:w-[400px] flex flex-col bg-white h-[50vh] md:h-full z-20 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
+      <div className="w-full md:w-[400px] flex flex-col bg-white dark:bg-slate-900 h-[50vh] md:h-full z-20 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
         <div className="p-6 border-b border-border bg-muted/50 flex items-center justify-between">
           <div>
             <h2 className="font-black text-lg text-foreground tracking-tight">Review & Annotate</h2>
@@ -190,7 +190,7 @@ export default function ApprovalsPage() {
         <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
           {comments.map((comment) => (
             <div key={comment.id} className="flex gap-3 group">
-              <Avatar className="h-8 w-8 ring-2 ring-white shadow-sm">
+              <Avatar className="h-8 w-8 ring-2 ring-white dark:ring-slate-900 shadow-sm">
                 <AvatarFallback className="bg-primary/10 text-foreground text-[10px] font-black">
                   {comment.user?.full_name?.charAt(0) || 'U'}
                 </AvatarFallback>
@@ -215,7 +215,7 @@ export default function ApprovalsPage() {
           ))}
         </div>
 
-        <div className="p-4 border-t border-border bg-white">
+        <div className="p-4 border-t border-border bg-white dark:bg-slate-900">
           <form onSubmit={handleAddComment} className="flex gap-2">
             <div className="flex-1 relative">
               <Input 

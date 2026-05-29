@@ -1108,7 +1108,7 @@ function ProposalsContent() {
       <div className="min-h-screen text-foreground flex flex-col p-0 space-y-6 antialiased font-sans transition-all duration-300">
         
         {/* Executive Header Command bar */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border/80 pb-6 shrink-0 bg-white p-6 rounded-2xl shadow-sm shadow-zinc-100">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border/80 pb-6 shrink-0 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm shadow-zinc-100">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => { setEditingProposal(null); reloadProposals(); }} 
@@ -1141,7 +1141,7 @@ function ProposalsContent() {
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'editor' ? 'bg-white text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
+                  activeBuilderTab === 'editor' ? 'bg-white dark:bg-slate-900 text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Edit3 className="h-3.5 w-3.5 mr-2 text-destructive" /> Proposal Builder
@@ -1151,7 +1151,7 @@ function ProposalsContent() {
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'pricing' ? 'bg-white text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
+                  activeBuilderTab === 'pricing' ? 'bg-white dark:bg-slate-900 text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <DollarSign className="h-3.5 w-3.5 mr-2 text-emerald-500" /> Pricing & Taxes
@@ -1161,7 +1161,7 @@ function ProposalsContent() {
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'client_portal' ? 'bg-white text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
+                  activeBuilderTab === 'client_portal' ? 'bg-white dark:bg-slate-900 text-foreground shadow-sm border border-border/40' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Eye className="h-3.5 w-3.5 mr-2 text-accent" /> Client View
@@ -1186,7 +1186,7 @@ function ProposalsContent() {
           <div className="xl:col-span-3 flex flex-col gap-6 overflow-y-auto pr-2 custom-scrollbar">
             
             {/* Stage Pipeline */}
-            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
                 <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
                   <Activity className="h-3.5 w-3.5 text-muted-foreground" /> Status
@@ -1199,7 +1199,7 @@ function ProposalsContent() {
                     { id: 'signed', label: 'Signed & Approved', desc: 'Project conversion ready', active: content.client_signature.signed }
                   ].map((stage) => (
                     <div key={stage.id} className="relative group">
-                      <div className={cn("absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white transition-all duration-300",
+                      <div className={cn("absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white dark:ring-slate-900 transition-all duration-300",
                         stage.active ? "bg-destructive shadow-[0_0_6px_rgba(239,68,68,0.5)]" : "bg-secondary"
                       )} />
                       <span className="text-xs font-bold block tracking-tight text-foreground">{stage.label}</span>
@@ -1211,7 +1211,7 @@ function ProposalsContent() {
             </Card>
 
             {/* Internal Multi-stage Approvals Chain */}
-            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
                 <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-muted-foreground" /> Approvals
@@ -1274,7 +1274,7 @@ function ProposalsContent() {
             </Card>
 
             {/* Version History Log */}
-            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
@@ -1311,7 +1311,7 @@ function ProposalsContent() {
           {/* ==========================================
               CENTER WORKSPACE: EDITOR OR SERVICE ENGINE
               ========================================== */}
-          <div className="xl:col-span-6 bg-white border border-border rounded-2xl p-6 md:p-8 overflow-y-auto custom-scrollbar flex flex-col min-h-[500px] shadow-sm">
+          <div className="xl:col-span-6 bg-white dark:bg-slate-900 border border-border rounded-2xl p-6 md:p-8 overflow-y-auto custom-scrollbar flex flex-col min-h-[500px] shadow-sm">
             
             {activeBuilderTab === 'editor' && (
               <div className="space-y-6 flex-1">
@@ -1390,7 +1390,7 @@ function ProposalsContent() {
                         key={idx}
                         onClick={() => setActiveSectionIdx(idx)}
                         className={cn("px-4 py-2 text-xs font-bold uppercase rounded-xl border tracking-wider transition shrink-0 shadow-sm h-9",
-                          activeSectionIdx === idx ? 'bg-primary text-white border-primary' : 'bg-white border-border text-muted-foreground/80 hover:text-foreground hover:bg-muted'
+                          activeSectionIdx === idx ? 'bg-primary text-white border-primary' : 'bg-white dark:bg-slate-900 border-border text-muted-foreground/80 hover:text-foreground hover:bg-muted'
                         )}
                       >
                         {idx + 1}. {sec.title.slice(0, 15)}...
@@ -1409,7 +1409,7 @@ function ProposalsContent() {
                             secs[activeSectionIdx].title = e.target.value;
                             setEditingProposal({ ...editingProposal, parsedContent: { ...content, sections: secs } });
                           }}
-                          className="bg-white border-border rounded-lg text-sm font-bold text-foreground max-w-[200px] h-8 focus-visible:ring-border"
+                          className="bg-white dark:bg-slate-900 border-border rounded-lg text-sm font-bold text-foreground max-w-[200px] h-8 focus-visible:ring-border"
                         />
                       </div>
 
@@ -1420,7 +1420,7 @@ function ProposalsContent() {
                           secs[activeSectionIdx].content = e.target.value;
                           setEditingProposal({ ...editingProposal, parsedContent: { ...content, sections: secs } });
                         }}
-                        className="bg-white border-border rounded-xl min-h-[250px] text-foreground/80 font-medium leading-relaxed text-sm p-4 custom-scrollbar focus-visible:ring-border"
+                        className="bg-white dark:bg-slate-900 border-border rounded-xl min-h-[250px] text-foreground/80 font-medium leading-relaxed text-sm p-4 custom-scrollbar focus-visible:ring-border"
                       />
                     </div>
                   )}
@@ -1443,19 +1443,19 @@ function ProposalsContent() {
                   <div className="grid grid-cols-3 gap-3">
                     <Button 
                       onClick={() => applyServiceTemplate('video_production')} 
-                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white dark:bg-slate-900 hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
                       <Zap className="h-4 w-4 text-accent" /> Brand Commercial
                     </Button>
                     <Button 
                       onClick={() => applyServiceTemplate('ai_commercials')} 
-                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white dark:bg-slate-900 hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
                       <BrainCircuit className="h-4 w-4 text-accent" /> Neural AI Spot
                     </Button>
                     <Button 
                       onClick={() => applyServiceTemplate('cgi_3d')} 
-                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white dark:bg-slate-900 hover:bg-muted border border-border text-xs font-bold uppercase text-foreground/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
                       <Layers className="h-4 w-4 text-accent" /> CGI & Unreal 3D
                     </Button>
@@ -1490,7 +1490,7 @@ function ProposalsContent() {
                             <Input 
                               value={item.category} 
                               onChange={(e) => updateLineItem(item.id, 'category', e.target.value)}
-                              className="bg-white border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
+                              className="bg-white dark:bg-slate-900 border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                           <div className="space-y-1">
@@ -1499,7 +1499,7 @@ function ProposalsContent() {
                               type="number"
                               value={item.quantity} 
                               onChange={(e) => updateLineItem(item.id, 'quantity', parseInt(e.target.value) || 1)}
-                              className="bg-white border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
+                              className="bg-white dark:bg-slate-900 border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                           <div className="space-y-1">
@@ -1508,7 +1508,7 @@ function ProposalsContent() {
                               type="number"
                               value={item.unit_price} 
                               onChange={(e) => updateLineItem(item.id, 'unit_price', parseFloat(e.target.value) || 0)}
-                              className="bg-white border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
+                              className="bg-white dark:bg-slate-900 border-border rounded-lg text-xs text-foreground font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                         </div>
@@ -1531,7 +1531,7 @@ function ProposalsContent() {
                       <SelectTrigger className="rounded-xl border-border bg-muted text-xs font-bold text-zinc-850 h-11 focus-visible:ring-border">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white text-foreground rounded-xl shadow-lg border-border">
+                      <SelectContent className="bg-white dark:bg-slate-900 text-foreground rounded-xl shadow-lg border-border">
                         <SelectItem value="Intra-state" className="focus:bg-muted rounded-lg py-2">Intra-state (9% CGST + 9% SGST)</SelectItem>
                         <SelectItem value="Inter-state" className="focus:bg-muted rounded-lg py-2">Inter-state (18% IGST)</SelectItem>
                         <SelectItem value="Export" className="focus:bg-muted rounded-lg py-2">Export / SEZ (0%)</SelectItem>
@@ -1624,7 +1624,7 @@ function ProposalsContent() {
                 </div>
 
                 {/* Live Portal Cover Slide (Apple Keynote Layout) */}
-                <div className="bg-white p-8 rounded-2xl border border-border space-y-6 relative overflow-hidden shadow-sm">
+                <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-border space-y-6 relative overflow-hidden shadow-sm">
                   <div className="absolute right-0 top-0 h-40 w-40 bg-destructive/5 rounded-full blur-[60px]" />
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
@@ -1706,7 +1706,7 @@ function ProposalsContent() {
                         </div>
                       </div>
 
-                      <div className="p-4 bg-white rounded-xl border border-border space-y-2 text-xs text-zinc-650 font-bold">
+                      <div className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-border space-y-2 text-xs text-zinc-650 font-bold">
                         <div className="flex justify-between"><span className="text-muted-foreground">Signatory:</span><span className="text-emerald-700 font-black">{content.client_signature.name}</span></div>
                         <div className="flex justify-between"><span className="text-muted-foreground">Timestamp:</span><span className="text-foreground">{new Date(content.client_signature.signed_at || '').toLocaleString()}</span></div>
                         <div className="flex justify-between"><span className="text-muted-foreground">Audit Node IP:</span><span className="text-foreground">{content.client_signature.ip_address}</span></div>
@@ -1729,7 +1729,7 @@ function ProposalsContent() {
                           placeholder="Type full legal name to authorize..."
                           value={signatureName}
                           onChange={(e) => setSignatureName(e.target.value)}
-                          className="bg-white border-border rounded-xl h-11 text-xs font-bold text-foreground focus-visible:ring-border"
+                          className="bg-white dark:bg-slate-900 border-border rounded-xl h-11 text-xs font-bold text-foreground focus-visible:ring-border"
                         />
                         <Button 
                           onClick={handleClientDigitalSignature}
@@ -1751,7 +1751,7 @@ function ProposalsContent() {
           <div className="xl:col-span-3 flex flex-col gap-6 overflow-y-auto pr-2 custom-scrollbar">
             
             {/* Real-time Profitability margin */}
-            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850 relative overflow-hidden">
+            <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-850 relative overflow-hidden">
               <CardContent className="p-6 space-y-4">
                 <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-muted-foreground" /> AI Analysis
@@ -1785,7 +1785,7 @@ function ProposalsContent() {
             </Card>
 
             {/* Crew Estimator */}
-            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-855">
+            <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-855">
               <CardContent className="p-6 space-y-4">
                 <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" /> Estimated Crew
@@ -1803,7 +1803,7 @@ function ProposalsContent() {
             </Card>
 
             {/* AI Risk auditing */}
-            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
                 <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-muted-foreground" /> Risks & Suggestions
@@ -1825,7 +1825,7 @@ function ProposalsContent() {
             </Card>
 
             {/* Comments Feed */}
-            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850 flex-1 flex flex-col min-h-[250px]">
+            <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-850 flex-1 flex flex-col min-h-[250px]">
               <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                 <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2 shrink-0 mb-4">
                   <MessageCircle className="h-4 w-4 text-muted-foreground" /> Comments
@@ -1869,7 +1869,7 @@ function ProposalsContent() {
 
         {/* Dialog for creating a new version */}
         <Dialog open={isVersionDialogOpen} onOpenChange={setIsVersionDialogOpen}>
-          <DialogContent className="bg-white text-foreground border border-border rounded-2xl shadow-xl max-w-md">
+          <DialogContent className="bg-white dark:bg-slate-900 text-foreground border border-border rounded-2xl shadow-xl max-w-md">
             <DialogHeader>
               <DialogTitle className="text-lg font-black text-foreground">Initiate New Version</DialogTitle>
               <DialogDescription className="text-muted-foreground text-xs">
@@ -1922,7 +1922,7 @@ function ProposalsContent() {
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Search proposals..." 
-              className="pl-9 h-10 rounded-xl bg-white border-border text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:ring-border"
+              className="pl-9 h-10 rounded-xl bg-white dark:bg-slate-900 border-border text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:ring-border"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -1934,8 +1934,8 @@ function ProposalsContent() {
                 <Plus className="h-4 w-4" /> Create with AI
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[800px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] flex flex-col bg-white">
-              <div className="text-foreground flex flex-col flex-1 min-h-0 bg-white">
+            <DialogContent className="sm:max-w-[800px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] flex flex-col bg-white dark:bg-slate-900">
+              <div className="text-foreground flex flex-col flex-1 min-h-0 bg-white dark:bg-slate-900">
                 <div className="p-8 border-b border-zinc-150 shrink-0">
                   <div className="flex items-center gap-4">
                     <div className="h-12 w-12 bg-destructive rounded-[10px] flex items-center justify-center shadow-lg">
@@ -1969,7 +1969,7 @@ function ProposalsContent() {
                             />
                           </div>
 
-                          <div className="mt-2 bg-white border border-border rounded-xl max-h-[160px] overflow-y-auto custom-scrollbar p-1 space-y-2">
+                          <div className="mt-2 bg-white dark:bg-slate-900 border border-border rounded-xl max-h-[160px] overflow-y-auto custom-scrollbar p-1 space-y-2">
                             {/* Group: Clients */}
                             {groupedClients.clients.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).length > 0 && (
                               <div>
@@ -2091,7 +2091,7 @@ function ProposalsContent() {
                             <SelectTrigger className="bg-muted border-border rounded-xl h-11 text-foreground">
                               <SelectValue placeholder="Proposal vs Quote" />
                             </SelectTrigger>
-                            <SelectContent className="bg-white border-border text-foreground rounded-xl">
+                            <SelectContent className="bg-white dark:bg-slate-900 border-border text-foreground rounded-xl">
                               <SelectItem value="proposal" className="focus:bg-muted rounded-lg cursor-pointer">Proposal (Detailed)</SelectItem>
                               <SelectItem value="quote" className="focus:bg-muted rounded-lg cursor-pointer">Quick Quote</SelectItem>
                             </SelectContent>
@@ -2164,7 +2164,7 @@ function ProposalsContent() {
 
       {/* Analytics Overview Widget */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 shrink-0">
-        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-[10px]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Total Proposals</span>
@@ -2174,7 +2174,7 @@ function ProposalsContent() {
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Total bids created</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-[10px]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Total Value</span>
@@ -2186,7 +2186,7 @@ function ProposalsContent() {
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Total estimated value</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-[10px]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Pending Approvals</span>
@@ -2198,7 +2198,7 @@ function ProposalsContent() {
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Awaiting final approvals</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-[10px]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Approved Proposals</span>
@@ -2215,7 +2215,7 @@ function ProposalsContent() {
       {/* Main Proposals Vault Listing */}
       <div className="space-y-4">
         {filteredProposals.length === 0 ? (
-          <Card className="border-2 border-dashed border-border p-24 text-center rounded-[10px] bg-white shadow-sm">
+          <Card className="border-2 border-dashed border-border p-24 text-center rounded-[10px] bg-white dark:bg-slate-900 shadow-sm">
             <BrainCircuit className="h-16 w-16 mx-auto mb-6 opacity-10 text-foreground" />
             <p className="font-black uppercase tracking-widest text-xs text-muted-foreground">No proposals found.</p>
             <Button variant="link" className="mt-4 font-bold text-destructive hover:text-destructive animate-pulse" onClick={() => setIsAddOpen(true)}>Create with AI</Button>
@@ -2229,7 +2229,7 @@ function ProposalsContent() {
             const total = taxableSubtotal + tax;
 
             return (
-              <Card key={prop.id} className="hover:shadow-lg hover:bg-white transition-all duration-300 border border-border bg-white group rounded-2xl overflow-hidden">
+              <Card key={prop.id} className="hover:shadow-lg hover:bg-white dark:bg-slate-900 transition-all duration-300 border border-border bg-white dark:bg-slate-900 group rounded-2xl overflow-hidden">
                 <CardContent className="p-0 flex flex-col md:flex-row md:items-center">
                   <div className="p-8 flex-1">
                     <div className="flex items-center gap-4">
@@ -2262,11 +2262,11 @@ function ProposalsContent() {
                     <div className="flex gap-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="flex-1 rounded-xl border-border hover:bg-muted text-foreground/80 bg-white h-11 gap-2">
+                          <Button variant="outline" className="flex-1 rounded-xl border-border hover:bg-muted text-foreground/80 bg-white dark:bg-slate-900 h-11 gap-2">
                             <Share2 className="h-4 w-4" /> Share
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl w-64 p-2 bg-white border border-border text-foreground/80 shadow-xl">
+                        <DropdownMenuContent align="end" className="rounded-xl w-64 p-2 bg-white dark:bg-slate-900 border border-border text-foreground/80 shadow-xl">
                           <DropdownMenuLabel className="text-xs uppercase font-bold text-muted-foreground tracking-wider px-3 py-2">Share Channels</DropdownMenuLabel>
                           <DropdownMenuItem onClick={() => handleShareWhatsApp(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-muted">
                             <MessageSquare className="h-4 w-4 text-emerald-500" /> Share via WhatsApp
@@ -2280,7 +2280,7 @@ function ProposalsContent() {
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                      <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl border-border text-destructive hover:bg-destructive/10 bg-white" onClick={() => setProposalToDelete(prop)}><Trash2 className="h-4 w-4" /></Button>
+                      <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl border-border text-destructive hover:bg-destructive/10 bg-white dark:bg-slate-900" onClick={() => setProposalToDelete(prop)}><Trash2 className="h-4 w-4" /></Button>
                     </div>
                   </div>
                 </CardContent>
@@ -2291,7 +2291,7 @@ function ProposalsContent() {
       </div>
 
       <AlertDialog open={!!proposalToDelete} onOpenChange={(open) => !open && setProposalToDelete(null)}>
-        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-foreground shadow-xl">
+        <AlertDialogContent className="rounded-[10px] bg-white dark:bg-slate-900 border border-border text-foreground shadow-xl">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-foreground">Delete Proposal Record?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground font-medium">Permanently remove "{proposalToDelete?.title}"? This will delete all history snapshots and cannot be undone.</AlertDialogDescription>

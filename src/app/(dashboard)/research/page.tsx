@@ -301,7 +301,7 @@ export default function MarketIntelligenceOS() {
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative w-full sm:w-40">
             <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger className="h-10 rounded-xl bg-white border-border text-foreground shadow-sm focus:ring-border">
+              <SelectTrigger className="h-10 rounded-xl bg-white dark:bg-slate-900 border-border text-foreground shadow-sm focus:ring-border">
                 <SelectValue placeholder="All Locations" />
               </SelectTrigger>
               <SelectContent className="rounded-xl border-border shadow-lg">
@@ -317,7 +317,7 @@ export default function MarketIntelligenceOS() {
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Search research database..." 
-              className="pl-9 h-10 rounded-xl bg-white border-border text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:ring-border"
+              className="pl-9 h-10 rounded-xl bg-white dark:bg-slate-900 border-border text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:ring-border"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -347,7 +347,7 @@ export default function MarketIntelligenceOS() {
                   "text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-all",
                   (activeTab === step.key) 
                     ? "bg-zinc-950 text-white border-zinc-950 shadow-md" 
-                    : "bg-white text-muted-foreground/80 border-border hover:bg-muted"
+                    : "bg-white dark:bg-slate-900 text-muted-foreground/80 border-border hover:bg-muted"
                 )}
               >
                 {step.label}
@@ -360,7 +360,7 @@ export default function MarketIntelligenceOS() {
 
       {/* Top Cockpit Analytics Cards (Phase 2 & Phase 13) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 shrink-0">
-        <Card className="border-none shadow-sm bg-white border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
           <CardContent className="p-6">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-xs font-bold uppercase tracking-wider">
               <span>Trending Industries</span>
@@ -371,7 +371,7 @@ export default function MarketIntelligenceOS() {
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-sm bg-white border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
           <CardContent className="p-6">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-xs font-bold uppercase tracking-wider">
               <span>Competitor Activity</span>
@@ -382,7 +382,7 @@ export default function MarketIntelligenceOS() {
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-sm bg-white border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
           <CardContent className="p-6">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-xs font-bold uppercase tracking-wider">
               <span>AI Lead Opportunity Score</span>
@@ -393,7 +393,7 @@ export default function MarketIntelligenceOS() {
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-sm bg-white border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border border-border rounded-2xl overflow-hidden relative group hover:border-border transition-colors">
           <CardContent className="p-6">
             <div className="flex items-center justify-between text-muted-foreground mb-2 text-xs font-bold uppercase tracking-wider">
               <span>Market Gap Alerts</span>
@@ -442,7 +442,7 @@ export default function MarketIntelligenceOS() {
             LEFT PANEL: RESEARCH CATEGORIES (Phase 2)
             ========================================== */}
         <div className="lg:col-span-3 space-y-6">
-          <Card className="bg-white border border-border rounded-2xl shadow-sm text-foreground overflow-hidden">
+          <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground overflow-hidden">
             <CardHeader className="p-6 border-b border-border shrink-0">
               <span className="text-xs font-black uppercase text-muted-foreground tracking-widest block">Categories</span>
               <h3 className="text-lg font-black text-foreground mt-1">Research Index</h3>
@@ -464,7 +464,7 @@ export default function MarketIntelligenceOS() {
                   }}
                   className={cn(
                     "w-full flex items-center justify-between p-3.5 rounded-xl transition-all duration-200 border",
-                    activeTab === category.id ? "bg-zinc-950 text-white border-zinc-950 shadow-md" : "bg-white text-muted-foreground hover:bg-muted"
+                    activeTab === category.id ? "bg-zinc-950 text-white border-zinc-950 shadow-md" : "bg-white dark:bg-slate-900 text-muted-foreground hover:bg-muted"
                   )}>
                   <span className="flex items-center gap-2.5">
                     <category.icon className={cn("h-4 w-4", activeTab === category.id ? "text-white animate-pulse" : "text-muted-foreground")} />
@@ -481,7 +481,7 @@ export default function MarketIntelligenceOS() {
           </Card>
 
           {/* Collaborative Research Notes Feed (Phase 14) */}
-          <Card className="bg-white border border-border rounded-2xl shadow-sm text-foreground">
+          <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground">
             <CardHeader className="p-6 border-b border-border flex items-center justify-between shrink-0">
               <div>
                 <span className="text-xs font-black uppercase text-muted-foreground tracking-widest block">Collaboration</span>
@@ -520,7 +520,7 @@ export default function MarketIntelligenceOS() {
             <div className="space-y-6 animate-in fade-in duration-300">
               
               {/* Executive Overview Analytics Matrix chart */}
-              <Card className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+              <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm overflow-hidden">
                 <CardHeader className="p-6 border-b border-border flex items-center justify-between shrink-0 bg-muted/30">
                   <div>
                     <span className="text-xs font-black uppercase text-muted-foreground tracking-widest block">Phase 13 Analytics</span>
@@ -561,12 +561,12 @@ export default function MarketIntelligenceOS() {
 
               {/* Opportunity Pipeline Values */}
               <div className="grid grid-cols-2 gap-6">
-                <Card className="bg-white border border-border rounded-2xl shadow-sm text-foreground p-6 flex flex-col justify-between">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground p-6 flex flex-col justify-between">
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block">Discovered Opportunities</span>
                   <div className="text-3xl font-black mt-3">₹{totalPipelineValue.toLocaleString('en-IN')}</div>
                   <p className="text-xs text-muted-foreground font-bold mt-1 tracking-wide">TOTAL PIPELINE VALUE</p>
                 </Card>
-                <Card className="bg-white border border-border rounded-2xl shadow-sm text-foreground p-6 flex flex-col justify-between">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground p-6 flex flex-col justify-between">
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block">Proposal Success Rate</span>
                   <div className="text-3xl font-black mt-3 text-emerald-600">{avgProbability}%</div>
                   <p className="text-xs text-muted-foreground font-bold mt-1 tracking-wide">CONVERSION PROBABILITY</p>
@@ -574,7 +574,7 @@ export default function MarketIntelligenceOS() {
               </div>
 
               {/* Featured Gaps Spotlight (Phase 3) */}
-              <Card className="bg-white border border-border rounded-2xl shadow-sm">
+              <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm">
                 <CardHeader className="p-6 border-b border-border flex items-center justify-between shrink-0">
                   <div>
                     <span className="text-xs font-black uppercase text-muted-foreground tracking-widest block">Market Gaps</span>
@@ -607,7 +607,7 @@ export default function MarketIntelligenceOS() {
           {activeTab === "leads" && (
             <div className="space-y-6 animate-in fade-in duration-300">
               
-              <Card className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+              <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm overflow-hidden">
                 <CardHeader className="p-6 border-b border-border shrink-0">
                   <span className="text-xs font-black uppercase text-muted-foreground tracking-widest block">Directory</span>
                   <h3 className="text-lg font-black text-foreground mt-1">Discovered Leads Directory</h3>
@@ -668,7 +668,7 @@ export default function MarketIntelligenceOS() {
 
               {/* Lead Details & Enrichment Panel (Phase 5) */}
               {selectedLead && (
-                <Card className="bg-white border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative animate-in zoom-in-95">
+                <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative animate-in zoom-in-95">
                   <div className="absolute right-0 top-0 h-40 w-40 bg-destructive/5 rounded-full blur-[60px]" />
                   <CardHeader className="p-6 border-b border-border shrink-0">
                     <span className="text-xs font-black uppercase text-muted-foreground tracking-widest block">AI Enriched Intelligence Profile</span>
@@ -742,7 +742,7 @@ export default function MarketIntelligenceOS() {
               
               <div className="space-y-4">
                 {(dashboardData?.gaps || []).map((gap: any) => (
-                  <Card key={gap.id} className="bg-white border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative group hover:border-border transition-colors">
+                  <Card key={gap.id} className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative group hover:border-border transition-colors">
                     <CardHeader className="p-6 border-b border-border flex items-center justify-between shrink-0">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 bg-destructive/10 border border-red-100 rounded-xl flex items-center justify-center text-destructive shadow-sm">
@@ -795,7 +795,7 @@ export default function MarketIntelligenceOS() {
               
               <div className="space-y-4">
                 {(dashboardData?.competitors || []).map((comp: any, idx: number) => (
-                  <Card key={idx} className="bg-white border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative">
+                  <Card key={idx} className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative">
                     <CardHeader className="p-6 border-b border-border flex items-center justify-between shrink-0 bg-muted/30">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 bg-accent/10 border border-accent/20 rounded-xl flex items-center justify-center text-accent shadow-sm">
@@ -854,7 +854,7 @@ export default function MarketIntelligenceOS() {
               
               <div className="space-y-4">
                 {(dashboardData?.trends || []).map((trend: any, idx: number) => (
-                  <Card key={trend.id} className="bg-white border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative">
+                  <Card key={trend.id} className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground overflow-hidden relative">
                     <CardHeader className="p-6 border-b border-border flex items-center justify-between shrink-0">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 bg-accent/10 border border-accent/20 rounded-xl flex items-center justify-center text-accent shadow-sm">
@@ -899,7 +899,7 @@ export default function MarketIntelligenceOS() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {(dashboardData?.gaps || []).map((board: any, idx: number) => (
-                  <Card key={idx} className="bg-white border border-border rounded-2xl shadow-sm text-foreground p-6 flex flex-col justify-between relative group hover:border-border transition-colors">
+                  <Card key={idx} className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-foreground p-6 flex flex-col justify-between relative group hover:border-border transition-colors">
                     <div className="space-y-4">
                       <div className="flex justify-between items-start">
                         <h4 className="font-black text-sm text-foreground group-hover:text-destructive transition-colors leading-tight">{board.gap_description || "Opportunity"}</h4>
@@ -941,7 +941,7 @@ export default function MarketIntelligenceOS() {
           {/* AI Sales Outreach Strategy Panel (Phase 11) */}
           <Card className="bg-zinc-950 border border-zinc-900 text-white rounded-2xl shadow-2xl overflow-hidden relative">
             <div className="absolute right-0 top-0 h-40 w-40 bg-rose-500/10 rounded-full blur-[60px] pointer-events-none" />
-            <CardHeader className="p-6 border-b border-white/10 shrink-0 bg-white/5 backdrop-blur-md relative z-10">
+            <CardHeader className="p-6 border-b border-white/10 dark:border-slate-700/10 shrink-0 bg-white/5 dark:bg-slate-900/5 backdrop-blur-md relative z-10">
               <span className="text-xs font-black uppercase text-rose-400 tracking-widest flex items-center gap-1.5">
                 <Sparkles className="h-4.5 w-4.5 text-rose-400 animate-pulse" />
                 AI Opportunity Strategist
@@ -952,7 +952,7 @@ export default function MarketIntelligenceOS() {
               
               <div className="space-y-3">
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block">Ideal Pricing Benchmark</span>
-                <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                <div className="p-4 bg-white/5 dark:bg-slate-900/5 border border-white/10 dark:border-slate-700/10 rounded-xl">
                   {strategistLead ? (
                     <>
                       <span className="text-2xl font-black text-emerald-400 block">
@@ -968,7 +968,7 @@ export default function MarketIntelligenceOS() {
 
               <div className="space-y-3">
                 <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest block">Suggested Service Bundle</span>
-                <div className="p-4 bg-white/5 border border-white/10 rounded-xl space-y-2 text-xs font-semibold">
+                <div className="p-4 bg-white/5 dark:bg-slate-900/5 border border-white/10 dark:border-slate-700/10 rounded-xl space-y-2 text-xs font-semibold">
                   {strategistLead?.services_needed ? (
                     strategistLead.services_needed.split('&').map((service: string, idx: number) => (
                       <div key={idx} className="flex items-center gap-2"><div className="h-1.5 w-1.5 bg-rose-400 rounded-full" /> {service.trim()}</div>
@@ -982,7 +982,7 @@ export default function MarketIntelligenceOS() {
               {/* Phase 11 & Phase 12 Proposal Outreach Draft script */}
               <div className="space-y-3">
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block">Suggested Outreach Strategy</span>
-                <div className="p-4 bg-white/5 border border-white/10 rounded-xl text-xs font-medium leading-relaxed text-zinc-300 space-y-3">
+                <div className="p-4 bg-white/5 dark:bg-slate-900/5 border border-white/10 dark:border-slate-700/10 rounded-xl text-xs font-medium leading-relaxed text-zinc-300 space-y-3">
                   <p className="italic">
                     {strategistLead 
                       ? `"We noticed ${strategistLead.industry} brands in ${strategistLead.location} are gaining massive traction, but ${strategistLead.company_name} lacks ${strategistLead.services_needed}."`
@@ -992,7 +992,7 @@ export default function MarketIntelligenceOS() {
                     onClick={() => {
                       toast({ title: "Copied outreach template", description: "Outreach message successfully saved to clipboard." });
                     }}
-                    className="w-full bg-white text-foreground hover:bg-muted rounded-xl h-10 font-bold uppercase text-[9px] tracking-widest"
+                    className="w-full bg-white dark:bg-slate-900 text-foreground hover:bg-muted rounded-xl h-10 font-bold uppercase text-[9px] tracking-widest"
                   >
                     Copy Outreach Script
                   </Button>
@@ -1003,7 +1003,7 @@ export default function MarketIntelligenceOS() {
           </Card>
 
           {/* Realtime Opportunity Collaboration feed (Phase 14) */}
-          <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850 flex flex-col min-h-[300px]">
+          <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm text-zinc-850 flex flex-col min-h-[300px]">
             <CardHeader className="p-6 border-b border-border shrink-0">
               <span className="text-xs font-black uppercase text-muted-foreground tracking-widest block">Discussions Feed</span>
               <h3 className="text-lg font-black text-foreground mt-1">Opportunity Chat</h3>

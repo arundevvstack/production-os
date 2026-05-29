@@ -75,7 +75,7 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
 
   if (!objectives || objectives.length === 0 || sortedObjectives.length === 0) {
     return (
-      <Card className="border-2 border-dashed p-12 text-center bg-white rounded-[10px]">
+      <Card className="border-2 border-dashed p-12 text-center bg-white dark:bg-slate-900 rounded-[10px]">
         <Activity className="h-12 w-12 text-slate-200 mx-auto mb-4" />
         <h3 className="font-bold text-muted-foreground uppercase tracking-widest text-sm">No Timeline Data</h3>
         <p className="text-xs text-muted-foreground mt-2">Add objectives with start and due dates to generate the timeline.</p>
@@ -85,7 +85,7 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
 
   return (
     <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
-      <div className="flex items-center justify-between bg-white p-4 rounded-[10px] border border-border shadow-sm">
+      <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-4 rounded-[10px] border border-border shadow-sm">
         <div className="flex items-center gap-3">
           <Calendar className="h-5 w-5 text-foreground" />
           <h3 className="font-black text-foreground tracking-tight uppercase">Dynamic Timeline Engine</h3>
@@ -100,7 +100,7 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
         </div>
       </div>
 
-      <Card className="border-none shadow-xl rounded-[10px] bg-white overflow-hidden p-0 relative">
+      <Card className="border-none shadow-xl rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden p-0 relative">
         {/* Timeline Grid Container */}
         <div className="overflow-x-auto custom-scrollbar bg-muted relative pb-10">
           

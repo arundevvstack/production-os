@@ -16,7 +16,7 @@ interface StatCardProps {
 
 export function StatCard({ title, value, description, icon: Icon, trend, className }: StatCardProps) {
   return (
-    <Card className={cn("overflow-hidden border-none shadow-sm bg-white", className)}>
+    <Card className={cn("overflow-hidden border-none shadow-sm bg-white dark:bg-slate-900", className)}>
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="p-2.5 rounded-xl bg-primary/10 text-foreground">
