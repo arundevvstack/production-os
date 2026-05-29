@@ -28,6 +28,7 @@ export function useSupabaseCollection<T = any>(
     where?: Record<string, any>;
     orderBy?: { column: string; ascending?: boolean } | Record<string, 'asc' | 'desc'>;
     limit?: number;
+    select?: string;
     /** Poll interval in ms. Default: 30000 (30s). Set to 0 to disable. */
     pollInterval?: number;
   }
@@ -57,7 +58,7 @@ export function useSupabaseCollection<T = any>(
       // Only show loading spinner on initial load, not on background refetches
       setIsLoading(prev => prev);
       try {
-        let query = supabase.from(table).select('*');
+        let query = supabase.from(table).select(queryConfig?.select || '*');
 
         if (queryConfig?.filters) {
           queryConfig.filters.forEach((f) => {

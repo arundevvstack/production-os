@@ -113,6 +113,7 @@ export default function ProjectsPage() {
 
   // Fetch Projects from Supabase
   const { data: projects, isLoading: isProjectsLoading, refetch: reloadProjects } = useSupabaseCollection('Project', {
+    select: '*, ProjectMember(*)',
     where: { company_id: companyId },
     orderBy: { created_at: 'desc' }
   });
@@ -773,6 +774,7 @@ export default function ProjectsPage() {
                 view={viewMode} 
                 index={idx}
                 onArchive={(p) => setProjectToArchive(p)}
+                companyUsers={companyUsers}
               />
             ))}
           </div>
@@ -799,7 +801,7 @@ export default function ProjectsPage() {
   );
 }
 
-function ProjectCard({ project, view, index, onArchive }: { project: any, view: ViewMode, index: number, onArchive: (p: any) => void }) {
+function ProjectCard({ project, view, index, onArchive, companyUsers }: { project: any, view: ViewMode, index: number, onArchive: (p: any) => void, companyUsers?: any[] | null }) {
   const isEven = index % 2 === 0;
 
   if (view === 'grid') {
@@ -997,9 +999,23 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
               <div className="hidden lg:flex flex-col space-y-2">
                 <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Assigned crew</span>
                 <div className="flex -space-x-3">
-                  <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0">
-                    <AvatarFallback className="text-[8px] font-black bg-primary text-white">{(project.project_name || 'P').charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
+                  {project.ProjectMember && project.ProjectMember.length > 0 ? (
+                    project.ProjectMember.map((member: any) => {
+                      const user = companyUsers?.find(u => u.id === member.user_id);
+                      const name = user?.fullName || user?.full_name || user?.email || 'Unknown';
+                      return (
+                        <Avatar key={member.id} className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title={`${name} (${member.role})`}>
+                          <AvatarFallback className="text-[8px] font-black bg-primary text-white">
+                            {name.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      );
+                    })
+                  ) : (
+                    <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title="Unassigned">
+                      <AvatarFallback className="text-[8px] font-black bg-slate-200 text-slate-500">?</AvatarFallback>
+                    </Avatar>
+                  )}
                 </div>
               </div>
             </div>

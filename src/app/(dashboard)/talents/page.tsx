@@ -23,137 +23,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-// ----------------------------------------------------
-// Mock Roster Data for High-Fidelity Cold Starts (Phases 1-13)
-// ----------------------------------------------------
-
-
-// ----------------------------------------------------
-// Mock Casting Calls & Requirements (Phase 6)
-// ----------------------------------------------------
-const INITIAL_CASTING_CALLS = [
-  {
-    id: "c_1",
-    project_name: "BB App TVC Commercial",
-    category: "Actor",
-    gender: "Male",
-    age_range: "25-35",
-    languages: "Malayalam, Tamil",
-    look_style: "Athletic, Premium Executive",
-    budget: 300000,
-    location: "Kochi, Kerala",
-    shoot_dates: "2026-06-12 to 2026-06-15",
-    deliverables: "1x Main Film, 3x Social Cutdowns",
-    shortlisted_ids: ["mock_t2", "mock_t4"],
-    status: "Active"
-  },
-  {
-    id: "c_2",
-    project_name: "Lulu Fashion CGI Walkthrough",
-    category: "Model",
-    gender: "Female",
-    age_range: "20-30",
-    languages: "English, Hindi",
-    look_style: "Ethnic Premium, International Look",
-    budget: 250000,
-    location: "Mumbai",
-    shoot_dates: "2026-06-25 to 2026-06-27",
-    deliverables: "CGI Avatar scan, 4x Ramp clips",
-    shortlisted_ids: ["mock_t3"],
-    status: "Active"
-  },
-  {
-    id: "c_3",
-    project_name: "Tech-Start Brand Film",
-    category: "Voice Artist",
-    gender: "Female",
-    age_range: "30-40",
-    languages: "English (Corporate Accent)",
-    look_style: "Warm, Authoritative, Confident",
-    budget: 50000,
-    location: "Remote Studio",
-    shoot_dates: "2026-06-05",
-    deliverables: "2-minute high-fidelity master dub",
-    shortlisted_ids: ["mock_t5"],
-    status: "Review"
-  }
-];
-
-// ----------------------------------------------------
-// Mock Contracts & Documents (Phase 10)
-// ----------------------------------------------------
-const INITIAL_CONTRACTS = [
-  {
-    id: "contract_1",
-    talent_name: "Tovino Thomas",
-    project_name: "BB App TVC Commercial",
-    doc_type: "NDA & Master Release Form",
-    date_issued: "2026-05-18",
-    status: "Signed",
-    signed_by: "Tovino Thomas",
-    ip_audit_log: "122.164.120.45",
-    amount: "₹3,50,000"
-  },
-  {
-    id: "contract_2",
-    talent_name: "Malavika Mohanan",
-    project_name: "Lulu Fashion CGI Walkthrough",
-    doc_type: "Corporate Performance Agreement",
-    date_issued: "2026-05-19",
-    status: "Pending Signature",
-    signed_by: "",
-    ip_audit_log: "",
-    amount: "₹2,00,000"
-  }
-];
-
-// ----------------------------------------------------
-// Mock Payments & Ledger (Phase 11)
-// ----------------------------------------------------
-const INITIAL_PAYMENTS = [
-  {
-    id: "pay_1",
-    talent_name: "Tovino Thomas",
-    project_name: "BB App TVC Commercial",
-    category: "Production Payroll",
-    amount: 350000,
-    advance_paid: 175000,
-    pending_due: 175000,
-    due_date: "2026-06-20",
-    status: "Approved"
-  },
-  {
-    id: "pay_2",
-    talent_name: "Aparna Balamurali",
-    project_name: "Kalyan Silks Puja Campaign",
-    category: "Pre-Production Booking Fee",
-    amount: 150000,
-    advance_paid: 150000,
-    pending_due: 0,
-    due_date: "2026-05-15",
-    status: "Paid"
-  },
-  {
-    id: "pay_3",
-    talent_name: "Malavika Mohanan",
-    project_name: "Lulu Fashion CGI Walkthrough",
-    category: "Model Casting Compensation",
-    amount: 200000,
-    advance_paid: 0,
-    pending_due: 200000,
-    due_date: "2026-06-30",
-    status: "Pending"
-  }
-];
-
-// ----------------------------------------------------
-// Mock Realtime Casting Comments (Phase 16)
-// ----------------------------------------------------
-const INITIAL_COMMENTS = [
-  { id: "cm_1", user: "Gireesh G (Super Admin)", text: "Tovino Thomas matches the premium athletic persona perfectly. Standardize this booking budget.", timestamp: "10 mins ago" },
-  { id: "cm_2", user: "Shyam Lal (Casting Director)", text: "Malavika Mohanan is confirmed available. Just waiting on the model agency signed agreement release.", timestamp: "2 hours ago" },
-  { id: "cm_3", user: "Ragesh K (Production Head)", text: "Sujith Bhakthan vlogging engagement in Kerala is at 9.8%. Perfect for the tourist integration film.", timestamp: "1 day ago" }
-];
+// Removed dummy mock data
 
 export default function TalentNetworkPage() {
   const { profile, isLoading: isTenantLoading, companyId, isSuperAdmin } = useTenant();
@@ -220,10 +90,10 @@ export default function TalentNetworkPage() {
   const [selectedTalentDetail, setSelectedTalentDetail] = useState<any>(null);
 
   // Dynamic Lists State (Phase 6, 10, 11, 16)
-  const [castingCalls, setCastingCalls] = useState(INITIAL_CASTING_CALLS);
-  const [contracts, setContracts] = useState(INITIAL_CONTRACTS);
-  const [payments, setPayments] = useState(INITIAL_PAYMENTS);
-  const [comments, setComments] = useState(INITIAL_COMMENTS);
+  const [castingCalls, setCastingCalls] = useState<any[]>([]);
+  const [contracts, setContracts] = useState<any[]>([]);
+  const [payments, setPayments] = useState<any[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState("");
 
   // Signature states (Phase 10)
