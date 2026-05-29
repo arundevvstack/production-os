@@ -27,7 +27,14 @@ import {
   Receipt,
   FileText,
   Calendar,
-  Lock
+  Lock,
+  AlertTriangle,
+  TrendingDown,
+  Star,
+  Building2,
+  PieChart as PieChartIcon,
+  BarChart2,
+  CircleDot
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -183,6 +190,16 @@ export default function DashboardPage() {
     return allProjects.filter(p => p.status === 'in_progress').slice(0, 4);
   }, [allProjects]);
 
+  // Per-user project count (used in SUPER_ADMIN dashboard crew roster)
+  const userProjectMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    if (!allProjects) return map;
+    allProjects.forEach(p => {
+      if (p.assignee_id) map[p.assignee_id] = (map[p.assignee_id] || 0) + 1;
+    });
+    return map;
+  }, [allProjects]);
+
   if (isTenantLoading || isProjectsLoading || isObjectivesLoading || isInvoicesLoading || isProspectsLoading || !hasMounted) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
@@ -195,148 +212,373 @@ export default function DashboardPage() {
 
   // 1. SUPER_ADMIN / OWNER Command Center
   if (roleId === 'SUPER_ADMIN' || isSuperAdmin) {
+    // --- Additional computed data for the rich dashboard ---
+    const netProfit = stats.revenue - stats.grossExpenses;
+    const profitMargin = stats.revenue > 0 ? ((netProfit / stats.revenue) * 100).toFixed(1) : '0.0';
+    const completedProjects = allProjects?.filter(p => p.status === 'completed').length || 0;
+    const overdueProjects = allProjects?.filter(p => {
+      if (!p.deadline || p.status === 'completed') return false;
+      return new Date(p.deadline) < new Date();
+    }).length || 0;
+    const crmWon = prospects?.filter(p => p.stage === 'won').reduce((s, p) => s + (p.deal_value || 0), 0) || 0;
+    const crmActive = prospects?.filter(p => !['won','lost'].includes(p.stage || ''));
+
+    const approvedUsers = companyUsers?.filter(u => u.status === 'approved') || [];
+
+    // Status helpers
+    const statusColor = (s: string) => {
+      if (s === 'in_progress') return 'bg-primary/10 text-primary';
+      if (s === 'completed') return 'bg-emerald-50 text-emerald-600';
+      if (s === 'on_hold') return 'bg-amber-50 text-amber-600';
+      return 'bg-muted text-muted-foreground';
+    };
+    const statusLabel = (s: string) => {
+      if (s === 'in_progress') return 'In Progress';
+      if (s === 'completed') return 'Completed';
+      if (s === 'on_hold') return 'On Hold';
+      return s?.replace(/_/g,' ') || 'Draft';
+    };
+    const isDeadlineSoon = (dl: string) => {
+      if (!dl) return false;
+      const diff = (new Date(dl).getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+      return diff >= 0 && diff <= 7;
+    };
+    const isOverdue = (dl: string, status: string) => {
+      if (!dl || status === 'completed') return false;
+      return new Date(dl) < new Date();
+    };
+
     return (
       <div className="space-y-8 font-body">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        {/* ═══ HEADER ═══ */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
                 Command, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Administrator'}</span>
               </h1>
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-primary/20 shadow-sm">
-                <Zap className="h-3 w-3 fill-current animate-pulse" /> {profile?.role_id ? `${profile.role_id.replace('_', ' ')} STATUS` : 'SUPER ADMIN STATUS'}
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-primary/20 shadow-sm">
+                <Zap className="h-3 w-3 fill-current animate-pulse" /> {profile?.role_id ? `${profile.role_id.replace('_', ' ')} STATUS` : 'SUPER ADMIN'}
               </div>
             </div>
             <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Layout className="h-4 w-4 text-foreground" /> {company?.name || 'Operational'} Enterprise Headquarters
+              <Building2 className="h-4 w-4 text-foreground" /> {company?.name || 'Operational'} · Enterprise Command Center
             </p>
+          </div>
+          <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground">
+            <span className="px-3 py-1.5 bg-white border rounded-full shadow-sm">{format(new Date(), 'EEE, dd MMM yyyy')}</span>
           </div>
         </div>
 
-        {/* Global KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-4 bg-emerald-50 text-emerald-600 rounded-[10px]"><IndianRupee className="h-6 w-6" /></div>
+        {/* ═══ ROW 1: 6 KPI TILES ═══ */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[
+            { label: 'Gross Revenue', value: `₹${stats.revenue.toLocaleString()}`, icon: IndianRupee, color: 'text-emerald-600', bg: 'bg-emerald-50', sub: `${profitMargin}% margin` },
+            { label: 'Net Profit', value: `₹${netProfit.toLocaleString()}`, icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50', sub: netProfit >= 0 ? 'Positive' : 'Deficit' },
+            { label: 'CRM Pipeline', value: `₹${stats.crmPipeline.toLocaleString()}`, icon: Target, color: 'text-violet-600', bg: 'bg-violet-50', sub: `${crmActive?.length || 0} active leads` },
+            { label: 'Total Projects', value: `${allProjects?.length || 0}`, icon: Briefcase, color: 'text-primary', bg: 'bg-primary/10', sub: `${stats.activeProjects} in progress` },
+            { label: 'Crew Force', value: `${companyUsers?.length || 0}`, icon: Users, color: 'text-amber-600', bg: 'bg-amber-50', sub: `${stats.pendingUsers} pending` },
+            { label: 'Overdue', value: `${overdueProjects}`, icon: AlertTriangle, color: overdueProjects > 0 ? 'text-accent' : 'text-muted-foreground', bg: overdueProjects > 0 ? 'bg-accent/10' : 'bg-muted', sub: overdueProjects > 0 ? 'Needs attention' : 'All on track' },
+          ].map((kpi) => (
+            <Card key={kpi.label} className="border-none shadow-premium rounded-[12px] bg-white hover:-translate-y-0.5 transition-all duration-300">
+              <CardContent className="p-5">
+                <div className={`h-9 w-9 rounded-[10px] ${kpi.bg} flex items-center justify-center mb-3`}>
+                  <kpi.icon className={`h-5 w-5 ${kpi.color}`} />
+                </div>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider mb-1">{kpi.label}</p>
+                <p className={`text-xl font-black ${kpi.color}`}>{kpi.value}</p>
+                <p className="text-[10px] font-medium text-muted-foreground mt-1">{kpi.sub}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* ═══ ROW 2: PROJECT HEALTH TABLE + CRM PIPELINE ═══ */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Project Health Table */}
+          <Card className="lg:col-span-2 border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+            <CardHeader className="border-b p-6 flex flex-row items-center justify-between">
               <div>
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Gross Sales</span>
-                <span className="text-2xl font-black text-foreground">₹{stats.revenue.toLocaleString()}</span>
+                <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
+                  <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Briefcase className="h-3.5 w-3.5 text-primary" />
+                  </div>
+                  Active Project Health
+                </CardTitle>
+                <CardDescription className="text-muted-foreground font-medium text-xs mt-1">Status, deadlines, budget, and progress for all running workspaces.</CardDescription>
               </div>
+              <Link href="/projects">
+                <Button variant="ghost" size="sm" className="h-8 px-3 rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-primary/5">
+                  View All <ArrowUpRight className="h-3 w-3 ml-1" />
+                </Button>
+              </Link>
+            </CardHeader>
+            <CardContent className="p-0">
+              {(!allProjects || allProjects.length === 0) ? (
+                <div className="p-12 text-center text-muted-foreground font-bold text-xs uppercase tracking-wider">No projects found.</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b bg-muted/50">
+                        <th className="text-left px-6 py-3 font-black text-[10px] uppercase tracking-wider text-muted-foreground">Project</th>
+                        <th className="text-left px-4 py-3 font-black text-[10px] uppercase tracking-wider text-muted-foreground">Status</th>
+                        <th className="text-left px-4 py-3 font-black text-[10px] uppercase tracking-wider text-muted-foreground">Deadline</th>
+                        <th className="text-left px-4 py-3 font-black text-[10px] uppercase tracking-wider text-muted-foreground">Budget</th>
+                        <th className="text-left px-4 py-3 font-black text-[10px] uppercase tracking-wider text-muted-foreground">Progress</th>
+                        <th className="px-4 py-3"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {allProjects.slice(0, 8).map((p) => (
+                        <tr key={p.id} className="hover:bg-muted/30 transition-colors group">
+                          <td className="px-6 py-4">
+                            <p className="font-black text-foreground truncate max-w-[160px]">{p.project_name}</p>
+                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">{p.client_name || '—'}</p>
+                          </td>
+                          <td className="px-4 py-4">
+                            <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${statusColor(p.status)}`}>
+                              {statusLabel(p.status)}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4">
+                            {p.deadline ? (
+                              <span className={`flex items-center gap-1 font-black ${
+                                isOverdue(p.deadline, p.status) ? 'text-accent' :
+                                isDeadlineSoon(p.deadline) ? 'text-amber-600' : 'text-foreground'
+                              }`}>
+                                {isOverdue(p.deadline, p.status) && <AlertTriangle className="h-3 w-3" />}
+                                {isDeadlineSoon(p.deadline) && !isOverdue(p.deadline, p.status) && <Clock className="h-3 w-3" />}
+                                {format(new Date(p.deadline), 'dd MMM yy')}
+                              </span>
+                            ) : <span className="text-muted-foreground">TBD</span>}
+                          </td>
+                          <td className="px-4 py-4">
+                            <span className="font-black text-foreground">₹{(p.budget || 0).toLocaleString()}</span>
+                          </td>
+                          <td className="px-4 py-4 min-w-[120px]">
+                            <div className="space-y-1">
+                              <div className="flex justify-between">
+                                <span className="text-[10px] font-black text-muted-foreground">{p.progress || 0}%</span>
+                              </div>
+                              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                                <div
+                                  className="h-full rounded-full transition-all"
+                                  style={{
+                                    width: `${p.progress || 0}%`,
+                                    background: (p.progress || 0) >= 80 ? '#10b981' : (p.progress || 0) >= 50 ? 'hsl(var(--primary))' : '#f59e0b'
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4">
+                            <Link href={`/projects/${p.id}`}>
+                              <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg bg-muted opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/10">
+                                <ArrowUpRight className="h-3.5 w-3.5" />
+                              </Button>
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
-              <div>
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Workspaces</span>
-                <span className="text-2xl font-black text-foreground">{allProjects?.length || 0} units</span>
+
+          {/* CRM Pipeline Card */}
+          <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+            <CardHeader className="border-b p-6">
+              <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
+                <div className="h-7 w-7 rounded-lg bg-violet-100 flex items-center justify-center">
+                  <Target className="h-3.5 w-3.5 text-violet-600" />
+                </div>
+                CRM Pipeline
+              </CardTitle>
+              <CardDescription className="text-muted-foreground font-medium text-xs mt-1">Active lead value and conversion funnel.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              {/* Pipeline summary */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-[10px] bg-violet-50 border border-violet-100">
+                  <p className="text-[9px] font-black text-violet-500 uppercase tracking-wider">Pipeline Value</p>
+                  <p className="text-lg font-black text-violet-700 mt-0.5">₹{stats.crmPipeline.toLocaleString()}</p>
+                </div>
+                <div className="p-3 rounded-[10px] bg-emerald-50 border border-emerald-100">
+                  <p className="text-[9px] font-black text-emerald-500 uppercase tracking-wider">Won Revenue</p>
+                  <p className="text-lg font-black text-emerald-700 mt-0.5">₹{crmWon.toLocaleString()}</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-          <Card className="border-none shadow-premium rounded-[10px] bg-white">
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Users className="h-6 w-6" /></div>
-              <div>
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Crew Force</span>
-                <span className="text-2xl font-black text-foreground">{companyUsers?.length || 0} profiles</span>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className={`border-none shadow-premium rounded-[10px] transition-colors ${stats.pendingUsers > 0 ? 'bg-accent text-white' : 'bg-white'}`}>
-            <CardContent className="p-6 flex items-center gap-4">
-              <div className={`p-4 rounded-[10px] ${stats.pendingUsers > 0 ? 'bg-white/20 text-white' : 'bg-accent/10 text-accent'}`}><UserCheck className="h-6 w-6" /></div>
-              <div>
-                <span className={`text-[10px] font-black uppercase tracking-wider block ${stats.pendingUsers > 0 ? 'text-white/80' : 'text-muted-foreground'}`}>Pending Approvals</span>
-                <span className="text-2xl font-black">{stats.pendingUsers} requests</span>
-              </div>
+              {/* Stage breakdown */}
+              {(['new', 'proposal', 'negotiation', 'won', 'lost'] as const).map(stage => {
+                const count = prospects?.filter(p => p.stage === stage).length || 0;
+                const val = prospects?.filter(p => p.stage === stage).reduce((s, p) => s + (p.deal_value || 0), 0) || 0;
+                const stageColor: Record<string, string> = {
+                  new: 'bg-blue-500', proposal: 'bg-primary', negotiation: 'bg-amber-500', won: 'bg-emerald-500', lost: 'bg-muted-foreground'
+                };
+                return (
+                  <div key={stage} className="flex items-center justify-between py-2 border-b border-dashed last:border-0">
+                    <div className="flex items-center gap-2">
+                      <div className={`h-2 w-2 rounded-full ${stageColor[stage]}`} />
+                      <span className="text-[11px] font-black uppercase tracking-wider text-foreground capitalize">{stage}</span>
+                      <span className="text-[10px] text-muted-foreground font-medium">({count})</span>
+                    </div>
+                    <span className="text-xs font-black text-foreground">₹{val.toLocaleString()}</span>
+                  </div>
+                );
+              })}
+              <Link href="/crm">
+                <Button variant="outline" className="w-full h-8 rounded-xl text-[10px] font-black uppercase tracking-wider mt-2">
+                  Open CRM <ArrowUpRight className="h-3 w-3 ml-1" />
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
 
-        {/* SuperAdmin Specific Sections: User Requests & System Logs */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* User Request Approvals */}
-          <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
-            <CardHeader className="border-b p-6">
-              <CardTitle className="text-lg font-black text-foreground flex items-center gap-2">
-                <Users className="h-5 w-5 text-foreground" /> Pending User Clearances
-              </CardTitle>
-              <CardDescription className="text-muted-foreground font-medium">New registrations awaiting credentials verification before accessing dashboard workspaces.</CardDescription>
+        {/* ═══ ROW 3: CREW ROSTER + REVENUE CHART + AUDIT LOGS ═══ */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Crew Roster */}
+          <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+            <CardHeader className="border-b p-6 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
+                  <div className="h-7 w-7 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <Users className="h-3.5 w-3.5 text-amber-600" />
+                  </div>
+                  Crew Roster
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground font-medium mt-1">All approved members &amp; their active workloads.</CardDescription>
+              </div>
             </CardHeader>
             <CardContent className="p-0">
-              {companyUsers?.filter(u => u.status === 'pending').length === 0 ? (
-                <div className="p-12 text-center text-muted-foreground font-bold uppercase tracking-wider text-xs">
-                  All systems clear. No pending crew registrations.
-                </div>
+              {approvedUsers.length === 0 ? (
+                <p className="p-8 text-center text-xs font-bold text-muted-foreground uppercase tracking-wider">No crew members yet.</p>
               ) : (
-                <div className="divide-y">
-                  {companyUsers?.filter(u => u.status === 'pending').map((member) => {
-                    const dispName = member.fullName || member.full_name || member.email?.split('@')[0] || 'New Crew';
+                <div className="divide-y max-h-[360px] overflow-y-auto custom-scrollbar">
+                  {approvedUsers.map((member) => {
+                    const name = member.fullName || member.full_name || member.email?.split('@')[0] || 'Crew';
+                    const projCount = userProjectMap[member.id] || 0;
+                    const roleTag = member.role_id?.replace(/_/g, ' ') || 'Crew';
                     return (
-                      <div key={member.id} className="p-4 flex items-center justify-between hover:bg-muted transition-colors">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-9 w-9">
-                            <AvatarFallback className="bg-primary/10 text-foreground text-[10px] font-black">
-                              {dispName.substring(0, 2).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="text-sm font-black text-foreground">{dispName}</p>
-                            <p className="text-[10px] text-muted-foreground font-medium">{member.email}</p>
-                          </div>
+                      <div key={member.id} className="p-4 flex items-center gap-3 hover:bg-muted/30 transition-colors">
+                        <Avatar className="h-9 w-9 shrink-0">
+                          {member.avatar_url && <img src={member.avatar_url} alt={name} className="rounded-full object-cover" />}
+                          <AvatarFallback className="bg-primary/10 text-foreground text-[10px] font-black">
+                            {name.substring(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-black text-foreground truncate">{name}</p>
+                          <p className="text-[10px] text-muted-foreground font-medium truncate">{member.email}</p>
                         </div>
-                        <Button onClick={() => handleApproveUser(member.id)} className="h-9 px-4 rounded-xl gap-2 font-bold text-xs bg-emerald-600 hover:bg-emerald-500 shadow-sm shadow-emerald-200">
-                          <UserCheck className="h-4 w-4" /> Grant Access
-                        </Button>
+                        <div className="flex flex-col items-end gap-1 shrink-0">
+                          <span className="text-[9px] font-black uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded-full">{roleTag}</span>
+                          <span className="text-[10px] font-bold text-muted-foreground">{projCount} project{projCount !== 1 ? 's' : ''}</span>
+                        </div>
                       </div>
                     );
                   })}
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Activity Logs */}
-          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 pb-4 border-b border-white/40 relative z-10">
-              <CardTitle className="text-lg font-black flex items-center gap-2 text-foreground">
-                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Activity className="h-4 w-4 text-primary" />
-                </div>
-                Operational Audit Logs
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 relative z-10">
-              {activityLogs?.length === 0 ? (
-                <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider text-center py-8">Zero system logs generated.</p>
-              ) : (
-                <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                  {activityLogs?.map((log) => (
-                    <div key={log.id} className="text-xs space-y-2 p-3 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md transition-all group relative overflow-hidden">
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
-                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-wider text-muted-foreground pl-2">
-                        <span>{log.user_name}</span>
-                        <span className="text-primary/70">{format(new Date(log.created_at), 'HH:mm | MMM d')}</span>
-                      </div>
-                      <p className="font-black text-foreground pl-2">{log.action}</p>
-                      <p className="text-[11px] text-muted-foreground font-medium pl-2">{log.details}</p>
-                    </div>
-                  ))}
+              {/* Pending clearances */}
+              {stats.pendingUsers > 0 && (
+                <div className="p-4 border-t bg-accent/5">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-accent">Pending Clearances ({stats.pendingUsers})</span>
+                  </div>
+                  <div className="space-y-2">
+                    {companyUsers?.filter(u => u.status === 'pending').map((member) => {
+                      const dispName = member.fullName || member.full_name || member.email?.split('@')[0] || 'New Crew';
+                      return (
+                        <div key={member.id} className="flex items-center justify-between p-2 rounded-lg bg-white border">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Avatar className="h-7 w-7 shrink-0">
+                              <AvatarFallback className="bg-accent/10 text-accent text-[9px] font-black">{dispName.substring(0, 2).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <p className="text-[11px] font-black text-foreground truncate">{dispName}</p>
+                          </div>
+                          <Button onClick={() => handleApproveUser(member.id)} className="h-7 px-3 rounded-lg text-[9px] font-black bg-emerald-600 hover:bg-emerald-500 text-white shrink-0">
+                            Approve
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </CardContent>
           </Card>
-        </div>
-      </div>
-    );
-  }
 
-  // 2. MANAGER Command Center
-  if (roleId === 'MANAGER') {
-    return (
-      <div className="space-y-8 font-body">
+          {/* Revenue Chart */}
+          <Card className="border-none shadow-premium rounded-[12px] bg-white overflow-hidden">
+            <CardHeader className="p-6 border-b">
+              <CardTitle className="text-base font-black text-foreground flex items-center gap-2">
+                <div className="h-7 w-7 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <BarChart2 className="h-3.5 w-3.5 text-emerald-600" />
+                </div>
+                Revenue Trend
+              </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground font-medium mt-1">6-month billing performance overview.</CardDescription>
+            </CardHeader>
+            <CardContent className="p-4 pt-4">
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Total Billed</p>
+                  <p className="text-xl font-black text-emerald-600">₹{stats.revenue.toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Total Expenses</p>
+                  <p className="text-xl font-black text-accent">₹{stats.grossExpenses.toLocaleString()}</p>
+                </div>
+              </div>
+              <div className="h-[180px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={revenueChartData}>
+                    <defs>
+                      <linearGradient id="colorRev2" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} style={{ fontSize: '10px', fontWeight: '900', fill: '#94a3b8' }} />
+                    <RechartsTooltip formatter={(v: any) => [`₹${v.toLocaleString()}`, 'Revenue']} />
+                    <Area type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={3} fill="url(#colorRev2)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+              {/* Pending invoices alert */}
+              {stats.pendingInvoices > 0 && (
+                <div className="mt-3 p-3 rounded-[10px] bg-amber-50 border border-amber-100 flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
+                  <span className="text-[11px] font-black text-amber-700">{stats.pendingInvoices} invoice{stats.pendingInvoices > 1 ? 's' : ''} pending payment</span>
+                  <Link href="/finance/invoices" className="ml-auto">
+                    <Button variant="ghost" size="sm" className="h-6 px-2 text-[10px] font-black text-amber-700 hover:bg-amber-100">View</Button>
+                  </Link>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Audit Logs */}
+          <Card className="border border-white/60 shadow-premium rounded-[12px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+            <CardHeader className="p-6 pb-4 border-b border-white/40 relative z-10">
+              <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
+                <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Activity className="h-3.5 w-3.5 text-primary" />
+                </div>
+                Audit Logs
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 relative z-10">
+              {(!activityLogs || activityLogs.length === 0) ? (
+                <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider text-center py-8">Zero system logs generated.</p>
+              ) : (
+                <div className="space-y-3 max-h-[320px] overflow-y-auto custom-scrollbar pr-1">
+                  {activityLogs?.map((log) => (
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
