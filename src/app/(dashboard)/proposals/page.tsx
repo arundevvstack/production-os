@@ -945,7 +945,6 @@ function ProposalsContent() {
     await supabase.from('Invoice').insert({
       id: invId,
       company_id: companyId,
-      client_id: editingProposal.parsedContent?.lead_id || null,
       project_id: prjId,
       invoice_number: invRef,
       subtotal: taxableSubtotal,
