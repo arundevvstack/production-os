@@ -94,7 +94,8 @@ function AccountCenterContent() {
   // Theme State
   const [themeColors, setThemeColors] = useState({
     primary: "#1e3a8a",
-    accent: "#ff4b82"
+    accent: "#ff4b82",
+    darkMode: false
   });
 
   useEffect(() => {
@@ -125,12 +126,14 @@ function AccountCenterContent() {
     if (tenantProfile?.theme_preference) {
       setThemeColors({
         primary: (tenantProfile.theme_preference as any).primary || "#1e3a8a",
-        accent: (tenantProfile.theme_preference as any).accent || "#ff4b82"
+        accent: (tenantProfile.theme_preference as any).accent || "#ff4b82",
+        darkMode: (tenantProfile.theme_preference as any).darkMode || false
       });
     } else if (settings?.theme) {
       setThemeColors({
         primary: (settings.theme as any).primary || "#1e3a8a",
-        accent: (settings.theme as any).accent || "#ff4b82"
+        accent: (settings.theme as any).accent || "#ff4b82",
+        darkMode: (settings.theme as any).darkMode || false
       });
     }
   }, [tenantProfile, company, settings]);
@@ -201,6 +204,7 @@ function AccountCenterContent() {
       theme_preference: {
         primary: themeColors.primary,
         accent: themeColors.accent,
+        darkMode: themeColors.darkMode,
       }
     }).eq('id', tenantProfile.id);
 
@@ -513,6 +517,19 @@ function AccountCenterContent() {
                           className="w-24 font-mono text-xs h-10 rounded-xl"
                         />
                       </div>
+                    </div>
+                    
+                    <Separator className="my-4" />
+
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="space-y-1">
+                        <Label>Dark Mode</Label>
+                        <p className="text-[10px] text-muted-foreground uppercase font-bold">Toggle dark interface</p>
+                      </div>
+                      <Switch 
+                        checked={themeColors.darkMode}
+                        onCheckedChange={(checked) => setThemeColors({ ...themeColors, darkMode: checked })}
+                      />
                     </div>
                   </div>
                 </div>
