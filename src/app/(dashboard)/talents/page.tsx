@@ -177,6 +177,13 @@ export default function TalentNetworkPage() {
     }
   }, [filteredTalents, selectedTalentDetail]);
 
+  // Derived Dynamic Stats
+  const totalTalents = talents.length;
+  const bookedTalents = contracts.filter(c => c.status === "Signed").length;
+  const availableTalents = Math.max(0, totalTalents - bookedTalents);
+  const utilizationRate = totalTalents > 0 ? ((bookedTalents / totalTalents) * 100).toFixed(1) : "0.0";
+  const totalShortlisted = castingCalls.reduce((acc, call) => acc + (call.shortlisted_ids?.length || 0), 0);
+
   // Database actions: Add Talent Profile (Phase 2 & Supabase Insert)
   const handleCreateTalentProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -386,7 +393,7 @@ export default function TalentNetworkPage() {
   }
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-3 pb-6">
       {/* ----------------------------------------------------
           COCKPIT horizontal pipeline & alerts (Phase 1 & 17)
           ---------------------------------------------------- */}
@@ -711,51 +718,51 @@ export default function TalentNetworkPage() {
           ---------------------------------------------------- */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
-          <CardContent className="p-5 space-y-1">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Total Talent</span>
-            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">{talents.length} Active</h3>
-            <span className="text-[9px] font-bold text-emerald-500 flex items-center gap-1 mt-3">
-              <CheckSquare className="h-3 w-3" /> Fully Vetted & Verified
+          <CardContent className="p-2 space-y-0">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Total Talent</span>
+            <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{totalTalents} Active</h3>
+            <span className="text-[8px] font-bold text-emerald-500 flex items-center gap-1 mt-1">
+              <CheckSquare className="h-2 w-2" /> Fully Vetted
             </span>
           </CardContent>
         </Card>
 
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
-          <CardContent className="p-5 space-y-1">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Available Now</span>
-            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">{talents.length - 2} Talents</h3>
-            <span className="text-[9px] font-bold text-foreground flex items-center gap-1 mt-3">
-              <Clock className="h-3 w-3" /> Ready for Immediate Shoot
+          <CardContent className="p-2 space-y-0">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Available Now</span>
+            <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{availableTalents} Talents</h3>
+            <span className="text-[8px] font-bold text-foreground flex items-center gap-1 mt-1">
+              <Clock className="h-2 w-2" /> Ready to Shoot
             </span>
           </CardContent>
         </Card>
 
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
-          <CardContent className="p-5 space-y-1">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Booked Roster</span>
-            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">2 On Location</h3>
-            <span className="text-[9px] font-bold text-muted-foreground flex items-center gap-1 mt-3">
-              <TrendingUp className="h-3 w-3" /> Utilization Rate: 74.2%
+          <CardContent className="p-2 space-y-0">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Booked Roster</span>
+            <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{bookedTalents} Booked</h3>
+            <span className="text-[8px] font-bold text-muted-foreground flex items-center gap-1 mt-1">
+              <TrendingUp className="h-2 w-2" /> Util: {utilizationRate}%
             </span>
           </CardContent>
         </Card>
 
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
-          <CardContent className="p-5 space-y-1">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Active Castings</span>
-            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">{castingCalls.length} Open</h3>
-            <span className="text-[9px] font-bold text-accent flex items-center gap-1 mt-3">
-              <AlertCircle className="h-3 w-3" /> 12 Candidates Shortlisted
+          <CardContent className="p-2 space-y-0">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Active Castings</span>
+            <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{castingCalls.length} Open</h3>
+            <span className="text-[8px] font-bold text-accent flex items-center gap-1 mt-1">
+              <AlertCircle className="h-2 w-2" /> {totalShortlisted} Shortlisted
             </span>
           </CardContent>
         </Card>
 
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group col-span-2 md:col-span-1">
-          <CardContent className="p-5 space-y-1">
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">AI Match Rate</span>
-            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">94% Accuracy</h3>
-            <span className="text-[9px] font-bold text-accent flex items-center gap-1 mt-3">
-              <Sparkles className="h-3 w-3 animate-pulse" /> Matched profiles
+          <CardContent className="p-2 space-y-0">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">AI Match Rate</span>
+            <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">94%</h3>
+            <span className="text-[8px] font-bold text-accent flex items-center gap-1 mt-1">
+              <Sparkles className="h-2 w-2 animate-pulse" /> Matched profiles
             </span>
           </CardContent>
         </Card>
@@ -764,12 +771,12 @@ export default function TalentNetworkPage() {
       {/* ----------------------------------------------------
           MAIN SCREEN WORKSPACE (Left Side Filter + Center Tabs + Right AI Side)
           ---------------------------------------------------- */}
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
         
         {/* LEFT PANEL — Advanced Casting Filter Sidebar (Phases 3 & 4) */}
-        <aside className="xl:col-span-1 space-y-6">
+        <aside className="xl:col-span-1 space-y-4">
           <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
-            <CardContent className="p-6 space-y-6">
+            <CardContent className="p-4 space-y-4">
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Search Directory</Label>
                 <div className="relative">
@@ -889,10 +896,10 @@ export default function TalentNetworkPage() {
             </TabsList>
 
             {/* TAB 1: TALENT PORTFOLIO ROSTER GRID (Phase 3 & 4) */}
-            <TabsContent value="roster" className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <TabsContent value="roster" className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {filteredTalents.length === 0 ? (
-                  <div className="col-span-full py-16 text-center text-muted-foreground bg-white/40 border-2 border-dashed border-white/40 rounded-[12px] shadow-sm">
+                  <div className="col-span-full py-8 text-center text-muted-foreground bg-white/40 border-2 border-dashed border-white/40 rounded-[12px] shadow-sm">
                     <p className="font-bold text-sm">No roster profiles matched filters.</p>
                     <Button variant="link" className="mt-2 text-xs" onClick={() => setIsAddOpen(true)}>List First Talent Profile</Button>
                   </div>
@@ -905,7 +912,7 @@ export default function TalentNetworkPage() {
                         selectedTalentDetail?.id === talent.id ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-md"
                       }`}
                     >
-                      <div className="relative aspect-[4/3] overflow-hidden bg-primary">
+                      <div className="relative h-16 overflow-hidden bg-primary">
                         <Image
                           src={talent.portfolio_url}
                           alt={talent.full_name}
