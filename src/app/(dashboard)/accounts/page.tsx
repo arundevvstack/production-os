@@ -491,12 +491,12 @@ export default function AccountsPage() {
         {/* OVERVIEW TAB */}
         <TabsContent value="overview" className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 px-2">
-            <Card className="obsidian-panel text-white rounded-[10px] overflow-hidden group shadow-2xl relative border-white/5">
+            <Card className="bg-white text-slate-900 rounded-[10px] overflow-hidden group shadow-2xl relative border-slate-200">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
               <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:scale-125 transition-transform duration-1000 rotate-12">
                 <Wallet className="h-32 w-32" />
               </div>
-              <CardContent className="p-12 space-y-8 relative z-10">
+              <CardContent className="p-8 space-y-8 relative z-10">
                 <div className="space-y-2">
                   <p className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-400">Total Balance</p>
                   <div className="h-1 w-12 bg-primary rounded-full"></div>
@@ -508,13 +508,13 @@ export default function AccountsPage() {
                   </p>
                 </div>
                 <div className="pt-4 flex gap-3">
-                  <div className="px-5 py-2 bg-white/5 rounded-[10px] text-[9px] font-black uppercase tracking-widest border border-white/10 backdrop-blur-md">Secure System</div>
+                  <div className="px-5 py-2 bg-white/5 rounded-[10px] text-[9px] font-black uppercase tracking-widest border border-slate-200 backdrop-blur-md">Secure System</div>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="premium-card rounded-[10px] overflow-hidden bg-white shadow-2xl border-none">
-              <CardContent className="p-12 flex flex-col justify-center h-full space-y-10">
+              <CardContent className="p-8 flex flex-col justify-center h-full space-y-10">
                 <div className="space-y-1">
                    <p className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-400">Monthly Spending</p>
                    <div className="h-1 w-12 bg-slate-200 rounded-full"></div>
@@ -542,8 +542,8 @@ export default function AccountsPage() {
               </CardContent>
             </Card>
 
-            <Card className="obsidian-panel rounded-[10px] overflow-hidden text-white shadow-2xl border-white/5 sm:col-span-2 md:col-span-1">
-              <CardContent className="p-12 flex flex-col justify-center h-full relative space-y-10">
+            <Card className="bg-white rounded-[10px] overflow-hidden text-slate-900 shadow-2xl border-slate-200 sm:col-span-2 md:col-span-1">
+              <CardContent className="p-8 flex flex-col justify-center h-full relative space-y-10">
                 <div className="absolute top-0 right-0 p-12 opacity-5 rotate-45">
                   <Cpu className="h-32 w-32" />
                 </div>
@@ -575,8 +575,8 @@ export default function AccountsPage() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {accounts?.length === 0 ? (
-                  <div className="col-span-full py-32 text-center bg-slate-900/50 backdrop-blur-md rounded-[10px] border border-white/5 shadow-2xl">
-                    <div className="h-20 w-20 rounded-[10px] bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6 animate-pulse">
+                  <div className="col-span-full py-32 text-center bg-slate-50/50 backdrop-blur-md rounded-[10px] border border-slate-200 shadow-2xl">
+                    <div className="h-20 w-20 rounded-[10px] bg-white/5 border border-slate-200 flex items-center justify-center mx-auto mb-6 animate-pulse">
                       <Building2 className="h-10 w-10 text-slate-500" />
                     </div>
                     <p className="text-base font-black uppercase tracking-widest text-slate-400">No active accounts found</p>
@@ -585,7 +585,7 @@ export default function AccountsPage() {
                       <Button className="h-12 px-6 rounded-[10px] bg-white text-slate-950 hover:bg-slate-100 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg" onClick={() => setIsAddOpen(true)}>
                         <Plus className="h-4 w-4 mr-2" /> Add Account
                       </Button>
-                      <Button variant="outline" className="h-12 px-6 rounded-[10px] border-white/10 bg-white/5 text-white hover:bg-white/10 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95" onClick={handleSeedDemoAccounts} disabled={isSeeding}>
+                      <Button variant="outline" className="h-12 px-6 rounded-[10px] border-slate-200 bg-white/5 text-white hover:bg-white/10 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95" onClick={handleSeedDemoAccounts} disabled={isSeeding}>
                         {isSeeding ? "Syncing..." : "Seed Default Accounts"}
                       </Button>
                     </div>
@@ -593,17 +593,17 @@ export default function AccountsPage() {
 
                 ) : (
                   accounts?.map((acc) => (
-                    <Card key={acc.id} className="obsidian-panel group border-white/5 shadow-2xl rounded-[10px] transition-all duration-700 hover:scale-[1.02] hover:bg-slate-900">
-                      <CardContent className="p-10 space-y-10">
+                    <Card key={acc.id} className="bg-white group border-slate-200 shadow-2xl rounded-[10px] transition-all duration-700 hover:scale-[1.02] hover:bg-slate-50">
+                      <CardContent className="p-6 space-y-6">
                         <div className="flex justify-between items-start">
                           <div className={cn(
-                            "h-16 w-16 rounded-[10px] flex items-center justify-center shadow-2xl backdrop-blur-3xl transition-all group-hover:rotate-6 group-hover:scale-110 border border-white/10",
+                            "h-16 w-16 rounded-[10px] flex items-center justify-center shadow-2xl backdrop-blur-3xl transition-all group-hover:rotate-6 group-hover:scale-110 border border-slate-200",
                             acc.type === 'Bank' ? 'bg-indigo-600 text-white' : 'bg-emerald-600 text-white'
                           )}>
                             {acc.type === 'Bank' ? <Building2 className="h-8 w-8" /> : <Banknote className="h-8 w-8" />}
                           </div>
                           <div className="flex items-center gap-3">
-                            <Badge className="bg-white/10 backdrop-blur-md text-white border-white/10 text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-sm">
+                            <Badge className="bg-white/10 backdrop-blur-md text-white border-slate-200 text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-sm">
                               {acc.type}
                             </Badge>
                             <DropdownMenu>
@@ -612,7 +612,7 @@ export default function AccountsPage() {
                                   <MoreVertical className="h-6 w-6" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="rounded-[10px] obsidian-panel p-2 w-60 border-white/10 text-white shadow-3xl">
+                              <DropdownMenuContent align="end" className="rounded-[10px] bg-white p-2 w-60 border-slate-200 text-white shadow-xl">
                                 <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 px-5 py-4">Account Options</DropdownMenuLabel>
                                 <DropdownMenuItem className="text-rose-500 font-black gap-4 rounded-xl m-1 py-4 cursor-pointer focus:bg-rose-500/10 focus:text-rose-500" onClick={() => setAccountToDelete(acc)}>
                                   <Trash2 className="h-5 w-5" /> Delete Account
@@ -622,18 +622,18 @@ export default function AccountsPage() {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <h4 className="font-black text-3xl tracking-tighter text-white group-hover:text-primary transition-colors">{acc.name}</h4>
+                          <h4 className="font-black text-3xl tracking-tighter text-slate-900 group-hover:text-primary transition-colors">{acc.name}</h4>
                           <p className="text-[11px] text-slate-500 font-black uppercase tracking-[0.2em] flex items-center gap-2">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] block"></span>
                             {acc.bank_name || 'Business Reserve'}
                           </p>
                         </div>
-                        <div className="pt-8 border-t border-white/5 flex justify-between items-end">
+                        <div className="pt-8 border-t border-slate-200 flex justify-between items-end">
                           <div className="space-y-2">
                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Available Balance</p>
-                            <p className="text-4xl font-black text-white tracking-tighter">₹{Number(acc.balance).toLocaleString()}</p>
+                            <p className="text-4xl font-black text-slate-900 tracking-tighter">₹{Number(acc.balance).toLocaleString()}</p>
                           </div>
-                          <div className="h-12 w-12 rounded-[10px] bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                          <div className="h-12 w-12 rounded-[10px] bg-white/5 border border-slate-200 flex items-center justify-center text-slate-400 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
                             <ChevronRight className="h-6 w-6" />
                           </div>
                         </div>
@@ -651,11 +651,11 @@ export default function AccountsPage() {
                 </div>
                 Financial Pulse
               </h3>
-              <Card className="obsidian-panel rounded-[10px] border-white/5 shadow-3xl overflow-hidden">
+              <Card className="bg-white rounded-[10px] border-slate-200 shadow-xl overflow-hidden">
                 <CardContent className="p-4">
                   {(!expenses || expenses.length === 0) ? (
                     <div className="py-24 text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 flex flex-col items-center justify-center">
-                      <div className="h-12 w-12 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/5">
+                      <div className="h-12 w-12 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-slate-200">
                         <History className="h-5 w-5 text-slate-500" />
                       </div>
                       Zero operational movements.
@@ -663,12 +663,12 @@ export default function AccountsPage() {
                   ) : (
                     <div className="space-y-2">
                       {expenses?.slice(0, 8).map((ex) => (
-                        <div key={ex.id} className="p-6 flex items-center gap-6 hover:bg-white/5 rounded-[10px] transition-all duration-500 group cursor-pointer border border-transparent hover:border-white/5">
+                        <div key={ex.id} className="p-6 flex items-center gap-6 hover:bg-slate-50 rounded-[10px] transition-all duration-500 group cursor-pointer border border-transparent hover:border-slate-200">
                           <div className="h-14 w-14 rounded-[10px] bg-rose-500/10 text-rose-500 flex items-center justify-center shrink-0 shadow-inner transition-all group-hover:scale-110 group-hover:rotate-6">
                             <TrendingDown className="h-7 w-7" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-base font-black text-white truncate tracking-tight group-hover:text-primary transition-colors">{ex.description}</p>
+                            <p className="text-base font-black text-slate-900 truncate tracking-tight group-hover:text-primary transition-colors">{ex.description}</p>
                             <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-1.5">{ex.category} • {ex.sub_category}</p>
                           </div>
                           <div className="text-right shrink-0 space-y-1.5">
@@ -677,7 +677,7 @@ export default function AccountsPage() {
                           </div>
                         </div>
                       ))}
-                      <Button variant="ghost" className="w-full h-14 rounded-[10px] text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-white hover:bg-white/5 transition-all mt-2">
+                      <Button variant="ghost" className="w-full h-14 rounded-[10px] text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-white hover:bg-slate-50 transition-all mt-2">
                         View All Expenses <ChevronRight className="h-4 w-4 ml-2" />
                       </Button>
                     </div>
@@ -690,21 +690,21 @@ export default function AccountsPage() {
         <TabsContent value="expenses" className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-12 duration-1000">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 px-2">
             <div className="lg:col-span-2 space-y-8">
-              <Card className="obsidian-panel rounded-[10px] overflow-hidden border-white/5 shadow-3xl">
-                <CardHeader className="bg-white/5 border-b border-white/5 px-10 py-10">
+              <Card className="bg-white rounded-[10px] overflow-hidden border-slate-200 shadow-xl">
+                <CardHeader className="bg-white/5 border-b border-slate-200 px-10 py-10">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                     <div>
-                      <CardTitle className="text-3xl font-black tracking-tighter text-white">Expense History</CardTitle>
+                      <CardTitle className="text-3xl font-black tracking-tighter text-slate-900">Expense History</CardTitle>
                       <CardDescription className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-2">Full list of all business transactions.</CardDescription>
                     </div>
                     <div className="flex flex-wrap items-center gap-4">
                       <div className="relative group">
                         <Filter className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-primary transition-colors" />
                         <Select value={projectFilter} onValueChange={setProjectFilter}>
-                          <SelectTrigger className="pl-12 w-[220px] rounded-[10px] h-12 text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10 text-white focus:ring-primary/20 shadow-xl backdrop-blur-xl">
+                          <SelectTrigger className="pl-12 w-[220px] rounded-[10px] h-12 text-[10px] font-black uppercase tracking-widest bg-white/5 border-slate-200 text-white focus:ring-primary/20 shadow-xl backdrop-blur-xl">
                             <SelectValue placeholder="Filter by Unit" />
                           </SelectTrigger>
-                          <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                          <SelectContent className="rounded-[10px] bg-white border-slate-200 text-white">
                             <SelectItem value="all" className="text-xs font-bold rounded-xl m-1">All Expenses</SelectItem>
                             <SelectItem value="overhead" className="text-xs font-bold rounded-xl m-1">General Overhead</SelectItem>
                             {projects?.map(p => (
@@ -713,7 +713,7 @@ export default function AccountsPage() {
                           </SelectContent>
                         </Select>
                       </div>
-                      <Button variant="outline" className="h-12 px-6 rounded-[10px] border-white/10 bg-white/5 text-white hover:bg-white/10 font-black text-[10px] uppercase tracking-widest shadow-xl gap-3 transition-all active:scale-95">
+                      <Button variant="outline" className="h-12 px-6 rounded-[10px] border-slate-200 bg-white/5 text-white hover:bg-white/10 font-black text-[10px] uppercase tracking-widest shadow-xl gap-3 transition-all active:scale-95">
                         <Download className="h-4 w-4 text-primary" /> Download Report
                       </Button>
                     </div>
@@ -742,7 +742,7 @@ export default function AccountsPage() {
                           filteredExpenses?.map((ex) => {
                             const linkedProject = projects?.find(p => p.id === ex.project_id);
                             return (
-                              <tr key={ex.id} className="hover:bg-white/5 transition-all group">
+                              <tr key={ex.id} className="hover:bg-slate-50 transition-all group">
                                 <td className="px-10 py-8 text-slate-500 font-black text-[10px] uppercase tracking-widest whitespace-nowrap">{format(new Date(ex.date), 'MMM dd, yyyy')}</td>
                                 <td className="px-8 py-8">
                                   <div className="flex flex-col gap-2">
@@ -753,7 +753,7 @@ export default function AccountsPage() {
                                 <td className="px-8 py-8 font-black text-white text-base tracking-tighter">{ex.description}</td>
                                 <td className="px-8 py-8">
                                   {linkedProject ? (
-                                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-white/10 bg-white/5 text-white py-1.5 px-4 rounded-full truncate max-w-[150px]">
+                                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-slate-200 bg-white/5 text-white py-1.5 px-4 rounded-full truncate max-w-[150px]">
                                       {linkedProject.project_name}
                                     </Badge>
                                   ) : (
@@ -792,9 +792,9 @@ export default function AccountsPage() {
             </div>
 
             <div className="space-y-8">
-              <Card className="obsidian-panel rounded-[10px] border-white/5 shadow-3xl">
+              <Card className="bg-white rounded-[10px] border-slate-200 shadow-xl">
                 <CardHeader className="p-10">
-                  <CardTitle className="text-3xl font-black tracking-tighter text-white flex items-center gap-4">
+                  <CardTitle className="text-3xl font-black tracking-tighter text-slate-900 flex items-center gap-4">
                     <PieChart className="h-8 w-8 text-primary" /> Spending by Category
                   </CardTitle>
                 </CardHeader>
@@ -806,7 +806,7 @@ export default function AccountsPage() {
                       <div key={cat} className="space-y-3.5">
                         <div className="flex justify-between items-end">
                           <span className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">{cat}</span>
-                          <span className="text-sm font-black text-white tracking-tighter">₹{catTotal.toLocaleString()}</span>
+                          <span className="text-sm font-black text-slate-900 tracking-tighter">₹{catTotal.toLocaleString()}</span>
                         </div>
                         <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden p-0.5">
                           <div className="h-full bg-primary rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${perc}%` }}></div>
@@ -817,7 +817,7 @@ export default function AccountsPage() {
                 </CardContent>
               </Card>
 
-              <Card className="obsidian-panel rounded-[10px] text-white overflow-hidden shadow-3xl relative border-white/5">
+              <Card className="bg-white rounded-[10px] text-slate-900 overflow-hidden shadow-xl relative border-slate-200">
                 <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
                    <BrainCircuit className="h-40 w-40" />
                 </div>
@@ -845,29 +845,29 @@ export default function AccountsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 px-2">
             <div className="lg:col-span-2 space-y-8">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <Card className="obsidian-panel rounded-[10px] border-white/5 shadow-2xl relative overflow-hidden group">
+                <Card className="bg-white rounded-[10px] border-slate-200 shadow-2xl relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
                   <CardContent className="p-10">
                     <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.4em] mb-3">GST Total</p>
                     <div className="space-y-2">
-                       <h4 className="text-4xl font-black tracking-tighter text-white">₹{gstStats.output.toLocaleString()}</h4>
+                       <h4 className="text-4xl font-black tracking-tighter text-slate-900">₹{gstStats.output.toLocaleString()}</h4>
                        <p className="text-[10px] text-emerald-400 font-black uppercase tracking-widest flex items-center gap-3">
                          <span className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.5)] block"></span> Connected
                        </p>
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="obsidian-panel rounded-[10px] border-white/5 shadow-2xl relative overflow-hidden">
+                <Card className="bg-white rounded-[10px] border-slate-200 shadow-2xl relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-slate-400/20" />
                   <CardContent className="p-10">
                     <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.4em] mb-3">ITC Projection</p>
                     <div className="space-y-2">
-                      <h4 className="text-4xl font-black tracking-tighter text-white">₹{(totalExpensesMonth * 0.18).toLocaleString()}</h4>
+                      <h4 className="text-4xl font-black tracking-tighter text-slate-900">₹{(totalExpensesMonth * 0.18).toLocaleString()}</h4>
                       <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Calculated Threshold</p>
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="obsidian-panel rounded-[10px] border-white/5 shadow-2xl relative overflow-hidden group">
+                <Card className="bg-white rounded-[10px] border-slate-200 shadow-2xl relative overflow-hidden group">
                   <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:rotate-45 transition-transform duration-1000">
                     <Zap className="h-20 w-20 fill-current" />
                   </div>
@@ -914,7 +914,7 @@ export default function AccountsPage() {
                           </tr>
                         ) : (
                           gstStats.periods.map((m, idx) => (
-                            <tr key={idx} className="hover:bg-white/5 transition-all group">
+                            <tr key={idx} className="hover:bg-slate-50 transition-all group">
                               <td className="px-10 py-8 font-black text-white text-lg tracking-tighter">{m.period}</td>
                               <td className="px-8 py-8">
                                 <span className="font-black text-xl text-primary tracking-tighter">₹{m.output.toLocaleString()}</span>
@@ -928,7 +928,7 @@ export default function AccountsPage() {
                                 </Badge>
                               </td>
                               <td className="px-10 py-8 text-right">
-                                <Button className="h-12 px-8 rounded-[10px] bg-white/5 hover:bg-white text-white hover:text-slate-900 border border-white/10 font-black text-[10px] uppercase tracking-widest gap-3 shadow-xl transition-all active:scale-95">
+                                <Button className="h-12 px-8 rounded-[10px] bg-white/5 hover:bg-white text-slate-900 hover:text-slate-900 border border-slate-200 font-black text-[10px] uppercase tracking-widest gap-3 shadow-xl transition-all active:scale-95">
                                   <Zap className="h-4 w-4 fill-current" /> File Return
                                 </Button>
                               </td>
@@ -953,7 +953,7 @@ export default function AccountsPage() {
                   </div>
                   <div className="space-y-3">
                     <h4 className="text-2xl font-black tracking-tight leading-tight">Bulk Filing <br/>Ready</h4>
-                    <p className="text-sm font-medium text-white/50 leading-relaxed">
+                    <p className="text-sm font-medium text-slate-900/50 leading-relaxed">
                       You have <strong>{gstStats.periods.filter(m => m.status === 'Pending').length}</strong> pending filings ready for submission.
                     </p>
                   </div>
@@ -964,7 +964,7 @@ export default function AccountsPage() {
               </Card>
 
               <Card className="premium-card rounded-[10px] bg-slate-900 text-white p-10 space-y-8 border-none shadow-2xl">
-                <div className="h-16 w-16 rounded-[10px] bg-white/5 flex items-center justify-center border border-white/10">
+                <div className="h-16 w-16 rounded-[10px] bg-white/5 flex items-center justify-center border border-slate-200">
                   <Cpu className="h-8 w-8 text-primary" />
                 </div>
                 <div className="space-y-3">
@@ -973,7 +973,7 @@ export default function AccountsPage() {
                 </div>
                 <div className="space-y-3">
                    {['GSTR-1 Verification', 'GSTR-3B Audit'].map(item => (
-                     <Button key={item} variant="outline" className="w-full h-12 bg-white/5 border-white/10 text-white hover:bg-white/10 rounded-[10px] text-[10px] font-black uppercase tracking-widest text-left justify-start px-6 gap-3 group transition-all">
+                     <Button key={item} variant="outline" className="w-full h-12 bg-white/5 border-slate-200 text-white hover:bg-white/10 rounded-[10px] text-[10px] font-black uppercase tracking-widest text-left justify-start px-6 gap-3 group transition-all">
                        <ShieldCheck className="h-4 w-4 text-primary opacity-50 group-hover:opacity-100" />
                        {item}
                      </Button>
@@ -989,8 +989,8 @@ export default function AccountsPage() {
 
       {/* Register Account Dialog */}
       <Dialog open={isAddAccountOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="sm:max-w-[500px] rounded-[10px] border-white/5 obsidian-panel p-0 overflow-hidden shadow-3xl">
-          <div className="bg-slate-900 p-10 text-white relative overflow-hidden border-b border-white/5">
+        <DialogContent className="sm:max-w-[500px] rounded-[10px] border-slate-200 bg-white p-0 overflow-hidden shadow-xl">
+          <div className="bg-slate-900 p-10 text-slate-900 relative overflow-hidden border-b border-slate-200">
             <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
                <Building2 className="h-32 w-32" />
             </div>
@@ -1014,17 +1014,17 @@ export default function AccountsPage() {
                 value={newAccount.name}
                 onChange={(e) => setNewAccount({...newAccount, name: e.target.value})}
                 required
-                className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
+                className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
               />
             </div>
             <div className="grid grid-cols-2 gap-8">
               <div className="space-y-3">
                 <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 ml-1">Account Type</Label>
                 <Select value={newAccount.type} onValueChange={(val) => setNewAccount({...newAccount, type: val})}>
-                  <SelectTrigger className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold">
+                  <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                  <SelectContent className="rounded-[10px] bg-white border-slate-200 text-white">
                     <SelectItem value="Bank" className="text-xs font-bold rounded-xl m-1">Bank Account</SelectItem>
                     <SelectItem value="Cash" className="text-xs font-bold rounded-xl m-1">Petty Cash / Cash</SelectItem>
                     <SelectItem value="Credit" className="text-xs font-bold rounded-xl m-1">Credit Card</SelectItem>
@@ -1039,7 +1039,7 @@ export default function AccountsPage() {
                   value={newAccount.balance}
                   onChange={(e) => setNewAccount({...newAccount, balance: e.target.value})}
                   required
-                  className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-black placeholder:text-slate-600"
+                  className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-black placeholder:text-slate-600"
                 />
               </div>
             </div>
@@ -1053,7 +1053,7 @@ export default function AccountsPage() {
                     value={newAccount.bank_name}
                     onChange={(e) => setNewAccount({...newAccount, bank_name: e.target.value})}
                     required
-                    className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
+                    className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
                   />
                 </div>
                 <div className="space-y-3">
@@ -1063,7 +1063,7 @@ export default function AccountsPage() {
                     value={newAccount.account_number}
                     onChange={(e) => setNewAccount({...newAccount, account_number: e.target.value})}
                     required
-                    className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
+                    className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl focus:ring-primary/20 font-bold placeholder:text-slate-600"
                   />
                 </div>
               </div>
@@ -1078,8 +1078,8 @@ export default function AccountsPage() {
 
       {/* Log Expense Dialog */}
       <Dialog open={isLogExpenseOpen} onOpenChange={setIsLogExpenseOpen}>
-        <DialogContent className="sm:max-w-[550px] rounded-[10px] border-white/5 obsidian-panel p-0 overflow-hidden shadow-3xl">
-          <div className="bg-primary p-10 text-white relative overflow-hidden border-b border-white/5">
+        <DialogContent className="sm:max-w-[550px] rounded-[10px] border-slate-200 bg-white p-0 overflow-hidden shadow-xl">
+          <div className="bg-primary p-10 text-slate-900 relative overflow-hidden border-b border-slate-200">
             <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12">
                <Receipt className="h-32 w-32" />
             </div>
@@ -1106,10 +1106,10 @@ export default function AccountsPage() {
                     setNewExpense({...newExpense, category: val, sub_category: subs[0] || ""});
                   }}
                 >
-                  <SelectTrigger className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold">
+                  <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                  <SelectContent className="rounded-[10px] bg-white border-slate-200 text-white">
                     {Object.keys(PRODUCTION_CATEGORIES_MAP).map(cat => (
                       <SelectItem key={cat} value={cat} className="text-xs font-bold rounded-xl m-1">{cat}</SelectItem>
                     ))}
@@ -1123,10 +1123,10 @@ export default function AccountsPage() {
                   value={newExpense.sub_category} 
                   onValueChange={(val) => setNewExpense({...newExpense, sub_category: val})}
                 >
-                  <SelectTrigger className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold">
+                  <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                  <SelectContent className="rounded-[10px] bg-white border-slate-200 text-white">
                     {(PRODUCTION_CATEGORIES_MAP[newExpense.category] || []).map(sub => (
                       <SelectItem key={sub} value={sub} className="text-xs font-bold rounded-xl m-1">{sub}</SelectItem>
                     ))}
@@ -1142,7 +1142,7 @@ export default function AccountsPage() {
                 value={newExpense.vendor_name}
                 onChange={(e) => setNewExpense({...newExpense, vendor_name: e.target.value})}
                 required
-                className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold placeholder:text-slate-600"
+                className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold placeholder:text-slate-600"
               />
             </div>
 
@@ -1153,7 +1153,7 @@ export default function AccountsPage() {
                 value={newExpense.description}
                 onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
                 required
-                className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold placeholder:text-slate-600"
+                className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold placeholder:text-slate-600"
               />
             </div>
 
@@ -1173,7 +1173,7 @@ export default function AccountsPage() {
                     });
                   }}
                   required
-                  className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-black placeholder:text-slate-600"
+                  className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-black placeholder:text-slate-600"
                 />
               </div>
               <div className="space-y-3">
@@ -1183,7 +1183,7 @@ export default function AccountsPage() {
                   value={newExpense.date}
                   onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
                   required
-                  className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold placeholder:text-slate-600"
+                  className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold placeholder:text-slate-600"
                 />
               </div>
             </div>
@@ -1202,10 +1202,10 @@ export default function AccountsPage() {
                     });
                   }}
                 >
-                  <SelectTrigger className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold">
+                  <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                  <SelectContent className="rounded-[10px] bg-white border-slate-200 text-white">
                     <SelectItem value="None" className="text-xs font-bold rounded-xl m-1">No Tax / Unregistered</SelectItem>
                     <SelectItem value="Intra-state" className="text-xs font-bold rounded-xl m-1">Intra-state (CGST + SGST)</SelectItem>
                     <SelectItem value="Inter-state" className="text-xs font-bold rounded-xl m-1">Inter-state (IGST)</SelectItem>
@@ -1220,7 +1220,7 @@ export default function AccountsPage() {
                   value={newExpense.gst_amount}
                   onChange={(e) => setNewExpense({...newExpense, gst_amount: e.target.value})}
                   disabled={newExpense.tax_type === "None"}
-                  className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-black placeholder:text-slate-600 disabled:opacity-50"
+                  className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-black placeholder:text-slate-600 disabled:opacity-50"
                 />
               </div>
             </div>
@@ -1228,10 +1228,10 @@ export default function AccountsPage() {
             <div className="space-y-3">
               <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 ml-1">Account Paid From</Label>
               <Select value={newExpense.account_id} onValueChange={(val) => setNewExpense({...newExpense, account_id: val})}>
-                <SelectTrigger className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold">
+                <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold">
                   <SelectValue placeholder="Select Account" />
                 </SelectTrigger>
-                <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                <SelectContent className="rounded-[10px] bg-white border-slate-200 text-white">
                   <SelectItem value="none" className="text-xs font-bold rounded-xl m-1">Select Account (Optional)</SelectItem>
                   {accounts?.map(acc => (
                     <SelectItem key={acc.id} value={acc.id} className="text-xs font-bold rounded-xl m-1">
@@ -1245,10 +1245,10 @@ export default function AccountsPage() {
             <div className="space-y-3">
               <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500 ml-1">Project Link (Optional)</Label>
               <Select value={newExpense.project_id} onValueChange={(val) => setNewExpense({...newExpense, project_id: val})}>
-                <SelectTrigger className="h-14 rounded-[10px] border-white/10 bg-white/5 text-white shadow-xl font-bold">
+                <SelectTrigger className="h-14 rounded-[10px] border-slate-200 bg-white/5 text-white shadow-xl font-bold">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="rounded-[10px] obsidian-panel border-white/10 text-white">
+                <SelectContent className="rounded-[10px] bg-white border-slate-200 text-white">
                   <SelectItem value="none" className="text-xs font-bold rounded-xl m-1">General Operating Expense</SelectItem>
                   {projects?.map(p => (
                     <SelectItem key={p.id} value={p.id} className="text-xs font-bold rounded-xl m-1">{p.project_name}</SelectItem>
@@ -1266,14 +1266,14 @@ export default function AccountsPage() {
 
       {/* AI Result Dialog */}
       <Dialog open={isAIResultOpen} onOpenChange={setIsAIResultOpen}>
-        <DialogContent className="sm:max-w-[650px] rounded-[10px] border-white/5 obsidian-panel p-0 overflow-hidden shadow-3xl">
-          <div className="bg-indigo-950 p-12 text-white relative overflow-hidden border-b border-white/5">
+        <DialogContent className="sm:max-w-[650px] rounded-[10px] border-slate-200 bg-white p-0 overflow-hidden shadow-xl">
+          <div className="bg-indigo-950 p-12 text-slate-900 relative overflow-hidden border-b border-slate-200">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-30"></div>
             <div className="absolute top-0 right-0 p-16 opacity-10 rotate-12">
                <BrainCircuit className="h-48 w-48" />
             </div>
             <DialogHeader className="relative z-10">
-              <div className="h-16 w-16 rounded-[10px] bg-accent flex items-center justify-center mb-8 shadow-2xl shadow-accent/40 border border-white/10">
+              <div className="h-16 w-16 rounded-[10px] bg-accent flex items-center justify-center mb-8 shadow-2xl shadow-accent/40 border border-slate-200">
                 <Zap className="h-8 w-8 text-white fill-current" />
               </div>
               <DialogTitle className="text-4xl font-black tracking-tighter">AI Business Insights</DialogTitle>
@@ -1283,16 +1283,16 @@ export default function AccountsPage() {
             </DialogHeader>
           </div>
           
-          <ScrollArea className="max-h-[60vh] bg-slate-900/50">
+          <ScrollArea className="max-h-[60vh] bg-slate-50/50">
             <div className="p-12 space-y-12 pb-24">
               {aiAdvice && (
                 <>
                   <div className="grid grid-cols-2 gap-8">
-                    <div className="p-8 rounded-[10px] bg-white/5 border border-white/5 space-y-3">
+                    <div className="p-8 rounded-[10px] bg-white/5 border border-slate-200 space-y-3">
                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Projected Health</p>
-                       <p className="text-4xl font-black text-white tracking-tighter capitalize">{aiAdvice.summary.split('.')[0]}</p>
+                       <p className="text-4xl font-black text-slate-900 tracking-tighter capitalize">{aiAdvice.summary.split('.')[0]}</p>
                     </div>
-                    <div className="p-8 rounded-[10px] bg-white/5 border border-white/5 space-y-3">
+                    <div className="p-8 rounded-[10px] bg-white/5 border border-slate-200 space-y-3">
                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Action Items</p>
                        <p className="text-4xl font-black text-emerald-400 tracking-tighter">{aiAdvice.recommendations.length} Tasks</p>
                     </div>
@@ -1304,8 +1304,8 @@ export default function AccountsPage() {
                     </h4>
                     <div className="space-y-5">
                       {aiAdvice.recommendations?.map((rec, i) => (
-                        <div key={i} className="p-8 rounded-[10px] bg-white/5 border border-white/5 shadow-2xl flex gap-8 group hover:border-primary/20 transition-all duration-500">
-                          <div className="h-12 w-12 rounded-[10px] bg-slate-800 flex items-center justify-center text-primary font-black shrink-0 group-hover:bg-primary group-hover:text-white transition-all text-sm">0{i+1}</div>
+                        <div key={i} className="p-8 rounded-[10px] bg-white/5 border border-slate-200 shadow-2xl flex gap-8 group hover:border-primary/20 transition-all duration-500">
+                          <div className="h-12 w-12 rounded-[10px] bg-slate-800 flex items-center justify-center text-primary font-black shrink-0 group-hover:bg-primary group-hover:text-slate-900 transition-all text-sm">0{i+1}</div>
                           <div className="space-y-2 pt-2">
                             <p className="text-xs font-black uppercase tracking-widest text-indigo-400">{rec.category}</p>
                             <p className="text-base font-medium text-slate-300 leading-relaxed">{rec.advice}</p>
@@ -1316,7 +1316,7 @@ export default function AccountsPage() {
                     </div>
                   </div>
 
-                  <div className="p-12 rounded-[10px] bg-gradient-to-br from-slate-800 to-slate-900 text-white space-y-8 relative overflow-hidden border border-white/5 shadow-3xl">
+                  <div className="p-12 rounded-[10px] bg-gradient-to-br from-slate-800 to-slate-900 text-slate-900 space-y-8 relative overflow-hidden border border-slate-200 shadow-xl">
                     <div className="absolute top-0 right-0 p-12 opacity-5">
                        <Receipt className="h-24 w-24" />
                     </div>
@@ -1327,7 +1327,7 @@ export default function AccountsPage() {
                       {aiAdvice.filingTip}
                     </p>
                     <div className="flex gap-4 pt-4">
-                      <Badge className="bg-white/10 text-white border border-white/10 py-2 px-5 rounded-[10px] text-[10px] font-black uppercase tracking-widest backdrop-blur-md">Smart Filing</Badge>
+                      <Badge className="bg-white/10 text-white border border-slate-200 py-2 px-5 rounded-[10px] text-[10px] font-black uppercase tracking-widest backdrop-blur-md">Smart Filing</Badge>
                       <Badge className="bg-accent text-white border-none py-2 px-5 rounded-[10px] text-[10px] font-black uppercase tracking-widest shadow-lg shadow-accent/20">Authorized</Badge>
                     </div>
                   </div>
@@ -1336,12 +1336,12 @@ export default function AccountsPage() {
             </div>
           </ScrollArea>
           
-          <div className="p-10 obsidian-panel border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="p-10 bg-white border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">
               <ShieldCheck className="h-5 w-5 text-emerald-400" />
               Verified with GSTR Standards
             </div>
-            <Button onClick={() => setIsAIResultOpen(false)} className="h-16 px-12 rounded-[10px] bg-white text-slate-900 font-black uppercase tracking-[0.2em] text-xs active:scale-95 transition-all shadow-3xl">
+            <Button onClick={() => setIsAIResultOpen(false)} className="h-16 px-12 rounded-[10px] bg-white text-slate-900 font-black uppercase tracking-[0.2em] text-xs active:scale-95 transition-all shadow-xl">
               Close
             </Button>
           </div>
@@ -1352,7 +1352,7 @@ export default function AccountsPage() {
       
       {/* Account Deletion */}
       <AlertDialog open={!!accountToDelete} onOpenChange={(open) => !open && setAccountToDelete(null)}>
-        <AlertDialogContent className="rounded-[10px] obsidian-panel border-white/5 p-12 overflow-hidden relative text-white shadow-3xl">
+        <AlertDialogContent className="rounded-[10px] bg-white border-slate-200 p-12 overflow-hidden relative text-white shadow-xl">
           <div className="absolute top-0 right-0 p-12 opacity-5 -rotate-12">
              <Trash2 className="h-40 w-40" />
           </div>
@@ -1362,11 +1362,11 @@ export default function AccountsPage() {
             </div>
             <AlertDialogTitle className="text-4xl font-black tracking-tighter">Delete Account?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 font-medium text-lg leading-relaxed pt-2">
-              Are you sure you want to delete <span className="text-white font-black">{accountToDelete?.name}</span>? This will remove all associated transaction data.
+              Are you sure you want to delete <span className="text-slate-900 font-black">{accountToDelete?.name}</span>? This will remove all associated transaction data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-12 gap-4 relative z-10">
-            <AlertDialogCancel className="h-14 px-8 rounded-[10px] bg-white/5 border-white/10 text-white hover:bg-white/10 font-black text-[10px] uppercase tracking-widest">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="h-14 px-8 rounded-[10px] bg-white/5 border-slate-200 text-white hover:bg-white/10 font-black text-[10px] uppercase tracking-widest">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={() => accountToDelete && handleDeleteAccount()} className="h-14 px-10 rounded-[10px] bg-rose-600 hover:bg-rose-700 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-rose-600/20 transition-all active:scale-95">
               Confirm Delete
             </AlertDialogAction>
@@ -1375,7 +1375,7 @@ export default function AccountsPage() {
       </AlertDialog>
 
       <AlertDialog open={!!expenseToDelete} onOpenChange={(open) => !open && setExpenseToDelete(null)}>
-        <AlertDialogContent className="rounded-[10px] obsidian-panel border-white/5 p-12 overflow-hidden relative text-white shadow-3xl">
+        <AlertDialogContent className="rounded-[10px] bg-white border-slate-200 p-12 overflow-hidden relative text-white shadow-xl">
           <div className="absolute top-0 right-0 p-12 opacity-5">
              <Receipt className="h-40 w-40" />
           </div>
@@ -1383,13 +1383,13 @@ export default function AccountsPage() {
             <div className="h-20 w-20 rounded-[10px] bg-rose-500/10 flex items-center justify-center text-rose-500 mb-4 shadow-inner">
               <AlertTriangle className="h-10 w-10" />
             </div>
-            <AlertDialogTitle className="text-4xl font-black tracking-tighter text-white">Delete Expense?</AlertDialogTitle>
+            <AlertDialogTitle className="text-4xl font-black tracking-tighter text-slate-900">Delete Expense?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 font-medium text-lg leading-relaxed pt-2">
               Are you sure you want to delete this expense record? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-12 gap-4 relative z-10">
-            <AlertDialogCancel className="h-14 px-8 rounded-[10px] border-white/10 bg-white/5 font-black uppercase tracking-widest text-[10px] text-white shadow-sm hover:bg-white/10">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="h-14 px-8 rounded-[10px] border-slate-200 bg-white/5 font-black uppercase tracking-widest text-[10px] text-white shadow-sm hover:bg-white/10">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={() => expenseToDelete && handleDeleteExpense()} className="h-14 px-10 rounded-[10px] bg-rose-600 hover:bg-rose-700 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-rose-600/20 transition-all active:scale-95">
               Confirm Delete
             </AlertDialogAction>

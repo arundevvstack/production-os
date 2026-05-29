@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSupabase } from '@/supabase/provider';
 import { useSupabaseDoc } from '@/supabase/hooks/use-doc';
+import { useSupabaseCollection } from '@/supabase/hooks/use-collection';
 import { supabase } from '@/supabase/client';
 
 export function useTenant() {
@@ -21,7 +22,10 @@ export function useTenant() {
   const { data: company, isLoading: isCompanyLoading } = useSupabaseDoc('Company', companyId || null);
 
   // 4. Get Company Settings (currencies, enabled modules, timezone)
-  const { data: settings, isLoading: isSettingsLoading } = useSupabaseDoc('CompanySettings', companyId || null);
+  const { data: settingsArray, isLoading: isSettingsLoading } = useSupabaseCollection('CompanySettings', {
+    where: companyId ? { company_id: companyId } : undefined
+  });
+  const settings = settingsArray?.[0] || null;
 
   // Defensive Profile Self-Healing Hook
   useEffect(() => {
@@ -109,14 +113,17 @@ export function useTenant() {
   }, [isSuperAdmin, roleId]);
 
   const isModuleEnabled = useCallback((moduleName: string) => {
+    // First, enforce company-level module enablement (this overrides even super admin)
+    if (settings?.modules_enabled && !settings.modules_enabled.includes(moduleName)) {
+      return false;
+    }
+
     if (isSuperAdmin) return true;
     
-    // First, enforce role-based module gating
+    // Enforce role-based module gating
     if (!hasPermission(moduleName, 'view')) return false;
 
-    // Second, enforce company-level module enablement
-    if (!settings?.modules_enabled) return true; // If not configured, default to enabled for backward compatibility
-    return settings.modules_enabled.includes(moduleName);
+    return true;
   }, [isSuperAdmin, hasPermission, settings?.modules_enabled]);
 
   // Perfectly memoize the returned object to enforce absolute reference stability

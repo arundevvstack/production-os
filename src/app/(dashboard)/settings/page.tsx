@@ -193,14 +193,14 @@ function AccountCenterContent() {
   const handleSaveTheme = async () => {
     if (!companyId) return;
     const { error } = await supabase.from('CompanySettings').upsert({
-      id: companyId,
+      id: settings?.id || crypto.randomUUID(),
       company_id: companyId,
       theme: {
         primary: themeColors.primary,
         accent: themeColors.accent,
       },
       updated_at: new Date().toISOString(),
-    });
+    }, { onConflict: 'company_id' });
 
     if (error) {
       toast({ variant: "destructive", title: "Theme Save Failed", description: error.message });
@@ -211,7 +211,7 @@ function AccountCenterContent() {
 
   const handleToggleModule = async (moduleId: string, enabled: boolean) => {
     if (!companyId) return;
-    const currentModules = settings?.enabled_modules || ['dashboard', 'projects'];
+    const currentModules = settings?.modules_enabled || ['dashboard', 'projects'];
     let updatedModules;
     if (enabled) {
       updatedModules = Array.from(new Set([...currentModules, moduleId]));
@@ -220,11 +220,11 @@ function AccountCenterContent() {
     }
     
     const { error } = await supabase.from('CompanySettings').upsert({
-      id: companyId,
+      id: settings?.id || crypto.randomUUID(),
       company_id: companyId,
-      enabled_modules: updatedModules,
+      modules_enabled: updatedModules,
       updated_at: new Date().toISOString(),
-    });
+    }, { onConflict: 'company_id' });
 
     if (error) {
       toast({ variant: "destructive", title: "Toggle Failed", description: error.message });
@@ -715,7 +715,7 @@ function AccountCenterContent() {
             </CardHeader>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               {modulesList.map(mod => {
-                const isEnabled = settings?.enabledModules?.includes(mod.id);
+                const isEnabled = settings?.modules_enabled?.includes(mod.id);
                 return (
                   <div key={mod.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-[10px]">
                     <div className="flex items-center gap-3">
