@@ -13,7 +13,7 @@ export default function TalentPage() {
 
   return (
     <div className="flex items-center justify-center h-[80vh]">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <Loader2 className="h-8 w-8 animate-spin text-foreground" />
     </div>
   );
 }

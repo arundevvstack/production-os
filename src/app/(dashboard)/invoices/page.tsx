@@ -238,7 +238,7 @@ export default function InvoicesPage() {
   if (isTenantLoading || isInvoicesLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -249,7 +249,7 @@ export default function InvoicesPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Invoice and Quote</h1>
+          <h1 className="text-3xl font-bold text-foreground">Invoice and Quote</h1>
           <p className="text-muted-foreground">Automated invoicing and real-time financial synchronization.</p>
         </div>
         <div className="flex items-center gap-2">
@@ -428,7 +428,7 @@ export default function InvoicesPage() {
                       <span>₹{((parseFloat(newInvoice.total) || 0) * 0.18).toLocaleString()}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm font-black text-primary border-t pt-1.5 mt-1">
+                  <div className="flex justify-between text-sm font-black text-foreground border-t pt-1.5 mt-1">
                     <span>Total Payable:</span>
                     <span>
                       ₹{
@@ -527,7 +527,7 @@ export default function InvoicesPage() {
                     <tr key={inv.id} className="hover:bg-muted transition-colors group">
                       <td className="p-4">
                         <div className="flex flex-col">
-                          <span className="font-mono font-bold text-primary">{inv.invoice_number}</span>
+                          <span className="font-mono font-bold text-foreground">{inv.invoice_number}</span>
                           <span className="text-[10px] text-muted-foreground font-medium uppercase">{new Date(inv.created_at?.toDate?.() || inv.created_at).toLocaleDateString()}</span>
                         </div>
                       </td>
@@ -539,7 +539,7 @@ export default function InvoicesPage() {
                           </div>
                           {inv.project_name && (
                             <div className="flex items-center gap-2">
-                              <Briefcase className="h-3 w-3 text-primary/60" />
+                              <Briefcase className="h-3 w-3 text-foreground/60" />
                               <span className="text-[10px] text-muted-foreground font-bold">{inv.project_name}</span>
                             </div>
                           )}
@@ -566,7 +566,7 @@ export default function InvoicesPage() {
                                 <MessageSquare className="h-4 w-4 text-emerald-500" /> Send via WhatsApp
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleShareEmail(inv)} className="gap-2 py-2 cursor-pointer">
-                                <Mail className="h-4 w-4 text-primary" /> Send via Email
+                                <Mail className="h-4 w-4 text-foreground" /> Send via Email
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem onClick={() => handleCopyLink(inv)} className="gap-2 py-2 cursor-pointer">
@@ -584,7 +584,7 @@ export default function InvoicesPage() {
                             <Trash2 className="h-4 w-4" />
                           </Button>
                           <Link href={`/invoices/${inv.id}`}>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-primary">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-foreground">
                               <ExternalLink className="h-4 w-4" />
                             </Button>
                           </Link>

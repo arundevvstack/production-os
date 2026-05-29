@@ -62,7 +62,7 @@ export default function FinancePage() {
   if (isTenantLoading || isInvoicesLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -71,7 +71,7 @@ export default function FinancePage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-headline text-primary">Invoice and Quote</h1>
+          <h1 className="text-3xl font-bold font-headline text-foreground">Invoice and Quote</h1>
           <p className="text-muted-foreground">Automated invoicing and real-time financial synchronization.</p>
         </div>
         <div className="flex items-center gap-2">
@@ -166,7 +166,7 @@ export default function FinancePage() {
                 ) : (
                   filteredInvoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-muted transition-colors group">
-                      <td className="p-4 font-mono font-bold text-primary">{inv.invoice_number}</td>
+                      <td className="p-4 font-mono font-bold text-foreground">{inv.invoice_number}</td>
                       <td className="p-4 font-bold">{inv.client_name}</td>
                       <td className="p-4 text-muted-foreground text-xs font-medium">{inv.issue_date}</td>
                       <td className="p-4 font-bold">₹{(inv.total || 0).toLocaleString()}</td>
@@ -180,11 +180,11 @@ export default function FinancePage() {
                       </td>
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                             <Download className="h-4 w-4" />
                           </Button>
                           <Link href={`/invoices/${inv.id}`}>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                               <ExternalLink className="h-4 w-4" />
                             </Button>
                           </Link>

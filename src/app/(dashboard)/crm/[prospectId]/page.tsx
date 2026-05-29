@@ -164,7 +164,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
   if (isTenantLoading || isProspectLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -188,7 +188,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-primary">{prospect.company_name}</h1>
+          <h1 className="text-3xl font-bold text-foreground">{prospect.company_name}</h1>
           <p className="text-muted-foreground flex items-center gap-2">
             Prospect ID: <span className="font-mono text-[10px] bg-muted px-2 py-0.5 rounded uppercase">{prospectId.slice(0,8)}</span>
           </p>
@@ -247,7 +247,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
             <CardContent className="p-8 space-y-10">
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Pipeline Velocity</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-foreground">Pipeline Velocity</span>
                   <span className="text-xl font-bold">{Math.round(progressValue)}%</span>
                 </div>
                 <Progress value={progressValue} className="h-2 rounded-full" />
@@ -281,7 +281,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                         <div className="flex items-center justify-between">
                           <span className={cn(
                             "text-[11px] font-black uppercase tracking-widest transition-colors",
-                            isCompleted ? "text-primary" : "text-muted-foreground"
+                            isCompleted ? "text-foreground" : "text-muted-foreground"
                           )}>
                             {s.name}
                           </span>
@@ -321,7 +321,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
           <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="bg-accent/10/30">
               <CardTitle className="text-lg flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" /> Drafted Proposals
+                <FileText className="h-5 w-5 text-foreground" /> Drafted Proposals
               </CardTitle>
               <CardDescription>AI-generated proposals linked to this prospect.</CardDescription>
             </CardHeader>
@@ -337,7 +337,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                   {proposals?.map(prop => (
                     <div key={prop.id} className="p-6 flex items-center justify-between hover:bg-muted transition-colors group">
                       <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                        <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground group-hover:bg-primary group-hover:text-white transition-colors">
                           <FileText className="h-5 w-5" />
                         </div>
                         <div>
@@ -360,7 +360,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
           <Card className="border-none shadow-sm rounded-[10px] bg-white">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-primary" /> Billing Context
+                <MapPin className="h-5 w-5 text-foreground" /> Billing Context
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -413,7 +413,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                 <div className="space-y-1">
                   <p className="text-[10px] font-bold text-muted-foreground uppercase">Est. Deal Value</p>
                   <h4 className="text-3xl font-bold flex items-center gap-1">
-                    <IndianRupee className="h-5 w-5 text-primary" />
+                    <IndianRupee className="h-5 w-5 text-foreground" />
                     {(prospect.deal_value || 0).toLocaleString()}
                   </h4>
                 </div>
@@ -449,7 +449,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                 </div>
                 {prospect.sub_vertical && (
                   <div className="flex items-center gap-4 pl-4 border-l-2 border-border">
-                    <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
+                    <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center text-foreground">
                       <ListTree className="h-4 w-4" />
                     </div>
                     <div>

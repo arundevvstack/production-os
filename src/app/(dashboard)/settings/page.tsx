@@ -288,7 +288,7 @@ function AccountCenterContent() {
   if (isTenantLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -297,7 +297,7 @@ function AccountCenterContent() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-primary">Account Center</h1>
+          <h1 className="text-4xl font-bold text-foreground">Account Center</h1>
           <p className="text-muted-foreground">Manage your personal presence and workspace configuration.</p>
         </div>
         <Button variant="ghost" className="rounded-xl px-6 text-accent hover:bg-accent/10" onClick={handleLogout}>
@@ -345,7 +345,7 @@ function AccountCenterContent() {
                     isUploading && "opacity-50"
                   )}>
                     <AvatarImage src={profileData.avatar} />
-                    <AvatarFallback className="text-2xl font-bold bg-white text-primary">
+                    <AvatarFallback className="text-2xl font-bold bg-white text-foreground">
                       {profileData.name.substring(0,2).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -408,7 +408,7 @@ function AccountCenterContent() {
           <Card className="border-none shadow-soft rounded-[10px] overflow-hidden">
             <CardHeader className="bg-primary/5 pb-8">
               <div className="flex items-center gap-4">
-                <div className="h-16 w-16 bg-white rounded-[10px] flex items-center justify-center text-primary shadow-sm">
+                <div className="h-16 w-16 bg-white rounded-[10px] flex items-center justify-center text-foreground shadow-sm">
                   <Palette className="h-8 w-8" />
                 </div>
                 <div>
@@ -440,7 +440,7 @@ function AccountCenterContent() {
                       <span className="text-[10px] font-bold truncate">{preset.name}</span>
                       {themeColors.primary === preset.primary && themeColors.accent === preset.accent && (
                         <div className="absolute top-2 right-2">
-                          <Check className="h-3 w-3 text-primary" />
+                          <Check className="h-3 w-3 text-foreground" />
                         </div>
                       )}
                     </button>
@@ -453,7 +453,7 @@ function AccountCenterContent() {
               {/* Custom Colors */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="space-y-6">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-foreground flex items-center gap-2">
                     <Sparkles className="h-4 w-4" /> Custom Palette
                   </h3>
                   <div className="space-y-4">
@@ -547,7 +547,7 @@ function AccountCenterContent() {
           <Card className="border-none shadow-soft rounded-[10px] overflow-hidden">
             <CardHeader className="bg-primary/5 pb-8">
               <div className="flex items-center gap-4">
-                <div className="h-16 w-16 bg-white rounded-[10px] flex items-center justify-center text-primary shadow-sm">
+                <div className="h-16 w-16 bg-white rounded-[10px] flex items-center justify-center text-foreground shadow-sm">
                   <Building2 className="h-8 w-8" />
                 </div>
                 <div>
@@ -559,7 +559,7 @@ function AccountCenterContent() {
             <CardContent className="p-8 space-y-8">
               {/* Basic Info */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-foreground flex items-center gap-2">
                   <Building2 className="h-4 w-4" /> Core Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -612,7 +612,7 @@ function AccountCenterContent() {
 
               {/* Legal & Tax */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-foreground flex items-center gap-2">
                   <CreditCard className="h-4 w-4" /> Legal & Tax Identifiers
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -650,7 +650,7 @@ function AccountCenterContent() {
 
               {/* Bank Details */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-foreground flex items-center gap-2">
                   <Receipt className="h-4 w-4" /> Bank Registry (For Invoices)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -719,7 +719,7 @@ function AccountCenterContent() {
                 return (
                   <div key={mod.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-[10px]">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-white rounded-lg"><mod.icon className="h-5 w-5 text-primary" /></div>
+                      <div className="p-2 bg-white rounded-lg"><mod.icon className="h-5 w-5 text-foreground" /></div>
                       <div>
                         <h4 className="font-bold text-sm">{mod.name}</h4>
                         <p className="text-[10px] text-muted-foreground">{mod.desc || 'Modular media utility'}</p>

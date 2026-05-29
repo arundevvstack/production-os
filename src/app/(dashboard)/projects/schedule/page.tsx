@@ -206,7 +206,7 @@ export default function ProductionSchedulePage() {
   const isLoading = isTenantLoading || isResourcesLoading || isBookingsLoading;
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-[80vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return <div className="flex items-center justify-center h-[80vh]"><Loader2 className="h-8 w-8 animate-spin text-foreground" /></div>;
   }
 
   return (
@@ -215,7 +215,7 @@ export default function ProductionSchedulePage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-primary">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground">
               Fleet & <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-rose-500 to-orange-500">Resource Planner</span>
             </h1>
             <Badge className="bg-primary text-white border-none font-bold text-[9px] uppercase tracking-widest px-3 py-1">
@@ -246,7 +246,7 @@ export default function ProductionSchedulePage() {
             <div className="h-1 w-8 bg-primary rounded-full"></div>
           </div>
           <div className="py-6 space-y-2">
-            <h2 className="text-5xl font-black text-primary tracking-tight">{utilizationStats.rate}%</h2>
+            <h2 className="text-5xl font-black text-foreground tracking-tight">{utilizationStats.rate}%</h2>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Active Gear Allocations</p>
           </div>
           <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
@@ -260,7 +260,7 @@ export default function ProductionSchedulePage() {
             <div className="h-1 w-8 bg-accent rounded-full"></div>
           </div>
           <div className="py-6">
-            <h2 className="text-5xl font-black text-primary tracking-tight">{utilizationStats.total}</h2>
+            <h2 className="text-5xl font-black text-foreground tracking-tight">{utilizationStats.total}</h2>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Registered Assets</p>
           </div>
           <p className="text-[10px] text-accent font-black uppercase tracking-widest flex items-center gap-1.5">
@@ -301,8 +301,8 @@ export default function ProductionSchedulePage() {
         {/* Bookings Timeline */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-black tracking-tight text-primary flex items-center gap-3">
-              <CalendarIcon className="h-6 w-6 text-primary" /> Active Timeline
+            <h3 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-3">
+              <CalendarIcon className="h-6 w-6 text-foreground" /> Active Timeline
             </h3>
             <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Confirmed reservations</span>
           </div>
@@ -312,7 +312,7 @@ export default function ProductionSchedulePage() {
               <Card className="border-2 border-dashed flex flex-col items-center justify-center p-24 text-muted-foreground bg-white rounded-[10px]">
                 <CalendarIcon className="h-12 w-12 mb-4 opacity-15" />
                 <p className="font-bold text-sm uppercase tracking-widest text-muted-foreground">No scheduled gear reservations.</p>
-                <Button variant="link" className="mt-2 text-primary font-bold text-xs" onClick={() => setIsBookResourceOpen(true)}>Book first item</Button>
+                <Button variant="link" className="mt-2 text-foreground font-bold text-xs" onClick={() => setIsBookResourceOpen(true)}>Book first item</Button>
               </Card>
             ) : (
               bookings?.map((booking) => {
@@ -322,31 +322,31 @@ export default function ProductionSchedulePage() {
                   <Card key={booking.id} className="border-none shadow-sm hover:shadow-md transition-all overflow-hidden rounded-[10px] bg-white">
                     <div className="flex flex-col sm:flex-row">
                       <div className="bg-muted p-6 sm:w-48 flex flex-col justify-center items-center text-center border-r border-border">
-                        <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1.5">
+                        <span className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-1.5">
                           Timeline range
                         </span>
-                        <h4 className="font-bold text-sm text-primary/80 leading-tight">
+                        <h4 className="font-bold text-sm text-foreground/80 leading-tight">
                           {new Date(booking.start_date).toLocaleDateString()}
                         </h4>
                         <span className="text-[10px] text-muted-foreground my-1">to</span>
-                        <h4 className="font-bold text-sm text-primary/80 leading-tight">
+                        <h4 className="font-bold text-sm text-foreground/80 leading-tight">
                           {new Date(booking.end_date).toLocaleDateString()}
                         </h4>
                       </div>
                       <div className="flex-1 p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                         <div className="space-y-2">
                           <div className="flex items-center gap-3">
-                            <span className="p-1.5 bg-primary/10 rounded-lg text-primary">
+                            <span className="p-1.5 bg-primary/10 rounded-lg text-foreground">
                               {linkedResource?.type === 'Space' ? <MapPin className="h-4 w-4" /> : <Video className="h-4 w-4" />}
                             </span>
-                            <h4 className="font-black text-lg text-primary">{linkedResource?.name || 'Unknown gear'}</h4>
+                            <h4 className="font-black text-lg text-foreground">{linkedResource?.name || 'Unknown gear'}</h4>
                             <Badge className="bg-muted text-muted-foreground/80 border-none font-bold text-[9px] uppercase tracking-wider">
                               {linkedResource?.type}
                             </Badge>
                           </div>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium pl-1">
                             <Laptop className="h-4 w-4 text-muted-foreground" />
-                            Assigned Project: <span className="font-bold text-primary/80">{linkedProject?.project_name || 'Active Campaign'}</span>
+                            Assigned Project: <span className="font-bold text-foreground/80">{linkedProject?.project_name || 'Active Campaign'}</span>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -370,7 +370,7 @@ export default function ProductionSchedulePage() {
 
         {/* Resource Pool List */}
         <div className="space-y-6">
-          <h3 className="text-2xl font-black tracking-tight text-primary flex items-center gap-3">
+          <h3 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-3">
             <Sliders className="h-6 w-6 text-accent" /> Resource Pool
           </h3>
 
@@ -382,13 +382,13 @@ export default function ProductionSchedulePage() {
                 resources?.map((res) => (
                   <div key={res.id} className="py-4 flex items-center justify-between group">
                     <div>
-                      <h4 className="font-bold text-sm text-primary group-hover:text-primary transition-colors">{res.name}</h4>
+                      <h4 className="font-bold text-sm text-foreground group-hover:text-foreground transition-colors">{res.name}</h4>
                       <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1">{res.type} • Status: {res.status}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge className={cn(
                         "text-[9px] font-black uppercase tracking-widest py-1 px-2.5 rounded-lg border-none shadow-sm",
-                        res.status === 'available' ? 'bg-emerald-50 text-emerald-600' : 'bg-primary/10 text-primary'
+                        res.status === 'available' ? 'bg-emerald-50 text-emerald-600' : 'bg-primary/10 text-foreground'
                       )}>
                         {res.status}
                       </Badge>
@@ -443,7 +443,7 @@ export default function ProductionSchedulePage() {
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <CalendarCheck className="h-5 w-5 text-primary" />
+              <CalendarCheck className="h-5 w-5 text-foreground" />
               Schedule Reservation
             </DialogTitle>
             <DialogDescription>Reserve gear or space. Overlapping bookings will be blocked automatically.</DialogDescription>

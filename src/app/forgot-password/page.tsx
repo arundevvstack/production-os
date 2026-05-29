@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
           <div className="mx-auto h-12 w-12 bg-destructive/10 rounded-2xl flex items-center justify-center text-destructive mb-4 shadow-sm">
             <Shield className="h-6 w-6" />
           </div>
-          <h1 className="text-xl font-black text-primary tracking-tight">System Recovery</h1>
+          <h1 className="text-xl font-black text-foreground tracking-tight">System Recovery</h1>
           <p className="text-xs text-muted-foreground font-bold mt-1">
             {submitted ? "Recovery link has been dispatched." : "Initiate a secure password reset."} 
           </p>
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
                   required 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-muted border-border h-11 text-xs rounded-xl focus:border-destructive text-primary font-bold w-full"
+                  className="bg-muted border-border h-11 text-xs rounded-xl focus:border-destructive text-foreground font-bold w-full"
                 />
               </div>
               

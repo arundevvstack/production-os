@@ -175,7 +175,7 @@ export default function OnboardingPage() {
           <>
             <CardHeader className="space-y-4 pt-10 pb-6 text-center bg-primary/5 border-b border-white/5 text-white relative">
               <div className="mx-auto h-12 w-12 bg-primary/10 border border-primary/20 rounded-[10px] flex items-center justify-center">
-                <Building className="h-6 w-6 text-primary" />
+                <Building className="h-6 w-6 text-foreground" />
               </div>
               <div className="space-y-1">
                 <CardTitle className="text-2.5xl font-black tracking-tight text-white">Initialize Production Space</CardTitle>
@@ -207,10 +207,10 @@ export default function OnboardingPage() {
           <div className="p-10 space-y-8 animate-in fade-in zoom-in-95 duration-500 text-white">
             <div className="flex items-center justify-between border-b border-white/5 pb-6">
               <div className="flex items-center gap-3">
-                <Terminal className="h-6 w-6 text-primary shrink-0 animate-pulse" />
+                <Terminal className="h-6 w-6 text-foreground shrink-0 animate-pulse" />
                 <h3 className="font-black text-lg uppercase tracking-wider">Workspace Initialization</h3>
               </div>
-              <span className="font-mono text-sm text-primary font-black">{initProgress}%</span>
+              <span className="font-mono text-sm text-foreground font-black">{initProgress}%</span>
             </div>
 
             <div className="space-y-4">
@@ -221,7 +221,7 @@ export default function OnboardingPage() {
                     <div className="flex items-center gap-3 text-xs font-medium">
                       <StepIcon className={cn(
                         "h-4.5 w-4.5 shrink-0",
-                        step.status === 'done' ? 'text-emerald-500' : (step.status === 'loading' ? 'text-primary animate-pulse' : 'text-muted-foreground/80')
+                        step.status === 'done' ? 'text-emerald-500' : (step.status === 'loading' ? 'text-foreground animate-pulse' : 'text-muted-foreground/80')
                       )} />
                       <span className={cn(
                         step.status === 'done' ? 'text-slate-300 font-bold' : (step.status === 'loading' ? 'text-white' : 'text-muted-foreground')
@@ -229,7 +229,7 @@ export default function OnboardingPage() {
                     </div>
                     <div>
                       {step.status === 'done' && <CheckCircle2 className="h-4.5 w-4.5 text-emerald-500" />}
-                      {step.status === 'loading' && <Loader2 className="h-4.5 w-4.5 text-primary animate-spin" />}
+                      {step.status === 'loading' && <Loader2 className="h-4.5 w-4.5 text-foreground animate-spin" />}
                       {step.status === 'idle' && <span className="h-2 w-2 rounded-full bg-primary mr-1.5" />}
                     </div>
                   </div>

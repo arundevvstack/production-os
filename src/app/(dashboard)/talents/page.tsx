@@ -380,7 +380,7 @@ export default function TalentNetworkPage() {
   if (isTenantLoading || isTalentsLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -392,8 +392,8 @@ export default function TalentNetworkPage() {
           ---------------------------------------------------- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/20 pb-6">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-primary flex items-center gap-2">
-            <Users className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-2">
+            <Users className="h-8 w-8 text-foreground" />
             Talent Network
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -411,8 +411,8 @@ export default function TalentNetworkPage() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[450px] rounded-[12px] bg-white border border-white/20 shadow-premium">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-primary font-black">
-                    <Sparkles className="h-5 w-5 text-primary" />
+                  <DialogTitle className="flex items-center gap-2 text-foreground font-black">
+                    <Sparkles className="h-5 w-5 text-foreground" />
                     Add Talent
                   </DialogTitle>
                   <DialogDescription>
@@ -509,13 +509,13 @@ export default function TalentNetworkPage() {
           {isCasting && (
             <Dialog open={isCastingOpen} onOpenChange={setIsCastingOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 rounded-xl h-11 font-bold border-white/40 hover:bg-muted text-primary/80">
+                <Button variant="outline" className="gap-2 rounded-xl h-11 font-bold border-white/40 hover:bg-muted text-foreground/80">
                   <Sparkles className="h-4 w-4 text-accent" /> Add Casting Call
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[480px] rounded-[12px] bg-white border border-white/20 shadow-premium">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-primary font-black">
+                  <DialogTitle className="flex items-center gap-2 text-foreground font-black">
                     <Award className="h-5 w-5 text-accent" />
                     Add Casting Call
                   </DialogTitle>
@@ -627,14 +627,14 @@ export default function TalentNetworkPage() {
           {isCasting && (
             <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
               <DialogTrigger asChild>
-                <Button variant="secondary" className="gap-2 rounded-xl h-11 font-bold text-primary bg-primary/10 hover:bg-primary/20">
+                <Button variant="secondary" className="gap-2 rounded-xl h-11 font-bold text-foreground bg-primary/10 hover:bg-primary/20">
                   <Calendar className="h-4 w-4" /> Book Talent
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[450px] rounded-[12px] bg-white border border-white/20 shadow-premium">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-primary font-black">
-                    <UserCheck className="h-5 w-5 text-primary" />
+                  <DialogTitle className="flex items-center gap-2 text-foreground font-black">
+                    <UserCheck className="h-5 w-5 text-foreground" />
                     Book Talent
                   </DialogTitle>
                   <DialogDescription>
@@ -713,7 +713,7 @@ export default function TalentNetworkPage() {
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-5 space-y-1">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Total Talent</span>
-            <h3 className="text-2xl font-black text-primary tracking-tight leading-none pt-2">{talents.length} Active</h3>
+            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">{talents.length} Active</h3>
             <span className="text-[9px] font-bold text-emerald-500 flex items-center gap-1 mt-3">
               <CheckSquare className="h-3 w-3" /> Fully Vetted & Verified
             </span>
@@ -723,8 +723,8 @@ export default function TalentNetworkPage() {
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-5 space-y-1">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Available Now</span>
-            <h3 className="text-2xl font-black text-primary tracking-tight leading-none pt-2">{talents.length - 2} Talents</h3>
-            <span className="text-[9px] font-bold text-primary flex items-center gap-1 mt-3">
+            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">{talents.length - 2} Talents</h3>
+            <span className="text-[9px] font-bold text-foreground flex items-center gap-1 mt-3">
               <Clock className="h-3 w-3" /> Ready for Immediate Shoot
             </span>
           </CardContent>
@@ -733,7 +733,7 @@ export default function TalentNetworkPage() {
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-5 space-y-1">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Booked Roster</span>
-            <h3 className="text-2xl font-black text-primary tracking-tight leading-none pt-2">2 On Location</h3>
+            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">2 On Location</h3>
             <span className="text-[9px] font-bold text-muted-foreground flex items-center gap-1 mt-3">
               <TrendingUp className="h-3 w-3" /> Utilization Rate: 74.2%
             </span>
@@ -743,7 +743,7 @@ export default function TalentNetworkPage() {
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-5 space-y-1">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Active Castings</span>
-            <h3 className="text-2xl font-black text-primary tracking-tight leading-none pt-2">{castingCalls.length} Open</h3>
+            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">{castingCalls.length} Open</h3>
             <span className="text-[9px] font-bold text-accent flex items-center gap-1 mt-3">
               <AlertCircle className="h-3 w-3" /> 12 Candidates Shortlisted
             </span>
@@ -753,7 +753,7 @@ export default function TalentNetworkPage() {
         <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group col-span-2 md:col-span-1">
           <CardContent className="p-5 space-y-1">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">AI Match Rate</span>
-            <h3 className="text-2xl font-black text-primary tracking-tight leading-none pt-2">94% Accuracy</h3>
+            <h3 className="text-2xl font-black text-foreground tracking-tight leading-none pt-2">94% Accuracy</h3>
             <span className="text-[9px] font-bold text-accent flex items-center gap-1 mt-3">
               <Sparkles className="h-3 w-3 animate-pulse" /> Matched profiles
             </span>
@@ -856,20 +856,20 @@ export default function TalentNetworkPage() {
           <Card className="border-l-4 border-l-primary glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-4 space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="font-black text-xs text-primary flex items-center gap-1.5">
-                  <Bell className="h-4 w-4 text-primary animate-bounce" /> Casting Activity Log
+                <h4 className="font-black text-xs text-foreground flex items-center gap-1.5">
+                  <Bell className="h-4 w-4 text-foreground animate-bounce" /> Casting Activity Log
                 </h4>
                 <div className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping" />
               </div>
               <div className="space-y-2 text-[10px] text-muted-foreground pt-1.5">
                 <p className="border-b border-white/10 pb-1.5">
-                  🛡️ <strong className="text-primary/80">Contract Signed</strong>: Tovino Thomas cleared standard NDA release. (10m ago)
+                  🛡️ <strong className="text-foreground/80">Contract Signed</strong>: Tovino Thomas cleared standard NDA release. (10m ago)
                 </p>
                 <p className="border-b border-white/10 pb-1.5">
-                  📣 <strong className="text-primary/80">New Casting</strong>: Tech-Start Brand Film Dub published requirement. (1h ago)
+                  📣 <strong className="text-foreground/80">New Casting</strong>: Tech-Start Brand Film Dub published requirement. (1h ago)
                 </p>
                 <p className="pb-0">
-                  ⚠️ <strong className="text-primary/80">Conflict Detected</strong>: Aparna B. has overlapping travel dates on June 14.
+                  ⚠️ <strong className="text-foreground/80">Conflict Detected</strong>: Aparna B. has overlapping travel dates on June 14.
                 </p>
               </div>
             </CardContent>
@@ -918,26 +918,26 @@ export default function TalentNetworkPage() {
                           </Button>
                         </div>
                         <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
-                          <Badge className="bg-white/90 text-primary border-none text-[10px] font-bold">{talent.category}</Badge>
+                          <Badge className="bg-white/90 text-foreground border-none text-[10px] font-bold">{talent.category}</Badge>
                           <Badge className="bg-primary/80 text-white border-none text-[10px] font-bold">{talent.sub_category}</Badge>
                         </div>
                       </div>
                       <CardContent className="p-4 space-y-3">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h3 className="font-black text-sm text-primary leading-tight">{talent.full_name}</h3>
+                            <h3 className="font-black text-sm text-foreground leading-tight">{talent.full_name}</h3>
                             <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1 font-bold">
                               <MapPin className="h-3 w-3 text-muted-foreground" /> {talent.location}
                             </p>
                           </div>
-                          <span className="font-black text-primary text-xs bg-primary/10 py-1 px-2.5 rounded-lg">
+                          <span className="font-black text-foreground text-xs bg-primary/10 py-1 px-2.5 rounded-lg">
                             ₹{talent.day_rate.toLocaleString()}/day
                           </span>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/15 text-[10px] font-bold text-muted-foreground uppercase">
                           <div className="flex items-center gap-1.5">
-                            <Instagram className="h-3.5 w-3.5 text-primary" />
+                            <Instagram className="h-3.5 w-3.5 text-foreground" />
                             <span>{(talent.followers / 1000000).toFixed(1)}M followers</span>
                           </div>
                           <div className="flex items-center gap-1.5">
@@ -959,10 +959,10 @@ export default function TalentNetworkPage() {
                   <CardContent className="p-5 space-y-4">
                     <div className="flex items-start justify-between">
                       <div>
-                        <Badge className="bg-primary/10 text-primary border-none text-[9px] font-bold uppercase tracking-wider">{c.category} Required</Badge>
-                        <h3 className="font-black text-base text-primary mt-1.5 leading-tight">{c.project_name}</h3>
+                        <Badge className="bg-primary/10 text-foreground border-none text-[9px] font-bold uppercase tracking-wider">{c.category} Required</Badge>
+                        <h3 className="font-black text-base text-foreground mt-1.5 leading-tight">{c.project_name}</h3>
                       </div>
-                      <span className="font-black text-xs text-primary bg-white/60 py-1.5 px-3 rounded-lg border border-white/40">
+                      <span className="font-black text-xs text-foreground bg-white/60 py-1.5 px-3 rounded-lg border border-white/40">
                         Budget: ₹{c.budget.toLocaleString()}
                       </span>
                     </div>
@@ -1009,7 +1009,7 @@ export default function TalentNetworkPage() {
                             setSelectedProjectForAI(c.id);
                             toast({ title: "AI Sync Triggered", description: "Analyzing compatibility metrics for this casting call." });
                           }}
-                          className="rounded-xl h-8 px-3 text-[10px] font-bold border-white/40 text-primary/80 bg-white/20 hover:bg-muted"
+                          className="rounded-xl h-8 px-3 text-[10px] font-bold border-white/40 text-foreground/80 bg-white/20 hover:bg-muted"
                         >
                           <Sparkles className="h-3 w-3 mr-1 text-accent" /> AI Roster Match
                         </Button>
@@ -1026,7 +1026,7 @@ export default function TalentNetworkPage() {
                 <CardContent className="p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-black text-sm text-primary">Production Booking Timeline</h3>
+                      <h3 className="font-black text-sm text-foreground">Production Booking Timeline</h3>
                       <p className="text-[10px] text-muted-foreground">Availability calendar blocks and overlapping shoot days detection.</p>
                     </div>
                     <Badge className="bg-emerald-500/10 text-emerald-500 border-none text-[9px] font-bold uppercase tracking-wider">Calendar Synced</Badge>
@@ -1040,7 +1040,7 @@ export default function TalentNetworkPage() {
                           <AvatarFallback>{t.stage_name.substring(0, 2)}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-xs text-primary leading-tight">{t.full_name}</h4>
+                          <h4 className="font-bold text-xs text-foreground leading-tight">{t.full_name}</h4>
                           <span className="text-[9px] text-muted-foreground font-medium block mt-1">{t.category} — {t.agency_name}</span>
                         </div>
                         <div className="text-right">
@@ -1062,11 +1062,11 @@ export default function TalentNetworkPage() {
                 <Card key={c.id} className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-start gap-3">
-                      <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0 mt-1">
+                      <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center text-foreground shrink-0 mt-1">
                         <FileText className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="font-black text-sm text-primary leading-tight">{c.doc_type}</h4>
+                        <h4 className="font-black text-sm text-foreground leading-tight">{c.doc_type}</h4>
                         <p className="text-[10px] text-muted-foreground mt-1.5 font-bold">
                           Talent: {c.talent_name} | Project: {c.project_name}
                         </p>
@@ -1115,7 +1115,7 @@ export default function TalentNetworkPage() {
                         <CreditCard className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="font-black text-sm text-primary leading-tight">{p.talent_name}</h4>
+                        <h4 className="font-black text-sm text-foreground leading-tight">{p.talent_name}</h4>
                         <p className="text-[10px] text-muted-foreground mt-1.5 font-bold">
                           Project: {p.project_name} | {p.category}
                         </p>
@@ -1124,7 +1124,7 @@ export default function TalentNetworkPage() {
                     </div>
 
                     <div className="text-right flex flex-col items-end gap-2">
-                      <div className="text-primary">
+                      <div className="text-foreground">
                         <span className="text-[10px] text-muted-foreground block">Negotiated Fee</span>
                         <strong className="text-sm font-black">₹{p.amount.toLocaleString()}</strong>
                       </div>
@@ -1219,7 +1219,7 @@ export default function TalentNetworkPage() {
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <h4 className="font-black text-sm text-primary leading-none">{creator.full_name}</h4>
+                            <h4 className="font-black text-sm text-foreground leading-none">{creator.full_name}</h4>
                             <Badge className="bg-accent/10 text-accent border-none text-[8px] font-bold uppercase py-0.5 px-2">{creator.category}</Badge>
                           </div>
                           <p className="text-[10px] text-muted-foreground mt-2 font-bold flex items-center gap-1">
@@ -1230,7 +1230,7 @@ export default function TalentNetworkPage() {
                       </div>
 
                       <div className="text-right flex flex-col items-end gap-2 shrink-0">
-                        <div className="text-primary">
+                        <div className="text-foreground">
                           <span className="text-[9px] text-muted-foreground block font-bold uppercase">Public Day Rate</span>
                           <strong className="text-sm font-black">₹{creator.day_rate.toLocaleString()}</strong>
                         </div>
@@ -1289,8 +1289,8 @@ export default function TalentNetworkPage() {
           {/* COLLABORATION & DISCUSSION CHAT (Phase 16) */}
           <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-5 space-y-4">
-              <h3 className="font-black text-sm text-primary flex items-center gap-1.5">
-                <MessageSquare className="h-4 w-4 text-primary" /> Casting Discussion
+              <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
+                <MessageSquare className="h-4 w-4 text-foreground" /> Casting Discussion
               </h3>
               
               <form onSubmit={handleAddComment} className="flex gap-2">
@@ -1308,7 +1308,7 @@ export default function TalentNetworkPage() {
               <div className="space-y-3 pt-2 max-h-[220px] overflow-y-auto custom-scrollbar">
                 {comments.map(c => (
                   <div key={c.id} className="p-3 bg-white/30 rounded-xl border border-white/10 text-[11px]">
-                    <div className="flex items-center justify-between font-bold text-primary/80">
+                    <div className="flex items-center justify-between font-bold text-foreground/80">
                       <span>{c.user}</span>
                       <span className="text-[9px] text-muted-foreground font-medium">{c.timestamp}</span>
                     </div>
@@ -1327,7 +1327,7 @@ export default function TalentNetworkPage() {
           <Card className="glass-panel border-white/20 shadow-premium bg-gradient-to-br from-indigo-50/10 to-purple-50/10 backdrop-blur-3xl rounded-[12px] border-l-4 border-l-indigo-400">
             <CardContent className="p-5 space-y-5">
               <div className="flex items-center justify-between">
-                <h3 className="font-black text-sm text-primary flex items-center gap-1.5">
+                <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
                   <Sparkles className="h-4 w-4 text-accent animate-pulse" /> AI Casting Suggestion
                 </h3>
                 <Badge className="bg-accent text-white border-none text-[8px] font-bold tracking-widest uppercase">Active</Badge>
@@ -1351,15 +1351,15 @@ export default function TalentNetworkPage() {
                 <div className="space-y-4 pt-1">
                   <div className="bg-white/40 p-3.5 rounded-xl border border-white/20 space-y-2 text-[11px]">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary/80">Category Matched</span>
+                      <span className="font-bold text-foreground/80">Category Matched</span>
                       <Badge className="bg-accent/10 text-accent border-none text-[9px] font-bold">{activeAICasting.category}</Badge>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary/80">Budget Constraint</span>
-                      <span className="font-black text-primary">₹{activeAICasting.budget.toLocaleString()}</span>
+                      <span className="font-bold text-foreground/80">Budget Constraint</span>
+                      <span className="font-black text-foreground">₹{activeAICasting.budget.toLocaleString()}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary/80">Preferred Look/Dates</span>
+                      <span className="font-bold text-foreground/80">Preferred Look/Dates</span>
                       <span className="text-muted-foreground font-medium">{activeAICasting.look_style}</span>
                     </div>
                   </div>
@@ -1378,7 +1378,7 @@ export default function TalentNetworkPage() {
                               <AvatarFallback>{rec.talent.stage_name.substring(0, 2)}</AvatarFallback>
                             </Avatar>
                             <div className="min-w-0">
-                              <h4 className="font-bold text-xs text-primary truncate leading-none">{rec.talent.full_name}</h4>
+                              <h4 className="font-bold text-xs text-foreground truncate leading-none">{rec.talent.full_name}</h4>
                               <span className="text-[9px] text-accent font-semibold block mt-1">{rec.suitability}</span>
                             </div>
                           </div>
@@ -1414,7 +1414,7 @@ export default function TalentNetworkPage() {
                     <AvatarFallback>{selectedTalentDetail.stage_name.substring(0,2)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-black text-sm text-primary leading-tight">{selectedTalentDetail.full_name}</h3>
+                    <h3 className="font-black text-sm text-foreground leading-tight">{selectedTalentDetail.full_name}</h3>
                     <span className="text-[10px] text-muted-foreground font-medium block mt-1">{selectedTalentDetail.category} ({selectedTalentDetail.sub_category})</span>
                   </div>
                 </div>
@@ -1422,19 +1422,19 @@ export default function TalentNetworkPage() {
                 <div className="space-y-2 text-[11px] border-t border-white/15 pt-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Day Rate</span>
-                    <strong className="text-primary">₹{selectedTalentDetail.day_rate.toLocaleString()}</strong>
+                    <strong className="text-foreground">₹{selectedTalentDetail.day_rate.toLocaleString()}</strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Languages</span>
-                    <span className="text-primary/80 font-bold">{selectedTalentDetail.languages}</span>
+                    <span className="text-foreground/80 font-bold">{selectedTalentDetail.languages}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Experience</span>
-                    <span className="text-primary/80 font-bold">{selectedTalentDetail.experience}</span>
+                    <span className="text-foreground/80 font-bold">{selectedTalentDetail.experience}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Agency Roster</span>
-                    <span className="text-primary/80 font-bold">{selectedTalentDetail.agency_name}</span>
+                    <span className="text-foreground/80 font-bold">{selectedTalentDetail.agency_name}</span>
                   </div>
                 </div>
 
@@ -1464,8 +1464,8 @@ export default function TalentNetworkPage() {
         <Dialog open={isSignatureOpen} onOpenChange={setIsSignatureOpen}>
           <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white border border-white/20 shadow-premium">
             <DialogHeader>
-              <DialogTitle className="text-primary font-black flex items-center gap-1.5">
-                <PenTool className="h-5 w-5 text-primary" /> Sign Contract
+              <DialogTitle className="text-foreground font-black flex items-center gap-1.5">
+                <PenTool className="h-5 w-5 text-foreground" /> Sign Contract
               </DialogTitle>
               <DialogDescription>
                 Sign this agreement: <strong>{selectedContractForSign.doc_type}</strong>.

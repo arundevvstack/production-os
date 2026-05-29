@@ -40,7 +40,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
   if (isTenantLoading || isInvoiceLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -90,7 +90,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
         <div className="flex gap-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="rounded-xl gap-2 h-10 px-6 font-bold border-primary text-primary hover:bg-primary/5">
+              <Button variant="outline" className="rounded-xl gap-2 h-10 px-6 font-bold border-primary text-foreground hover:bg-primary/5">
                 <Share2 className="h-4 w-4" /> Send Invoice
               </Button>
             </DropdownMenuTrigger>
@@ -100,7 +100,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
                 <MessageSquare className="h-4 w-4 text-emerald-500" /> Send via WhatsApp
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleShareEmail} className="gap-2 py-3 cursor-pointer rounded-lg">
-                <Mail className="h-4 w-4 text-primary" /> Send via Email
+                <Mail className="h-4 w-4 text-foreground" /> Send via Email
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleCopyLink} className="gap-2 py-3 cursor-pointer rounded-lg">
@@ -129,7 +129,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
                 {company?.name?.substring(0, 2).toUpperCase() || 'DP'}
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tighter text-primary">{company?.name || 'DP Media OS'}</h1>
+                <h1 className="text-3xl font-bold tracking-tighter text-foreground">{company?.name || 'DP Media OS'}</h1>
                 <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Media Production Hub</p>
               </div>
             </div>
@@ -137,30 +137,30 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
             <div className="space-y-1 text-sm text-muted-foreground font-medium">
               <div className="flex gap-2">
                 <span className="w-24 font-bold text-muted-foreground">Project :</span>
-                <span className="text-primary font-bold uppercase">{invoice.project_ref || invoice.project_name || 'GENERAL'}</span>
+                <span className="text-foreground font-bold uppercase">{invoice.project_ref || invoice.project_name || 'GENERAL'}</span>
               </div>
               <div className="flex gap-2">
                 <span className="w-24 font-bold text-muted-foreground">Invoice No :</span>
-                <span className="text-primary font-bold">{invoice.invoice_number}</span>
+                <span className="text-foreground font-bold">{invoice.invoice_number}</span>
               </div>
               <div className="flex gap-2">
                 <span className="w-24 font-bold text-muted-foreground">Invoice Date :</span>
-                <span className="text-primary font-bold">{new Date(invoice.issue_date).toLocaleDateString('en-GB')}</span>
+                <span className="text-foreground font-bold">{new Date(invoice.issue_date).toLocaleDateString('en-GB')}</span>
               </div>
               <div className="flex gap-2">
                 <span className="w-24 font-bold text-muted-foreground">Payable To :</span>
-                <span className="text-primary font-bold">{company?.name}</span>
+                <span className="text-foreground font-bold">{company?.name}</span>
               </div>
               <div className="flex gap-2">
                 <span className="w-24 font-bold text-muted-foreground">Due Date :</span>
-                <span className="text-primary font-bold">{new Date(invoice.due_date).toLocaleDateString('en-GB')}</span>
+                <span className="text-foreground font-bold">{new Date(invoice.due_date).toLocaleDateString('en-GB')}</span>
               </div>
             </div>
           </div>
 
           <div className="text-right space-y-4">
             <div>
-              <h2 className="text-4xl font-black text-primary/20 uppercase tracking-tighter mb-1">Invoice</h2>
+              <h2 className="text-4xl font-black text-foreground/20 uppercase tracking-tighter mb-1">Invoice</h2>
               <div className="text-xs space-y-1 font-bold">
                 <p className="text-accent">{company?.name} PVT LTD</p>
                 <p className="text-muted-foreground">CIN: {company?.cin || 'U60200KL2023PTC081308'}</p>
@@ -171,11 +171,11 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
             <div className="pt-8">
               <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-2">Bill To</p>
               <div className="max-w-[250px] ml-auto space-y-1">
-                <p className="font-bold text-primary leading-tight">{client?.company_name || invoice.client_name}</p>
+                <p className="font-bold text-foreground leading-tight">{client?.company_name || invoice.client_name}</p>
                 <p className="text-xs text-muted-foreground whitespace-pre-line leading-relaxed">
                   {client?.billing_address || 'Billing address pending update in CRM.'}
                 </p>
-                {client?.gstin && <p className="text-xs font-bold text-primary mt-2">{client.gstin}</p>}
+                {client?.gstin && <p className="text-xs font-bold text-foreground mt-2">{client.gstin}</p>}
               </div>
             </div>
           </div>
@@ -198,10 +198,10 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
                 {invoice.line_items?.map((item: any, idx: number) => (
                   <tr key={idx} className="hover:bg-muted transition-colors">
                     <td className="p-4 text-center font-bold text-muted-foreground">{idx + 1}</td>
-                    <td className="p-4 font-bold text-primary">{item.description}</td>
+                    <td className="p-4 font-bold text-foreground">{item.description}</td>
                     <td className="p-4 text-right font-bold text-muted-foreground/80">{(item.unit_price || 0).toLocaleString()}</td>
                     <td className="p-4 text-center font-bold text-muted-foreground/80">{item.quantity || 1}</td>
-                    <td className="p-4 text-right font-black text-primary">₹{(item.total || 0).toLocaleString()}</td>
+                    <td className="p-4 text-right font-black text-foreground">₹{(item.total || 0).toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -212,7 +212,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
             <div className="w-full md:w-80 space-y-3">
               <div className="flex justify-between items-center bg-muted p-3 rounded-lg">
                 <span className="text-xs font-black uppercase text-muted-foreground">Total</span>
-                <span className="font-black text-primary">₹{(invoice.subtotal || 0).toLocaleString()}</span>
+                <span className="font-black text-foreground">₹{(invoice.subtotal || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center px-3">
                 <span className="text-xs font-bold text-muted-foreground">GST @ 18%</span>
@@ -226,7 +226,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
               {/* Stamp Placeholder */}
               <div className="pt-6 flex justify-center">
                 <div className="h-24 w-24 rounded-full border-4 border-primary/20 border-dashed flex items-center justify-center relative opacity-40 grayscale">
-                   <div className="text-[8px] font-black text-primary/40 text-center uppercase leading-none">
+                   <div className="text-[8px] font-black text-foreground/40 text-center uppercase leading-none">
                      Digital<br/>Verified<br/>Stamp
                    </div>
 
@@ -240,31 +240,31 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
         <div className="mt-12 pt-12 border-t border-primary">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-4">
-              <h3 className="font-black text-sm uppercase text-primary">Account Details</h3>
+              <h3 className="font-black text-sm uppercase text-foreground">Account Details</h3>
               <div className="space-y-2 text-xs">
-                <p className="font-black text-primary">{company?.bank_details?.bank_name || 'Axis Bank'}</p>
+                <p className="font-black text-foreground">{company?.bank_details?.bank_name || 'Axis Bank'}</p>
                 <div className="grid grid-cols-2 max-w-[250px] gap-y-1 font-bold text-muted-foreground">
                   <span>Acc no</span>
-                  <span className="text-primary">: {company?.bank_details?.account_no || '922020014850667'}</span>
+                  <span className="text-foreground">: {company?.bank_details?.account_no || '922020014850667'}</span>
                   <span>Phone</span>
-                  <span className="text-primary">: {company?.contact_phone || '9947109143'}</span>
+                  <span className="text-foreground">: {company?.contact_phone || '9947109143'}</span>
                   <span>NAME</span>
-                  <span className="text-primary">: {company?.name} Private Limited.</span>
+                  <span className="text-foreground">: {company?.name} Private Limited.</span>
                   <span>IFSC</span>
-                  <span className="text-primary">: {company?.bank_details?.ifsc || 'UTIB0003042'}</span>
+                  <span className="text-foreground">: {company?.bank_details?.ifsc || 'UTIB0003042'}</span>
                   <span>Branch</span>
-                  <span className="text-primary">: {company?.bank_details?.branch || 'Sasthamangalam'}</span>
+                  <span className="text-foreground">: {company?.bank_details?.branch || 'Sasthamangalam'}</span>
                   <span>PAN</span>
-                  <span className="text-primary">: {company?.bank_details?.pan || 'AAQCM8450P'}</span>
+                  <span className="text-foreground">: {company?.bank_details?.pan || 'AAQCM8450P'}</span>
                   <span>GST</span>
-                  <span className="text-primary">: {company?.gstin || '32AAQCM8450P1ZQ'}</span>
+                  <span className="text-foreground">: {company?.gstin || '32AAQCM8450P1ZQ'}</span>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col justify-end items-end text-right space-y-6">
               <div className="space-y-1">
-                <h4 className="font-black text-sm text-primary uppercase">{company?.name} PRIVATE LIMITED</h4>
+                <h4 className="font-black text-sm text-foreground uppercase">{company?.name} PRIVATE LIMITED</h4>
                 <p className="text-[10px] text-muted-foreground font-bold max-w-[300px]">
                   {company?.address || 'Dotspace Business Center TC 24/3088 Ushasandya Building, Kowdiar - Devasom Board Road, Kowdiar, Trivandrum, Pin : 695003'}
                 </p>
@@ -272,10 +272,10 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
               
               <div className="space-y-1">
                 <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Contact Us</p>
-                <div className="text-[10px] font-bold text-primary">
+                <div className="text-[10px] font-bold text-foreground">
                   <p>Email: {company?.contact_email || 'info@marzelz.com'}</p>
                   <p>Phone: {company?.contact_phone || '+91 871 400 5550'}</p>
-                  <p className="text-primary">{company?.website || 'www.marzelz.com'}</p>
+                  <p className="text-foreground">{company?.website || 'www.marzelz.com'}</p>
                 </div>
               </div>
             </div>

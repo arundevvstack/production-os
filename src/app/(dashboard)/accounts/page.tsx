@@ -409,7 +409,7 @@ export default function AccountsPage() {
   if (isTenantLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -421,7 +421,7 @@ export default function AccountsPage() {
           <Lock className="h-12 w-12" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-black text-primary tracking-tight">Security Clearance Blocked</h2>
+          <h2 className="text-2xl font-black text-foreground tracking-tight">Security Clearance Blocked</h2>
           <p className="text-muted-foreground font-medium max-w-sm">You do not possess the required credentials to access the organizational finance vaults.</p>
         </div>
         <Link href="/dashboard">
@@ -436,7 +436,7 @@ export default function AccountsPage() {
   if (isAccountsLoading || isExpensesLoading || isInvoicesLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -447,7 +447,7 @@ export default function AccountsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 px-2">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-foreground">
               Accounts & <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-rose-500 to-orange-500">Finance</span>
             </h1>
             <div className="flex items-center gap-2 px-3 py-1 bg-primary text-white rounded-full text-[9px] font-black uppercase tracking-[0.2em]">
@@ -491,7 +491,7 @@ export default function AccountsPage() {
         {/* OVERVIEW TAB */}
         <TabsContent value="overview" className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 px-2">
-            <Card className="bg-white text-primary rounded-[10px] overflow-hidden group shadow-2xl relative border-border">
+            <Card className="bg-white text-foreground rounded-[10px] overflow-hidden group shadow-2xl relative border-border">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
               <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:scale-125 transition-transform duration-1000 rotate-12">
                 <Wallet className="h-32 w-32" />
@@ -522,8 +522,8 @@ export default function AccountsPage() {
                 <div className="space-y-8">
                   <div className="space-y-4">
                     <div className="flex justify-between items-end">
-                      <span className="text-sm font-black text-primary">Total Expenses</span>
-                      <span className="text-3xl font-black text-primary">₹{totalExpensesMonth.toLocaleString()}</span>
+                      <span className="text-sm font-black text-foreground">Total Expenses</span>
+                      <span className="text-3xl font-black text-foreground">₹{totalExpensesMonth.toLocaleString()}</span>
                     </div>
                     <div className="h-4 w-full bg-muted rounded-full overflow-hidden p-1">
                       <div 
@@ -542,7 +542,7 @@ export default function AccountsPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white rounded-[10px] overflow-hidden text-primary shadow-2xl border-border sm:col-span-2 md:col-span-1">
+            <Card className="bg-white rounded-[10px] overflow-hidden text-foreground shadow-2xl border-border sm:col-span-2 md:col-span-1">
               <CardContent className="p-8 flex flex-col justify-center h-full relative space-y-10">
                 <div className="absolute top-0 right-0 p-12 opacity-5 rotate-45">
                   <Cpu className="h-32 w-32" />
@@ -564,8 +564,8 @@ export default function AccountsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 px-2">
             <div className="lg:col-span-2 space-y-8">
               <div className="flex items-center justify-between px-2">
-                <h3 className="text-2xl font-black tracking-tight text-primary flex items-center gap-3">
-                   <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <h3 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-3">
+                   <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-foreground">
                     <Building2 className="h-5 w-5" />
                    </div>
                    Connected Accounts
@@ -582,7 +582,7 @@ export default function AccountsPage() {
                     <p className="text-base font-black uppercase tracking-widest text-muted-foreground">No active accounts found</p>
                     <p className="text-xs text-muted-foreground/80 mt-2 font-medium max-w-sm mx-auto">Create a dynamic bank account or populate demo environments with default accounts.</p>
                     <div className="flex justify-center gap-4 mt-8">
-                      <Button className="h-12 px-6 rounded-[10px] bg-white text-primary hover:bg-muted text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg" onClick={() => setIsAddOpen(true)}>
+                      <Button className="h-12 px-6 rounded-[10px] bg-white text-foreground hover:bg-muted text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg" onClick={() => setIsAddOpen(true)}>
                         <Plus className="h-4 w-4 mr-2" /> Add Account
                       </Button>
                       <Button variant="outline" className="h-12 px-6 rounded-[10px] border-border bg-white/5 text-white hover:bg-white/10 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95" onClick={handleSeedDemoAccounts} disabled={isSeeding}>
@@ -622,7 +622,7 @@ export default function AccountsPage() {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <h4 className="font-black text-3xl tracking-tighter text-primary group-hover:text-primary transition-colors">{acc.name}</h4>
+                          <h4 className="font-black text-3xl tracking-tighter text-foreground group-hover:text-foreground transition-colors">{acc.name}</h4>
                           <p className="text-[11px] text-muted-foreground font-black uppercase tracking-[0.2em] flex items-center gap-2">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] block"></span>
                             {acc.bank_name || 'Business Reserve'}
@@ -631,7 +631,7 @@ export default function AccountsPage() {
                         <div className="pt-8 border-t border-border flex justify-between items-end">
                           <div className="space-y-2">
                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Available Balance</p>
-                            <p className="text-4xl font-black text-primary tracking-tighter">₹{Number(acc.balance).toLocaleString()}</p>
+                            <p className="text-4xl font-black text-foreground tracking-tighter">₹{Number(acc.balance).toLocaleString()}</p>
                           </div>
                           <div className="h-12 w-12 rounded-[10px] bg-white/5 border border-border flex items-center justify-center text-muted-foreground opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
                             <ChevronRight className="h-6 w-6" />
@@ -645,8 +645,8 @@ export default function AccountsPage() {
             </div>
 
             <div className="space-y-8">
-              <h3 className="text-3xl font-black tracking-tighter text-primary flex items-center gap-4 px-2">
-                <div className="h-10 w-10 rounded-[10px] bg-primary/10 flex items-center justify-center text-primary shadow-lg backdrop-blur-md">
+              <h3 className="text-3xl font-black tracking-tighter text-foreground flex items-center gap-4 px-2">
+                <div className="h-10 w-10 rounded-[10px] bg-primary/10 flex items-center justify-center text-foreground shadow-lg backdrop-blur-md">
                   <History className="h-5 w-5" />
                 </div>
                 Financial Pulse
@@ -668,7 +668,7 @@ export default function AccountsPage() {
                             <TrendingDown className="h-7 w-7" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-base font-black text-primary truncate tracking-tight group-hover:text-primary transition-colors">{ex.description}</p>
+                            <p className="text-base font-black text-foreground truncate tracking-tight group-hover:text-foreground transition-colors">{ex.description}</p>
                             <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-1.5">{ex.category} • {ex.sub_category}</p>
                           </div>
                           <div className="text-right shrink-0 space-y-1.5">
@@ -694,12 +694,12 @@ export default function AccountsPage() {
                 <CardHeader className="bg-white/5 border-b border-border px-10 py-10">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                     <div>
-                      <CardTitle className="text-3xl font-black tracking-tighter text-primary">Expense History</CardTitle>
+                      <CardTitle className="text-3xl font-black tracking-tighter text-foreground">Expense History</CardTitle>
                       <CardDescription className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-2">Full list of all business transactions.</CardDescription>
                     </div>
                     <div className="flex flex-wrap items-center gap-4">
                       <div className="relative group">
-                        <Filter className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <Filter className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
                         <Select value={projectFilter} onValueChange={setProjectFilter}>
                           <SelectTrigger className="pl-12 w-[220px] rounded-[10px] h-12 text-[10px] font-black uppercase tracking-widest bg-white/5 border-border text-white focus:ring-primary/20 shadow-xl backdrop-blur-xl">
                             <SelectValue placeholder="Filter by Unit" />
@@ -714,7 +714,7 @@ export default function AccountsPage() {
                         </Select>
                       </div>
                       <Button variant="outline" className="h-12 px-6 rounded-[10px] border-border bg-white/5 text-white hover:bg-white/10 font-black text-[10px] uppercase tracking-widest shadow-xl gap-3 transition-all active:scale-95">
-                        <Download className="h-4 w-4 text-primary" /> Download Report
+                        <Download className="h-4 w-4 text-foreground" /> Download Report
                       </Button>
                     </div>
                   </div>
@@ -794,8 +794,8 @@ export default function AccountsPage() {
             <div className="space-y-8">
               <Card className="bg-white rounded-[10px] border-border shadow-xl">
                 <CardHeader className="p-10">
-                  <CardTitle className="text-3xl font-black tracking-tighter text-primary flex items-center gap-4">
-                    <PieChart className="h-8 w-8 text-primary" /> Spending by Category
+                  <CardTitle className="text-3xl font-black tracking-tighter text-foreground flex items-center gap-4">
+                    <PieChart className="h-8 w-8 text-foreground" /> Spending by Category
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-10 pt-0 space-y-8">
@@ -806,7 +806,7 @@ export default function AccountsPage() {
                       <div key={cat} className="space-y-3.5">
                         <div className="flex justify-between items-end">
                           <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">{cat}</span>
-                          <span className="text-sm font-black text-primary tracking-tighter">₹{catTotal.toLocaleString()}</span>
+                          <span className="text-sm font-black text-foreground tracking-tighter">₹{catTotal.toLocaleString()}</span>
                         </div>
                         <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden p-0.5">
                           <div className="h-full bg-primary rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${perc}%` }}></div>
@@ -817,7 +817,7 @@ export default function AccountsPage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white rounded-[10px] text-primary overflow-hidden shadow-xl relative border-border">
+              <Card className="bg-white rounded-[10px] text-foreground overflow-hidden shadow-xl relative border-border">
                 <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
                    <BrainCircuit className="h-40 w-40" />
                 </div>
@@ -831,7 +831,7 @@ export default function AccountsPage() {
                       Smart analysis of your spending and tax records.
                     </p>
                   </div>
-                  <Button className="w-full rounded-[10px] h-14 bg-white text-primary hover:bg-muted font-black text-xs uppercase tracking-[0.2em] gap-3 shadow-2xl active:scale-95 transition-all" onClick={handleConsultAI} disabled={isConsultingAI}>
+                  <Button className="w-full rounded-[10px] h-14 bg-white text-foreground hover:bg-muted font-black text-xs uppercase tracking-[0.2em] gap-3 shadow-2xl active:scale-95 transition-all" onClick={handleConsultAI} disabled={isConsultingAI}>
                     {isConsultingAI ? <Loader2 className="h-5 w-5 animate-spin" /> : "Get AI Advice"}
                   </Button>
                 </CardContent>
@@ -850,7 +850,7 @@ export default function AccountsPage() {
                   <CardContent className="p-10">
                     <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-3">GST Total</p>
                     <div className="space-y-2">
-                       <h4 className="text-4xl font-black tracking-tighter text-primary">₹{gstStats.output.toLocaleString()}</h4>
+                       <h4 className="text-4xl font-black tracking-tighter text-foreground">₹{gstStats.output.toLocaleString()}</h4>
                        <p className="text-[10px] text-emerald-400 font-black uppercase tracking-widest flex items-center gap-3">
                          <span className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.5)] block"></span> Connected
                        </p>
@@ -862,7 +862,7 @@ export default function AccountsPage() {
                   <CardContent className="p-10">
                     <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-3">ITC Projection</p>
                     <div className="space-y-2">
-                      <h4 className="text-4xl font-black tracking-tighter text-primary">₹{(totalExpensesMonth * 0.18).toLocaleString()}</h4>
+                      <h4 className="text-4xl font-black tracking-tighter text-foreground">₹{(totalExpensesMonth * 0.18).toLocaleString()}</h4>
                       <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Calculated Threshold</p>
                     </div>
                   </CardContent>
@@ -874,7 +874,7 @@ export default function AccountsPage() {
                   <CardContent className="p-10">
                     <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-3">Net GST Due</p>
                     <div className="space-y-2">
-                      <h4 className="text-4xl font-black tracking-tighter text-primary">₹{Math.max(0, gstStats.output - (totalExpensesMonth * 0.18)).toLocaleString()}</h4>
+                      <h4 className="text-4xl font-black tracking-tighter text-foreground">₹{Math.max(0, gstStats.output - (totalExpensesMonth * 0.18)).toLocaleString()}</h4>
                       <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">After ITC deduction</p>
                     </div>
                   </CardContent>
@@ -885,7 +885,7 @@ export default function AccountsPage() {
                 <CardHeader className="bg-white/40 border-b border-white px-10 py-10">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-2xl font-black tracking-tight text-primary">Compliance Intelligence</CardTitle>
+                      <CardTitle className="text-2xl font-black tracking-tight text-foreground">Compliance Intelligence</CardTitle>
                       <CardDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Direct Handshake protocol active.</CardDescription>
                     </div>
                     <div className="flex gap-4">
@@ -917,18 +917,18 @@ export default function AccountsPage() {
                             <tr key={idx} className="hover:bg-muted transition-all group">
                               <td className="px-10 py-8 font-black text-white text-lg tracking-tighter">{m.period}</td>
                               <td className="px-8 py-8">
-                                <span className="font-black text-xl text-primary tracking-tighter">₹{m.output.toLocaleString()}</span>
+                                <span className="font-black text-xl text-foreground tracking-tighter">₹{m.output.toLocaleString()}</span>
                               </td>
                               <td className="px-8 py-8">
                                 <Badge className={cn(
                                   "text-[10px] uppercase font-black tracking-widest px-5 py-2 rounded-full border-none shadow-lg backdrop-blur-md",
-                                  m.status === 'Filed' ? 'bg-white/10 text-white' : 'bg-primary/20 text-primary'
+                                  m.status === 'Filed' ? 'bg-white/10 text-white' : 'bg-primary/20 text-foreground'
                                 )}>
                                   {m.status}
                                 </Badge>
                               </td>
                               <td className="px-10 py-8 text-right">
-                                <Button className="h-12 px-8 rounded-[10px] bg-white/5 hover:bg-white text-primary hover:text-primary border border-border font-black text-[10px] uppercase tracking-widest gap-3 shadow-xl transition-all active:scale-95">
+                                <Button className="h-12 px-8 rounded-[10px] bg-white/5 hover:bg-white text-foreground hover:text-foreground border border-border font-black text-[10px] uppercase tracking-widest gap-3 shadow-xl transition-all active:scale-95">
                                   <Zap className="h-4 w-4 fill-current" /> File Return
                                 </Button>
                               </td>
@@ -953,7 +953,7 @@ export default function AccountsPage() {
                   </div>
                   <div className="space-y-3">
                     <h4 className="text-2xl font-black tracking-tight leading-tight">Bulk Filing <br/>Ready</h4>
-                    <p className="text-sm font-medium text-primary/50 leading-relaxed">
+                    <p className="text-sm font-medium text-foreground/50 leading-relaxed">
                       You have <strong>{gstStats.periods.filter(m => m.status === 'Pending').length}</strong> pending filings ready for submission.
                     </p>
                   </div>
@@ -965,7 +965,7 @@ export default function AccountsPage() {
 
               <Card className="premium-card rounded-[10px] bg-primary text-white p-10 space-y-8 border-none shadow-2xl">
                 <div className="h-16 w-16 rounded-[10px] bg-white/5 flex items-center justify-center border border-border">
-                  <Cpu className="h-8 w-8 text-primary" />
+                  <Cpu className="h-8 w-8 text-foreground" />
                 </div>
                 <div className="space-y-3">
                   <h4 className="text-2xl font-black tracking-tight">Compliance <br/>Checker</h4>
@@ -974,7 +974,7 @@ export default function AccountsPage() {
                 <div className="space-y-3">
                    {['GSTR-1 Verification', 'GSTR-3B Audit'].map(item => (
                      <Button key={item} variant="outline" className="w-full h-12 bg-white/5 border-border text-white hover:bg-white/10 rounded-[10px] text-[10px] font-black uppercase tracking-widest text-left justify-start px-6 gap-3 group transition-all">
-                       <ShieldCheck className="h-4 w-4 text-primary opacity-50 group-hover:opacity-100" />
+                       <ShieldCheck className="h-4 w-4 text-foreground opacity-50 group-hover:opacity-100" />
                        {item}
                      </Button>
                    ))}
@@ -990,7 +990,7 @@ export default function AccountsPage() {
       {/* Register Account Dialog */}
       <Dialog open={isAddAccountOpen} onOpenChange={setIsAddOpen}>
         <DialogContent className="sm:max-w-[500px] rounded-[10px] border-border bg-white p-0 overflow-hidden shadow-xl">
-          <div className="bg-primary p-10 text-primary relative overflow-hidden border-b border-border">
+          <div className="bg-primary p-10 text-foreground relative overflow-hidden border-b border-border">
             <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
                <Building2 className="h-32 w-32" />
             </div>
@@ -1069,7 +1069,7 @@ export default function AccountsPage() {
               </div>
             )}
             
-            <Button type="submit" disabled={isSubmitting} className="w-full h-16 bg-white text-primary hover:bg-muted font-black rounded-[10px] shadow-2xl active:scale-95 transition-all mt-4 text-xs uppercase tracking-[0.2em]">
+            <Button type="submit" disabled={isSubmitting} className="w-full h-16 bg-white text-foreground hover:bg-muted font-black rounded-[10px] shadow-2xl active:scale-95 transition-all mt-4 text-xs uppercase tracking-[0.2em]">
               {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Save Account"}
             </Button>
           </form>
@@ -1079,7 +1079,7 @@ export default function AccountsPage() {
       {/* Log Expense Dialog */}
       <Dialog open={isLogExpenseOpen} onOpenChange={setIsLogExpenseOpen}>
         <DialogContent className="sm:max-w-[550px] rounded-[10px] border-border bg-white p-0 overflow-hidden shadow-xl">
-          <div className="bg-primary p-10 text-primary relative overflow-hidden border-b border-border">
+          <div className="bg-primary p-10 text-foreground relative overflow-hidden border-b border-border">
             <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12">
                <Receipt className="h-32 w-32" />
             </div>
@@ -1267,7 +1267,7 @@ export default function AccountsPage() {
       {/* AI Result Dialog */}
       <Dialog open={isAIResultOpen} onOpenChange={setIsAIResultOpen}>
         <DialogContent className="sm:max-w-[650px] rounded-[10px] border-border bg-white p-0 overflow-hidden shadow-xl">
-          <div className="bg-accent p-12 text-primary relative overflow-hidden border-b border-border">
+          <div className="bg-accent p-12 text-foreground relative overflow-hidden border-b border-border">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-30"></div>
             <div className="absolute top-0 right-0 p-16 opacity-10 rotate-12">
                <BrainCircuit className="h-48 w-48" />
@@ -1290,7 +1290,7 @@ export default function AccountsPage() {
                   <div className="grid grid-cols-2 gap-8">
                     <div className="p-8 rounded-[10px] bg-white/5 border border-border space-y-3">
                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Projected Health</p>
-                       <p className="text-4xl font-black text-primary tracking-tighter capitalize">{aiAdvice.summary.split('.')[0]}</p>
+                       <p className="text-4xl font-black text-foreground tracking-tighter capitalize">{aiAdvice.summary.split('.')[0]}</p>
                     </div>
                     <div className="p-8 rounded-[10px] bg-white/5 border border-border space-y-3">
                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Action Items</p>
@@ -1300,12 +1300,12 @@ export default function AccountsPage() {
 
                   <div className="space-y-8">
                     <h4 className="text-xs font-black uppercase tracking-[0.4em] text-muted-foreground flex items-center gap-4 ml-2">
-                       <Target className="h-5 w-5 text-primary" /> Tactical Directives
+                       <Target className="h-5 w-5 text-foreground" /> Tactical Directives
                     </h4>
                     <div className="space-y-5">
                       {aiAdvice.recommendations?.map((rec, i) => (
                         <div key={i} className="p-8 rounded-[10px] bg-white/5 border border-border shadow-2xl flex gap-8 group hover:border-primary/20 transition-all duration-500">
-                          <div className="h-12 w-12 rounded-[10px] bg-primary flex items-center justify-center text-primary font-black shrink-0 group-hover:bg-primary group-hover:text-primary transition-all text-sm">0{i+1}</div>
+                          <div className="h-12 w-12 rounded-[10px] bg-primary flex items-center justify-center text-foreground font-black shrink-0 group-hover:bg-primary group-hover:text-foreground transition-all text-sm">0{i+1}</div>
                           <div className="space-y-2 pt-2">
                             <p className="text-xs font-black uppercase tracking-widest text-accent">{rec.category}</p>
                             <p className="text-base font-medium text-slate-300 leading-relaxed">{rec.advice}</p>
@@ -1316,7 +1316,7 @@ export default function AccountsPage() {
                     </div>
                   </div>
 
-                  <div className="p-12 rounded-[10px] bg-gradient-to-br from-slate-800 to-slate-900 text-primary space-y-8 relative overflow-hidden border border-border shadow-xl">
+                  <div className="p-12 rounded-[10px] bg-gradient-to-br from-slate-800 to-slate-900 text-foreground space-y-8 relative overflow-hidden border border-border shadow-xl">
                     <div className="absolute top-0 right-0 p-12 opacity-5">
                        <Receipt className="h-24 w-24" />
                     </div>
@@ -1341,7 +1341,7 @@ export default function AccountsPage() {
               <ShieldCheck className="h-5 w-5 text-emerald-400" />
               Verified with GSTR Standards
             </div>
-            <Button onClick={() => setIsAIResultOpen(false)} className="h-16 px-12 rounded-[10px] bg-white text-primary font-black uppercase tracking-[0.2em] text-xs active:scale-95 transition-all shadow-xl">
+            <Button onClick={() => setIsAIResultOpen(false)} className="h-16 px-12 rounded-[10px] bg-white text-foreground font-black uppercase tracking-[0.2em] text-xs active:scale-95 transition-all shadow-xl">
               Close
             </Button>
           </div>
@@ -1362,7 +1362,7 @@ export default function AccountsPage() {
             </div>
             <AlertDialogTitle className="text-4xl font-black tracking-tighter">Delete Account?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed pt-2">
-              Are you sure you want to delete <span className="text-primary font-black">{accountToDelete?.name}</span>? This will remove all associated transaction data.
+              Are you sure you want to delete <span className="text-foreground font-black">{accountToDelete?.name}</span>? This will remove all associated transaction data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-12 gap-4 relative z-10">
@@ -1383,7 +1383,7 @@ export default function AccountsPage() {
             <div className="h-20 w-20 rounded-[10px] bg-accent/10 flex items-center justify-center text-accent mb-4 shadow-inner">
               <AlertTriangle className="h-10 w-10" />
             </div>
-            <AlertDialogTitle className="text-4xl font-black tracking-tighter text-primary">Delete Expense?</AlertDialogTitle>
+            <AlertDialogTitle className="text-4xl font-black tracking-tighter text-foreground">Delete Expense?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed pt-2">
               Are you sure you want to delete this expense record? This action cannot be undone.
             </AlertDialogDescription>

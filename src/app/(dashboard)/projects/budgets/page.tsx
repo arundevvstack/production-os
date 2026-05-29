@@ -81,7 +81,7 @@ export default function BudgetsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -90,7 +90,7 @@ export default function BudgetsPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Financial Tracking</h1>
+          <h1 className="text-3xl font-bold text-foreground">Financial Tracking</h1>
           <p className="text-muted-foreground">Manage production costs and budget allocation across all phases.</p>
         </div>
         <div className="flex items-center gap-2">

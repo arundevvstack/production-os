@@ -108,7 +108,7 @@ export default function PublicEcosystemHomepage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-primary font-sans antialiased pb-20 relative overflow-hidden selection:bg-destructive selection:text-white">
+    <div className="min-h-screen bg-white text-foreground font-sans antialiased pb-20 relative overflow-hidden selection:bg-destructive selection:text-white">
       
       {/* 🔮 Background Subtle Glow Elements */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-destructive/5 blur-[120px] rounded-full pointer-events-none" />
@@ -121,7 +121,7 @@ export default function PublicEcosystemHomepage() {
           </div>  <Badge className="bg-destructive/10 text-destructive border-none font-bold text-[8px] uppercase tracking-widest py-0.5 px-2 rounded-full ring-1 ring-red-500/20 shadow-sm">Active</Badge>
 
           <nav className="flex items-center gap-6">
-            <Link href="/creators" className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary font-bold transition">Directory</Link>
+            <Link href="/creators" className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground font-bold transition">Directory</Link>
             <Link href="/login">
               <Button className="bg-primary hover:bg-primary text-white font-bold h-9 px-5 text-xs rounded-full shadow-md transition duration-300">
                 Sign In
@@ -138,7 +138,7 @@ export default function PublicEcosystemHomepage() {
             <Sparkle className="h-3.5 w-3.5 inline-block mr-1.5 text-destructive" /> Welcome to Media OS
           </Badge>
           
-          <h1 className="text-5xl md:text-7xl lg:text-[84px] font-black tracking-tighter text-primary leading-[1.05] max-w-5xl mx-auto whitespace-pre-line drop-shadow-sm">
+          <h1 className="text-5xl md:text-7xl lg:text-[84px] font-black tracking-tighter text-foreground leading-[1.05] max-w-5xl mx-auto whitespace-pre-line drop-shadow-sm">
             Architect your next {"\n"}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-rose-500 to-orange-600">cinematic campaign.</span>
           </h1>
@@ -155,7 +155,7 @@ export default function PublicEcosystemHomepage() {
             </Button>
           </Link>
           <a href="#campaign-generator">
-            <Button size="lg" variant="outline" className="border-border bg-white hover:bg-muted text-primary font-bold h-14 px-8 rounded-full text-[13px] gap-2 shadow-sm transition-all duration-300">
+            <Button size="lg" variant="outline" className="border-border bg-white hover:bg-muted text-foreground font-bold h-14 px-8 rounded-full text-[13px] gap-2 shadow-sm transition-all duration-300">
               Start Campaign <PlayCircle className="h-5 w-5" />
             </Button>
           </a>
@@ -171,7 +171,7 @@ export default function PublicEcosystemHomepage() {
               <Bot className="h-6 w-6" />
             </div>
             <div className="space-y-2">
-              <h3 className="font-bold text-[13px] uppercase tracking-widest text-primary">AI Assistant</h3>
+              <h3 className="font-bold text-[13px] uppercase tracking-widest text-foreground">AI Assistant</h3>
               <p className="text-xs text-muted-foreground leading-relaxed font-bold">Get instant creator suggestions and budget estimates for your upcoming campaigns in milliseconds.</p>
             </div>
           </CardContent>
@@ -183,7 +183,7 @@ export default function PublicEcosystemHomepage() {
               <Users className="h-6 w-6" />
             </div>
             <div className="space-y-2">
-              <h3 className="font-bold text-[13px] uppercase tracking-widest text-primary">Creator Network</h3>
+              <h3 className="font-bold text-[13px] uppercase tracking-widest text-foreground">Creator Network</h3>
               <p className="text-xs text-muted-foreground leading-relaxed font-bold">Hire verified actors, models, and video editors for your projects with full portfolio transparency.</p>
             </div>
           </CardContent>
@@ -195,7 +195,7 @@ export default function PublicEcosystemHomepage() {
               <Building2 className="h-6 w-6" />
             </div>
             <div className="space-y-2">
-              <h3 className="font-bold text-[13px] uppercase tracking-widest text-primary">Project Portal</h3>
+              <h3 className="font-bold text-[13px] uppercase tracking-widest text-foreground">Project Portal</h3>
               <p className="text-xs text-muted-foreground leading-relaxed font-bold">Review raw videos, share feedback, and track payments in a single, secure enterprise workspace.</p>
             </div>
           </CardContent>
@@ -209,7 +209,7 @@ export default function PublicEcosystemHomepage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-8">
           <div className="space-y-2">
             <span className="text-[10px] font-black text-destructive uppercase tracking-widest block">Exclusive Access</span>
-            <h2 className="text-4xl font-black uppercase text-primary tracking-tighter">Verified Roster</h2>
+            <h2 className="text-4xl font-black uppercase text-foreground tracking-tighter">Verified Roster</h2>
           </div>
 
           {/* Directory filters */}
@@ -217,7 +217,7 @@ export default function PublicEcosystemHomepage() {
             <select 
               value={searchCategory}
               onChange={(e) => setSearchCategory(e.target.value)}
-              className="bg-white border border-border text-primary rounded-full text-xs h-10 px-5 outline-none font-bold focus:border-destructive shadow-sm appearance-none"
+              className="bg-white border border-border text-foreground rounded-full text-xs h-10 px-5 outline-none font-bold focus:border-destructive shadow-sm appearance-none"
             >
               <option value="all">All Specialties</option>
               <option value="anchor">Anchor</option>
@@ -228,7 +228,7 @@ export default function PublicEcosystemHomepage() {
             <select 
               value={searchCity}
               onChange={(e) => setSearchCity(e.target.value)}
-              className="bg-white border border-border text-primary rounded-full text-xs h-10 px-5 outline-none font-bold focus:border-destructive shadow-sm appearance-none"
+              className="bg-white border border-border text-foreground rounded-full text-xs h-10 px-5 outline-none font-bold focus:border-destructive shadow-sm appearance-none"
             >
               <option value="all">All Locations</option>
               <optgroup label="Kerala Districts">
@@ -264,12 +264,12 @@ export default function PublicEcosystemHomepage() {
                 <div className="flex gap-5 items-center">
                   <Avatar className="h-20 w-20 ring-4 ring-slate-50 shadow-md shrink-0 group-hover:ring-red-500/10 transition-all duration-500">
                     <AvatarImage src={c.image} className="object-cover" />
-                    <AvatarFallback className="bg-muted text-primary font-bold">{c.name[0]}</AvatarFallback>
+                    <AvatarFallback className="bg-muted text-foreground font-bold">{c.name[0]}</AvatarFallback>
                   </Avatar>
                   
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="font-bold text-xl text-primary leading-tight">{c.name}</h4>
+                      <h4 className="font-bold text-xl text-foreground leading-tight">{c.name}</h4>
                       {c.verified && (
                         <CheckCircle2 className="h-5 w-5 text-destructive fill-red-500/10 shrink-0" />
                       )}
@@ -279,7 +279,7 @@ export default function PublicEcosystemHomepage() {
                 </div>
 
                 {/* Elegant Location Details */}
-                <div className="grid grid-cols-2 gap-3 bg-muted border border-border p-4 rounded-2xl text-[11px] leading-none text-primary/80 font-bold">
+                <div className="grid grid-cols-2 gap-3 bg-muted border border-border p-4 rounded-2xl text-[11px] leading-none text-foreground/80 font-bold">
                   <div className="flex items-center gap-1.5">
                     <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
                     <span>{c.city}</span>
@@ -294,7 +294,7 @@ export default function PublicEcosystemHomepage() {
               {/* Action links */}
               <div className="bg-muted/80 border-t border-border p-5 flex gap-3">
                 <Link href={`/creators/${c.id}`} className="flex-1">
-                  <Button variant="outline" className="w-full rounded-full h-12 border-border bg-white text-xs font-bold text-primary hover:bg-muted shadow-sm transition-all">
+                  <Button variant="outline" className="w-full rounded-full h-12 border-border bg-white text-xs font-bold text-foreground hover:bg-muted shadow-sm transition-all">
                     View Portfolio
                   </Button>
                 </Link>
@@ -320,7 +320,7 @@ export default function PublicEcosystemHomepage() {
           <CardContent className="p-12 space-y-8 relative z-10">
             
             <div className="text-center space-y-2 max-w-xl mx-auto">
-              <h3 className="text-xl font-black uppercase text-primary tracking-tighter flex items-center justify-center gap-2">
+              <h3 className="text-xl font-black uppercase text-foreground tracking-tighter flex items-center justify-center gap-2">
                 <Sparkles className="h-6 w-6 text-destructive animate-pulse" /> Neural AI Assistant
               </h3>
               <p className="text-[13px] text-muted-foreground font-bold">Query our intelligence hub for creator suggestions, budget estimates, or cinematic project timelines.</p>
@@ -331,7 +331,7 @@ export default function PublicEcosystemHomepage() {
                 placeholder="e.g. Find premium Malayalam anchors in Kochi..."
                 value={publicQuery}
                 onChange={(e) => setPublicQuery(e.target.value)}
-                className="bg-transparent border-none h-12 px-6 text-[13px] rounded-full flex-grow focus-visible:ring-0 text-primary font-bold placeholder:text-muted-foreground"
+                className="bg-transparent border-none h-12 px-6 text-[13px] rounded-full flex-grow focus-visible:ring-0 text-foreground font-bold placeholder:text-muted-foreground"
               />
               <Button type="submit" disabled={isLoadingAnswer} className="rounded-full h-12 bg-destructive text-white hover:bg-destructive font-bold text-[13px] px-8 shadow-md transition-all duration-300 hover:scale-[1.02]">
                 {isLoadingAnswer ? (
@@ -365,7 +365,7 @@ export default function PublicEcosystemHomepage() {
           <CardContent className="p-10 space-y-6">
             
             <div className="space-y-1 text-center">
-              <h3 className="text-2xl font-black uppercase text-primary tracking-tighter">Start Your Campaign</h3>
+              <h3 className="text-2xl font-black uppercase text-foreground tracking-tighter">Start Your Campaign</h3>
               <p className="text-[13px] text-muted-foreground font-bold">Input your parameters to generate a custom production blueprint.</p>
             </div>
 
@@ -378,7 +378,7 @@ export default function PublicEcosystemHomepage() {
                     value={leadForm.name}
                     onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
                     placeholder="Vijay Shekhar"
-                    className="bg-muted border-border text-primary h-12 text-xs rounded-xl w-full font-bold focus:border-destructive focus:bg-white transition-all shadow-sm"
+                    className="bg-muted border-border text-foreground h-12 text-xs rounded-xl w-full font-bold focus:border-destructive focus:bg-white transition-all shadow-sm"
                     required
                   />
                 </div>
@@ -389,7 +389,7 @@ export default function PublicEcosystemHomepage() {
                     value={leadForm.email}
                     onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
                     placeholder="vijay@brand.com"
-                    className="bg-muted border-border text-primary h-12 text-xs rounded-xl w-full font-bold focus:border-destructive focus:bg-white transition-all shadow-sm"
+                    className="bg-muted border-border text-foreground h-12 text-xs rounded-xl w-full font-bold focus:border-destructive focus:bg-white transition-all shadow-sm"
                     required
                   />
                 </div>
@@ -400,7 +400,7 @@ export default function PublicEcosystemHomepage() {
                 <select 
                   value={leadForm.campaignType}
                   onChange={(e) => setLeadForm({ ...leadForm, campaignType: e.target.value })}
-                  className="bg-muted border border-border text-primary rounded-xl text-xs h-12 px-4 w-full outline-none font-bold focus:border-destructive focus:bg-white transition-all shadow-sm appearance-none"
+                  className="bg-muted border border-border text-foreground rounded-xl text-xs h-12 px-4 w-full outline-none font-bold focus:border-destructive focus:bg-white transition-all shadow-sm appearance-none"
                 >
                   <option value="AI TVC Commercial">AI TVC Commercial</option>
                   <option value="CGI Product Launch">CGI Product Launch</option>
@@ -415,7 +415,7 @@ export default function PublicEcosystemHomepage() {
                   value={leadForm.message}
                   onChange={(e) => setLeadForm({ ...leadForm, message: e.target.value })}
                   placeholder="Summarize the core target audience and timelines..."
-                  className="bg-muted border border-border rounded-xl text-xs p-4 text-primary w-full outline-none resize-none focus:border-destructive focus:bg-white transition-all font-bold placeholder:text-muted-foreground shadow-sm"
+                  className="bg-muted border border-border rounded-xl text-xs p-4 text-foreground w-full outline-none resize-none focus:border-destructive focus:bg-white transition-all font-bold placeholder:text-muted-foreground shadow-sm"
                   required
                 />
               </div>
@@ -440,24 +440,24 @@ export default function PublicEcosystemHomepage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 text-xs text-muted-foreground/80 font-bold">
           
           <div className="space-y-3">
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-1.5">
+            <span className="text-[10px] font-black text-foreground uppercase tracking-widest flex items-center gap-1.5">
               <Activity className="h-4.5 w-4.5 text-destructive animate-pulse" /> System Status
             </span>
             <div className="space-y-2 leading-relaxed text-[11px] text-muted-foreground">
-              <div>Network Node: <strong className="text-primary">{healthStats.realtimeSync}</strong></div>
-              <div>Response Time: <strong className="text-primary">{healthStats.apiLatency}</strong></div>
+              <div>Network Node: <strong className="text-foreground">{healthStats.realtimeSync}</strong></div>
+              <div>Response Time: <strong className="text-foreground">{healthStats.apiLatency}</strong></div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Platform Hubs</span>
+            <span className="text-[10px] font-black text-foreground uppercase tracking-widest block mb-2">Platform Hubs</span>
             <Link href="/login" className="hover:text-destructive block text-muted-foreground transition-colors">Workspace Login</Link>
             <Link href="/talent/login" className="hover:text-destructive block text-muted-foreground transition-colors">Creator Portal</Link>
             <Link href="/client/login" className="hover:text-destructive block text-muted-foreground transition-colors">Business Collaboration</Link>
           </div>
 
           <div className="space-y-2">
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Security</span>
+            <span className="text-[10px] font-black text-foreground uppercase tracking-widest block mb-2">Security</span>
             <div className="text-muted-foreground">Encrypted DB Node</div>
             <div className="text-muted-foreground">Zero-Trust Auth</div>
           </div>

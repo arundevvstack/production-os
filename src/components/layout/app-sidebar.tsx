@@ -90,7 +90,7 @@ export function AppSidebar() {
     return (
       <Sidebar collapsible="icon" variant="inset" className="bg-sidebar">
         <div className="flex h-full w-full items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          <Loader2 className="h-6 w-6 animate-spin text-foreground" />
         </div>
       </Sidebar>
     );

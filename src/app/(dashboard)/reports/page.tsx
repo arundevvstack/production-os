@@ -156,7 +156,7 @@ export default function ReportsPage() {
   if (isTenantLoading || isInvoicesLoading || isProjectsLoading || isTalentsLoading || isLeadsLoading || isExpensesForBudgetsLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -167,8 +167,8 @@ export default function ReportsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-headline text-primary tracking-tight uppercase flex items-center gap-2">
-            <Activity className="h-7 w-7 text-primary animate-pulse" /> Operational Intelligence & Health Command
+          <h1 className="text-3xl font-bold font-headline text-foreground tracking-tight uppercase flex items-center gap-2">
+            <Activity className="h-7 w-7 text-foreground animate-pulse" /> Operational Intelligence & Health Command
           </h1>
           <p className="text-muted-foreground text-xs font-medium">
             Monitor central event pipelines, workflow automations, transcoding queues, and relational knowledge graphs.
@@ -197,7 +197,7 @@ export default function ReportsPage() {
               </div>
               <div className="space-y-1">
                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-                <p className="text-2xl font-black font-headline text-primary">{stat.val}</p>
+                <p className="text-2xl font-black font-headline text-foreground">{stat.val}</p>
               </div>
             </CardContent>
           </Card>
@@ -234,7 +234,7 @@ export default function ReportsPage() {
           
           <Card className="border-border shadow-sm h-[400px]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-black text-primary uppercase tracking-wide">Monthly Revenue Trends</CardTitle>
+              <CardTitle className="text-base font-black text-foreground uppercase tracking-wide">Monthly Revenue Trends</CardTitle>
               <CardDescription className="text-xs">Consolidated earnings from generated invoices</CardDescription>
             </CardHeader>
             <CardContent className="h-[300px]">
@@ -262,7 +262,7 @@ export default function ReportsPage() {
 
           <Card className="border-border shadow-sm h-[400px]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-black text-primary uppercase tracking-wide">Budget Allocation</CardTitle>
+              <CardTitle className="text-base font-black text-foreground uppercase tracking-wide">Budget Allocation</CardTitle>
               <CardDescription className="text-xs">Distribution of allocated funds by category</CardDescription>
             </CardHeader>
             <CardContent className="h-[300px] flex items-center justify-center">
@@ -310,8 +310,8 @@ export default function ReportsPage() {
       {activeTab === 'health' && (
         <Card className="border-border shadow-sm animate-in fade-in duration-300">
           <CardHeader>
-            <CardTitle className="text-base font-black text-primary uppercase tracking-wide flex items-center gap-1.5">
-              <Activity className="h-4.5 w-4.5 text-primary" /> Live Infrastructure Node Status
+            <CardTitle className="text-base font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
+              <Activity className="h-4.5 w-4.5 text-foreground" /> Live Infrastructure Node Status
             </CardTitle>
             <CardDescription className="text-xs">Observability analytics generated directly from edge microservices.</CardDescription>
           </CardHeader>
@@ -320,7 +320,7 @@ export default function ReportsPage() {
               {healthMetrics.map((met, i) => (
                 <div key={i} className="p-4 rounded-xl border border-border bg-muted flex items-center justify-between">
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-primary/80 block">{met.service}</span>
+                    <span className="text-xs font-bold text-foreground/80 block">{met.service}</span>
                     <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium">
                       <span>Uptime: {met.uptime}</span>
                       <span>•</span>
@@ -346,8 +346,8 @@ export default function ReportsPage() {
       {activeTab === 'workflow' && (
         <Card className="border-border shadow-sm animate-in fade-in duration-300">
           <CardHeader>
-            <CardTitle className="text-base font-black text-primary uppercase tracking-wide flex items-center gap-1.5">
-              <Zap className="h-4.5 w-4.5 text-primary" /> Event Bus Trigger Logs
+            <CardTitle className="text-base font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
+              <Zap className="h-4.5 w-4.5 text-foreground" /> Event Bus Trigger Logs
             </CardTitle>
             <CardDescription className="text-xs">Standardized event routing history for cross-platform triggers.</CardDescription>
           </CardHeader>
@@ -360,8 +360,8 @@ export default function ReportsPage() {
                       <Badge className="bg-accent/10 text-accent border-none text-[9px] font-black uppercase py-0.5 px-2.5">{log.trigger}</Badge>
                       <span className="text-[10px] text-muted-foreground font-bold">{log.time}</span>
                     </div>
-                    <p className="text-primary/80 font-bold mt-2">
-                      IF <span className="text-accent">{log.trigger}</span> THEN <span className="text-primary font-black">{log.action}</span>
+                    <p className="text-foreground/80 font-bold mt-2">
+                      IF <span className="text-accent">{log.trigger}</span> THEN <span className="text-foreground font-black">{log.action}</span>
                     </p>
                     <span className="text-[10px] text-muted-foreground font-medium mt-1 block">Target: {log.target}</span>
                   </div>
@@ -380,8 +380,8 @@ export default function ReportsPage() {
       {activeTab === 'collaboration' && (
         <Card className="border-border shadow-sm animate-in fade-in duration-300">
           <CardHeader>
-            <CardTitle className="text-base font-black text-primary uppercase tracking-wide flex items-center gap-1.5">
-              <Users className="h-4.5 w-4.5 text-primary" /> Global Collaboration Roster Mentions
+            <CardTitle className="text-base font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
+              <Users className="h-4.5 w-4.5 text-foreground" /> Global Collaboration Roster Mentions
             </CardTitle>
             <CardDescription className="text-xs">Direct @mentions, client comment threads, and team campaign alerts.</CardDescription>
           </CardHeader>
@@ -393,7 +393,7 @@ export default function ReportsPage() {
                 placeholder="Type a team message (use @mentions)..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className="bg-muted border-border h-10 text-xs rounded-xl flex-grow text-primary"
+                className="bg-muted border-border h-10 text-xs rounded-xl flex-grow text-foreground"
               />
               <Button type="submit" className="rounded-xl h-10 bg-primary hover:bg-primary/95 text-white font-bold text-xs px-5 shadow">
                 Send
@@ -410,7 +410,7 @@ export default function ReportsPage() {
                   
                   <div className="space-y-1 flex-grow">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-primary">{c.author}</span>
+                      <span className="font-bold text-foreground">{c.author}</span>
                       <Badge className="bg-secondary text-muted-foreground/80 border-none text-[8px] font-black uppercase py-0 px-2">{c.role}</Badge>
                       <span className="text-[9px] text-muted-foreground font-bold ml-auto">{c.time}</span>
                     </div>
@@ -428,8 +428,8 @@ export default function ReportsPage() {
       {activeTab === 'knowledge' && (
         <Card className="border-border shadow-sm animate-in fade-in duration-300">
           <CardHeader>
-            <CardTitle className="text-base font-black text-primary uppercase tracking-wide flex items-center gap-1.5">
-              <Network className="h-4.5 w-4.5 text-primary animate-pulse" /> operational Knowledge Graph Insights
+            <CardTitle className="text-base font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
+              <Network className="h-4.5 w-4.5 text-foreground animate-pulse" /> operational Knowledge Graph Insights
             </CardTitle>
             <CardDescription className="text-xs">Relationship maps connecting creators, project margins, and regional surges.</CardDescription>
           </CardHeader>
@@ -437,12 +437,12 @@ export default function ReportsPage() {
             <div className="space-y-3">
               {graphInsights.map(g => (
                 <div key={g.id} className="p-4 rounded-xl border border-border bg-muted flex items-start gap-3 text-xs">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-foreground shrink-0 mt-0.5">
                     <Sparkles className="h-4.5 w-4.5" />
                   </div>
                   
                   <div className="space-y-1">
-                    <span className="text-[10px] font-black text-primary uppercase tracking-widest block">{g.type}</span>
+                    <span className="text-[10px] font-black text-foreground uppercase tracking-widest block">{g.type}</span>
                     <p className="text-muted-foreground/80 font-semibold leading-relaxed">{g.text}</p>
                   </div>
                 </div>
@@ -456,8 +456,8 @@ export default function ReportsPage() {
       {activeTab === 'audit' && (
         <Card className="border-border shadow-sm animate-in fade-in duration-300">
           <CardHeader>
-            <CardTitle className="text-base font-black text-primary uppercase tracking-wide flex items-center gap-1.5">
-              <ShieldCheck className="h-4.5 w-4.5 text-primary" /> Global Compliance Ledger
+            <CardTitle className="text-base font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
+              <ShieldCheck className="h-4.5 w-4.5 text-foreground" /> Global Compliance Ledger
             </CardTitle>
             <CardDescription className="text-xs">Immutable chronological log of pricing updates, access permissions, and financial edits.</CardDescription>
           </CardHeader>
@@ -467,7 +467,7 @@ export default function ReportsPage() {
                 <div key={audit.id} className="p-4 rounded-xl border border-border bg-muted flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-primary">{audit.action}</span>
+                      <span className="font-bold text-foreground">{audit.action}</span>
                       <span className="text-[10px] text-muted-foreground font-bold">•</span>
                       <span className="text-[10px] text-muted-foreground font-bold">Operator: {audit.operator}</span>
                     </div>

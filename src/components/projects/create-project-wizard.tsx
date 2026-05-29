@@ -195,7 +195,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     <div className={cn(
                       "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-300 shrink-0",
                       wizardStep > s.n ? "bg-emerald-400 text-white" :
-                      wizardStep === s.n ? "bg-white text-primary" :
+                      wizardStep === s.n ? "bg-white text-foreground" :
                       "bg-white/10 text-white"
                     )}>
                       {wizardStep > s.n ? <CheckCircle2 className="h-3.5 w-3.5" /> : s.n}
@@ -216,7 +216,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Choose Workflow Pipeline</p>
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { value: "AI Production", icon: Sparkles, label: "AI Production", desc: "8 stages · AI-assisted", color: "text-primary", bg: "bg-primary/5 border-primary/20", activeBg: "bg-primary/10 border-primary" },
+                  { value: "AI Production", icon: Sparkles, label: "AI Production", desc: "8 stages · AI-assisted", color: "text-foreground", bg: "bg-primary/5 border-primary/20", activeBg: "bg-primary/10 border-primary" },
                   { value: "Hybrid Production", icon: Layers, label: "Hybrid", desc: "6 stages · Mixed workflow", color: "text-accent", bg: "bg-accent/10 border-accent/20", activeBg: "bg-accent/10 border-accent" },
                   { value: "Normal Production", icon: Film, label: "Standard", desc: "5 stages · Traditional", color: "text-muted-foreground", bg: "bg-muted border-border", activeBg: "bg-muted border-slate-400" },
                 ].map(p => (
@@ -236,7 +236,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     )}
                     <p.icon className={cn("h-6 w-6", p.color)} />
                     <div>
-                      <p className="text-xs font-black text-primary">{p.label}</p>
+                      <p className="text-xs font-black text-foreground">{p.label}</p>
                       <p className="text-[9px] text-muted-foreground font-medium mt-0.5">{p.desc}</p>
                     </div>
                   </button>
@@ -316,7 +316,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     placeholder="e.g. Diwali Campaign 2025"
                     value={newProject.project_name}
                     onChange={(e) => setNewProject({ ...newProject, project_name: e.target.value })}
-                    className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-primary focus:ring-primary/10"
+                    className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-foreground focus:ring-primary/10"
                     autoFocus
                   />
                 </div>
@@ -333,7 +333,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                         const typed = e.target.value;
                         setNewProject(prev => ({ ...prev, client_name: typed }));
                       }}
-                      className="h-12 w-full rounded-xl border border-border bg-white shadow-sm font-bold text-sm text-primary focus-visible:ring-primary/20 focus-visible:border-primary/40"
+                      className="h-12 w-full rounded-xl border border-border bg-white shadow-sm font-bold text-sm text-foreground focus-visible:ring-primary/20 focus-visible:border-primary/40"
                     />
                     {isClientDropdownOpen && (
                       <div className="absolute top-full left-0 w-full mt-2 bg-white border border-border shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
@@ -364,7 +364,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                                   }
                                   setIsClientDropdownOpen(false);
                                 }}
-                                className="w-full text-left px-3 py-2 text-sm font-bold text-primary/80 hover:bg-muted hover:text-primary rounded-lg flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 text-sm font-bold text-foreground/80 hover:bg-muted hover:text-foreground rounded-lg flex items-center justify-between group transition-colors"
                               >
                                 <span className="truncate">{name}</span>
                                 {isLead && <Badge variant="secondary" className="text-[9px] h-4">CRM Lead</Badge>}
@@ -385,7 +385,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                       placeholder="0"
                       value={newProject.budget}
                       onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
-                      className="h-12 rounded-xl border-border bg-white shadow-sm font-black text-primary"
+                      className="h-12 rounded-xl border-border bg-white shadow-sm font-black text-foreground"
                     />
                   </div>
                   <div>
@@ -394,20 +394,20 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                       type="date"
                       value={newProject.deadline}
                       onChange={(e) => setNewProject({ ...newProject, deadline: e.target.value })}
-                      className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-primary"
+                      className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-foreground"
                     />
                   </div>
                 </div>
                 <div className="mt-4">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Project Manager (Assignee)</Label>
                   <Select value={newProject.assignee_id} onValueChange={(val) => setNewProject({ ...newProject, assignee_id: val })}>
-                    <SelectTrigger className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-sm text-primary">
+                    <SelectTrigger className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-sm text-foreground">
                       <SelectValue placeholder="Select Assignee (Optional)" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl bg-white border border-border shadow-xl z-[200]">
                       <SelectItem value="none" className="text-xs font-bold rounded-lg m-0.5 text-muted-foreground">Unassigned (Self)</SelectItem>
                       {companyUsers?.map((user: any) => (
-                        <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-lg m-0.5 text-primary">
+                        <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-lg m-0.5 text-foreground">
                           {user.full_name || user.email}
                         </SelectItem>
                       ))}
@@ -417,7 +417,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               </div>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <Button type="button" variant="ghost" onClick={() => setWizardStep(1)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-primary">
+              <Button type="button" variant="ghost" onClick={() => setWizardStep(1)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-foreground">
                 ← Back
               </Button>
               <Button
@@ -447,16 +447,16 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Project Name</p>
-                  <p className="text-sm font-black text-primary mt-1">{newProject.project_name}</p>
+                  <p className="text-sm font-black text-foreground mt-1">{newProject.project_name}</p>
                 </div>
                 <div>
                   <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Client</p>
-                  <p className="text-sm font-black text-primary mt-1">{newProject.client_name}</p>
+                  <p className="text-sm font-black text-foreground mt-1">{newProject.client_name}</p>
                 </div>
                 <div>
                   <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Pipeline</p>
-                  <p className="text-sm font-bold text-primary/80 mt-1 flex items-center gap-1.5">
-                    {newProject.project_type === "AI Production" && <Sparkles className="h-3.5 w-3.5 text-primary" />}
+                  <p className="text-sm font-bold text-foreground/80 mt-1 flex items-center gap-1.5">
+                    {newProject.project_type === "AI Production" && <Sparkles className="h-3.5 w-3.5 text-foreground" />}
                     {newProject.project_type === "Hybrid Production" && <Layers className="h-3.5 w-3.5 text-accent" />}
                     {newProject.project_type === "Normal Production" && <Film className="h-3.5 w-3.5 text-muted-foreground" />}
                     {newProject.project_type}
@@ -464,7 +464,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                 </div>
                 <div>
                   <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Category</p>
-                  <p className="text-sm font-bold text-primary/80 mt-1">{newProject.service_category || <span className="text-slate-300">—</span>}</p>
+                  <p className="text-sm font-bold text-foreground/80 mt-1">{newProject.service_category || <span className="text-slate-300">—</span>}</p>
                 </div>
                 {newProject.budget && (
                   <div>
@@ -475,7 +475,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                 {newProject.deadline && (
                   <div>
                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Deadline</p>
-                    <p className="text-sm font-bold text-primary/80 mt-1">{new Date(newProject.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                    <p className="text-sm font-bold text-foreground/80 mt-1">{new Date(newProject.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                   </div>
                 )}
               </div>
@@ -507,7 +507,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
             </div>
 
             <div className="flex items-center justify-between">
-              <Button type="button" variant="ghost" onClick={() => setWizardStep(2)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-primary">
+              <Button type="button" variant="ghost" onClick={() => setWizardStep(2)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-foreground">
                 ← Back
               </Button>
               <Button

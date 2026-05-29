@@ -213,13 +213,13 @@ export default function TalentSignupFlow() {
           <div className="flex items-center gap-2.5">
             <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-destructive shadow-sm shrink-0">DP</div>
             <div>
-              <span className="font-bold text-base tracking-tight block text-primary">Creator Network</span>
+              <span className="font-bold text-base tracking-tight block text-foreground">Creator Network</span>
               <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Onboarding Lifecycle</span>
             </div>
           </div>
 
           <a href="/creators">
-            <Button variant="ghost" className="text-xs font-bold text-muted-foreground hover:text-primary hover:bg-muted rounded-full h-9 px-4 border border-border shadow-sm bg-white transition">
+            <Button variant="ghost" className="text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted rounded-full h-9 px-4 border border-border shadow-sm bg-white transition">
               Exit
             </Button>
           </a>
@@ -254,7 +254,7 @@ export default function TalentSignupFlow() {
                   <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-2xl flex items-center justify-center shadow-sm">
                     <Sparkle className="h-8 w-8 text-destructive animate-pulse" />
                   </div>
-                  <h1 className="text-3xl font-bold tracking-tight text-primary leading-none">
+                  <h1 className="text-3xl font-bold tracking-tight text-foreground leading-none">
                     Create Your Talent Profile
                   </h1>
                   <p className="text-sm text-muted-foreground font-bold leading-relaxed max-w-sm mx-auto">
@@ -275,7 +275,7 @@ export default function TalentSignupFlow() {
                       toast({ title: "Google Auth Initialized", description: "Connecting securely to identity gateway..." });
                       setStep(1);
                     }} 
-                    className="w-full border-border bg-white hover:bg-muted text-primary/80 font-bold h-12 rounded-full text-xs flex items-center justify-center gap-2 shadow-sm transition"
+                    className="w-full border-border bg-white hover:bg-muted text-foreground/80 font-bold h-12 rounded-full text-xs flex items-center justify-center gap-2 shadow-sm transition"
                   >
                     <svg viewBox="0 0 48 48" className="h-4 w-4 shrink-0">
                       <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"></path>
@@ -288,7 +288,7 @@ export default function TalentSignupFlow() {
                 </div>
 
                 <div className="pt-4 border-t border-border text-center">
-                  <a href="/talent/login" className="text-xs font-bold text-muted-foreground hover:text-primary transition">
+                  <a href="/talent/login" className="text-xs font-bold text-muted-foreground hover:text-foreground transition">
                     Already have an account? <span className="text-red-650 hover:underline">Sign In</span>
                   </a>
                 </div>
@@ -299,7 +299,7 @@ export default function TalentSignupFlow() {
             {step === 1 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-300">
                 <div className="space-y-1.5">
-                  <h2 className="text-xl font-bold tracking-tight text-primary flex items-center gap-1.5">
+                  <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-1.5">
                     <Sparkles className="h-5 w-5 text-red-650 animate-pulse" /> Basic Details
                   </h2>
                   <p className="text-xs text-muted-foreground font-bold leading-relaxed">
@@ -315,7 +315,7 @@ export default function TalentSignupFlow() {
                       placeholder="e.g. Aparna Balamurali"
                       value={formData.fullName}
                       onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       required
                     />
                   </div>
@@ -327,7 +327,7 @@ export default function TalentSignupFlow() {
                       placeholder="name@company.com"
                       value={formData.emailAddress}
                       onChange={(e) => setFormData({...formData, emailAddress: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       required
                     />
                   </div>
@@ -340,7 +340,7 @@ export default function TalentSignupFlow() {
                         placeholder="+91 98765 43210"
                         value={formData.phoneNumber}
                         onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -351,14 +351,14 @@ export default function TalentSignupFlow() {
                           placeholder="••••••••"
                           value={formData.password}
                           onChange={(e) => setFormData({...formData, password: e.target.value})}
-                          className="bg-muted border-border h-10 text-xs rounded-xl pr-10 focus:border-destructive text-primary font-bold w-full"
+                          className="bg-muted border-border h-10 text-xs rounded-xl pr-10 focus:border-destructive text-foreground font-bold w-full"
                           required
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
+                          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground rounded-xl"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
@@ -375,7 +375,7 @@ export default function TalentSignupFlow() {
                         placeholder="e.g. Kochi"
                         value={formData.city}
                         onChange={(e) => setFormData({...formData, city: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -385,7 +385,7 @@ export default function TalentSignupFlow() {
                         placeholder="e.g. English"
                         value={formData.language}
                         onChange={(e) => setFormData({...formData, language: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                   </div>
@@ -419,7 +419,7 @@ export default function TalentSignupFlow() {
                     type="button" 
                     onClick={() => setStep(0)} 
                     variant="ghost" 
-                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition px-6"
+                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-foreground/80 bg-white shadow-sm transition px-6"
                   >
                     Back
                   </Button>
@@ -438,7 +438,7 @@ export default function TalentSignupFlow() {
             {step === 2 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-300">
                 <div className="space-y-1.5">
-                  <h2 className="text-xl font-bold tracking-tight text-primary">Profile Identity</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">Profile Identity</h2>
                   <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                     Set up your photos, bio, and visual branding links.
                   </p>
@@ -454,7 +454,7 @@ export default function TalentSignupFlow() {
                         placeholder="https://image-url.com"
                         value={formData.avatarUrl}
                         onChange={(e) => setFormData({...formData, avatarUrl: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -464,7 +464,7 @@ export default function TalentSignupFlow() {
                         placeholder="https://banner-url.com"
                         value={formData.bannerUrl}
                         onChange={(e) => setFormData({...formData, bannerUrl: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                   </div>
@@ -478,7 +478,7 @@ export default function TalentSignupFlow() {
                       placeholder="Outline your acting history, client TVC experience, or crew projects..."
                       value={formData.bio}
                       onChange={(e) => setFormData({...formData, bio: e.target.value})}
-                      className="bg-muted border border-border h-20 text-xs rounded-xl focus:border-destructive text-primary w-full p-3 resize-none focus:outline-none font-bold"
+                      className="bg-muted border border-border h-20 text-xs rounded-xl focus:border-destructive text-foreground w-full p-3 resize-none focus:outline-none font-bold"
                     />
                   </div>
 
@@ -488,7 +488,7 @@ export default function TalentSignupFlow() {
                       <select 
                         value={formData.experienceLevel} 
                         onChange={(e) => setFormData({...formData, experienceLevel: e.target.value})}
-                        className="bg-muted border border-border h-10 px-3 text-xs rounded-xl focus:border-destructive text-primary/80 w-full outline-none font-bold animate-none"
+                        className="bg-muted border border-border h-10 px-3 text-xs rounded-xl focus:border-destructive text-foreground/80 w-full outline-none font-bold animate-none"
                       >
                         <option value="Entry-level">Entry-level</option>
                         <option value="Mid-level">Mid-level</option>
@@ -503,7 +503,7 @@ export default function TalentSignupFlow() {
                         placeholder="Malayalam, English, Tamil"
                         value={formData.languagesSpoken}
                         onChange={(e) => setFormData({...formData, languagesSpoken: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                   </div>
@@ -515,7 +515,7 @@ export default function TalentSignupFlow() {
                       placeholder="https://instagram.com/username"
                       value={formData.instagramLink}
                       onChange={(e) => setFormData({...formData, instagramLink: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                     />
                   </div>
 
@@ -527,7 +527,7 @@ export default function TalentSignupFlow() {
                         placeholder="https://youtube.com/channel"
                         value={formData.youtubeLink}
                         onChange={(e) => setFormData({...formData, youtubeLink: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -537,7 +537,7 @@ export default function TalentSignupFlow() {
                         placeholder="https://mywork.com"
                         value={formData.portfolioWebsite}
                         onChange={(e) => setFormData({...formData, portfolioWebsite: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                   </div>
@@ -548,7 +548,7 @@ export default function TalentSignupFlow() {
                     type="button" 
                     onClick={handleBack} 
                     variant="ghost" 
-                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition px-6"
+                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-foreground/80 bg-white shadow-sm transition px-6"
                   >
                     Back
                   </Button>
@@ -567,7 +567,7 @@ export default function TalentSignupFlow() {
             {step === 3 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-300">
                 <div className="space-y-1.5">
-                  <h2 className="text-xl font-bold tracking-tight text-primary">Portfolio Upload</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">Portfolio Upload</h2>
                   <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                     Upload showreels, campaign photos, b-roll, or PDFs.
                   </p>
@@ -580,7 +580,7 @@ export default function TalentSignupFlow() {
                     className="border-2 border-dashed border-border hover:border-destructive/50 rounded-2xl p-8 text-center cursor-pointer bg-muted transition shadow-sm relative group"
                   >
                     <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-3 group-hover:scale-105 transition-transform duration-300" />
-                    <span className="font-bold text-xs block text-primary">Drag & Drop files here</span>
+                    <span className="font-bold text-xs block text-foreground">Drag & Drop files here</span>
                     <span className="text-[10px] text-muted-foreground mt-1 block">Supports video reels, photos, and PDF brochures (Max 100MB)</span>
                   </div>
 
@@ -619,7 +619,7 @@ export default function TalentSignupFlow() {
                     type="button" 
                     onClick={handleBack} 
                     variant="ghost" 
-                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition px-6"
+                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-foreground/80 bg-white shadow-sm transition px-6"
                   >
                     Back
                   </Button>
@@ -639,7 +639,7 @@ export default function TalentSignupFlow() {
             {step === 4 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-300">
                 <div className="space-y-1.5">
-                  <h2 className="text-xl font-bold tracking-tight text-primary">Work Preferences</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">Work Preferences</h2>
                   <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                     Set up your day rates and calendar availability.
                   </p>
@@ -654,7 +654,7 @@ export default function TalentSignupFlow() {
                         placeholder="e.g. 150000"
                         value={formData.dayRate}
                         onChange={(e) => setFormData({...formData, dayRate: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                         required
                       />
                     </div>
@@ -665,7 +665,7 @@ export default function TalentSignupFlow() {
                         placeholder="e.g. 20000"
                         value={formData.hourlyRate}
                         onChange={(e) => setFormData({...formData, hourlyRate: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                   </div>
@@ -678,7 +678,7 @@ export default function TalentSignupFlow() {
                         placeholder="e.g. 50000"
                         value={formData.projectMinimum}
                         onChange={(e) => setFormData({...formData, projectMinimum: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -688,7 +688,7 @@ export default function TalentSignupFlow() {
                         placeholder="e.g. Kochi, Bangalore"
                         value={formData.availableCities}
                         onChange={(e) => setFormData({...formData, availableCities: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       />
                     </div>
                   </div>
@@ -734,7 +734,7 @@ export default function TalentSignupFlow() {
                     type="button" 
                     onClick={handleBack} 
                     variant="ghost" 
-                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition px-6"
+                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-foreground/80 bg-white shadow-sm transition px-6"
                   >
                     Back
                   </Button>
@@ -753,7 +753,7 @@ export default function TalentSignupFlow() {
             {step === 5 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-right-3 duration-300">
                 <div className="space-y-1.5">
-                  <h2 className="text-xl font-bold tracking-tight text-primary flex items-center gap-1.5">
+                  <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-1.5">
                     <ShieldCheck className="h-5 w-5 text-emerald-600" /> Account Trust
                   </h2>
                   <p className="text-xs text-muted-foreground font-bold leading-relaxed">
@@ -769,7 +769,7 @@ export default function TalentSignupFlow() {
                     }`}
                   >
                     <div className="text-left">
-                      <strong className="font-bold text-xs block text-primary">ID Verification</strong>
+                      <strong className="font-bold text-xs block text-foreground">ID Verification</strong>
                       <span className="text-[10px] text-muted-foreground block mt-0.5">Submit legal passport or driver's license for absolute verification trust.</span>
                     </div>
                     {formData.verifiedId ? (
@@ -786,7 +786,7 @@ export default function TalentSignupFlow() {
                     }`}
                   >
                     <div className="text-left">
-                      <strong className="font-bold text-xs block text-primary">Instagram Verification</strong>
+                      <strong className="font-bold text-xs block text-foreground">Instagram Verification</strong>
                       <span className="text-[10px] text-muted-foreground block mt-0.5">Link and audit social reach counts automatically.</span>
                     </div>
                     {formData.verifiedInstagram ? (
@@ -802,11 +802,11 @@ export default function TalentSignupFlow() {
                     <div className="grid grid-cols-2 gap-2 text-center text-[10px]">
                       <div className="p-3 bg-muted border border-border rounded-2xl flex flex-col items-center gap-1 shadow-sm">
                         <CheckCircle2 className="h-5 w-5 text-red-650" />
-                        <span className="font-bold text-primary">Verified Talent</span>
+                        <span className="font-bold text-foreground">Verified Talent</span>
                       </div>
                       <div className="p-3 bg-muted border border-border rounded-2xl flex flex-col items-center gap-1 shadow-sm">
                         <Award className="h-5 w-5 text-red-650" />
-                        <span className="font-bold text-primary">Top Rated</span>
+                        <span className="font-bold text-foreground">Top Rated</span>
                       </div>
                     </div>
                   </div>
@@ -817,7 +817,7 @@ export default function TalentSignupFlow() {
                     type="button" 
                     onClick={handleBack} 
                     variant="ghost" 
-                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition px-6"
+                    className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-foreground/80 bg-white shadow-sm transition px-6"
                   >
                     Back
                   </Button>

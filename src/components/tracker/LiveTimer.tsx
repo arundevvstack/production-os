@@ -148,8 +148,8 @@ export function LiveTimer() {
       {/* Expanded Interface */}
       {isExpanded && !activeEntry && (
         <Card className="mb-4 w-80 p-4 border-none shadow-2xl rounded-2xl bg-white/90 backdrop-blur-xl border border-white">
-          <div className="flex items-center gap-2 mb-4 text-primary">
-            <Clock className="h-4 w-4 text-primary" />
+          <div className="flex items-center gap-2 mb-4 text-foreground">
+            <Clock className="h-4 w-4 text-foreground" />
             <h4 className="font-black uppercase tracking-widest text-[10px]">Start Time Entry</h4>
           </div>
           

@@ -176,7 +176,7 @@ export default function RBACPage() {
   if (isTenantLoading || isUsersLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -185,8 +185,8 @@ export default function RBACPage() {
     <div className="space-y-8 font-body">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-primary flex items-center gap-2.5">
-            <ShieldCheck className="h-8 w-8 text-primary" /> Team Access Control
+          <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-2.5">
+            <ShieldCheck className="h-8 w-8 text-foreground" /> Team Access Control
           </h1>
           <p className="text-muted-foreground font-medium">Approve, suspend, and govern organizational credentials and SaaS department permissions.</p>
         </div>
@@ -197,7 +197,7 @@ export default function RBACPage() {
         <div className="lg:col-span-2 space-y-6">
           <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-white/40 backdrop-blur-2xl">
             <CardHeader className="p-6 border-b border-border">
-              <CardTitle className="text-lg font-black text-primary">Workspace Directory</CardTitle>
+              <CardTitle className="text-lg font-black text-foreground">Workspace Directory</CardTitle>
               <CardDescription className="text-muted-foreground font-medium">Manage pending crew approvals and deactivations.</CardDescription>
             </CardHeader>
             <CardContent className="p-0 bg-white">
@@ -217,12 +217,12 @@ export default function RBACPage() {
                         <td className="p-4">
                           <div className="flex items-center gap-3">
                             <Avatar className="h-9 w-9 ring-2 ring-white shadow">
-                              <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-black">
+                              <AvatarFallback className="bg-primary/5 text-foreground text-[10px] font-black">
                                 {(member.fullName || member.full_name)?.substring(0,2).toUpperCase() || 'U'}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col">
-                              <span className="font-black text-sm text-primary">{member.fullName || member.full_name}</span>
+                              <span className="font-black text-sm text-foreground">{member.fullName || member.full_name}</span>
                               <span className="text-[10px] text-muted-foreground font-medium">{member.email}</span>
                             </div>
                           </div>
@@ -256,11 +256,11 @@ export default function RBACPage() {
                         </td>
                         <td className="p-4 text-right">
                           {mutatingId === member.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin text-primary ml-auto" />
+                            <Loader2 className="h-4 w-4 animate-spin text-foreground ml-auto" />
                           ) : (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary/80 hover:bg-muted rounded-xl">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground/80 hover:bg-muted rounded-xl">
                                   <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
@@ -336,7 +336,7 @@ export default function RBACPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
             <CardHeader className="p-6 relative z-10">
               <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
-                <Lock className="h-5 w-5 text-primary" /> Active Access Matrix
+                <Lock className="h-5 w-5 text-foreground" /> Active Access Matrix
               </CardTitle>
               <CardDescription className="text-muted-foreground font-medium">Standardized SaaS roles automatically enforced at both routing and database triggers.</CardDescription>
             </CardHeader>
@@ -345,7 +345,7 @@ export default function RBACPage() {
                 <div key={role.id} className="p-4 rounded-[10px] bg-white/5 border border-white/10 hover:border-white/20 transition-all space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-black tracking-wider uppercase text-slate-300">{role.name}</span>
-                    <Badge className="bg-primary/20 text-primary text-[8px] font-black border-none tracking-widest uppercase">{role.id}</Badge>
+                    <Badge className="bg-primary/20 text-foreground text-[8px] font-black border-none tracking-widest uppercase">{role.id}</Badge>
                   </div>
                   <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">{role.description}</p>
                 </div>
@@ -359,8 +359,8 @@ export default function RBACPage() {
       <Dialog open={isChangeRoleOpen} onOpenChange={setIsChangeRoleOpen}>
         <DialogContent className="sm:max-w-[420px] rounded-[10px] p-6 font-body">
           <DialogHeader>
-            <DialogTitle className="text-xl font-black text-primary flex items-center gap-2">
-              <UserCog className="h-5.5 w-5.5 text-primary" /> Assign Crew Credentials
+            <DialogTitle className="text-xl font-black text-foreground flex items-center gap-2">
+              <UserCog className="h-5.5 w-5.5 text-foreground" /> Assign Crew Credentials
             </DialogTitle>
             <DialogDescription className="text-muted-foreground font-medium">
               Reassign {editingMember?.fullName || editingMember?.full_name} to a different operational level and department.
@@ -378,7 +378,7 @@ export default function RBACPage() {
                 </SelectTrigger>
                 <SelectContent className="rounded-[10px] p-1.5 font-body">
                   {ENTERPRISE_ROLES.map(r => (
-                    <SelectItem key={r.id} value={r.id} className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">
+                    <SelectItem key={r.id} value={r.id} className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-foreground">
                       {r.name}
                     </SelectItem>
                   ))}
@@ -396,11 +396,11 @@ export default function RBACPage() {
                   <SelectValue placeholder="Select Business Department" />
                 </SelectTrigger>
                 <SelectContent className="rounded-[10px] p-1.5 font-body">
-                  <SelectItem value="Production" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Production & Crew</SelectItem>
-                  <SelectItem value="Creative" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Creative Operations</SelectItem>
-                  <SelectItem value="Finance" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Accounts & Finance</SelectItem>
-                  <SelectItem value="Sales & Marketing" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Sales & Marketing</SelectItem>
-                  <SelectItem value="Administration" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">General Administration</SelectItem>
+                  <SelectItem value="Production" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-foreground">Production & Crew</SelectItem>
+                  <SelectItem value="Creative" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-foreground">Creative Operations</SelectItem>
+                  <SelectItem value="Finance" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-foreground">Accounts & Finance</SelectItem>
+                  <SelectItem value="Sales & Marketing" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-foreground">Sales & Marketing</SelectItem>
+                  <SelectItem value="Administration" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-foreground">General Administration</SelectItem>
                 </SelectContent>
               </Select>
             </div>

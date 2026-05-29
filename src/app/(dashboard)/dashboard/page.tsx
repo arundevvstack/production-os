@@ -186,7 +186,7 @@ export default function DashboardPage() {
   if (isTenantLoading || isProjectsLoading || isObjectivesLoading || isInvoicesLoading || isProspectsLoading || !hasMounted) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -201,7 +201,7 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-primary">
+              <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
                 Command, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Administrator'}</span>
               </h1>
               <div className="flex items-center gap-1.5 px-3 py-1 bg-primary shadow-lg shadow-primary/20 text-white rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-white/20">
@@ -209,7 +209,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Layout className="h-4 w-4 text-primary" /> {company?.name || 'Operational'} Enterprise Headquarters
+              <Layout className="h-4 w-4 text-foreground" /> {company?.name || 'Operational'} Enterprise Headquarters
             </p>
           </div>
         </div>
@@ -221,7 +221,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-emerald-50 text-emerald-600 rounded-[10px]"><IndianRupee className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Gross Sales</span>
-                <span className="text-2xl font-black text-primary">₹{stats.revenue.toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">₹{stats.revenue.toLocaleString()}</span>
               </div>
             </CardContent>
           </Card>
@@ -230,7 +230,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Workspaces</span>
-                <span className="text-2xl font-black text-primary">{allProjects?.length || 0} units</span>
+                <span className="text-2xl font-black text-foreground">{allProjects?.length || 0} units</span>
               </div>
             </CardContent>
           </Card>
@@ -239,7 +239,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Users className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Crew Force</span>
-                <span className="text-2xl font-black text-primary">{companyUsers?.length || 0} profiles</span>
+                <span className="text-2xl font-black text-foreground">{companyUsers?.length || 0} profiles</span>
               </div>
             </CardContent>
           </Card>
@@ -259,8 +259,8 @@ export default function DashboardPage() {
           {/* User Request Approvals */}
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="border-b p-6">
-              <CardTitle className="text-lg font-black text-primary flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" /> Pending User Clearances
+              <CardTitle className="text-lg font-black text-foreground flex items-center gap-2">
+                <Users className="h-5 w-5 text-foreground" /> Pending User Clearances
               </CardTitle>
               <CardDescription className="text-muted-foreground font-medium">New registrations awaiting credentials verification before accessing dashboard workspaces.</CardDescription>
             </CardHeader>
@@ -277,12 +277,12 @@ export default function DashboardPage() {
                       <div key={member.id} className="p-4 flex items-center justify-between hover:bg-muted transition-colors">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-9 w-9">
-                            <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-black">
+                            <AvatarFallback className="bg-primary/10 text-foreground text-[10px] font-black">
                               {dispName.substring(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="text-sm font-black text-primary">{dispName}</p>
+                            <p className="text-sm font-black text-foreground">{dispName}</p>
                             <p className="text-[10px] text-muted-foreground font-medium">{member.email}</p>
                           </div>
                         </div>
@@ -301,7 +301,7 @@ export default function DashboardPage() {
           <Card className="border-none shadow-premium rounded-[10px] bg-primary text-white overflow-hidden">
             <CardHeader className="p-6 pb-4 border-b border-white/10">
               <CardTitle className="text-lg font-black flex items-center gap-2">
-                <Activity className="h-5 w-5 text-primary" /> Operational Audit Logs
+                <Activity className="h-5 w-5 text-foreground" /> Operational Audit Logs
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -335,11 +335,11 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-primary">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
               Director, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Manager'}</span>
             </h1>
             <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Layout className="h-4 w-4 text-primary" /> Workspace Management Core
+              <Layout className="h-4 w-4 text-foreground" /> Workspace Management Core
             </p>
           </div>
         </div>
@@ -351,7 +351,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Active Units</span>
-                <span className="text-2xl font-black text-primary">{stats.activeProjects} active</span>
+                <span className="text-2xl font-black text-foreground">{stats.activeProjects} active</span>
               </div>
             </CardContent>
           </Card>
@@ -360,7 +360,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Active Tasks</span>
-                <span className="text-2xl font-black text-primary">{companyObjectives.filter(t => t.status !== 'done').length || 0} tasks</span>
+                <span className="text-2xl font-black text-foreground">{companyObjectives.filter(t => t.status !== 'done').length || 0} tasks</span>
               </div>
             </CardContent>
           </Card>
@@ -369,7 +369,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Users className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Crew Force</span>
-                <span className="text-2xl font-black text-primary">{companyUsers?.length || 0} members</span>
+                <span className="text-2xl font-black text-foreground">{companyUsers?.length || 0} members</span>
               </div>
             </CardContent>
           </Card>
@@ -378,7 +378,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><UserCheck className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Pending Crew</span>
-                <span className="text-2xl font-black text-primary">{stats.pendingUsers} requests</span>
+                <span className="text-2xl font-black text-foreground">{stats.pendingUsers} requests</span>
               </div>
             </CardContent>
           </Card>
@@ -388,7 +388,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="p-6 border-b">
-              <CardTitle className="text-lg font-black text-primary">Operational Focus Units</CardTitle>
+              <CardTitle className="text-lg font-black text-foreground">Operational Focus Units</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {activeProjectsList.length === 0 ? (
@@ -398,16 +398,16 @@ export default function DashboardPage() {
                   {activeProjectsList.map((p) => (
                     <div key={p.id} className="p-6 flex items-center justify-between hover:bg-muted transition-colors">
                       <div className="space-y-1">
-                        <h4 className="font-black text-base text-primary">{p.project_name}</h4>
+                        <h4 className="font-black text-base text-foreground">{p.project_name}</h4>
                         <span className="text-[9px] font-black uppercase tracking-wider bg-muted text-muted-foreground px-2 py-0.5 rounded">Budget: ₹{p.budget?.toLocaleString() || 0}</span>
                       </div>
                       <div className="flex items-center gap-6">
                         <div className="text-right">
                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Health</span>
-                          <span className="font-black text-primary">{p.progress}%</span>
+                          <span className="font-black text-foreground">{p.progress}%</span>
                         </div>
                         <Link href={`/projects/${p.id}`}>
-                          <Button variant="ghost" size="icon" className="h-9 w-9 bg-muted hover:bg-primary/5 hover:text-primary rounded-xl"><ArrowUpRight className="h-5 w-5" /></Button>
+                          <Button variant="ghost" size="icon" className="h-9 w-9 bg-muted hover:bg-primary/5 hover:text-foreground rounded-xl"><ArrowUpRight className="h-5 w-5" /></Button>
                         </Link>
                       </div>
                     </div>
@@ -421,7 +421,7 @@ export default function DashboardPage() {
           <Card className="border-none shadow-premium rounded-[10px] bg-primary text-white overflow-hidden">
             <CardHeader className="p-6 border-b border-white/10">
               <CardTitle className="text-base font-black flex items-center gap-2">
-                <UserCheck className="h-5 w-5 text-primary" /> Crew Enlistment Alerts
+                <UserCheck className="h-5 w-5 text-foreground" /> Crew Enlistment Alerts
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -454,11 +454,11 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-primary">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
               Assigned Work, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Creative'}</span>
             </h1>
             <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Layers className="h-4 w-4 text-primary" /> Team Member Dashboard
+              <Layers className="h-4 w-4 text-foreground" /> Team Member Dashboard
             </p>
           </div>
         </div>
@@ -470,7 +470,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Clock className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Assigned Tasks</span>
-                <span className="text-2xl font-black text-primary">{objectivesFeed.length} active</span>
+                <span className="text-2xl font-black text-foreground">{objectivesFeed.length} active</span>
               </div>
             </CardContent>
           </Card>
@@ -479,7 +479,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Assigned Productions</span>
-                <span className="text-2xl font-black text-primary">{activeProjectsList.length} units</span>
+                <span className="text-2xl font-black text-foreground">{activeProjectsList.length} units</span>
               </div>
             </CardContent>
           </Card>
@@ -488,7 +488,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Calendar className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Clearance Level</span>
-                <span className="text-2xl font-black text-primary">Crew Member</span>
+                <span className="text-2xl font-black text-foreground">Crew Member</span>
               </div>
             </CardContent>
           </Card>
@@ -498,7 +498,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="p-6 border-b">
-              <CardTitle className="text-lg font-black text-primary">My Task Backlog</CardTitle>
+              <CardTitle className="text-lg font-black text-foreground">My Task Backlog</CardTitle>
               <CardDescription className="text-muted-foreground font-medium">Clear assigned milestones inside production roadmaps.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -509,11 +509,11 @@ export default function DashboardPage() {
                   {objectivesFeed.map((t) => (
                     <div key={t.id} className="p-5 flex items-center justify-between hover:bg-muted transition-colors">
                       <div className="space-y-1">
-                        <span className="text-[9px] font-black uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded">Milestone</span>
-                        <h4 className="font-bold text-sm text-primary">{t.title}</h4>
+                        <span className="text-[9px] font-black uppercase tracking-wider bg-primary/10 text-foreground px-2 py-0.5 rounded">Milestone</span>
+                        <h4 className="font-bold text-sm text-foreground">{t.title}</h4>
                       </div>
                       <Link href={`/projects/${t.project_id}`}>
-                        <Button variant="ghost" size="icon" className="h-9 w-9 bg-muted hover:bg-primary/5 hover:text-primary rounded-xl"><ArrowUpRight className="h-5 w-5" /></Button>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 bg-muted hover:bg-primary/5 hover:text-foreground rounded-xl"><ArrowUpRight className="h-5 w-5" /></Button>
                       </Link>
                     </div>
                   ))}
@@ -525,8 +525,8 @@ export default function DashboardPage() {
           {/* Pending Reviews Panel */}
           <Card className="border-none shadow-premium rounded-[10px] bg-white overflow-hidden relative">
             <CardHeader className="p-6 relative z-10 border-b border-border bg-muted">
-              <CardTitle className="text-base font-black flex items-center gap-2 text-primary">
-                <Activity className="h-5 w-5 text-primary" /> Pending Asset Reviews
+              <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
+                <Activity className="h-5 w-5 text-foreground" /> Pending Asset Reviews
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 relative z-10">
@@ -539,7 +539,7 @@ export default function DashboardPage() {
                   {pendingAssets.slice(0,5).map((asset) => (
                     <div key={asset.id} className="p-4 flex justify-between items-center hover:bg-muted transition-colors">
                       <div className="min-w-0">
-                        <p className="text-sm font-black text-primary truncate">{asset.name}</p>
+                        <p className="text-sm font-black text-foreground truncate">{asset.name}</p>
                         <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Awaiting Feedback</p>
                       </div>
                       <Link href={`/projects/${asset.project_id}/approvals`}>
@@ -563,11 +563,11 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-primary">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
               Accounting, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Auditor'}</span>
             </h1>
             <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Receipt className="h-4 w-4 text-primary" /> Finance & Payroll Department
+              <Receipt className="h-4 w-4 text-foreground" /> Finance & Payroll Department
             </p>
           </div>
         </div>
@@ -579,7 +579,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-emerald-50 text-emerald-600 rounded-[10px]"><IndianRupee className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Gross Capital</span>
-                <span className="text-2xl font-black text-primary">₹{stats.revenue.toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">₹{stats.revenue.toLocaleString()}</span>
               </div>
             </CardContent>
           </Card>
@@ -588,7 +588,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Layers className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Gross Expenses</span>
-                <span className="text-2xl font-black text-primary">₹{stats.grossExpenses.toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">₹{stats.grossExpenses.toLocaleString()}</span>
               </div>
             </CardContent>
           </Card>
@@ -597,7 +597,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Receipt className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Pending Invoices</span>
-                <span className="text-2xl font-black text-primary">{stats.pendingInvoices} invoices</span>
+                <span className="text-2xl font-black text-foreground">{stats.pendingInvoices} invoices</span>
               </div>
             </CardContent>
           </Card>
@@ -606,7 +606,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><TrendingUp className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Cash Velocity</span>
-                <span className="text-2xl font-black text-primary">₹{((stats.revenue - stats.grossExpenses) / 1000).toFixed(1)}k</span>
+                <span className="text-2xl font-black text-foreground">₹{((stats.revenue - stats.grossExpenses) / 1000).toFixed(1)}k</span>
               </div>
             </CardContent>
           </Card>
@@ -616,7 +616,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] overflow-hidden bg-white">
             <CardHeader className="px-8 pt-8">
-              <CardTitle className="text-xl font-black tracking-tight text-primary">Revenue Ledger</CardTitle>
+              <CardTitle className="text-xl font-black tracking-tight text-foreground">Revenue Ledger</CardTitle>
               <CardDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Global billing performance</CardDescription>
             </CardHeader>
             <CardContent className="h-[280px] pt-4 pr-4">
@@ -641,7 +641,7 @@ export default function DashboardPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
             <CardHeader className="p-6 relative z-10">
               <CardTitle className="text-base font-black flex items-center gap-2">
-                <Lock className="h-5 w-5 text-primary" /> Access Gates Active
+                <Lock className="h-5 w-5 text-foreground" /> Access Gates Active
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 relative z-10 pt-0 space-y-4">
@@ -667,11 +667,11 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-primary">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
               Sales, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Strategist'}</span>
             </h1>
             <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" /> Growth & CRM Department
+              <Target className="h-4 w-4 text-foreground" /> Growth & CRM Department
             </p>
           </div>
         </div>
@@ -683,7 +683,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Target className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">CRM Pipeline</span>
-                <span className="text-2xl font-black text-primary">₹{stats.crmPipeline.toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">₹{stats.crmPipeline.toLocaleString()}</span>
               </div>
             </CardContent>
           </Card>
@@ -692,7 +692,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Total Prospects</span>
-                <span className="text-2xl font-black text-primary">{prospects?.length || 0} prospects</span>
+                <span className="text-2xl font-black text-foreground">{prospects?.length || 0} prospects</span>
               </div>
             </CardContent>
           </Card>
@@ -701,7 +701,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><FileText className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Proposals</span>
-                <span className="text-2xl font-black text-primary">{proposals?.length || 0} drafts</span>
+                <span className="text-2xl font-black text-foreground">{proposals?.length || 0} drafts</span>
               </div>
             </CardContent>
           </Card>
@@ -710,7 +710,7 @@ export default function DashboardPage() {
               <div className="p-4 bg-emerald-50 text-emerald-600 rounded-[10px]"><CheckCircle2 className="h-6 w-6" /></div>
               <div>
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-wider block">Approved Total</span>
-                <span className="text-2xl font-black text-primary">₹{stats.revenue.toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">₹{stats.revenue.toLocaleString()}</span>
               </div>
             </CardContent>
           </Card>
@@ -720,7 +720,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className="lg:col-span-2 border-none shadow-premium rounded-[10px] bg-white overflow-hidden">
             <CardHeader className="p-6 border-b">
-              <CardTitle className="text-lg font-black text-primary">Growth Opportunities</CardTitle>
+              <CardTitle className="text-lg font-black text-foreground">Growth Opportunities</CardTitle>
               <CardDescription className="text-muted-foreground font-medium">Latest incoming prospects in the sales pipeline.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -731,7 +731,7 @@ export default function DashboardPage() {
                   {prospects?.slice(0, 4).map((l) => (
                     <div key={l.id} className="p-5 flex items-center justify-between hover:bg-muted transition-colors">
                       <div className="space-y-1">
-                        <h4 className="font-bold text-sm text-primary">{l.company_name}</h4>
+                        <h4 className="font-bold text-sm text-foreground">{l.company_name}</h4>
                         <span className="text-[9px] font-black uppercase tracking-wider bg-muted text-muted-foreground px-2 py-0.5 rounded">Stage: {l.stage || 'new'}</span>
                       </div>
                       <div className="flex items-center gap-6">
@@ -740,7 +740,7 @@ export default function DashboardPage() {
                           <span className="font-black text-emerald-600">₹{l.deal_value?.toLocaleString() || 0}</span>
                         </div>
                         <Link href="/crm">
-                          <Button variant="ghost" size="icon" className="h-9 w-9 bg-muted hover:bg-primary/5 hover:text-primary rounded-xl"><ArrowUpRight className="h-5 w-5" /></Button>
+                          <Button variant="ghost" size="icon" className="h-9 w-9 bg-muted hover:bg-primary/5 hover:text-foreground rounded-xl"><ArrowUpRight className="h-5 w-5" /></Button>
                         </Link>
                       </div>
                     </div>
@@ -755,7 +755,7 @@ export default function DashboardPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
             <CardHeader className="p-6 relative z-10">
               <CardTitle className="text-base font-black flex items-center gap-2">
-                <Lock className="h-5 w-5 text-primary" /> Operational Boundary
+                <Lock className="h-5 w-5 text-foreground" /> Operational Boundary
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 relative z-10 pt-0 space-y-4">

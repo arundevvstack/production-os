@@ -55,19 +55,19 @@ export default function ClientLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-muted text-primary font-sans antialiased flex flex-col justify-between">
+    <div className="min-h-screen bg-muted text-foreground font-sans antialiased flex flex-col justify-between">
       
       {/* Premium White Header */}
       <header className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between w-full border-b border-border bg-white">
         <div className="flex items-center gap-2.5">
           <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center font-black text-sm text-white shadow-sm">DP</div>
           <div>
-            <span className="font-black text-base tracking-tight block text-primary">Define Perspective</span>
+            <span className="font-black text-base tracking-tight block text-foreground">Define Perspective</span>
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Partner Portal</span>
           </div>
         </div>
 
-        <a href="/login" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1 font-bold">
+        <a href="/login" className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 font-bold">
           Employee OS <ArrowUpRight className="h-4 w-4" />
         </a>
       </header>
@@ -78,8 +78,8 @@ export default function ClientLoginPage() {
           <CardContent className="p-8 space-y-6">
             
             <div className="space-y-1.5 text-center">
-              <h2 className="text-xl font-black tracking-tight text-primary flex items-center justify-center gap-1.5">
-                <Building2 className="h-5 w-5 text-primary/80" /> Partner Sign In
+              <h2 className="text-xl font-black tracking-tight text-foreground flex items-center justify-center gap-1.5">
+                <Building2 className="h-5 w-5 text-foreground/80" /> Partner Sign In
               </h2>
               <p className="text-[11px] text-muted-foreground font-medium">
                 Review proposed contracts, approve design assets, and monitor payments.
@@ -96,7 +96,7 @@ export default function ClientLoginPage() {
                     placeholder="partner@brand.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-muted border-border h-10 text-xs rounded-xl pl-9 focus:border-primary text-primary w-full"
+                    className="bg-muted border-border h-10 text-xs rounded-xl pl-9 focus:border-primary text-foreground w-full"
                     required
                   />
                 </div>
@@ -114,14 +114,14 @@ export default function ClientLoginPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-muted border-border h-10 text-xs rounded-xl pl-9 pr-10 focus:border-primary text-primary w-full"
+                    className="bg-muted border-border h-10 text-xs rounded-xl pl-9 pr-10 focus:border-primary text-foreground w-full"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
@@ -150,7 +150,7 @@ export default function ClientLoginPage() {
               <div className="flex-grow border-t border-border"></div>
             </div>
 
-            <Button variant="outline" className="w-full border-border bg-white hover:bg-muted rounded-xl h-10 text-xs font-bold gap-1 text-primary/80 shadow-sm">
+            <Button variant="outline" className="w-full border-border bg-white hover:bg-muted rounded-xl h-10 text-xs font-bold gap-1 text-foreground/80 shadow-sm">
               <GoogleIcon /> Sign In with Google Workspace
             </Button>
 

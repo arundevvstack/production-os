@@ -62,12 +62,12 @@ export default function TalentLoginPage() {
         <div className="flex items-center gap-2.5">
           <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-red-650 shadow-sm shrink-0">DP</div>
           <div>
-            <span className="font-bold text-base tracking-tight block text-primary">Creator Network</span>
+            <span className="font-bold text-base tracking-tight block text-foreground">Creator Network</span>
             <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Public Portal</span>
           </div>
         </div>
 
-        <a href="/creators" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1 font-bold">
+        <a href="/creators" className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 font-bold">
           <ArrowLeft className="h-4 w-4" /> Back to Directory
         </a>
       </header>
@@ -78,7 +78,7 @@ export default function TalentLoginPage() {
           <CardContent className="p-8 space-y-6">
             
             <div className="space-y-1.5 text-center">
-              <h2 className="text-xl font-bold tracking-tight text-primary flex items-center justify-center gap-1.5">
+              <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center justify-center gap-1.5">
                 <Sparkles className="h-5 w-5 text-red-650" /> Sign In to Creator Portal
               </h2>
               <p className="text-xs text-muted-foreground font-bold leading-relaxed">
@@ -96,7 +96,7 @@ export default function TalentLoginPage() {
                     placeholder="creator@network.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-muted border border-border h-11 text-xs rounded-xl pl-11 focus:border-destructive text-primary font-bold w-full"
+                    className="bg-muted border border-border h-11 text-xs rounded-xl pl-11 focus:border-destructive text-foreground font-bold w-full"
                     required
                   />
                 </div>
@@ -114,14 +114,14 @@ export default function TalentLoginPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-muted border border-border h-11 text-xs rounded-xl pl-11 pr-10 focus:border-destructive text-primary font-bold w-full"
+                    className="bg-muted border border-border h-11 text-xs rounded-xl pl-11 pr-10 focus:border-destructive text-foreground font-bold w-full"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
@@ -151,10 +151,10 @@ export default function TalentLoginPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="border-border bg-white hover:bg-muted rounded-full h-10 text-xs font-bold gap-1 text-primary/80 shadow-sm transition">
+              <Button variant="outline" className="border-border bg-white hover:bg-muted rounded-full h-10 text-xs font-bold gap-1 text-foreground/80 shadow-sm transition">
                 <GoogleIcon /> Google
               </Button>
-              <Button variant="outline" className="border-border bg-white hover:bg-muted rounded-full h-10 text-xs font-bold gap-1 text-primary/80 shadow-sm transition">
+              <Button variant="outline" className="border-border bg-white hover:bg-muted rounded-full h-10 text-xs font-bold gap-1 text-foreground/80 shadow-sm transition">
                 <Instagram className="h-4 w-4 text-[#e1306c]" /> Instagram
               </Button>
             </div>

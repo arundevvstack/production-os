@@ -145,9 +145,9 @@ export function UnifiedClientSelector({
           onClick={() => setOpen(!open)}
         >
           {value ? (
-            <div className="flex items-center gap-2 text-primary w-[90%] overflow-hidden">
+            <div className="flex items-center gap-2 text-foreground w-[90%] overflow-hidden">
               <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span className="font-bold text-primary truncate">{value}</span>
+              <span className="font-bold text-foreground truncate">{value}</span>
             </div>
           ) : (
             <span className="text-muted-foreground text-sm font-normal">{isLoading ? "Loading Registry..." : placeholder}</span>
@@ -175,7 +175,7 @@ export function UnifiedClientSelector({
                     <div className="flex items-center justify-between w-full gap-4">
                       <div className="flex items-center gap-2 overflow-hidden w-[70%]">
                         <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                        <span className="font-bold text-primary truncate">{client.company_name}</span>
+                        <span className="font-bold text-foreground truncate">{client.company_name}</span>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         <Badge className={client.isPartner ? "bg-emerald-50 text-emerald-700 border border-emerald-100 text-[8px] font-black uppercase" : "bg-accent/10 text-accent border border-accent/20 text-[8px] font-black uppercase"}>

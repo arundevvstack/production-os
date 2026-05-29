@@ -7,7 +7,7 @@ export function ProductionDashboard({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-black tracking-tight text-primary">Physical Production</h2>
+        <h2 className="text-2xl font-black tracking-tight text-foreground">Physical Production</h2>
         <p className="text-sm font-medium text-muted-foreground">Active shoots, crew attendance, and equipment tracking.</p>
       </div>
 
@@ -15,9 +15,9 @@ export function ProductionDashboard({ companyId }: { companyId: string }) {
         <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border relative overflow-hidden group">
             <div className="flex justify-between items-start mb-2">
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Active Shoots Today</p>
-                <Camera className="h-4 w-4 text-primary" />
+                <Camera className="h-4 w-4 text-foreground" />
             </div>
-            <h3 className="text-4xl font-black text-primary">2</h3>
+            <h3 className="text-4xl font-black text-foreground">2</h3>
             <p className="text-xs font-bold mt-4 text-emerald-500">All on schedule</p>
         </Card>
 
@@ -26,7 +26,7 @@ export function ProductionDashboard({ companyId }: { companyId: string }) {
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Crew Deployed</p>
                 <HardHat className="h-4 w-4 text-accent" />
             </div>
-            <h3 className="text-3xl font-black text-primary">18</h3>
+            <h3 className="text-3xl font-black text-foreground">18</h3>
             <p className="text-xs font-bold mt-4 text-muted-foreground">Across 3 locations</p>
         </Card>
 
@@ -35,7 +35,7 @@ export function ProductionDashboard({ companyId }: { companyId: string }) {
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Equipment in Field</p>
                 <Package className="h-4 w-4 text-accent" />
             </div>
-            <h3 className="text-3xl font-black text-primary">42 Items</h3>
+            <h3 className="text-3xl font-black text-foreground">42 Items</h3>
             <p className="text-xs font-bold mt-4 text-muted-foreground">Zero maintenance alerts</p>
         </Card>
 
@@ -44,7 +44,7 @@ export function ProductionDashboard({ companyId }: { companyId: string }) {
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Upcoming (7 Days)</p>
                 <Calendar className="h-4 w-4 text-accent" />
             </div>
-            <h3 className="text-3xl font-black text-primary">5 Shoots</h3>
+            <h3 className="text-3xl font-black text-foreground">5 Shoots</h3>
             <p className="text-xs font-bold mt-4 text-muted-foreground">Pre-production locked</p>
         </Card>
       </div>

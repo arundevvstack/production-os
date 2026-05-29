@@ -206,18 +206,18 @@ export default function TalentDashboardPage() {
           <div className="flex items-center gap-2.5">
             <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-red-650 shadow-sm shrink-0">DP</div>
             <div>
-              <span className="font-bold text-base tracking-tight block text-primary">Creator Network</span>
+              <span className="font-bold text-base tracking-tight block text-foreground">Creator Network</span>
               <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Creator Dashboard</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <a href="/creators/public_t1" target="_blank">
-              <Button className="rounded-full h-10 bg-white border border-border text-primary hover:bg-muted text-xs font-bold gap-1 shadow-sm transition">
+              <Button className="rounded-full h-10 bg-white border border-border text-foreground hover:bg-muted text-xs font-bold gap-1 shadow-sm transition">
                 <Eye className="h-4 w-4" /> View Public Page
               </Button>
             </a>
-            <Button onClick={() => window.location.href = "/talent/login"} variant="ghost" className="rounded-full h-10 text-xs font-bold text-muted-foreground hover:text-primary hover:bg-muted border border-border shadow-sm bg-white transition gap-1 px-4">
+            <Button onClick={() => window.location.href = "/talent/login"} variant="ghost" className="rounded-full h-10 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted border border-border shadow-sm bg-white transition gap-1 px-4">
               <LogOut className="h-4 w-4" /> Sign Out
             </Button>
           </div>
@@ -235,12 +235,12 @@ export default function TalentDashboardPage() {
               <div className="flex flex-col items-center text-center space-y-4">
                 <Avatar className="h-24 w-24 border-4 border-white shadow-md ring-4 ring-border">
                   <AvatarImage src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400&h=500" className="object-cover" />
-                  <AvatarFallback className="bg-muted text-primary font-bold">{profileData.fullName[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-muted text-foreground font-bold">{profileData.fullName[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-center gap-1.5">
-                    <h2 className="text-lg font-bold text-primary tracking-tight">{profileData.fullName}</h2>
+                    <h2 className="text-lg font-bold text-foreground tracking-tight">{profileData.fullName}</h2>
                     <Badge className="bg-destructive/10 text-red-650 border-none text-[8px] font-bold uppercase py-0.5 px-2 rounded-full">Premium</Badge>
                   </div>
                   <span className="text-xs text-destructive font-bold tracking-widest uppercase">{profileData.category}</span>
@@ -256,7 +256,7 @@ export default function TalentDashboardPage() {
               <div className="border-t border-b border-slate-150 py-4 space-y-3 text-xs text-slate-650 font-bold">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Day Rate</span>
-                  <strong className="text-primary">₹{parseFloat(profileData.dayRate).toLocaleString()}</strong>
+                  <strong className="text-foreground">₹{parseFloat(profileData.dayRate).toLocaleString()}</strong>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Calendar Status</span>
@@ -282,7 +282,7 @@ export default function TalentDashboardPage() {
           {/* Secure Creator Privacy Settings (Phase 5) */}
           <Card className="bg-white border border-border rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-xs uppercase tracking-widest text-primary flex items-center gap-1.5">
+              <h3 className="font-bold text-xs uppercase tracking-widest text-foreground flex items-center gap-1.5">
                 <Lock className="h-4 w-4 text-red-650" /> Creator Privacy Settings
               </h3>
               
@@ -316,7 +316,7 @@ export default function TalentDashboardPage() {
             <div className="border-b border-border bg-muted/50 p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-4.5 w-4.5 text-red-650" />
-                <h3 className="font-bold text-sm text-primary">Client secure chat</h3>
+                <h3 className="font-bold text-sm text-foreground">Client secure chat</h3>
               </div>
 
               {/* Chat tab switcher */}
@@ -327,7 +327,7 @@ export default function TalentDashboardPage() {
                     onClick={() => setSelectedChatId(inq.id)}
                     variant="ghost"
                     className={`rounded-full h-8 px-3 text-[10px] font-bold transition ${
-                      selectedChatId === inq.id ? "bg-white border border-border text-primary shadow-sm" : "text-muted-foreground"
+                      selectedChatId === inq.id ? "bg-white border border-border text-foreground shadow-sm" : "text-muted-foreground"
                     }`}
                   >
                     {inq.client.split(" ")[0]}
@@ -361,7 +361,7 @@ export default function TalentDashboardPage() {
                       {msg.sender === "creator" ? "You" : currentChatInquiry?.client.split(" ")[0]}
                     </span>
                     <div 
-                      className={`p-3.5 rounded-2xl shadow-sm text-primary ${
+                      className={`p-3.5 rounded-2xl shadow-sm text-foreground ${
                         msg.sender === "creator" 
                           ? "bg-red-650 text-white rounded-tr-none font-bold" 
                           : "bg-white border border-border rounded-tl-none font-bold"
@@ -379,7 +379,7 @@ export default function TalentDashboardPage() {
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   placeholder="Reply securely..."
-                  className="bg-muted border border-border h-10 text-xs rounded-xl flex-grow text-primary font-bold"
+                  className="bg-muted border border-border h-10 text-xs rounded-xl flex-grow text-foreground font-bold"
                 />
 
                 <Button type="submit" className="rounded-xl h-10 bg-primary hover:bg-primary text-white font-bold px-4 shadow-sm">
@@ -392,7 +392,7 @@ export default function TalentDashboardPage() {
           {/* New Booking Requests */}
           <Card className="bg-white border border-border rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-primary flex items-center gap-1.5">
+              <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
                 <MessageCircle className="h-4.5 w-4.5 text-red-650" /> New Booking Requests
               </h3>
 
@@ -401,7 +401,7 @@ export default function TalentDashboardPage() {
                   <div key={inq.id} className="p-4 rounded-2xl bg-muted border border-border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <h4 className="font-bold text-xs text-primary">{inq.client}</h4>
+                        <h4 className="font-bold text-xs text-foreground">{inq.client}</h4>
                         <Badge className={`border-none text-[8px] font-bold rounded-full px-2 py-0.5 ${
                           inq.status === "Approved" ? "bg-emerald-500/10 text-emerald-605" : "bg-destructive/10 text-red-650"
                         }`}>{inq.status}</Badge>
@@ -413,7 +413,7 @@ export default function TalentDashboardPage() {
 
                     <div className="text-right flex flex-col items-end gap-2 shrink-0">
                       <div className="text-[10px] text-muted-foreground font-bold">
-                        Proposed Budget: <strong className="text-primary font-black">{inq.budget}</strong>
+                        Proposed Budget: <strong className="text-foreground font-black">{inq.budget}</strong>
                       </div>
                       
                       {inq.status !== "Approved" ? (
@@ -421,7 +421,7 @@ export default function TalentDashboardPage() {
                           <Button 
                             onClick={() => handleInquiryReject(inq.id, inq.client)}
                             variant="ghost"
-                            className="rounded-full h-8 px-3.5 text-[10px] font-bold text-muted-foreground hover:text-primary border border-border bg-white"
+                            className="rounded-full h-8 px-3.5 text-[10px] font-bold text-muted-foreground hover:text-foreground border border-border bg-white"
                           >
                             Decline
                           </Button>
@@ -448,7 +448,7 @@ export default function TalentDashboardPage() {
           {/* Confirmed Calendar Bookings */}
           <Card className="bg-white border border-border rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-primary flex items-center gap-1.5">
+              <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
                 <CalendarIcon className="h-4.5 w-4.5 text-red-650 animate-pulse" /> Confirmed Shoot Dates
               </h3>
               
@@ -459,7 +459,7 @@ export default function TalentDashboardPage() {
                       <Film className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-xs text-primary">{bk.project}</h4>
+                      <h4 className="font-bold text-xs text-foreground">{bk.project}</h4>
                       <p className="text-[10px] text-muted-foreground font-bold mt-1">Role: {bk.role} | Shoot Dates: {bk.shootDates}</p>
                     </div>
                   </div>
@@ -475,7 +475,7 @@ export default function TalentDashboardPage() {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="bg-white text-[#1d1d1f] border-border rounded-[32px] p-6 max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl">
           <DialogHeader className="space-y-1">
-            <DialogTitle className="text-lg font-black text-primary tracking-tight flex items-center gap-2">
+            <DialogTitle className="text-lg font-black text-foreground tracking-tight flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-red-650 animate-pulse shrink-0" /> Edit Talent Profile Details
             </DialogTitle>
             <DialogDescription className="text-muted-foreground text-xs font-bold leading-normal">
@@ -516,7 +516,7 @@ export default function TalentDashboardPage() {
                       {isPassed ? "✓" : step.id}
                     </span>
                     <span className={`text-[9px] font-extrabold uppercase tracking-widest mt-1 hidden md:inline transition-colors duration-200 ${
-                      isCurrent ? 'text-primary' : 'text-muted-foreground'
+                      isCurrent ? 'text-foreground' : 'text-muted-foreground'
                     }`}>
                       {step.label}
                     </span>
@@ -535,7 +535,7 @@ export default function TalentDashboardPage() {
                   <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <Edit3 className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 1: Stage Identity & Location</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Step 1: Stage Identity & Location</h4>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -615,7 +615,7 @@ export default function TalentDashboardPage() {
                   <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <DollarSign className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 2: Casting Day Rate & Reach</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Step 2: Casting Day Rate & Reach</h4>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -637,7 +637,7 @@ export default function TalentDashboardPage() {
                     <select 
                       value={tempData.availability}
                       onChange={(e) => setTempData({ ...tempData, availability: e.target.value })}
-                      className="bg-muted border border-border text-primary/80 rounded-xl text-xs h-10 px-3 w-full outline-none font-black tracking-wide focus:bg-white transition-all duration-200"
+                      className="bg-muted border border-border text-foreground/80 rounded-xl text-xs h-10 px-3 w-full outline-none font-black tracking-wide focus:bg-white transition-all duration-200"
                     >
                       <option value="Available">🟢 Available (Accepting Proposals)</option>
                       <option value="Busy">🟡 Busy (Next 14 Days Booked)</option>
@@ -682,7 +682,7 @@ export default function TalentDashboardPage() {
                   <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <Award className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 3: Physical Measurements</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Step 3: Physical Measurements</h4>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-3">
@@ -792,7 +792,7 @@ export default function TalentDashboardPage() {
                   <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <AlertCircle className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 4: Casting Brand Preferences</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Step 4: Casting Brand Preferences</h4>
                 </div>
                 
                 <div className="space-y-4">
@@ -925,12 +925,12 @@ export default function TalentDashboardPage() {
                   <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <Film className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 5: Media & Connected Channels</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-foreground">Step 5: Media & Connected Channels</h4>
                 </div>
                 
                 {/* Social media links editing */}
                 <div className="p-4 bg-muted rounded-2xl border border-border space-y-3">
-                  <span className="text-[10px] font-black text-primary uppercase tracking-widest block">Connected Social Channels</span>
+                  <span className="text-[10px] font-black text-foreground uppercase tracking-widest block">Connected Social Channels</span>
                   
                   <div className="space-y-2.5">
                     <div className="space-y-1">
@@ -998,7 +998,7 @@ export default function TalentDashboardPage() {
 
                 {/* Showreels */}
                 <div className="p-4 bg-muted rounded-2xl border border-border space-y-3">
-                  <span className="text-[10px] font-black text-primary uppercase tracking-widest block">Showreel Video 1</span>
+                  <span className="text-[10px] font-black text-foreground uppercase tracking-widest block">Showreel Video 1</span>
                   <div className="grid grid-cols-3 gap-2">
                     <div className="col-span-2 space-y-1">
                       <label className="text-[8px] text-muted-foreground uppercase font-bold block">Title</label>
@@ -1031,7 +1031,7 @@ export default function TalentDashboardPage() {
                 </div>
 
                 <div className="p-4 bg-muted rounded-2xl border border-border space-y-3">
-                  <span className="text-[10px] font-black text-primary uppercase tracking-widest block">Showreel Video 2</span>
+                  <span className="text-[10px] font-black text-foreground uppercase tracking-widest block">Showreel Video 2</span>
                   <div className="grid grid-cols-3 gap-2">
                     <div className="col-span-2 space-y-1">
                       <label className="text-[8px] text-muted-foreground uppercase font-bold block">Title</label>
@@ -1082,7 +1082,7 @@ export default function TalentDashboardPage() {
                     type="button" 
                     variant="ghost" 
                     onClick={() => setWizardStep(prev => prev - 1)} 
-                    className="rounded-full border border-border hover:bg-muted text-xs font-black bg-white text-primary/80 h-10 px-4 transition shrink-0"
+                    className="rounded-full border border-border hover:bg-muted text-xs font-black bg-white text-foreground/80 h-10 px-4 transition shrink-0"
                   >
                     Back
                   </Button>
@@ -1091,7 +1091,7 @@ export default function TalentDashboardPage() {
                   type="button" 
                   variant="ghost" 
                   onClick={() => setIsEditOpen(false)} 
-                  className="rounded-full border border-border hover:bg-muted text-xs font-black bg-white text-primary/80 h-10 px-4 transition shrink-0"
+                  className="rounded-full border border-border hover:bg-muted text-xs font-black bg-white text-foreground/80 h-10 px-4 transition shrink-0"
                 >
                   Cancel
                 </Button>

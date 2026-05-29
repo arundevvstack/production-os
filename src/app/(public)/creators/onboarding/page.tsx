@@ -75,13 +75,13 @@ export default function PublicCreatorsOnboarding() {
           <div className="flex items-center gap-2.5">
             <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-destructive shadow-sm shrink-0">DP</div>
             <div>
-              <span className="font-bold text-base tracking-tight block text-primary">Creator Network</span>
+              <span className="font-bold text-base tracking-tight block text-foreground">Creator Network</span>
               <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Talent Registration</span>
             </div>
           </div>
 
           <a href="/creators">
-            <Button variant="ghost" className="text-xs font-bold text-muted-foreground hover:text-primary hover:bg-muted rounded-full h-9 px-4 border border-border shadow-sm bg-white transition">
+            <Button variant="ghost" className="text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted rounded-full h-9 px-4 border border-border shadow-sm bg-white transition">
               <ArrowLeft className="h-4 w-4 mr-1" /> Exit
             </Button>
           </a>
@@ -109,7 +109,7 @@ export default function PublicCreatorsOnboarding() {
               {step === 1 && (
                 <div className="space-y-5">
                   <div className="space-y-1.5">
-                    <h2 className="text-xl font-bold tracking-tight text-primary flex items-center gap-1.5 leading-tight">
+                    <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-1.5 leading-tight">
                       <Sparkles className="h-5 w-5 text-red-650" /> Create your profile
                     </h2>
                     <p className="text-xs text-muted-foreground font-bold leading-relaxed">
@@ -121,7 +121,7 @@ export default function PublicCreatorsOnboarding() {
                     <div 
                       onClick={() => setUserType("Talent")}
                       className={`p-4 rounded-2xl border text-center cursor-pointer transition shadow-sm ${
-                        userType === "Talent" ? "bg-destructive/5 border-destructive/30 text-red-650" : "bg-muted border-border/85 hover:bg-muted text-primary/80"
+                        userType === "Talent" ? "bg-destructive/5 border-destructive/30 text-red-650" : "bg-muted border-border/85 hover:bg-muted text-foreground/80"
                       }`}
                     >
                       <Users className="h-5 w-5 mx-auto mb-2 text-destructive" />
@@ -131,7 +131,7 @@ export default function PublicCreatorsOnboarding() {
                     <div 
                       onClick={() => setUserType("Influencer")}
                       className={`p-4 rounded-2xl border text-center cursor-pointer transition shadow-sm ${
-                        userType === "Influencer" ? "bg-destructive/5 border-destructive/30 text-red-650" : "bg-muted border-border/85 hover:bg-muted text-primary/80"
+                        userType === "Influencer" ? "bg-destructive/5 border-destructive/30 text-red-650" : "bg-muted border-border/85 hover:bg-muted text-foreground/80"
                       }`}
                     >
                       <Flame className="h-5 w-5 mx-auto mb-2 text-destructive" />
@@ -146,7 +146,7 @@ export default function PublicCreatorsOnboarding() {
                       placeholder="e.g. Aparna Balamurali"
                       value={formData.fullName}
                       onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                       required
                     />
                   </div>
@@ -158,7 +158,7 @@ export default function PublicCreatorsOnboarding() {
                       placeholder="e.g. Aparna"
                       value={formData.stageName}
                       onChange={(e) => setFormData({...formData, stageName: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                     />
                   </div>
 
@@ -168,10 +168,10 @@ export default function PublicCreatorsOnboarding() {
                       <select 
                         value={formData.category} 
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        className="bg-muted border border-border h-10 px-3 text-xs rounded-xl focus:border-destructive text-primary/80 w-full outline-none font-bold"
+                        className="bg-muted border border-border h-10 px-3 text-xs rounded-xl focus:border-destructive text-foreground/80 w-full outline-none font-bold"
                       >
                         {categories.map(c => (
-                          <option key={c} value={c} className="bg-white text-primary font-bold">{c}</option>
+                          <option key={c} value={c} className="bg-white text-foreground font-bold">{c}</option>
                         ))}
                       </select>
                     </div>
@@ -183,7 +183,7 @@ export default function PublicCreatorsOnboarding() {
                         placeholder="e.g. 150000"
                         value={formData.dayRate}
                         onChange={(e) => setFormData({...formData, dayRate: e.target.value})}
-                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                         required
                       />
                     </div>
@@ -205,7 +205,7 @@ export default function PublicCreatorsOnboarding() {
               {step === 2 && (
                 <div className="space-y-5">
                   <div className="space-y-1.5">
-                    <h2 className="text-xl font-bold tracking-tight text-primary leading-tight">Skills & Reach</h2>
+                    <h2 className="text-xl font-bold tracking-tight text-foreground leading-tight">Skills & Reach</h2>
                     <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                       Highlight your specialties and add reach stats for advertising matches.
                     </p>
@@ -218,7 +218,7 @@ export default function PublicCreatorsOnboarding() {
                       placeholder="e.g. Method Acting, Classical Dance, Dialect Voiceover"
                       value={formData.skills}
                       onChange={(e) => setFormData({...formData, skills: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                     />
                   </div>
 
@@ -229,7 +229,7 @@ export default function PublicCreatorsOnboarding() {
                       placeholder="e.g. Malayalam, English, Tamil"
                       value={formData.languages}
                       onChange={(e) => setFormData({...formData, languages: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                     />
                   </div>
 
@@ -240,7 +240,7 @@ export default function PublicCreatorsOnboarding() {
                       placeholder="@username"
                       value={formData.instagram}
                       onChange={(e) => setFormData({...formData, instagram: e.target.value})}
-                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-foreground font-bold"
                     />
                   </div>
 
@@ -250,7 +250,7 @@ export default function PublicCreatorsOnboarding() {
                       placeholder="Short professional intro for directors..."
                       value={formData.bio}
                       onChange={(e) => setFormData({...formData, bio: e.target.value})}
-                      className="bg-muted border border-border h-20 text-xs rounded-xl focus:border-destructive text-primary w-full p-3 resize-none focus:outline-none font-bold"
+                      className="bg-muted border border-border h-20 text-xs rounded-xl focus:border-destructive text-foreground w-full p-3 resize-none focus:outline-none font-bold"
                     />
                   </div>
 
@@ -259,7 +259,7 @@ export default function PublicCreatorsOnboarding() {
                       type="button" 
                       onClick={handleBack} 
                       variant="ghost" 
-                      className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition"
+                      className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-foreground/80 bg-white shadow-sm transition"
                     >
                       Back
                     </Button>
@@ -278,7 +278,7 @@ export default function PublicCreatorsOnboarding() {
               {step === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-1.5">
-                    <h2 className="text-xl font-bold tracking-tight text-primary leading-tight font-sans">Review Profile</h2>
+                    <h2 className="text-xl font-bold tracking-tight text-foreground leading-tight font-sans">Review Profile</h2>
                     <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                       Check your profile details before submitting.
                     </p>
@@ -287,10 +287,10 @@ export default function PublicCreatorsOnboarding() {
                   <div className="p-5 rounded-2xl bg-muted border border-border space-y-4 shadow-sm">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-12 w-12 border-2 border-red-550 shadow-sm ring-4 ring-white">
-                        <AvatarFallback className="bg-muted text-primary font-bold">{formData.fullName.substring(0, 2).toUpperCase()}</AvatarFallback>
+                        <AvatarFallback className="bg-muted text-foreground font-bold">{formData.fullName.substring(0, 2).toUpperCase()}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <h4 className="font-bold text-sm text-primary">{formData.fullName}</h4>
+                        <h4 className="font-bold text-sm text-foreground">{formData.fullName}</h4>
                         <span className="text-[10px] text-destructive font-bold uppercase block mt-0.5">{formData.category}</span>
                       </div>
                     </div>
@@ -298,19 +298,19 @@ export default function PublicCreatorsOnboarding() {
                     <div className="space-y-2 text-xs border-t border-slate-150 pt-4 font-bold text-slate-650">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Target Day Rate:</span>
-                        <strong className="text-primary">₹{parseFloat(formData.dayRate || "0").toLocaleString()}</strong>
+                        <strong className="text-foreground">₹{parseFloat(formData.dayRate || "0").toLocaleString()}</strong>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Locations Base:</span>
-                        <strong className="text-primary">{formData.location}</strong>
+                        <strong className="text-foreground">{formData.location}</strong>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Languages:</span>
-                        <strong className="text-primary">{formData.languages}</strong>
+                        <strong className="text-foreground">{formData.languages}</strong>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Skills:</span>
-                        <strong className="text-primary">{formData.skills}</strong>
+                        <strong className="text-foreground">{formData.skills}</strong>
                       </div>
                     </div>
                   </div>
@@ -327,7 +327,7 @@ export default function PublicCreatorsOnboarding() {
                       type="button" 
                       onClick={handleBack} 
                       variant="ghost" 
-                      className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition"
+                      className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-foreground/80 bg-white shadow-sm transition"
                     >
                       Modify
                     </Button>

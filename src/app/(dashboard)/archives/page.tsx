@@ -143,7 +143,7 @@ export default function ArchivesPage() {
   if (isTenantLoading || isArchivesLoading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -152,7 +152,7 @@ export default function ArchivesPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-primary tracking-tighter">Workspace Vault</h1>
+          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tighter">Workspace Vault</h1>
           <p className="text-sm text-muted-foreground flex items-center gap-2">
             <Archive className="h-3.5 w-3.5" /> Decommissioned clients and projects for audit or recovery.
           </p>

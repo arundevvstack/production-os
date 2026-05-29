@@ -191,16 +191,16 @@ export default function ClientDashboardPage() {
           <div className="flex items-center gap-2.5">
             <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-red-650 shadow-sm">DP</div>
             <div>
-              <span className="font-bold text-base tracking-tight block text-primary">Define Perspective</span>
+              <span className="font-bold text-base tracking-tight block text-foreground">Define Perspective</span>
               <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Partner Portal</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <Badge className="bg-muted text-primary border-border px-3 py-1 font-bold text-[10px] uppercase rounded-full">
+            <Badge className="bg-muted text-foreground border-border px-3 py-1 font-bold text-[10px] uppercase rounded-full">
               Brand Representative
             </Badge>
-            <Button onClick={() => window.location.href = "/client/login"} variant="ghost" className="rounded-full h-10 text-xs font-bold text-muted-foreground hover:text-primary hover:bg-muted border border-border shadow-sm bg-white transition px-4 gap-1">
+            <Button onClick={() => window.location.href = "/client/login"} variant="ghost" className="rounded-full h-10 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted border border-border shadow-sm bg-white transition px-4 gap-1">
               <LogOut className="h-4 w-4" /> Sign Out
             </Button>
           </div>
@@ -217,8 +217,8 @@ export default function ClientDashboardPage() {
               
               <div className="space-y-2">
                 <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Active Campaign</span>
-                <h2 className="text-xl font-bold text-primary leading-tight tracking-tight">{campaignProgress.name}</h2>
-                <Badge className="bg-muted text-primary/80 border border-border font-bold text-[9px] py-1 px-3 mt-1 rounded-full">
+                <h2 className="text-xl font-bold text-foreground leading-tight tracking-tight">{campaignProgress.name}</h2>
+                <Badge className="bg-muted text-foreground/80 border border-border font-bold text-[9px] py-1 px-3 mt-1 rounded-full">
                   {campaignProgress.status}
                 </Badge>
               </div>
@@ -227,7 +227,7 @@ export default function ClientDashboardPage() {
               <div className="space-y-2.5 border-t border-border pt-4">
                 <div className="flex justify-between text-xs font-bold">
                   <span className="text-muted-foreground font-medium">Production Progress</span>
-                  <span className="text-primary font-black">{campaignProgress.progressPercent}%</span>
+                  <span className="text-foreground font-black">{campaignProgress.progressPercent}%</span>
                 </div>
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                   <div className="h-full bg-primary rounded-full" style={{ width: `${campaignProgress.progressPercent}%` }} />
@@ -237,7 +237,7 @@ export default function ClientDashboardPage() {
               <div className="space-y-2 text-xs border-t border-border pt-4 font-bold font-sans">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total Budget Value</span>
-                  <strong className="text-primary">{campaignProgress.budget}</strong>
+                  <strong className="text-foreground">{campaignProgress.budget}</strong>
                 </div>
               </div>
 
@@ -255,7 +255,7 @@ export default function ClientDashboardPage() {
                 {talents.map(t => (
                   <div key={t.id} className="p-3 bg-muted border border-slate-150 rounded-2xl flex flex-col gap-2 font-bold text-xs">
                     <div className="flex justify-between items-center">
-                      <span className="text-primary">{t.fullName}</span>
+                      <span className="text-foreground">{t.fullName}</span>
                       {t.unlocked ? (
                         <Badge className="bg-emerald-500/10 text-emerald-605 border-none text-[8px] rounded-full">Unlocked</Badge>
                       ) : (
@@ -293,7 +293,7 @@ export default function ClientDashboardPage() {
             <div className="border-b border-border bg-muted/50 p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-4.5 w-4.5 text-red-650" />
-                <h3 className="font-bold text-sm text-primary">Secure Conversations</h3>
+                <h3 className="font-bold text-sm text-foreground">Secure Conversations</h3>
               </div>
 
               {/* Quick conversation switcher tab */}
@@ -304,7 +304,7 @@ export default function ClientDashboardPage() {
                     onClick={() => setSelectedTalentChat(t.id)}
                     variant="ghost"
                     className={`rounded-full h-8 px-3 text-[10px] font-bold transition ${
-                      selectedTalentChat === t.id ? "bg-white border border-border text-primary shadow-sm" : "text-muted-foreground"
+                      selectedTalentChat === t.id ? "bg-white border border-border text-foreground shadow-sm" : "text-muted-foreground"
                     }`}
                   >
                     {t.fullName.split(" ")[0]}
@@ -338,7 +338,7 @@ export default function ClientDashboardPage() {
                       {msg.sender === "client" ? "You" : currentChatTalent?.fullName.split(" ")[0] || "Manager"}
                     </span>
                     <div 
-                      className={`p-3.5 rounded-2xl shadow-sm text-primary ${
+                      className={`p-3.5 rounded-2xl shadow-sm text-foreground ${
                         msg.sender === "client" 
                           ? "bg-destructive text-white rounded-tr-none font-bold" 
                           : "bg-white border border-border rounded-tl-none font-bold"
@@ -356,7 +356,7 @@ export default function ClientDashboardPage() {
                   value={messageInput}
                   onChange={(e) => setMessageInput(e.target.value)}
                   placeholder="Type message securely..."
-                  className="bg-muted border border-border h-10 text-xs rounded-xl flex-grow text-primary font-bold"
+                  className="bg-muted border border-border h-10 text-xs rounded-xl flex-grow text-foreground font-bold"
                 />
                 
                 <Button 
@@ -378,7 +378,7 @@ export default function ClientDashboardPage() {
           {/* Creator Casting & Approvals Section */}
           <Card className="bg-white border border-border shadow-sm rounded-3xl">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-primary flex items-center gap-1.5">
+              <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
                 <Film className="h-4.5 w-4.5 text-red-650 animate-pulse" /> Casting Discovery & Approvals
               </h3>
 
@@ -392,8 +392,8 @@ export default function ClientDashboardPage() {
                       </Avatar>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <h4 className="font-bold text-xs text-primary">{t.fullName}</h4>
-                          <Badge className="bg-muted text-primary/80 border-none text-[8px] font-bold uppercase rounded-full">{t.category}</Badge>
+                          <h4 className="font-bold text-xs text-foreground">{t.fullName}</h4>
+                          <Badge className="bg-muted text-foreground/80 border-none text-[8px] font-bold uppercase rounded-full">{t.category}</Badge>
                         </div>
                         <p className="text-[10px] text-muted-foreground font-bold mt-1">Shoot Dates: {t.shootDates}</p>
                       </div>
@@ -403,7 +403,7 @@ export default function ClientDashboardPage() {
                       <Button 
                         onClick={() => setActiveVideoUrl(t.reelUrl)}
                         variant="outline" 
-                        className="rounded-full h-8 px-4 text-[10px] font-bold border-border bg-white hover:bg-muted text-primary/80 shadow-sm gap-1"
+                        className="rounded-full h-8 px-4 text-[10px] font-bold border-border bg-white hover:bg-muted text-foreground/80 shadow-sm gap-1"
                       >
                         <PlayCircle className="h-4 w-4 text-red-650" /> Watch Reel
                       </Button>
@@ -428,7 +428,7 @@ export default function ClientDashboardPage() {
           {/* Active Proposals & Work Contracts */}
           <Card className="bg-white border border-border shadow-sm rounded-3xl">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-primary flex items-center gap-1.5">
+              <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
                 <FileText className="h-4.5 w-4.5 text-muted-foreground/80" /> Active Proposals & Work Contracts
               </h3>
 
@@ -437,7 +437,7 @@ export default function ClientDashboardPage() {
                   <div key={p.id} className="p-4 rounded-2xl bg-muted border border-border/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <h4 className="font-bold text-xs text-primary">{p.title}</h4>
+                        <h4 className="font-bold text-xs text-foreground">{p.title}</h4>
                         <Badge className={`border-none text-[8px] font-bold rounded-full ${
                           p.status === "Approved" ? "bg-emerald-500/10 text-emerald-600" : "bg-accent/10 text-accent"
                         }`}>{p.status}</Badge>

@@ -465,7 +465,7 @@ export default function ProjectWorkspacePage() {
   const isLoading = isTenantLoading || isProjectLoading || isStagesLoading || isObjectivesLoading || isAssetsLoading || isInvoicesLoading || isProjectExpensesLoading;
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-[80vh]"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return <div className="flex items-center justify-center h-[80vh]"><Loader2 className="h-8 w-8 animate-spin text-foreground" /></div>;
   }
 
   if (!project) {
@@ -512,13 +512,13 @@ export default function ProjectWorkspacePage() {
           <div className="flex items-start gap-5">
             <button
               onClick={() => router.push("/projects")}
-              className="mt-1 h-9 w-9 rounded-xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary/80 hover:bg-muted transition-all shrink-0"
+              className="mt-1 h-9 w-9 rounded-xl bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-all shrink-0"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
             <div className="space-y-2">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-3xl font-black text-primary tracking-tight leading-none">{project.project_name}</h1>
+                <h1 className="text-3xl font-black text-foreground tracking-tight leading-none">{project.project_name}</h1>
                 {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) ? (
                   <Select
                     defaultValue={project.status}
@@ -605,10 +605,10 @@ export default function ProjectWorkspacePage() {
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-primary/80">{liveProgress}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-foreground/80">{liveProgress}%</span>
                 </div>
                 <div>
-                  <p className="text-lg font-black text-primary">{liveProgress}%</p>
+                  <p className="text-lg font-black text-foreground">{liveProgress}%</p>
                   <p className="text-[9px] text-muted-foreground font-bold uppercase">Complete</p>
                 </div>
               </div>
@@ -631,20 +631,20 @@ export default function ProjectWorkspacePage() {
                 <TabsTrigger
                   key={stage.id}
                   value={stage.name}
-                  className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none transition-all"
+                  className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none transition-all"
                 >
                   {getPhaseIcon(stage.name.toLowerCase())} {stage.name}
                 </TabsTrigger>
               ))}
-              <TabsTrigger value="assets" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary transition-all">
+              <TabsTrigger value="assets" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground transition-all">
                 <Package className="h-3.5 w-3.5" /> Assets
               </TabsTrigger>
               {hasFinanceAccess && (
-                <TabsTrigger value="finances" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary transition-all">
+                <TabsTrigger value="finances" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground transition-all">
                   <Receipt className="h-3.5 w-3.5" /> Finances
                 </TabsTrigger>
               )}
-              <TabsTrigger value="timeline" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary transition-all">
+              <TabsTrigger value="timeline" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground transition-all">
                 <Calendar className="h-3.5 w-3.5" /> Timeline
               </TabsTrigger>
             </TabsList>
@@ -664,17 +664,17 @@ export default function ProjectWorkspacePage() {
               <div className="lg:col-span-2 border-r border-border">
                 <div className="px-8 py-6 border-b border-border flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-foreground">
                       {getPhaseIcon(stage.name.toLowerCase())}
                     </div>
                     <div>
-                      <h3 className="font-black text-primary capitalize">{stage.name}</h3>
+                      <h3 className="font-black text-foreground capitalize">{stage.name}</h3>
                       <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">{phaseObjectives(stage.name).length} tasks · {phaseProgress(stage.name)}% complete</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Link href={`/projects/${projectId}/approvals`}>
-                      <Button size="sm" variant="outline" className="rounded-xl font-bold bg-white text-primary/80 border-border shadow-sm hover:bg-muted gap-2 h-9">
+                      <Button size="sm" variant="outline" className="rounded-xl font-bold bg-white text-foreground/80 border-border shadow-sm hover:bg-muted gap-2 h-9">
                         <CheckCircle2 className="h-3.5 w-3.5" /> Review
                       </Button>
                     </Link>
@@ -711,7 +711,7 @@ export default function ProjectWorkspacePage() {
 
                           {/* Main content */}
                           <div className="flex-1 min-w-0 space-y-2">
-                            <p className={cn("font-bold text-sm leading-snug", isDone ? 'line-through text-slate-300' : 'text-primary')}>
+                            <p className={cn("font-bold text-sm leading-snug", isDone ? 'line-through text-slate-300' : 'text-foreground')}>
                               {objective.title}
                             </p>
 
@@ -726,7 +726,7 @@ export default function ProjectWorkspacePage() {
                                 )}>{objective.priority}</span>
                               )}
                               {actualHrs > 0 && (
-                                <span className="text-[9px] font-black text-primary/70 flex items-center gap-1">
+                                <span className="text-[9px] font-black text-foreground/70 flex items-center gap-1">
                                   <Clock className="h-2.5 w-2.5" />{actualHrs}h logged{estHrs > 0 ? ` / ${estHrs}h est` : ''}
                                 </span>
                               )}
@@ -738,10 +738,10 @@ export default function ProjectWorkspacePage() {
                                 value={objective.assignee_id || 'unassigned'}
                                 onValueChange={(val) => handleAssignObjective(objective.id, val === 'unassigned' ? null : val)}
                               >
-                                <SelectTrigger className="h-7 text-[10px] font-bold w-auto max-w-[180px] bg-transparent border-0 shadow-none px-0 text-muted-foreground hover:text-primary/80 focus:ring-0 gap-1.5 pl-0">
+                                <SelectTrigger className="h-7 text-[10px] font-bold w-auto max-w-[180px] bg-transparent border-0 shadow-none px-0 text-muted-foreground hover:text-foreground/80 focus:ring-0 gap-1.5 pl-0">
                                   {assignee ? (
                                     <span className="flex items-center gap-1.5">
-                                      <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[8px] font-black shrink-0">
+                                      <span className="h-5 w-5 rounded-full bg-primary/10 text-foreground flex items-center justify-center text-[8px] font-black shrink-0">
                                         {(assignee.fullName || assignee.email || 'U')[0].toUpperCase()}
                                       </span>
                                       <span className="truncate">{assignee.fullName || assignee.email?.split('@')[0]}</span>
@@ -757,7 +757,7 @@ export default function ProjectWorkspacePage() {
                                   {companyUsers?.map(user => (
                                     <SelectItem key={user.id} value={user.id} className="rounded-lg text-xs font-bold">
                                       <span className="flex items-center gap-2">
-                                        <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[8px] font-black shrink-0">
+                                        <span className="h-5 w-5 rounded-full bg-primary/10 text-foreground flex items-center justify-center text-[8px] font-black shrink-0">
                                           {(user.fullName || user.email || 'U')[0].toUpperCase()}
                                         </span>
                                         {user.fullName || user.email?.split('@')[0]}
@@ -774,7 +774,7 @@ export default function ProjectWorkspacePage() {
                           <div className="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => { setTimeLogObjective(objective); setIsLogTimeOpen(true); }}
-                              className="h-7 px-2.5 rounded-lg bg-muted hover:bg-primary/5 text-muted-foreground hover:text-primary flex items-center gap-1.5 text-[10px] font-black uppercase transition-colors"
+                              className="h-7 px-2.5 rounded-lg bg-muted hover:bg-primary/5 text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-[10px] font-black uppercase transition-colors"
                             >
                               <Clock className="h-3 w-3" /> Log Time
                             </button>
@@ -803,11 +803,11 @@ export default function ProjectWorkspacePage() {
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xl font-black text-primary">{phaseProgress(stage.name)}%</span>
+                      <span className="text-xl font-black text-foreground">{phaseProgress(stage.name)}%</span>
                     </div>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs font-black text-primary/80 capitalize">{stage.name}</p>
+                    <p className="text-xs font-black text-foreground/80 capitalize">{stage.name}</p>
                     <p className="text-[10px] text-muted-foreground font-bold">{completedPhaseObjectives(stage.name)} of {phaseObjectives(stage.name).length} done</p>
                   </div>
                 </div>
@@ -818,20 +818,20 @@ export default function ProjectWorkspacePage() {
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
                     <span className={cn("text-[10px] font-black uppercase px-2 py-0.5 rounded-full",
                       stage.status === 'active' ? 'bg-emerald-50 text-emerald-600' :
-                      stage.status === 'completed' ? 'bg-primary/10 text-primary' :
+                      stage.status === 'completed' ? 'bg-primary/10 text-foreground' :
                       'bg-muted text-muted-foreground'
                     )}>{stage.status || 'pending'}</span>
                   </div>
                   {stage.start_date && (
                     <div className="flex justify-between items-center">
                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Start</span>
-                      <span className="text-xs font-bold text-primary/80">{new Date(stage.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                      <span className="text-xs font-bold text-foreground/80">{new Date(stage.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                     </div>
                   )}
                   {stage.end_date && (
                     <div className="flex justify-between items-center">
                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Due</span>
-                      <span className="text-xs font-bold text-primary/80">{new Date(stage.end_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                      <span className="text-xs font-bold text-foreground/80">{new Date(stage.end_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                     </div>
                   )}
                 </div>
@@ -847,7 +847,7 @@ export default function ProjectWorkspacePage() {
               <div className="h-16 w-16 rounded-2xl bg-accent/10 flex items-center justify-center">
                 <ShieldAlert className="h-8 w-8 text-accent" />
               </div>
-              <h2 className="text-xl font-black text-primary">Access Restricted</h2>
+              <h2 className="text-xl font-black text-foreground">Access Restricted</h2>
               <p className="text-muted-foreground font-medium max-w-sm text-center text-sm">Accounts profiles are blocked from browsing creative media files.</p>
             </div>
           ) : (
@@ -869,11 +869,11 @@ export default function ProjectWorkspacePage() {
                       className={cn(
                         "flex flex-col items-center gap-1.5 py-5 px-4 text-center border-b-2 transition-all font-bold text-[10px] uppercase tracking-widest",
                         selectedFolderFilter === f.id
-                          ? "border-primary text-primary bg-muted"
+                          ? "border-primary text-foreground bg-muted"
                           : "border-transparent text-muted-foreground hover:text-muted-foreground/80 hover:bg-muted/50"
                       )}
                     >
-                      <f.icon className={cn("h-5 w-5", selectedFolderFilter === f.id ? "text-primary" : f.color)} />
+                      <f.icon className={cn("h-5 w-5", selectedFolderFilter === f.id ? "text-foreground" : f.color)} />
                       <span>{f.label}</span>
                     </button>
                   ))}
@@ -891,7 +891,7 @@ export default function ProjectWorkspacePage() {
                       <button onClick={() => setSelectedAssetForReview(null)} className="text-white/30 hover:text-white text-xs font-bold transition-colors">Close ×</button>
                     </div>
                     <div className="relative aspect-video bg-black flex items-center justify-center group cursor-pointer">
-                      <Monitor className="h-12 w-12 text-primary/80" />
+                      <Monitor className="h-12 w-12 text-foreground/80" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-5">
                         <div className="flex items-center gap-3">
                           <button className="h-9 w-9 bg-accent rounded-full flex items-center justify-center"><Play className="h-4 w-4 text-white fill-white" /></button>
@@ -962,7 +962,7 @@ export default function ProjectWorkspacePage() {
                           </div>
                           {/* Meta */}
                           <div className="p-4">
-                            <p className="font-black text-sm text-primary truncate">{asset.name}</p>
+                            <p className="font-black text-sm text-foreground truncate">{asset.name}</p>
                             <div className="flex items-center justify-between mt-2">
                               <span className={cn(
                                 "text-[9px] font-black uppercase px-2 py-0.5 rounded-full",
@@ -1005,7 +1005,7 @@ export default function ProjectWorkspacePage() {
                     <div>
                       <div className="flex justify-between text-xs font-bold mb-2">
                         <span className="text-muted-foreground">Pool Used</span>
-                        <span className="text-primary">1.4 GB / 25 GB</span>
+                        <span className="text-foreground">1.4 GB / 25 GB</span>
                       </div>
                       <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full" style={{ width: '6%' }} />
@@ -1014,7 +1014,7 @@ export default function ProjectWorkspacePage() {
                     <div className="space-y-2.5 text-xs">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground font-medium">Total Assets</span>
-                        <span className="font-black text-primary/80">{assets?.length || 0}</span>
+                        <span className="font-black text-foreground/80">{assets?.length || 0}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground font-medium">Download Log</span>
@@ -1042,7 +1042,7 @@ export default function ProjectWorkspacePage() {
                           </div>
                           <div className="flex-1 flex justify-between items-center">
                             <span className="text-xs font-bold text-muted-foreground/80">{type}</span>
-                            <span className="text-xs font-black text-primary">{count}</span>
+                            <span className="text-xs font-black text-foreground">{count}</span>
                           </div>
                         </div>
                       );
@@ -1092,12 +1092,12 @@ export default function ProjectWorkspacePage() {
                               <Receipt className="h-5 w-5" />
                             </div>
                             <div>
-                              <p className="font-bold text-sm text-primary">{exp.category}</p>
+                              <p className="font-bold text-sm text-foreground">{exp.category}</p>
                               <p className="text-[10px] text-muted-foreground font-bold uppercase mt-1">{exp.description || 'Production Charge'}</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <h4 className="font-black text-sm text-primary">₹{(exp.amount || 0).toLocaleString()}</h4>
+                            <h4 className="font-black text-sm text-foreground">₹{(exp.amount || 0).toLocaleString()}</h4>
                             <p className="text-[9px] text-muted-foreground font-mono mt-1">{exp.date ? new Date(exp.date).toLocaleDateString() : 'Today'}</p>
                           </div>
                         </div>
@@ -1119,7 +1119,7 @@ export default function ProjectWorkspacePage() {
                 <div className="space-y-4">
                   <div className="flex justify-between text-xs font-medium">
                     <span className="text-muted-foreground">Total Billed Subtotal</span>
-                    <span className="font-black text-primary">₹{totalRevenueBase.toLocaleString()}</span>
+                    <span className="font-black text-foreground">₹{totalRevenueBase.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-xs font-medium">
                     <span className="text-muted-foreground">Total Logged expenses</span>
@@ -1153,7 +1153,7 @@ export default function ProjectWorkspacePage() {
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+              <Sparkles className="h-5 w-5 text-foreground animate-pulse" />
               Add Task
             </DialogTitle>
             <DialogDescription>Assign objectives and milestone dates to crew members.</DialogDescription>
@@ -1311,11 +1311,11 @@ export default function ProjectWorkspacePage() {
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
+              <Clock className="h-5 w-5 text-foreground" />
               Log Time
             </DialogTitle>
             <DialogDescription>
-              Logging time for: <span className="font-bold text-primary">{timeLogObjective?.title}</span>
+              Logging time for: <span className="font-bold text-foreground">{timeLogObjective?.title}</span>
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleLogTime} className="space-y-4 py-4">
@@ -1368,7 +1368,7 @@ export default function ProjectWorkspacePage() {
               Update Asset Link
             </DialogTitle>
             <DialogDescription>
-              Provide a new Google Drive or external link for: <span className="font-bold text-primary">{editingAsset?.name}</span>
+              Provide a new Google Drive or external link for: <span className="font-bold text-foreground">{editingAsset?.name}</span>
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateAssetLink} className="space-y-4 py-4">
