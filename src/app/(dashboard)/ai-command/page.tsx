@@ -41,14 +41,9 @@ export default function AICommandCenter() {
     { id: "a_3", type: "Sales", desc: "Generate healthcare proposal follow-up email sequence for Aster DM", status: "Pending approval", action_type: "GENERATE_PROPOSAL" }
   ]);
 
-  // Executive Dashboard Stats — starts with mock values, upgraded by real API on mount
-  const [stats, setStats] = useState({
-    projectedRevenue: "₹24,50,000",
-    revenueGrowth: "+18.4%",
-    activeRisks: 2,
-    utilizationRate: "88%",
-    proposalConversion: "84%"
-  });
+  // Executive Dashboard Stats
+  const [stats, setStats] = useState<any>(null);
+  const [isStatsLoading, setIsStatsLoading] = useState(true);
 
   // Phase 1: Fetch real business metrics on mount
   useEffect(() => {
@@ -56,17 +51,41 @@ export default function AICommandCenter() {
     fetch('/api/v1/intelligence/metrics')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (cancelled || !data?.metrics) return;
-        const m = data.metrics;
-        setStats({
-          projectedRevenue: m.projectedRevenue ?? "₹24,50,000",
-          revenueGrowth: m.revenueGrowth ?? "+18.4%",
-          activeRisks: m.activeRisks ?? 2,
-          utilizationRate: m.utilizationRate ?? "88%",
-          proposalConversion: m.proposalConversion ?? "84%",
-        });
+        if (cancelled) return;
+        if (data?.metrics) {
+          const m = data.metrics;
+          setStats({
+            projectedRevenue: m.projectedRevenue ?? "₹0",
+            revenueGrowth: m.revenueGrowth ?? "0%",
+            activeRisks: m.activeRisks ?? 0,
+            utilizationRate: m.utilizationRate ?? "0%",
+            proposalConversion: m.proposalConversion ?? "0%",
+          });
+        } else {
+          // If no API data yet, default to empty state rather than flashing dummy data
+          setStats({
+            projectedRevenue: "₹0",
+            revenueGrowth: "0%",
+            activeRisks: 0,
+            utilizationRate: "0%",
+            proposalConversion: "0%",
+          });
+        }
       })
-      .catch(() => { /* silently keep mock values */ });
+      .catch(() => { 
+        if (!cancelled) {
+          setStats({
+            projectedRevenue: "₹0",
+            revenueGrowth: "0%",
+            activeRisks: 0,
+            utilizationRate: "0%",
+            proposalConversion: "0%",
+          });
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsStatsLoading(false);
+      });
     return () => { cancelled = true; };
   }, []);
 
@@ -282,34 +301,43 @@ export default function AICommandCenter() {
 
               <div className="grid grid-cols-1 gap-4">
                 
-                {/* Stat blocks in Light Theme */}
-                <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
-                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Projected Monthly Revenue</span>
-                  <div className="flex justify-between items-baseline mt-1.5">
-                    <strong className="text-lg font-black text-foreground">{stats.projectedRevenue}</strong>
-                    <span className="text-[10px] text-emerald-600 font-bold">{stats.revenueGrowth}</span>
+                {isStatsLoading || !stats ? (
+                  <div className="space-y-4">
+                    <div className="h-16 bg-muted animate-pulse rounded-xl" />
+                    <div className="h-16 bg-muted animate-pulse rounded-xl" />
+                    <div className="h-16 bg-muted animate-pulse rounded-xl" />
                   </div>
-                </div>
+                ) : (
+                  <>
+                    <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
+                      <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Projected Monthly Revenue</span>
+                      <div className="flex justify-between items-baseline mt-1.5">
+                        <strong className="text-lg font-black text-foreground">{stats.projectedRevenue}</strong>
+                        <span className="text-[10px] text-emerald-600 font-bold">{stats.revenueGrowth}</span>
+                      </div>
+                    </div>
 
-                <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
-                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Roster Utilization</span>
-                  <div className="flex justify-between items-baseline mt-1.5">
-                    <strong className="text-lg font-black text-foreground">{stats.utilizationRate}</strong>
-                    <span className="text-[10px] text-destructive font-bold">Target: 85%</span>
-                  </div>
-                </div>
+                    <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
+                      <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Roster Utilization</span>
+                      <div className="flex justify-between items-baseline mt-1.5">
+                        <strong className="text-lg font-black text-foreground">{stats.utilizationRate}</strong>
+                        <span className="text-[10px] text-destructive font-bold">Target: 85%</span>
+                      </div>
+                    </div>
 
-                <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
-                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Active Pipeline Risks</span>
-                  <div className="flex justify-between items-center mt-1.5">
-                    <strong className={`text-lg font-black ${stats.activeRisks > 0 ? 'text-accent' : 'text-muted-foreground'}`}>
-                      {stats.activeRisks} Flagged
-                    </strong>
-                    {stats.activeRisks > 0 && (
-                      <Badge className="bg-accent/10 text-accent border-none font-bold text-[8px]">Action Required</Badge>
-                    )}
-                  </div>
-                </div>
+                    <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
+                      <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Active Pipeline Risks</span>
+                      <div className="flex justify-between items-center mt-1.5">
+                        <strong className={`text-lg font-black ${stats.activeRisks > 0 ? 'text-accent' : 'text-muted-foreground'}`}>
+                          {stats.activeRisks} Flagged
+                        </strong>
+                        {stats.activeRisks > 0 && (
+                          <Badge className="bg-accent/10 text-accent border-none font-bold text-[8px]">Action Required</Badge>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
 
               </div>
 

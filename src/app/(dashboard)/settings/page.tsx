@@ -31,6 +31,7 @@ import {
   RefreshCcw,
   Sparkles
 } from "lucide-react";
+import imageCompression from 'browser-image-compression';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
@@ -273,20 +274,27 @@ function AccountCenterContent() {
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) { 
-      toast({ variant: "destructive", title: "File Too Large", description: "Image must be less than 2MB." });
-      return;
-    }
-
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
+      // Compress the image to ensure it's under 2MB
+      const options = {
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+      
+      let finalFile = file;
+      if (file.size > 2 * 1024 * 1024 || file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp') {
+         finalFile = await imageCompression(file, options);
+      }
+
+      const fileExt = finalFile.name.split('.').pop() || 'jpg';
       const fileName = `${uid}-${Math.random()}.${fileExt}`;
       const filePath = `${uid}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file);
+        .upload(filePath, finalFile);
 
       if (uploadError) throw uploadError;
 
