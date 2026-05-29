@@ -18,12 +18,12 @@ import { ENTERPRISE_TEMPLATES } from "@/lib/enterprise-workflow-templates";
 import { Loader2 } from "lucide-react";
 
 const PROJECT_COLORS = [
-  'bg-rose-500',
-  'bg-indigo-500',
+  'bg-accent',
+  'bg-accent',
   'bg-emerald-500',
-  'bg-amber-500',
-  'bg-cyan-500',
-  'bg-purple-500'
+  'bg-accent',
+  'bg-accent',
+  'bg-accent'
 ];
 
 interface CreateProjectWizardProps {
@@ -195,7 +195,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     <div className={cn(
                       "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-300 shrink-0",
                       wizardStep > s.n ? "bg-emerald-400 text-white" :
-                      wizardStep === s.n ? "bg-white text-slate-900" :
+                      wizardStep === s.n ? "bg-white text-primary" :
                       "bg-white/10 text-white"
                     )}>
                       {wizardStep > s.n ? <CheckCircle2 className="h-3.5 w-3.5" /> : s.n}
@@ -213,12 +213,12 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
         {wizardStep === 1 && (
           <div className="p-7 space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Choose Workflow Pipeline</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Choose Workflow Pipeline</p>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { value: "AI Production", icon: Sparkles, label: "AI Production", desc: "8 stages · AI-assisted", color: "text-primary", bg: "bg-primary/5 border-primary/20", activeBg: "bg-primary/10 border-primary" },
-                  { value: "Hybrid Production", icon: Layers, label: "Hybrid", desc: "6 stages · Mixed workflow", color: "text-amber-500", bg: "bg-amber-50 border-amber-100", activeBg: "bg-amber-50 border-amber-400" },
-                  { value: "Normal Production", icon: Film, label: "Standard", desc: "5 stages · Traditional", color: "text-slate-500", bg: "bg-slate-50 border-slate-200", activeBg: "bg-slate-100 border-slate-400" },
+                  { value: "Hybrid Production", icon: Layers, label: "Hybrid", desc: "6 stages · Mixed workflow", color: "text-accent", bg: "bg-accent/10 border-accent/20", activeBg: "bg-accent/10 border-accent" },
+                  { value: "Normal Production", icon: Film, label: "Standard", desc: "5 stages · Traditional", color: "text-muted-foreground", bg: "bg-muted border-border", activeBg: "bg-muted border-slate-400" },
                 ].map(p => (
                   <button
                     key={p.value}
@@ -236,8 +236,8 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     )}
                     <p.icon className={cn("h-6 w-6", p.color)} />
                     <div>
-                      <p className="text-xs font-black text-slate-800">{p.label}</p>
-                      <p className="text-[9px] text-slate-400 font-medium mt-0.5">{p.desc}</p>
+                      <p className="text-xs font-black text-primary">{p.label}</p>
+                      <p className="text-[9px] text-muted-foreground font-medium mt-0.5">{p.desc}</p>
                     </div>
                   </button>
                 ))}
@@ -248,14 +248,14 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
             {newProject.project_type && ENTERPRISE_TEMPLATES[newProject.project_type] && (() => {
               const tmpl = ENTERPRISE_TEMPLATES[newProject.project_type];
               return (
-                <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-3">Workspace Preview · {tmpl.stages.length} Stages</p>
+                <div className="rounded-xl bg-muted border border-border p-4">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-3">Workspace Preview · {tmpl.stages.length} Stages</p>
                   <div className="grid grid-cols-2 gap-1.5">
                     {tmpl.stages.map((stage, i) => (
                       <div key={stage.name} className="flex items-center gap-2">
-                        <span className="h-5 w-5 rounded-md bg-white border border-slate-200 flex items-center justify-center text-[9px] font-black text-slate-400 shrink-0">{i + 1}</span>
-                        <span className="text-xs font-bold text-slate-600 truncate">{stage.name}</span>
-                        <span className="text-[9px] text-slate-400 ml-auto shrink-0">{stage.objectives.length}t</span>
+                        <span className="h-5 w-5 rounded-md bg-white border border-border flex items-center justify-center text-[9px] font-black text-muted-foreground shrink-0">{i + 1}</span>
+                        <span className="text-xs font-bold text-muted-foreground/80 truncate">{stage.name}</span>
+                        <span className="text-[9px] text-muted-foreground ml-auto shrink-0">{stage.objectives.length}t</span>
                       </div>
                     ))}
                   </div>
@@ -265,12 +265,12 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Service Category</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Service Category</Label>
                 <Select value={newProject.service_category} onValueChange={(val) => setNewProject({ ...newProject, service_category: val, service: "" })}>
-                  <SelectTrigger className="h-11 rounded-xl border-slate-200 bg-white shadow-sm text-sm">
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-white shadow-sm text-sm">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-xl z-[200]">
+                  <SelectContent className="rounded-xl bg-white border border-border shadow-xl z-[200]">
                     {CONTENT_VERTICALS.map(v => (
                       <SelectItem key={v.id} value={v.name} className="text-xs font-bold rounded-lg m-0.5">{v.name}</SelectItem>
                     ))}
@@ -278,12 +278,12 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                 </Select>
               </div>
               <div>
-                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Service</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Service</Label>
                 <Select disabled={!newProject.service_category} value={newProject.service} onValueChange={(val) => setNewProject({ ...newProject, service: val })}>
-                  <SelectTrigger className="h-11 rounded-xl border-slate-200 bg-white shadow-sm text-sm">
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-white shadow-sm text-sm">
                     <SelectValue placeholder={newProject.service_category ? "Select service" : "Pick category first"} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-xl z-[200]">
+                  <SelectContent className="rounded-xl bg-white border border-border shadow-xl z-[200]">
                     {CONTENT_VERTICALS.find(v => v.name === newProject.service_category)?.services.map(s => (
                       <SelectItem key={s} value={s} className="text-xs font-bold rounded-lg m-0.5">{s}</SelectItem>
                     ))}
@@ -296,7 +296,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               <Button
                 type="button"
                 onClick={() => setWizardStep(2)}
-                className="h-11 px-8 gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black shadow-lg"
+                className="h-11 px-8 gap-2 rounded-xl bg-primary hover:bg-primary text-white font-black shadow-lg"
               >
                 Next <ArrowRight className="h-4 w-4" />
               </Button>
@@ -308,20 +308,20 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
         {wizardStep === 2 && (
           <div className="p-7 space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Project Information</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">Project Information</p>
               <div className="space-y-4">
                 <div>
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Project Name <span className="text-red-400">*</span></Label>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Project Name <span className="text-destructive">*</span></Label>
                   <Input
                     placeholder="e.g. Diwali Campaign 2025"
                     value={newProject.project_name}
                     onChange={(e) => setNewProject({ ...newProject, project_name: e.target.value })}
-                    className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-bold text-slate-800 focus:ring-primary/10"
+                    className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-primary focus:ring-primary/10"
                     autoFocus
                   />
                 </div>
                 <div>
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Client <span className="text-red-400">*</span></Label>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Client <span className="text-destructive">*</span></Label>
                   <div className="relative">
                     <Input
                       type="text"
@@ -333,12 +333,12 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                         const typed = e.target.value;
                         setNewProject(prev => ({ ...prev, client_name: typed }));
                       }}
-                      className="h-12 w-full rounded-xl border border-slate-200 bg-white shadow-sm font-bold text-sm text-slate-800 focus-visible:ring-primary/20 focus-visible:border-primary/40"
+                      className="h-12 w-full rounded-xl border border-border bg-white shadow-sm font-bold text-sm text-primary focus-visible:ring-primary/20 focus-visible:border-primary/40"
                     />
                     {isClientDropdownOpen && (
-                      <div className="absolute top-full left-0 w-full mt-2 bg-white border border-slate-200 shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
+                      <div className="absolute top-full left-0 w-full mt-2 bg-white border border-border shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
                         {combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).length === 0 ? (
-                          <div className="px-3 py-4 text-xs font-bold text-slate-400 text-center">
+                          <div className="px-3 py-4 text-xs font-bold text-muted-foreground text-center">
                             Press Enter to use custom name
                           </div>
                         ) : (
@@ -364,7 +364,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                                   }
                                   setIsClientDropdownOpen(false);
                                 }}
-                                className="w-full text-left px-3 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900 rounded-lg flex items-center justify-between group transition-colors"
+                                className="w-full text-left px-3 py-2 text-sm font-bold text-primary/80 hover:bg-muted hover:text-primary rounded-lg flex items-center justify-between group transition-colors"
                               >
                                 <span className="truncate">{name}</span>
                                 {isLead && <Badge variant="secondary" className="text-[9px] h-4">CRM Lead</Badge>}
@@ -379,35 +379,35 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Budget (₹)</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Budget (₹)</Label>
                     <Input
                       type="number"
                       placeholder="0"
                       value={newProject.budget}
                       onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
-                      className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-black text-slate-800"
+                      className="h-12 rounded-xl border-border bg-white shadow-sm font-black text-primary"
                     />
                   </div>
                   <div>
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Deadline</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Deadline</Label>
                     <Input
                       type="date"
                       value={newProject.deadline}
                       onChange={(e) => setNewProject({ ...newProject, deadline: e.target.value })}
-                      className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-bold text-slate-800"
+                      className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-primary"
                     />
                   </div>
                 </div>
                 <div className="mt-4">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Project Manager (Assignee)</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Project Manager (Assignee)</Label>
                   <Select value={newProject.assignee_id} onValueChange={(val) => setNewProject({ ...newProject, assignee_id: val })}>
-                    <SelectTrigger className="h-12 rounded-xl border-slate-200 bg-white shadow-sm font-bold text-sm text-slate-800">
+                    <SelectTrigger className="h-12 rounded-xl border-border bg-white shadow-sm font-bold text-sm text-primary">
                       <SelectValue placeholder="Select Assignee (Optional)" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl bg-white border border-slate-200 shadow-xl z-[200]">
-                      <SelectItem value="none" className="text-xs font-bold rounded-lg m-0.5 text-slate-500">Unassigned (Self)</SelectItem>
+                    <SelectContent className="rounded-xl bg-white border border-border shadow-xl z-[200]">
+                      <SelectItem value="none" className="text-xs font-bold rounded-lg m-0.5 text-muted-foreground">Unassigned (Self)</SelectItem>
                       {companyUsers?.map((user: any) => (
-                        <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-lg m-0.5 text-slate-800">
+                        <SelectItem key={user.id} value={user.id} className="text-xs font-bold rounded-lg m-0.5 text-primary">
                           {user.full_name || user.email}
                         </SelectItem>
                       ))}
@@ -417,7 +417,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               </div>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <Button type="button" variant="ghost" onClick={() => setWizardStep(1)} className="h-11 px-6 rounded-xl font-bold text-slate-500 hover:text-slate-900">
+              <Button type="button" variant="ghost" onClick={() => setWizardStep(1)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-primary">
                 ← Back
               </Button>
               <Button
@@ -429,7 +429,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                   }
                   setWizardStep(3);
                 }}
-                className="h-11 px-8 gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black shadow-lg"
+                className="h-11 px-8 gap-2 rounded-xl bg-primary hover:bg-primary text-white font-black shadow-lg"
               >
                 Review <ArrowRight className="h-4 w-4" />
               </Button>
@@ -440,42 +440,42 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
         {/* Step 3: Review & Launch */}
         {wizardStep === 3 && (
           <form onSubmit={handleCreateProject} className="p-7 space-y-5">
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Review & Launch</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Review & Launch</p>
             
             {/* Summary card */}
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-5 space-y-4">
+            <div className="rounded-xl border border-border bg-muted p-5 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Project Name</p>
-                  <p className="text-sm font-black text-slate-900 mt-1">{newProject.project_name}</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Project Name</p>
+                  <p className="text-sm font-black text-primary mt-1">{newProject.project_name}</p>
                 </div>
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Client</p>
-                  <p className="text-sm font-black text-slate-900 mt-1">{newProject.client_name}</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Client</p>
+                  <p className="text-sm font-black text-primary mt-1">{newProject.client_name}</p>
                 </div>
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Pipeline</p>
-                  <p className="text-sm font-bold text-slate-700 mt-1 flex items-center gap-1.5">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Pipeline</p>
+                  <p className="text-sm font-bold text-primary/80 mt-1 flex items-center gap-1.5">
                     {newProject.project_type === "AI Production" && <Sparkles className="h-3.5 w-3.5 text-primary" />}
-                    {newProject.project_type === "Hybrid Production" && <Layers className="h-3.5 w-3.5 text-amber-500" />}
-                    {newProject.project_type === "Normal Production" && <Film className="h-3.5 w-3.5 text-slate-500" />}
+                    {newProject.project_type === "Hybrid Production" && <Layers className="h-3.5 w-3.5 text-accent" />}
+                    {newProject.project_type === "Normal Production" && <Film className="h-3.5 w-3.5 text-muted-foreground" />}
                     {newProject.project_type}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Category</p>
-                  <p className="text-sm font-bold text-slate-700 mt-1">{newProject.service_category || <span className="text-slate-300">—</span>}</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Category</p>
+                  <p className="text-sm font-bold text-primary/80 mt-1">{newProject.service_category || <span className="text-slate-300">—</span>}</p>
                 </div>
                 {newProject.budget && (
                   <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Budget</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Budget</p>
                     <p className="text-sm font-black text-emerald-600 mt-1">₹{Number(newProject.budget).toLocaleString('en-IN')}</p>
                   </div>
                 )}
                 {newProject.deadline && (
                   <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Deadline</p>
-                    <p className="text-sm font-bold text-slate-700 mt-1">{new Date(newProject.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Deadline</p>
+                    <p className="text-sm font-bold text-primary/80 mt-1">{new Date(newProject.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                   </div>
                 )}
               </div>
@@ -485,20 +485,20 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                 const tmpl = ENTERPRISE_TEMPLATES[newProject.project_type];
                 const totalObjs = tmpl.stages.reduce((acc, s) => acc + s.objectives.length, 0);
                 return (
-                  <div className="pt-3 border-t border-slate-200">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">Auto-Created Workspace</p>
+                  <div className="pt-3 border-t border-border">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">Auto-Created Workspace</p>
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1.5">
                         <div className="h-2 w-2 rounded-full bg-primary" />
-                        <span className="text-xs font-bold text-slate-600">{tmpl.stages.length} Stages</span>
+                        <span className="text-xs font-bold text-muted-foreground/80">{tmpl.stages.length} Stages</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <div className="h-2 w-2 rounded-full bg-emerald-400" />
-                        <span className="text-xs font-bold text-slate-600">{totalObjs} Objectives</span>
+                        <span className="text-xs font-bold text-muted-foreground/80">{totalObjs} Objectives</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <div className="h-2 w-2 rounded-full bg-amber-400" />
-                        <span className="text-xs font-bold text-slate-600">Dependency chains</span>
+                        <div className="h-2 w-2 rounded-full bg-accent" />
+                        <span className="text-xs font-bold text-muted-foreground/80">Dependency chains</span>
                       </div>
                     </div>
                   </div>
@@ -507,7 +507,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
             </div>
 
             <div className="flex items-center justify-between">
-              <Button type="button" variant="ghost" onClick={() => setWizardStep(2)} className="h-11 px-6 rounded-xl font-bold text-slate-500 hover:text-slate-900">
+              <Button type="button" variant="ghost" onClick={() => setWizardStep(2)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-primary">
                 ← Back
               </Button>
               <Button

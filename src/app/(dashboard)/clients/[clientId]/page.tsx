@@ -221,30 +221,30 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
         <Card className="border-none shadow-sm rounded-[10px] bg-white border-l-4 border-l-primary">
           <CardContent className="pt-6">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Active Work</p>
-            <h4 className="text-2xl font-black text-slate-800">{activeProjectsStats.count} Projects</h4>
+            <h4 className="text-2xl font-black text-primary">{activeProjectsStats.count} Projects</h4>
             <p className="text-[9px] text-primary font-bold mt-1">₹{activeProjectsStats.totalValue.toLocaleString()} Aggregate Value</p>
           </CardContent>
         </Card>
         
-        <Card className="border-none shadow-sm rounded-[10px] bg-indigo-50 border-l-4 border-l-indigo-500">
+        <Card className="border-none shadow-sm rounded-[10px] bg-accent/10 border-l-4 border-l-indigo-500">
           <CardContent className="pt-6">
-            <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Sales Pipeline</p>
-            <h4 className="text-2xl font-black text-indigo-900">{pipelineStats.count} Opportunities</h4>
-            <p className="text-[9px] text-indigo-400 font-bold mt-1">₹{pipelineStats.totalValue.toLocaleString()} Projected Value</p>
+            <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-1">Sales Pipeline</p>
+            <h4 className="text-2xl font-black text-accent">{pipelineStats.count} Opportunities</h4>
+            <p className="text-[9px] text-accent font-bold mt-1">₹{pipelineStats.totalValue.toLocaleString()} Projected Value</p>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-sm rounded-[10px] bg-rose-50 border-l-4 border-l-rose-500">
+        <Card className="border-none shadow-sm rounded-[10px] bg-accent/10 border-l-4 border-l-rose-500">
           <CardContent className="pt-6">
-            <p className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1">Pending Invoices</p>
-            <h4 className="text-2xl font-black text-rose-900">{invoiceStats.pendingCount} Unpaid</h4>
-            <p className="text-[9px] text-rose-400 font-bold mt-1">₹{invoiceStats.pendingValue.toLocaleString()} Outstanding</p>
+            <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-1">Pending Invoices</p>
+            <h4 className="text-2xl font-black text-accent">{invoiceStats.pendingCount} Unpaid</h4>
+            <p className="text-[9px] text-accent font-bold mt-1">₹{invoiceStats.pendingValue.toLocaleString()} Outstanding</p>
           </CardContent>
         </Card>
 
         <Card className={cn(
           "border-none shadow-sm rounded-[10px] text-white border-l-4 transition-colors",
-          totals.profit >= 0 ? "bg-emerald-600 border-l-emerald-400" : "bg-rose-600 border-l-rose-400"
+          totals.profit >= 0 ? "bg-emerald-600 border-l-emerald-400" : "bg-accent border-l-rose-400"
         )}>
           <CardContent className="pt-6">
             <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Net Performance</p>
@@ -258,7 +258,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
         {/* Sidebar Context */}
         <aside className="lg:col-span-4 space-y-6">
           <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white">
-            <CardHeader className="bg-slate-50/50 border-b pb-6 px-8">
+            <CardHeader className="bg-muted/50 border-b pb-6 px-8">
               <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Classification Details</CardTitle>
             </CardHeader>
             <CardContent className="p-8 space-y-6">
@@ -268,8 +268,8 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                     <User className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Primary Liaison</p>
-                    <p className="font-bold text-sm text-slate-800">{client.contact_person || 'Liaison Unassigned'}</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Primary Liaison</p>
+                    <p className="font-bold text-sm text-primary">{client.contact_person || 'Liaison Unassigned'}</p>
                   </div>
                 </div>
 
@@ -278,8 +278,8 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                     <Mail className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Communication</p>
-                    <p className="font-bold text-sm text-slate-800 truncate max-w-[200px]">{client.email || 'No email provided'}</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Communication</p>
+                    <p className="font-bold text-sm text-primary truncate max-w-[200px]">{client.email || 'No email provided'}</p>
                   </div>
                 </div>
 
@@ -288,8 +288,8 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                     <CreditCard className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">GSTIN Registry</p>
-                    <p className="font-mono font-bold text-xs uppercase text-slate-700">{client.gstin || 'PENDING RECORD'}</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">GSTIN Registry</p>
+                    <p className="font-mono font-bold text-xs uppercase text-primary/80">{client.gstin || 'PENDING RECORD'}</p>
                   </div>
                 </div>
 
@@ -298,15 +298,15 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Billing Logic Context</p>
-                    <p className="text-xs font-medium text-slate-600 leading-relaxed italic">{client.billing_address || 'Address context pending update.'}</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Billing Logic Context</p>
+                    <p className="text-xs font-medium text-muted-foreground/80 leading-relaxed italic">{client.billing_address || 'Address context pending update.'}</p>
                   </div>
                 </div>
               </div>
 
               <div className="pt-6 border-t space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Vertical Focus</span>
+                  <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Vertical Focus</span>
                   <Badge variant="secondary" className="rounded-lg text-[9px] font-black bg-primary/5 text-primary border-none">
                     {client.service_vertical || 'General Media'}
                   </Badge>
@@ -315,7 +315,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-soft rounded-[10px] bg-slate-900 text-white p-10 space-y-6 relative overflow-hidden">
+          <Card className="border-none shadow-soft rounded-[10px] bg-primary text-white p-10 space-y-6 relative overflow-hidden">
             <Sparkles className="absolute top-0 right-0 p-8 opacity-10 h-24 w-24" />
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-accent rounded-xl flex items-center justify-center text-white shadow-lg">
@@ -327,7 +327,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               Generate a high-premium production strategy tailored for {client.company_name}.
             </p>
             <Link href={`/proposals?source=crm&leadId=${clientId}&companyName=${encodeURIComponent(client.company_name)}&vertical=${encodeURIComponent(client.service_vertical || '')}&industry=${encodeURIComponent(client.industry || '')}`} className="block pt-2">
-              <Button className="w-full bg-white text-primary hover:bg-slate-100 font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
+              <Button className="w-full bg-white text-primary hover:bg-muted font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
                 Initialize Architect
               </Button>
             </Link>
@@ -337,7 +337,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
         {/* Main Content */}
         <main className="lg:col-span-8 space-y-8">
           <Tabs defaultValue="history" className="w-full">
-            <TabsList className="bg-transparent h-auto p-0 gap-8 border-b border-slate-200 w-full justify-start rounded-none mb-8">
+            <TabsList className="bg-transparent h-auto p-0 gap-8 border-b border-border w-full justify-start rounded-none mb-8">
               <TabsTrigger value="history" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-xs font-black uppercase tracking-widest px-0 pb-3 transition-all">Production History</TabsTrigger>
               <TabsTrigger value="pipeline" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-xs font-black uppercase tracking-widest px-0 pb-3 transition-all">Sales Pipeline</TabsTrigger>
               <TabsTrigger value="finance" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-xs font-black uppercase tracking-widest px-0 pb-3 transition-all">Financial Ledger</TabsTrigger>
@@ -347,18 +347,18 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               {isProjectsLoading ? (
                 <div className="py-24 flex justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" /></div>
               ) : projectAnalytics.length === 0 ? (
-                <div className="py-32 text-center bg-white rounded-[10px] border-2 border-dashed border-slate-100 px-8">
-                  <div className="h-16 w-16 bg-slate-50 rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
+                <div className="py-32 text-center bg-white rounded-[10px] border-2 border-dashed border-border px-8">
+                  <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
                     <Briefcase className="h-8 w-8" />
                   </div>
-                  <p className="text-sm font-black uppercase tracking-widest text-slate-400">Zero Productions Found</p>
+                  <p className="text-sm font-black uppercase tracking-widest text-muted-foreground">Zero Productions Found</p>
                   <p className="text-xs text-muted-foreground mt-2">Initialize your first workspace to begin tracking.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {projectAnalytics.map((proj) => (
                     <Card key={proj.id} className="border-none shadow-sm hover:shadow-md transition-all rounded-[10px] overflow-hidden group bg-white border border-slate-50 flex flex-col">
-                      <CardHeader className="bg-slate-50/50 pb-6 pt-8 px-8 border-b border-white/50">
+                      <CardHeader className="bg-muted/50 pb-6 pt-8 px-8 border-b border-white/50">
                         <div className="flex justify-between items-start mb-4">
                           <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary bg-white px-3">
                             {proj.status?.replace('_', ' ')}
@@ -371,36 +371,36 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                       </CardHeader>
                       <CardContent className="p-8 space-y-8 flex-1 flex flex-col justify-between">
                         <div className="space-y-4">
-                          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                             <span className="flex items-center gap-2"><TrendingUp className="h-3.5 w-3.5" /> Project Pulse</span>
                             <span className={cn(
                               "px-2 py-0.5 rounded-full",
-                              proj.profit >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                              proj.profit >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-accent/10 text-accent"
                             )}>
                               {proj.margin.toFixed(1)}% Margin
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-slate-50/80 p-4 rounded-[10px] border border-white">
-                              <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider mb-1">Billed</p>
-                              <p className="text-sm font-bold text-slate-800">₹{proj.billed.toLocaleString()}</p>
+                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white">
+                              <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Billed</p>
+                              <p className="text-sm font-bold text-primary">₹{proj.billed.toLocaleString()}</p>
                             </div>
-                            <div className="bg-slate-50/80 p-4 rounded-[10px] border border-white">
-                              <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider mb-1">Burn</p>
-                              <p className="text-sm font-bold text-rose-600">₹{proj.burn.toLocaleString()}</p>
+                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white">
+                              <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Burn</p>
+                              <p className="text-sm font-bold text-accent">₹{proj.burn.toLocaleString()}</p>
                             </div>
                           </div>
                         </div>
                         <div className="pt-6 border-t flex justify-between items-center">
                           <div className="flex -space-x-2">
                             {[1, 2, 3].map(i => (
-                              <div key={i} className="h-7 w-7 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center overflow-hidden shadow-sm">
+                              <div key={i} className="h-7 w-7 rounded-full border-2 border-white bg-muted flex items-center justify-center overflow-hidden shadow-sm">
                                 <Building2 className="h-3.5 w-3.5 opacity-20" />
                               </div>
                             ))}
                           </div>
                           <Link href={`/projects/${proj.id}`}>
-                            <Button variant="ghost" size="sm" className="h-9 rounded-[10px] text-[10px] font-black uppercase tracking-widest gap-2 bg-slate-50 hover:bg-primary hover:text-white transition-all px-5">
+                            <Button variant="ghost" size="sm" className="h-9 rounded-[10px] text-[10px] font-black uppercase tracking-widest gap-2 bg-muted hover:bg-primary hover:text-white transition-all px-5">
                               Open Workspace <ChevronRight className="h-3.5 w-3.5" />
                             </Button>
                           </Link>
@@ -414,11 +414,11 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
             <TabsContent value="pipeline" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {pipelineStats.items.length === 0 ? (
-                <div className="py-32 text-center bg-white rounded-[10px] border-2 border-dashed border-slate-100 px-8">
-                  <div className="h-16 w-16 bg-slate-50 rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
+                <div className="py-32 text-center bg-white rounded-[10px] border-2 border-dashed border-border px-8">
+                  <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
                     <Target className="h-8 w-8" />
                   </div>
-                  <p className="text-sm font-black uppercase tracking-widest text-slate-400">Pipeline Empty</p>
+                  <p className="text-sm font-black uppercase tracking-widest text-muted-foreground">Pipeline Empty</p>
                   <p className="text-xs text-muted-foreground mt-2">Create a new lead to start tracking opportunities for this client.</p>
                   <Button onClick={() => setIsCreateLeadOpen(true)} variant="outline" className="mt-6 rounded-xl font-black text-[10px] uppercase tracking-widest px-8">
                     Create Lead
@@ -430,12 +430,12 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                     const stage = PIPELINE_STAGES.find(s => s.id === lead.stage);
                     return (
                       <Card key={lead.id} className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white border border-slate-50 flex flex-col">
-                        <CardHeader className="bg-indigo-50/30 pb-6 pt-8 px-8">
+                        <CardHeader className="bg-accent/10/30 pb-6 pt-8 px-8">
                           <div className="flex justify-between items-start mb-4">
-                            <Badge className={cn("text-[9px] font-black uppercase tracking-widest border-none px-3", stage?.color || 'bg-slate-100 text-slate-600')}>
+                            <Badge className={cn("text-[9px] font-black uppercase tracking-widest border-none px-3", stage?.color || 'bg-muted text-muted-foreground/80')}>
                               {stage?.name || 'Prospect'}
                             </Badge>
-                            <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">CRM Opportunity</span>
+                            <span className="text-[10px] font-black text-accent bg-accent/10 px-2 py-0.5 rounded-full">CRM Opportunity</span>
                           </div>
                           <Link href={`/crm/${lead.id}`}>
                             <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors cursor-pointer leading-tight">
@@ -445,24 +445,24 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                         </CardHeader>
                         <CardContent className="p-8 space-y-6 flex-1 flex flex-col justify-between">
                           <div className="space-y-4">
-                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                               <span className="flex items-center gap-2"><Clock className="h-3.5 w-3.5" /> Pipeline Status</span>
                               <span>Est. Value</span>
                             </div>
-                            <div className="bg-slate-50/80 p-5 rounded-[10px] border border-white flex justify-between items-center">
+                            <div className="bg-muted/80 p-5 rounded-[10px] border border-white flex justify-between items-center">
                               <div>
-                                <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider mb-1">Current Focus</p>
-                                <p className="text-sm font-bold text-slate-800">{lead.industry || 'Media'}</p>
+                                <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Current Focus</p>
+                                <p className="text-sm font-bold text-primary">{lead.industry || 'Media'}</p>
                               </div>
                               <div className="text-right">
-                                <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider mb-1">Deal Projection</p>
-                                <p className="text-lg font-black text-indigo-600">₹{lead.deal_value?.toLocaleString()}</p>
+                                <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Deal Projection</p>
+                                <p className="text-lg font-black text-accent">₹{lead.deal_value?.toLocaleString()}</p>
                               </div>
                             </div>
                           </div>
                           <div className="pt-6 border-t flex justify-end">
                             <Link href={`/crm/${lead.id}`}>
-                              <Button variant="ghost" size="sm" className="h-9 rounded-[10px] text-[10px] font-black uppercase tracking-widest gap-2 bg-slate-50 hover:bg-primary hover:text-white transition-all px-5">
+                              <Button variant="ghost" size="sm" className="h-9 rounded-[10px] text-[10px] font-black uppercase tracking-widest gap-2 bg-muted hover:bg-primary hover:text-white transition-all px-5">
                                 Manage Pipeline <ArrowRight className="h-3.5 w-3.5" />
                               </Button>
                             </Link>
@@ -478,11 +478,11 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
             <TabsContent value="finance" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="space-y-6">
                 {invoiceStats.pendingCount > 0 && (
-                  <Alert className="bg-rose-50 border-rose-100 rounded-[10px] p-6">
-                    <AlertCircle className="h-5 w-5 text-rose-600" />
+                  <Alert className="bg-accent/10 border-accent/20 rounded-[10px] p-6">
+                    <AlertCircle className="h-5 w-5 text-accent" />
                     <div className="ml-4">
-                      <h4 className="text-sm font-black text-rose-900 uppercase tracking-widest">Attention Required</h4>
-                      <p className="text-xs text-rose-700 mt-1">
+                      <h4 className="text-sm font-black text-accent uppercase tracking-widest">Attention Required</h4>
+                      <p className="text-xs text-accent mt-1">
                         There are <strong>{invoiceStats.pendingCount}</strong> outstanding invoices totaling <strong>₹{invoiceStats.pendingValue.toLocaleString()}</strong> for this client.
                       </p>
                     </div>
@@ -493,7 +493,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                   <CardContent className="p-0">
                     <div className="overflow-x-auto custom-scrollbar">
                       <table className="w-full text-sm">
-                        <thead className="bg-slate-50/50 border-b">
+                        <thead className="bg-muted/50 border-b">
                           <tr>
                             <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Invoice #</th>
                             <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Context Date</th>
@@ -509,12 +509,12 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                             <tr><td colSpan={5} className="px-10 py-24 text-center text-muted-foreground italic text-xs font-bold uppercase tracking-widest opacity-40">No Billing Records Generated.</td></tr>
                           ) : (
                             invoices?.map((inv) => (
-                              <tr key={inv.id} className="hover:bg-slate-50/50 transition-colors group">
+                              <tr key={inv.id} className="hover:bg-muted/50 transition-colors group">
                                 <td className="px-10 py-6 font-mono font-bold text-primary">{inv.invoice_number}</td>
-                                <td className="px-10 py-6 text-slate-500 font-bold text-xs uppercase tracking-tighter">{inv.issue_date}</td>
-                                <td className="px-10 py-6 font-black text-slate-800 text-xs">₹{inv.total?.toLocaleString()}</td>
+                                <td className="px-10 py-6 text-muted-foreground font-bold text-xs uppercase tracking-tighter">{inv.issue_date}</td>
+                                <td className="px-10 py-6 font-black text-primary text-xs">₹{inv.total?.toLocaleString()}</td>
                                 <td className="px-10 py-6">
-                                  <Badge variant={inv.payment_status === 'paid' ? 'default' : 'secondary'} className={cn("text-[9px] font-black uppercase px-3 py-1 border-none", inv.payment_status !== 'paid' && "bg-rose-100 text-rose-600")}>
+                                  <Badge variant={inv.payment_status === 'paid' ? 'default' : 'secondary'} className={cn("text-[9px] font-black uppercase px-3 py-1 border-none", inv.payment_status !== 'paid' && "bg-accent/10 text-accent")}>
                                     {inv.payment_status}
                                   </Badge>
                                 </td>

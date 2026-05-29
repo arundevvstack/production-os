@@ -198,26 +198,26 @@ export default function TalentDashboardPage() {
   const currentChatInquiry = inquiries.find(inq => inq.id === selectedChatId);
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased pb-20 selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased pb-20 selection:bg-destructive selection:text-white">
       
       {/* Platform Header */}
-      <header className="border-b border-slate-200 bg-white/85 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+      <header className="border-b border-border bg-white/85 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="h-10 w-10 bg-red-500/10 rounded-xl flex items-center justify-center font-black text-sm text-red-650 shadow-sm shrink-0">DP</div>
+            <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-red-650 shadow-sm shrink-0">DP</div>
             <div>
-              <span className="font-bold text-base tracking-tight block text-slate-900">Creator Network</span>
-              <span className="text-[9px] font-bold text-red-600 uppercase tracking-widest leading-none">Creator Dashboard</span>
+              <span className="font-bold text-base tracking-tight block text-primary">Creator Network</span>
+              <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Creator Dashboard</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <a href="/creators/public_t1" target="_blank">
-              <Button className="rounded-full h-10 bg-white border border-slate-200 text-slate-800 hover:bg-slate-50 text-xs font-bold gap-1 shadow-sm transition">
+              <Button className="rounded-full h-10 bg-white border border-border text-primary hover:bg-muted text-xs font-bold gap-1 shadow-sm transition">
                 <Eye className="h-4 w-4" /> View Public Page
               </Button>
             </a>
-            <Button onClick={() => window.location.href = "/talent/login"} variant="ghost" className="rounded-full h-10 text-xs font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 shadow-sm bg-white transition gap-1 px-4">
+            <Button onClick={() => window.location.href = "/talent/login"} variant="ghost" className="rounded-full h-10 text-xs font-bold text-muted-foreground hover:text-primary hover:bg-muted border border-border shadow-sm bg-white transition gap-1 px-4">
               <LogOut className="h-4 w-4" /> Sign Out
             </Button>
           </div>
@@ -229,25 +229,25 @@ export default function TalentDashboardPage() {
         
         {/* Left Side Profile Card */}
         <section className="lg:col-span-1 space-y-6">
-          <Card className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+          <Card className="bg-white border border-border rounded-3xl overflow-hidden shadow-sm">
             <CardContent className="p-6 space-y-6">
               
               <div className="flex flex-col items-center text-center space-y-4">
-                <Avatar className="h-24 w-24 border-4 border-white shadow-md ring-4 ring-slate-100">
+                <Avatar className="h-24 w-24 border-4 border-white shadow-md ring-4 ring-border">
                   <AvatarImage src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400&h=500" className="object-cover" />
-                  <AvatarFallback className="bg-slate-100 text-slate-900 font-bold">{profileData.fullName[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-muted text-primary font-bold">{profileData.fullName[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-center gap-1.5">
-                    <h2 className="text-lg font-bold text-slate-900 tracking-tight">{profileData.fullName}</h2>
-                    <Badge className="bg-red-500/10 text-red-650 border-none text-[8px] font-bold uppercase py-0.5 px-2 rounded-full">Premium</Badge>
+                    <h2 className="text-lg font-bold text-primary tracking-tight">{profileData.fullName}</h2>
+                    <Badge className="bg-destructive/10 text-red-650 border-none text-[8px] font-bold uppercase py-0.5 px-2 rounded-full">Premium</Badge>
                   </div>
-                  <span className="text-xs text-red-600 font-bold tracking-widest uppercase">{profileData.category}</span>
+                  <span className="text-xs text-destructive font-bold tracking-widest uppercase">{profileData.category}</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
-                  <MapPin className="h-3.5 w-3.5 text-red-600 animate-pulse" />
+                <div className="flex items-center gap-2 text-xs text-muted-foreground font-bold">
+                  <MapPin className="h-3.5 w-3.5 text-destructive animate-pulse" />
                   <span>{profileData.location}</span>
                 </div>
               </div>
@@ -255,12 +255,12 @@ export default function TalentDashboardPage() {
               {/* Day rate info */}
               <div className="border-t border-b border-slate-150 py-4 space-y-3 text-xs text-slate-650 font-bold">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Day Rate</span>
-                  <strong className="text-slate-950">₹{parseFloat(profileData.dayRate).toLocaleString()}</strong>
+                  <span className="text-muted-foreground">Day Rate</span>
+                  <strong className="text-primary">₹{parseFloat(profileData.dayRate).toLocaleString()}</strong>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Calendar Status</span>
-                  <Badge className={profileData.availability === "Available" ? "bg-emerald-500/10 text-emerald-600 border-none rounded-full" : "bg-amber-500/10 text-amber-600 border-none rounded-full"}>
+                  <span className="text-muted-foreground">Calendar Status</span>
+                  <Badge className={profileData.availability === "Available" ? "bg-emerald-500/10 text-emerald-600 border-none rounded-full" : "bg-accent/10 text-accent border-none rounded-full"}>
                     {profileData.availability}
                   </Badge>
                 </div>
@@ -271,7 +271,7 @@ export default function TalentDashboardPage() {
                   setTempData({ ...profileData });
                   setIsEditOpen(true);
                 }}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow shadow-red-500/10 transition"
+                className="w-full bg-destructive hover:bg-destructive text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow shadow-red-500/10 transition"
               >
                 <Edit3 className="h-4 w-4" /> Edit Profile Details
               </Button>
@@ -280,9 +280,9 @@ export default function TalentDashboardPage() {
           </Card>
 
           {/* Secure Creator Privacy Settings (Phase 5) */}
-          <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <Card className="bg-white border border-border rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-xs uppercase tracking-widest text-slate-800 flex items-center gap-1.5">
+              <h3 className="font-bold text-xs uppercase tracking-widest text-primary flex items-center gap-1.5">
                 <Lock className="h-4 w-4 text-red-650" /> Creator Privacy Settings
               </h3>
               
@@ -293,12 +293,12 @@ export default function TalentDashboardPage() {
                   "Show WhatsApp After Approval",
                   "Hide Personal Contact"
                 ].map(setting => (
-                  <label key={setting} className="flex items-center gap-2 p-2 bg-slate-50 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-100/50 transition">
+                  <label key={setting} className="flex items-center gap-2 p-2 bg-muted border border-border rounded-xl cursor-pointer hover:bg-muted/50 transition">
                     <input 
                       type="checkbox" 
                       checked={privacySettings.includes(setting)}
                       onChange={() => handlePrivacyToggle(setting)}
-                      className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                      className="rounded border-border text-red-650 focus:ring-red-500 h-4 w-4"
                     />
                     {setting}
                   </label>
@@ -312,11 +312,11 @@ export default function TalentDashboardPage() {
         <section className="lg:col-span-2 space-y-8">
           
           {/* SECURE IN-APP CHAT (Phase 4, 7) */}
-          <Card className="bg-white border border-slate-200 shadow-sm rounded-3xl overflow-hidden">
-            <div className="border-b border-slate-200 bg-slate-50/50 p-4 flex items-center justify-between">
+          <Card className="bg-white border border-border shadow-sm rounded-3xl overflow-hidden">
+            <div className="border-b border-border bg-muted/50 p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-4.5 w-4.5 text-red-650" />
-                <h3 className="font-bold text-sm text-slate-900">Client secure chat</h3>
+                <h3 className="font-bold text-sm text-primary">Client secure chat</h3>
               </div>
 
               {/* Chat tab switcher */}
@@ -327,7 +327,7 @@ export default function TalentDashboardPage() {
                     onClick={() => setSelectedChatId(inq.id)}
                     variant="ghost"
                     className={`rounded-full h-8 px-3 text-[10px] font-bold transition ${
-                      selectedChatId === inq.id ? "bg-white border border-slate-200 text-slate-900 shadow-sm" : "text-slate-400"
+                      selectedChatId === inq.id ? "bg-white border border-border text-primary shadow-sm" : "text-muted-foreground"
                     }`}
                   >
                     {inq.client.split(" ")[0]}
@@ -342,8 +342,8 @@ export default function TalentDashboardPage() {
                 
                 {/* Secure chat warning locks */}
                 {currentChatInquiry?.status !== "Approved" && (
-                  <div className="p-3 bg-amber-500/5 border border-amber-500/10 rounded-2xl flex gap-2 text-[10px] text-amber-700 leading-relaxed font-bold">
-                    <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
+                  <div className="p-3 bg-accent/5 border border-accent/10 rounded-2xl flex gap-2 text-[10px] text-accent leading-relaxed font-bold">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-accent mt-0.5" />
                     <div>
                       <span><strong>Secure Notice</strong>: Direct contacts are locked until you accept the collaboration request and the manager approves. Use Platform Chat to coordinate.</span>
                     </div>
@@ -357,14 +357,14 @@ export default function TalentDashboardPage() {
                       msg.sender === "creator" ? "ml-auto items-end" : "mr-auto items-start"
                     }`}
                   >
-                    <span className="text-[8px] text-slate-400 uppercase tracking-widest">
+                    <span className="text-[8px] text-muted-foreground uppercase tracking-widest">
                       {msg.sender === "creator" ? "You" : currentChatInquiry?.client.split(" ")[0]}
                     </span>
                     <div 
-                      className={`p-3.5 rounded-2xl shadow-sm text-slate-800 ${
+                      className={`p-3.5 rounded-2xl shadow-sm text-primary ${
                         msg.sender === "creator" 
                           ? "bg-red-650 text-white rounded-tr-none font-bold" 
-                          : "bg-white border border-slate-200 rounded-tl-none font-bold"
+                          : "bg-white border border-border rounded-tl-none font-bold"
                       }`}
                     >
                       {msg.text}
@@ -374,15 +374,15 @@ export default function TalentDashboardPage() {
               </div>
 
               {/* Chat Input form */}
-              <form onSubmit={handleSendChatMessage} className="p-3 bg-white border-t border-slate-200 flex gap-2">
+              <form onSubmit={handleSendChatMessage} className="p-3 bg-white border-t border-border flex gap-2">
                 <Input 
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   placeholder="Reply securely..."
-                  className="bg-slate-50 border border-slate-200 h-10 text-xs rounded-xl flex-grow text-slate-900 font-bold"
+                  className="bg-muted border border-border h-10 text-xs rounded-xl flex-grow text-primary font-bold"
                 />
 
-                <Button type="submit" className="rounded-xl h-10 bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 shadow-sm">
+                <Button type="submit" className="rounded-xl h-10 bg-primary hover:bg-primary text-white font-bold px-4 shadow-sm">
                   <Send className="h-4 w-4" />
                 </Button>
               </form>
@@ -390,20 +390,20 @@ export default function TalentDashboardPage() {
           </Card>
 
           {/* New Booking Requests */}
-          <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <Card className="bg-white border border-border rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              <h3 className="font-bold text-sm text-primary flex items-center gap-1.5">
                 <MessageCircle className="h-4.5 w-4.5 text-red-650" /> New Booking Requests
               </h3>
 
               <div className="space-y-4">
                 {inquiries.map(inq => (
-                  <div key={inq.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+                  <div key={inq.id} className="p-4 rounded-2xl bg-muted border border-border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <h4 className="font-bold text-xs text-slate-900">{inq.client}</h4>
+                        <h4 className="font-bold text-xs text-primary">{inq.client}</h4>
                         <Badge className={`border-none text-[8px] font-bold rounded-full px-2 py-0.5 ${
-                          inq.status === "Approved" ? "bg-emerald-500/10 text-emerald-605" : "bg-red-500/10 text-red-650"
+                          inq.status === "Approved" ? "bg-emerald-500/10 text-emerald-605" : "bg-destructive/10 text-red-650"
                         }`}>{inq.status}</Badge>
                       </div>
                       <p className="text-[10px] text-slate-550 font-bold mt-1.5">
@@ -412,8 +412,8 @@ export default function TalentDashboardPage() {
                     </div>
 
                     <div className="text-right flex flex-col items-end gap-2 shrink-0">
-                      <div className="text-[10px] text-slate-500 font-bold">
-                        Proposed Budget: <strong className="text-slate-950 font-black">{inq.budget}</strong>
+                      <div className="text-[10px] text-muted-foreground font-bold">
+                        Proposed Budget: <strong className="text-primary font-black">{inq.budget}</strong>
                       </div>
                       
                       {inq.status !== "Approved" ? (
@@ -421,13 +421,13 @@ export default function TalentDashboardPage() {
                           <Button 
                             onClick={() => handleInquiryReject(inq.id, inq.client)}
                             variant="ghost"
-                            className="rounded-full h-8 px-3.5 text-[10px] font-bold text-slate-500 hover:text-slate-950 border border-slate-200 bg-white"
+                            className="rounded-full h-8 px-3.5 text-[10px] font-bold text-muted-foreground hover:text-primary border border-border bg-white"
                           >
                             Decline
                           </Button>
                           <Button 
                             onClick={() => handleInquiryAccept(inq.id, inq.client)}
-                            className="rounded-full h-8 px-4 text-[10px] font-bold bg-red-600 hover:bg-red-700 text-white shadow shadow-red-500/10 transition"
+                            className="rounded-full h-8 px-4 text-[10px] font-bold bg-destructive hover:bg-destructive text-white shadow shadow-red-500/10 transition"
                           >
                             Accept Offer
                           </Button>
@@ -446,21 +446,21 @@ export default function TalentDashboardPage() {
           </Card>
 
           {/* Confirmed Calendar Bookings */}
-          <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <Card className="bg-white border border-border rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              <h3 className="font-bold text-sm text-primary flex items-center gap-1.5">
                 <CalendarIcon className="h-4.5 w-4.5 text-red-650 animate-pulse" /> Confirmed Shoot Dates
               </h3>
               
               {bookings.map(bk => (
-                <div key={bk.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4 shadow-sm">
+                <div key={bk.id} className="p-4 rounded-2xl bg-muted border border-border flex items-center justify-between gap-4 shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 bg-red-500/10 rounded-xl flex items-center justify-center text-red-600 shrink-0">
+                    <div className="h-9 w-9 bg-destructive/10 rounded-xl flex items-center justify-center text-destructive shrink-0">
                       <Film className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-xs text-slate-900">{bk.project}</h4>
-                      <p className="text-[10px] text-slate-500 font-bold mt-1">Role: {bk.role} | Shoot Dates: {bk.shootDates}</p>
+                      <h4 className="font-bold text-xs text-primary">{bk.project}</h4>
+                      <p className="text-[10px] text-muted-foreground font-bold mt-1">Role: {bk.role} | Shoot Dates: {bk.shootDates}</p>
                     </div>
                   </div>
                   <Badge className="bg-emerald-500/10 text-emerald-600 border-none text-[9px] font-bold rounded-full px-2.5 py-0.5">{bk.status}</Badge>
@@ -473,18 +473,18 @@ export default function TalentDashboardPage() {
 
       </main>
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="bg-white text-[#1d1d1f] border-slate-200 rounded-[32px] p-6 max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl">
+        <DialogContent className="bg-white text-[#1d1d1f] border-border rounded-[32px] p-6 max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl">
           <DialogHeader className="space-y-1">
-            <DialogTitle className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <DialogTitle className="text-lg font-black text-primary tracking-tight flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-red-650 animate-pulse shrink-0" /> Edit Talent Profile Details
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs font-bold leading-normal">
+            <DialogDescription className="text-muted-foreground text-xs font-bold leading-normal">
               Manage your day rates, availability status, casting requirements, measurements, and showreels.
             </DialogDescription>
           </DialogHeader>
 
           {/* Top Sleek Clickable Stepper Progress Menu */}
-          <div className="mt-4 mb-6 bg-slate-50 p-2 rounded-2xl border border-slate-100 flex items-center justify-between gap-1 shadow-inner">
+          <div className="mt-4 mb-6 bg-muted p-2 rounded-2xl border border-border flex items-center justify-between gap-1 shadow-inner">
             {[
               { id: 1, label: "Identity", desc: "Basic Bio" },
               { id: 2, label: "Rates", desc: "Day Rate" },
@@ -501,7 +501,7 @@ export default function TalentDashboardPage() {
                   onClick={() => setWizardStep(step.id)}
                   className={`flex flex-col items-center flex-1 py-2 rounded-xl transition-all duration-300 outline-none ${
                     isCurrent 
-                      ? 'bg-white shadow-sm border border-slate-200' 
+                      ? 'bg-white shadow-sm border border-border' 
                       : 'border border-transparent hover:bg-slate-150/40'
                   }`}
                 >
@@ -511,12 +511,12 @@ export default function TalentDashboardPage() {
                         ? 'bg-red-650 text-white shadow-md shadow-red-500/20' 
                         : isPassed 
                           ? 'bg-emerald-500 text-white font-bold' 
-                          : 'bg-slate-200 text-slate-500'
+                          : 'bg-secondary text-muted-foreground'
                     }`}>
                       {isPassed ? "✓" : step.id}
                     </span>
                     <span className={`text-[9px] font-extrabold uppercase tracking-widest mt-1 hidden md:inline transition-colors duration-200 ${
-                      isCurrent ? 'text-slate-900' : 'text-slate-400'
+                      isCurrent ? 'text-primary' : 'text-muted-foreground'
                     }`}>
                       {step.label}
                     </span>
@@ -531,31 +531,31 @@ export default function TalentDashboardPage() {
             {/* Step 1: Basic Profile */}
             {wizardStep === 1 && (
               <div className="space-y-4 animate-fade-in">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                  <div className="h-6 w-6 rounded-lg bg-red-500/10 flex items-center justify-center text-red-600 shrink-0">
+                <div className="flex items-center gap-2 border-b border-border pb-2">
+                  <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <Edit3 className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">Step 1: Stage Identity & Location</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 1: Stage Identity & Location</h4>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Stage Name</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Stage Name</label>
                     <Input 
                       type="text" 
                       value={tempData.stageName}
                       onChange={(e) => setTempData({ ...tempData, stageName: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Full Name</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Full Name</label>
                     <Input 
                       type="text" 
                       value={tempData.fullName}
                       onChange={(e) => setTempData({ ...tempData, fullName: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
                       required
                     />
                   </div>
@@ -563,45 +563,45 @@ export default function TalentDashboardPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Category</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Category</label>
                     <Input 
                       type="text" 
                       value={tempData.category}
                       onChange={(e) => setTempData({ ...tempData, category: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Location</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Location</label>
                     <Input 
                       type="text" 
                       value={tempData.location}
                       onChange={(e) => setTempData({ ...tempData, location: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Bio Description</label>
+                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Bio Description</label>
                   <textarea 
                     value={tempData.bio}
                     onChange={(e) => setTempData({ ...tempData, bio: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-20 w-full p-3 outline-none font-bold focus:bg-white transition-all duration-200 shadow-inner"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-20 w-full p-3 outline-none font-bold focus:bg-white transition-all duration-200 shadow-inner"
                     placeholder="Describe your artistic persona and background..."
                     required
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Languages Spoken (comma-separated)</label>
+                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Languages Spoken (comma-separated)</label>
                   <Input 
                     type="text" 
                     value={tempData.languages}
                     onChange={(e) => setTempData({ ...tempData, languages: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold focus:bg-white transition-all duration-200"
                     required
                   />
                 </div>
@@ -611,33 +611,33 @@ export default function TalentDashboardPage() {
             {/* Step 2: Casting & Rates */}
             {wizardStep === 2 && (
               <div className="space-y-4 animate-fade-in">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                  <div className="h-6 w-6 rounded-lg bg-red-500/10 flex items-center justify-center text-red-600 shrink-0">
+                <div className="flex items-center gap-2 border-b border-border pb-2">
+                  <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <DollarSign className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">Step 2: Casting Day Rate & Reach</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 2: Casting Day Rate & Reach</h4>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Casting Day Rate</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Casting Day Rate</label>
                     <div className="relative flex items-center">
-                      <span className="absolute left-3 text-slate-400 font-extrabold text-xs">₹</span>
+                      <span className="absolute left-3 text-muted-foreground font-extrabold text-xs">₹</span>
                       <Input 
                         type="number" 
                         value={tempData.dayRate}
                         onChange={(e) => setTempData({ ...tempData, dayRate: e.target.value })}
-                        className="bg-slate-50 border border-slate-200 text-slate-855 rounded-xl text-xs h-10 pl-7 font-black tracking-tight focus:bg-white transition-all duration-200"
+                        className="bg-muted border border-border text-slate-855 rounded-xl text-xs h-10 pl-7 font-black tracking-tight focus:bg-white transition-all duration-200"
                         required
                       />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Calendar Availability</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Calendar Availability</label>
                     <select 
                       value={tempData.availability}
                       onChange={(e) => setTempData({ ...tempData, availability: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs h-10 px-3 w-full outline-none font-black tracking-wide focus:bg-white transition-all duration-200"
+                      className="bg-muted border border-border text-primary/80 rounded-xl text-xs h-10 px-3 w-full outline-none font-black tracking-wide focus:bg-white transition-all duration-200"
                     >
                       <option value="Available">🟢 Available (Accepting Proposals)</option>
                       <option value="Busy">🟡 Busy (Next 14 Days Booked)</option>
@@ -648,25 +648,25 @@ export default function TalentDashboardPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Reach / Followers</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Reach / Followers</label>
                     <div className="relative flex items-center">
-                      <span className="absolute left-3 text-slate-400 font-extrabold text-[10px]">✨</span>
+                      <span className="absolute left-3 text-muted-foreground font-extrabold text-[10px]">✨</span>
                       <Input 
                         type="number" 
                         value={tempData.reach}
                         onChange={(e) => setTempData({ ...tempData, reach: e.target.value })}
-                        className="bg-slate-50 border border-slate-200 text-slate-855 rounded-xl text-xs h-10 pl-7 font-black tracking-tight focus:bg-white transition-all duration-200"
+                        className="bg-muted border border-border text-slate-855 rounded-xl text-xs h-10 pl-7 font-black tracking-tight focus:bg-white transition-all duration-200"
                         required
                       />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Engagement Rate</label>
+                    <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Engagement Rate</label>
                     <Input 
                       type="text" 
                       value={tempData.engagementRate}
                       onChange={(e) => setTempData({ ...tempData, engagementRate: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-855 rounded-xl text-xs h-10 font-black tracking-tight focus:bg-white transition-all duration-200"
+                      className="bg-muted border border-border text-slate-855 rounded-xl text-xs h-10 font-black tracking-tight focus:bg-white transition-all duration-200"
                       placeholder="e.g. 8.2%"
                       required
                     />
@@ -678,11 +678,11 @@ export default function TalentDashboardPage() {
             {/* Step 3: Measurements */}
             {wizardStep === 3 && (
               <div className="space-y-4 animate-fade-in">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                  <div className="h-6 w-6 rounded-lg bg-red-500/10 flex items-center justify-center text-red-600 shrink-0">
+                <div className="flex items-center gap-2 border-b border-border pb-2">
+                  <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <Award className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">Step 3: Physical Measurements</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 3: Physical Measurements</h4>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-3">
@@ -692,7 +692,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.height || ""}
                       onChange={(e) => setTempData({ ...tempData, height: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. 185 cm"
                     />
                   </div>
@@ -702,7 +702,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.weight || ""}
                       onChange={(e) => setTempData({ ...tempData, weight: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. 78 kg"
                     />
                   </div>
@@ -712,7 +712,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.chest || ""}
                       onChange={(e) => setTempData({ ...tempData, chest: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. 40 in"
                     />
                   </div>
@@ -725,7 +725,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.waist || ""}
                       onChange={(e) => setTempData({ ...tempData, waist: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. 32 in"
                     />
                   </div>
@@ -735,7 +735,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.hip || ""}
                       onChange={(e) => setTempData({ ...tempData, hip: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. 38 in"
                     />
                   </div>
@@ -745,7 +745,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.shoeSize || ""}
                       onChange={(e) => setTempData({ ...tempData, shoeSize: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. 10 US"
                     />
                   </div>
@@ -758,7 +758,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.hairColor || ""}
                       onChange={(e) => setTempData({ ...tempData, hairColor: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. Black"
                     />
                   </div>
@@ -768,7 +768,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.skinTone || ""}
                       onChange={(e) => setTempData({ ...tempData, skinTone: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. Wheatish"
                     />
                   </div>
@@ -778,7 +778,7 @@ export default function TalentDashboardPage() {
                       type="text" 
                       value={tempData.tattoos || ""}
                       onChange={(e) => setTempData({ ...tempData, tattoos: e.target.value })}
-                      className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
+                      className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-9 font-bold focus:bg-white transition-all duration-200 text-center"
                       placeholder="e.g. None"
                     />
                   </div>
@@ -788,11 +788,11 @@ export default function TalentDashboardPage() {
             {/* Step 4: Campaign Preferences */}
             {wizardStep === 4 && (
               <div className="space-y-4 animate-fade-in">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                  <div className="h-6 w-6 rounded-lg bg-red-500/10 flex items-center justify-center text-red-600 shrink-0">
+                <div className="flex items-center gap-2 border-b border-border pb-2">
+                  <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <AlertCircle className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">Step 4: Casting Brand Preferences</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 4: Casting Brand Preferences</h4>
                 </div>
                 
                 <div className="space-y-4">
@@ -803,7 +803,7 @@ export default function TalentDashboardPage() {
                         <span className="text-xs text-emerald-600">👍</span>
                         <label className="text-[10px] font-black text-emerald-700 uppercase tracking-wider">Comfortable Campaigns</label>
                       </div>
-                      <span className="text-[8px] font-extrabold text-slate-400 uppercase tracking-wider">Click suggestions to add</span>
+                      <span className="text-[8px] font-extrabold text-muted-foreground uppercase tracking-wider">Click suggestions to add</span>
                     </div>
                     <textarea 
                       value={tempData.comfortable ? (Array.isArray(tempData.comfortable) ? tempData.comfortable.join(", ") : tempData.comfortable) : ""}
@@ -846,7 +846,7 @@ export default function TalentDashboardPage() {
                             className={`text-[9px] font-black px-2.5 py-0.5 rounded-full border transition-all duration-200 ${
                               isSelected
                                 ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm shadow-emerald-500/10'
-                                : 'bg-white border-slate-200 hover:border-emerald-300 text-slate-600 hover:bg-emerald-50/50'
+                                : 'bg-white border-border hover:border-emerald-300 text-muted-foreground/80 hover:bg-emerald-50/50'
                             }`}
                           >
                             {isSelected ? `✓ ${sugg}` : `+ ${sugg}`}
@@ -857,13 +857,13 @@ export default function TalentDashboardPage() {
                   </div>
 
                   {/* Uncomfortable Campaigns Card */}
-                  <div className="p-4 bg-red-50/50 rounded-2xl border border-red-100 space-y-2">
+                  <div className="p-4 bg-destructive/10/50 rounded-2xl border border-red-100 space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-red-600">⚠️</span>
-                        <label className="text-[10px] font-black text-red-700 uppercase tracking-wider">Uncomfortable Campaigns</label>
+                        <span className="text-xs text-destructive">⚠️</span>
+                        <label className="text-[10px] font-black text-destructive uppercase tracking-wider">Uncomfortable Campaigns</label>
                       </div>
-                      <span className="text-[8px] font-extrabold text-slate-400 uppercase tracking-wider">Click suggestions to add</span>
+                      <span className="text-[8px] font-extrabold text-muted-foreground uppercase tracking-wider">Click suggestions to add</span>
                     </div>
                     <textarea 
                       value={tempData.uncomfortable ? (Array.isArray(tempData.uncomfortable) ? tempData.uncomfortable.join(", ") : tempData.uncomfortable) : ""}
@@ -905,7 +905,7 @@ export default function TalentDashboardPage() {
                             className={`text-[9px] font-black px-2.5 py-0.5 rounded-full border transition-all duration-200 ${
                               isSelected
                                 ? 'bg-red-650 border-red-650 text-white shadow-sm shadow-red-500/10'
-                                : 'bg-white border-slate-200 hover:border-red-300 text-slate-650 hover:bg-red-50/50'
+                                : 'bg-white border-border hover:border-red-300 text-slate-650 hover:bg-destructive/10/50'
                             }`}
                           >
                             {isSelected ? `✓ ${sugg}` : `+ ${sugg}`}
@@ -921,65 +921,65 @@ export default function TalentDashboardPage() {
             {/* Step 5: Media & Social Links */}
             {wizardStep === 5 && (
               <div className="space-y-4 animate-fade-in max-h-[50vh] overflow-y-auto pr-1">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                  <div className="h-6 w-6 rounded-lg bg-red-500/10 flex items-center justify-center text-red-600 shrink-0">
+                <div className="flex items-center gap-2 border-b border-border pb-2">
+                  <div className="h-6 w-6 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive shrink-0">
                     <Film className="h-3.5 w-3.5" />
                   </div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">Step 5: Media & Connected Channels</h4>
+                  <h4 className="text-xs font-black uppercase tracking-wider text-primary">Step 5: Media & Connected Channels</h4>
                 </div>
                 
                 {/* Social media links editing */}
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                  <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest block">Connected Social Channels</span>
+                <div className="p-4 bg-muted rounded-2xl border border-border space-y-3">
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest block">Connected Social Channels</span>
                   
                   <div className="space-y-2.5">
                     <div className="space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-black tracking-widest block">Instagram Profile Link</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-black tracking-widest block">Instagram Profile Link</label>
                       <div className="relative flex items-center">
                         <div className="absolute left-3 flex items-center gap-1.5 pointer-events-none">
-                          <Instagram className="h-3.5 w-3.5 text-pink-600" />
+                          <Instagram className="h-3.5 w-3.5 text-accent" />
                         </div>
                         <Input 
                           type="text" 
                           value={tempData.instagram || ""}
                           onChange={(e) => setTempData({ ...tempData, instagram: e.target.value })}
-                          className="bg-white border-slate-200 text-slate-850 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
+                          className="bg-white border-border text-slate-850 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
                           placeholder="https://instagram.com/username"
                         />
                       </div>
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-black tracking-widest block">YouTube Channel Link</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-black tracking-widest block">YouTube Channel Link</label>
                       <div className="relative flex items-center">
                         <div className="absolute left-3 flex items-center gap-1.5 pointer-events-none">
-                          <Youtube className="h-3.5 w-3.5 text-red-600" />
+                          <Youtube className="h-3.5 w-3.5 text-destructive" />
                         </div>
                         <Input 
                           type="text" 
                           value={tempData.youtube || ""}
                           onChange={(e) => setTempData({ ...tempData, youtube: e.target.value })}
-                          className="bg-white border-slate-200 text-slate-850 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
+                          className="bg-white border-border text-slate-850 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
                           placeholder="https://youtube.com/channel"
                         />
                       </div>
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-black tracking-widest block">LinkedIn Profile Link</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-black tracking-widest block">LinkedIn Profile Link</label>
                       <div className="relative flex items-center">
                         <div className="absolute left-3 flex items-center gap-1.5 pointer-events-none">
-                          <Sparkle className="h-3.5 w-3.5 text-blue-600" />
+                          <Sparkle className="h-3.5 w-3.5 text-accent" />
                         </div>
                         <Input 
                           type="text" 
                           value={tempData.linkedin || ""}
                           onChange={(e) => setTempData({ ...tempData, linkedin: e.target.value })}
-                          className="bg-white border-slate-200 text-slate-855 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
+                          className="bg-white border-border text-slate-855 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
                           placeholder="https://linkedin.com/in/username"
                         />
                       </div>
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-black tracking-widest block">Facebook Profile Link</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-black tracking-widest block">Facebook Profile Link</label>
                       <div className="relative flex items-center">
                         <div className="absolute left-3 flex items-center gap-1.5 pointer-events-none">
                           <Facebook className="h-3.5 w-3.5 text-[#1877F2]" />
@@ -988,7 +988,7 @@ export default function TalentDashboardPage() {
                           type="text" 
                           value={tempData.facebook || ""}
                           onChange={(e) => setTempData({ ...tempData, facebook: e.target.value })}
-                          className="bg-white border-slate-200 text-slate-855 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
+                          className="bg-white border-border text-slate-855 text-xs h-9 pl-9 rounded-xl font-bold focus:bg-white transition-all"
                           placeholder="https://facebook.com/username"
                         />
                       </div>
@@ -997,92 +997,92 @@ export default function TalentDashboardPage() {
                 </div>
 
                 {/* Showreels */}
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                  <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest block">Showreel Video 1</span>
+                <div className="p-4 bg-muted rounded-2xl border border-border space-y-3">
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest block">Showreel Video 1</span>
                   <div className="grid grid-cols-3 gap-2">
                     <div className="col-span-2 space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-bold block">Title</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-bold block">Title</label>
                       <Input 
                         type="text" 
                         value={tempData.reel1Title || ""}
                         onChange={(e) => setTempData({ ...tempData, reel1Title: e.target.value })}
-                        className="bg-white border-slate-200 text-slate-850 text-xs h-9 rounded-lg font-bold"
+                        className="bg-white border-border text-slate-850 text-xs h-9 rounded-lg font-bold"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-bold block">Duration</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-bold block">Duration</label>
                       <Input 
                         type="text" 
                         value={tempData.reel1Duration || ""}
                         onChange={(e) => setTempData({ ...tempData, reel1Duration: e.target.value })}
-                        className="bg-white border-slate-200 text-slate-850 text-xs h-9 rounded-lg font-bold"
+                        className="bg-white border-border text-slate-850 text-xs h-9 rounded-lg font-bold"
                       />
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[8px] text-slate-400 uppercase font-bold block">Video MP4 URL</label>
+                    <label className="text-[8px] text-muted-foreground uppercase font-bold block">Video MP4 URL</label>
                     <Input 
                       type="text" 
                       value={tempData.reel1Url || ""}
                       onChange={(e) => setTempData({ ...tempData, reel1Url: e.target.value })}
-                      className="bg-white border-slate-200 text-slate-850 text-xs h-9 rounded-lg font-bold"
+                      className="bg-white border-border text-slate-850 text-xs h-9 rounded-lg font-bold"
                     />
                   </div>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                  <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest block">Showreel Video 2</span>
+                <div className="p-4 bg-muted rounded-2xl border border-border space-y-3">
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest block">Showreel Video 2</span>
                   <div className="grid grid-cols-3 gap-2">
                     <div className="col-span-2 space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-bold block">Title</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-bold block">Title</label>
                       <Input 
                         type="text" 
                         value={tempData.reel2Title || ""}
                         onChange={(e) => setTempData({ ...tempData, reel2Title: e.target.value })}
-                        className="bg-white border-slate-200 text-slate-850 text-xs h-9 rounded-lg font-bold"
+                        className="bg-white border-border text-slate-850 text-xs h-9 rounded-lg font-bold"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[8px] text-slate-400 uppercase font-bold block">Duration</label>
+                      <label className="text-[8px] text-muted-foreground uppercase font-bold block">Duration</label>
                       <Input 
                         type="text" 
                         value={tempData.reel2Duration || ""}
                         onChange={(e) => setTempData({ ...tempData, reel2Duration: e.target.value })}
-                        className="bg-white border-slate-200 text-slate-850 text-xs h-9 rounded-lg font-bold"
+                        className="bg-white border-border text-slate-850 text-xs h-9 rounded-lg font-bold"
                       />
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[8px] text-slate-400 uppercase font-bold block">Video MP4 URL</label>
+                    <label className="text-[8px] text-muted-foreground uppercase font-bold block">Video MP4 URL</label>
                     <Input 
                       type="text" 
                       value={tempData.reel2Url || ""}
                       onChange={(e) => setTempData({ ...tempData, reel2Url: e.target.value })}
-                      className="bg-white border-slate-200 text-slate-850 text-xs h-9 rounded-lg font-bold"
+                      className="bg-white border-border text-slate-850 text-xs h-9 rounded-lg font-bold"
                     />
                   </div>
                 </div>
 
                 {/* Lookbook photo urls */}
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Lookbook Photo URLs (comma separated)</label>
+                  <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block">Lookbook Photo URLs (comma separated)</label>
                   <textarea 
                     value={tempData.galleryUrls || ""}
                     onChange={(e) => setTempData({ ...tempData, galleryUrls: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-20 w-full p-2.5 outline-none font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-20 w-full p-2.5 outline-none font-bold"
                   />
                 </div>
               </div>
             )}
 
-            <DialogFooter className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+            <DialogFooter className="pt-4 border-t border-border flex items-center justify-between gap-2">
               <div className="flex gap-2">
                 {wizardStep > 1 && (
                   <Button 
                     type="button" 
                     variant="ghost" 
                     onClick={() => setWizardStep(prev => prev - 1)} 
-                    className="rounded-full border border-slate-200 hover:bg-slate-50 text-xs font-black bg-white text-slate-700 h-10 px-4 transition shrink-0"
+                    className="rounded-full border border-border hover:bg-muted text-xs font-black bg-white text-primary/80 h-10 px-4 transition shrink-0"
                   >
                     Back
                   </Button>
@@ -1091,7 +1091,7 @@ export default function TalentDashboardPage() {
                   type="button" 
                   variant="ghost" 
                   onClick={() => setIsEditOpen(false)} 
-                  className="rounded-full border border-slate-200 hover:bg-slate-50 text-xs font-black bg-white text-slate-700 h-10 px-4 transition shrink-0"
+                  className="rounded-full border border-border hover:bg-muted text-xs font-black bg-white text-primary/80 h-10 px-4 transition shrink-0"
                 >
                   Cancel
                 </Button>
@@ -1101,14 +1101,14 @@ export default function TalentDashboardPage() {
                 <Button 
                   type="button" 
                   onClick={() => setWizardStep(prev => prev + 1)}
-                  className="bg-red-650 hover:bg-red-700 text-white rounded-full text-xs font-black h-10 px-5 shadow shadow-red-500/20 transition-all duration-300"
+                  className="bg-red-650 hover:bg-destructive text-white rounded-full text-xs font-black h-10 px-5 shadow shadow-red-500/20 transition-all duration-300"
                 >
                   Next Step
                 </Button>
               ) : (
                 <Button 
                   type="submit" 
-                  className="bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-black h-10 px-5 shadow shadow-red-500/20 transition-all duration-300"
+                  className="bg-destructive hover:bg-destructive text-white rounded-full text-xs font-black h-10 px-5 shadow shadow-red-500/20 transition-all duration-300"
                 >
                   Save Profile Changes
                 </Button>

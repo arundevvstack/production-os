@@ -33,13 +33,13 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CONTENT_VERTICALS = [
-  { id: 'advertising', name: 'Advertising & Brand Films', icon: Megaphone, color: 'bg-rose-500', 
+  { id: 'advertising', name: 'Advertising & Brand Films', icon: Megaphone, color: 'bg-accent', 
     services: ['TV Commercials', 'Digital Ads', 'Brand Story Films', 'Product Launch Ads', 'Festival Campaign Ads', 'Luxury Brand Commercials'] 
   },
-  { id: 'ecommerce', name: 'Product & E-commerce', icon: Package, color: 'bg-blue-500', 
+  { id: 'ecommerce', name: 'Product & E-commerce', icon: Package, color: 'bg-accent', 
     services: ['Product Commercial Videos', 'Amazon Product Videos', 'Flipkart Listing Videos', 'Product Demo Videos', 'Unboxing Videos', 'Product Photography'] 
   },
-  { id: 'social', name: 'Social Media Content', icon: Smartphone, color: 'bg-purple-500', 
+  { id: 'social', name: 'Social Media Content', icon: Smartphone, color: 'bg-accent', 
     services: ['Instagram Reels', 'YouTube Shorts', 'Influencer Content', 'Social Media Ad Creatives', 'Monthly Content Packages'] 
   },
   { id: 'corporate', name: 'Corporate Videos', icon: Building2, color: 'bg-slate-700', 
@@ -48,28 +48,28 @@ const CONTENT_VERTICALS = [
   { id: 'realestate', name: 'Real Estate Videos', icon: Home, color: 'bg-emerald-600', 
     services: ['Property Walkthrough Video', 'Luxury Property Ads', 'Drone Property Tour', 'Architecture Showcase', 'Construction Progress Video'] 
   },
-  { id: 'events', name: 'Event Videos', icon: Ticket, color: 'bg-amber-500', 
+  { id: 'events', name: 'Event Videos', icon: Ticket, color: 'bg-accent', 
     services: ['Event Coverage', 'Conference Highlight Video', 'Event Aftermovie', 'Product Launch Event Video', 'Brand Activation Coverage'] 
   },
-  { id: 'startups', name: 'Startup & App Videos', icon: Rocket, color: 'bg-cyan-500', 
+  { id: 'startups', name: 'Startup & App Videos', icon: Rocket, color: 'bg-accent', 
     services: ['App Explainer Video', 'SaaS Product Demo', 'Startup Pitch Video', 'UI Demo Video', 'Animated Explainer Video'] 
   },
-  { id: 'entertainment', name: 'Entertainment Production', icon: Film, color: 'bg-indigo-600', 
+  { id: 'entertainment', name: 'Entertainment Production', icon: Film, color: 'bg-accent', 
     services: ['Music Video', 'Short Film', 'Fashion Film', 'Web Series', 'Creative Campaign Video'] 
   },
-  { id: 'podcasts', name: 'Podcast & Interviews', icon: Mic, color: 'bg-orange-500', 
+  { id: 'podcasts', name: 'Podcast & Interviews', icon: Mic, color: 'bg-accent', 
     services: ['Video Podcast Production', 'Interview Video', 'Customer Testimonial Video', 'Founder Story Video'] 
   },
   { id: 'educational', name: 'Educational Content', icon: BookOpen, color: 'bg-lime-600', 
     services: ['Online Course Video', 'Training Modules', 'Educational Explainer Video', 'Coaching Center Promo'] 
   },
-  { id: 'animation', name: 'Animation & Motion', icon: Play, color: 'bg-red-500', 
+  { id: 'animation', name: 'Animation & Motion', icon: Play, color: 'bg-destructive', 
     services: ['Motion Graphics Video', '2D Animation', '3D Animation', 'Infographic Animation'] 
   },
   { id: 'post', name: 'Post Production', icon: Scissors, color: 'bg-slate-500', 
     services: ['Video Editing', 'Color Grading', 'Sound Design', 'Visual Effects (VFX)', 'Subtitles'] 
   },
-  { id: 'ai', name: 'AI Generated Content', icon: Sparkles, color: 'bg-fuchsia-500', 
+  { id: 'ai', name: 'AI Generated Content', icon: Sparkles, color: 'bg-accent', 
     services: ['AI Commercials', 'AI Product Ads', 'AI Fashion Campaigns', 'AI Cinematic Videos', 'AI Social Media Ads'] 
   },
 ];
@@ -142,7 +142,7 @@ export default function ServiceBuilderPage() {
                     "cursor-pointer transition-all duration-300 border-2 rounded-[10px] group relative overflow-hidden",
                     selectedVerticalId === vertical.id 
                       ? "border-primary shadow-lg ring-4 ring-primary/5" 
-                      : "border-transparent hover:border-slate-200 hover:shadow-md bg-white"
+                      : "border-transparent hover:border-border hover:shadow-md bg-white"
                   )}
                   onClick={() => setSelectedVerticalId(vertical.id)}
                 >
@@ -183,7 +183,7 @@ export default function ServiceBuilderPage() {
                             "flex items-center gap-4 p-4 rounded-[10px] border transition-all cursor-pointer group",
                             isSelected 
                               ? "bg-primary/5 border-primary/20 shadow-sm" 
-                              : "border-slate-50 hover:border-slate-200 hover:bg-slate-50/50"
+                              : "border-slate-50 hover:border-border hover:bg-muted/50"
                           )}
                           onClick={() => toggleService(activeVertical.id, service)}
                         >
@@ -194,7 +194,7 @@ export default function ServiceBuilderPage() {
                           <div className="flex-1">
                             <p className={cn(
                               "text-xs font-bold transition-colors",
-                              isSelected ? "text-primary" : "text-slate-600 group-hover:text-slate-900"
+                              isSelected ? "text-primary" : "text-muted-foreground/80 group-hover:text-primary"
                             )}>
                               {service}
                             </p>
@@ -209,7 +209,7 @@ export default function ServiceBuilderPage() {
             </section>
           ) : (
             <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed rounded-[10px] text-muted-foreground bg-white/50">
-              <div className="h-16 w-16 bg-slate-100 rounded-[10px] flex items-center justify-center mb-4">
+              <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mb-4">
                 <Info className="h-8 w-8 opacity-20" />
               </div>
               <p className="text-sm font-bold uppercase tracking-widest opacity-40">Awaiting Vertical Selection</p>
@@ -219,7 +219,7 @@ export default function ServiceBuilderPage() {
 
         {/* Right Column: Brief Summary */}
         <aside className="lg:col-span-4 lg:sticky lg:top-8 space-y-6">
-          <Card className="border-none shadow-xl rounded-[10px] bg-slate-900 text-white overflow-hidden">
+          <Card className="border-none shadow-xl rounded-[10px] bg-primary text-white overflow-hidden">
             <CardHeader className="bg-white/5 p-8 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-accent rounded-xl flex items-center justify-center shadow-lg shadow-accent/20">
@@ -227,7 +227,7 @@ export default function ServiceBuilderPage() {
                 </div>
                 <div>
                   <CardTitle className="text-lg">Project Brief Summary</CardTitle>
-                  <CardDescription className="text-slate-400 text-xs uppercase font-black tracking-widest">Scope Synthesis</CardDescription>
+                  <CardDescription className="text-muted-foreground text-xs uppercase font-black tracking-widest">Scope Synthesis</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -246,7 +246,7 @@ export default function ServiceBuilderPage() {
                         <div key={verticalId} className="space-y-4">
                           <div className="flex items-center gap-2">
                             <div className={cn("h-6 w-1 rounded-full", vertical?.color)} />
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{vertical?.name}</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{vertical?.name}</h4>
                           </div>
                           <div className="space-y-2">
                             {services.map(s => (
@@ -255,7 +255,7 @@ export default function ServiceBuilderPage() {
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
-                                  className="h-6 w-6 rounded-full text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  className="h-6 w-6 rounded-full text-muted-foreground hover:text-accent hover:bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity"
                                   onClick={() => toggleService(verticalId, s)}
                                 >
                                   <Plus className="h-3 w-3 rotate-45" />
@@ -272,11 +272,11 @@ export default function ServiceBuilderPage() {
 
               <div className="p-8 border-t border-white/10 bg-white/5 backdrop-blur-md">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Deliverables Count</span>
+                  <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Deliverables Count</span>
                   <span className="text-xl font-black text-accent">{totalSelectedCount}</span>
                 </div>
                 <Button 
-                  className="w-full h-14 rounded-[10px] bg-white text-slate-900 hover:bg-slate-100 font-black uppercase text-xs tracking-widest gap-3 shadow-xl"
+                  className="w-full h-14 rounded-[10px] bg-white text-primary hover:bg-muted font-black uppercase text-xs tracking-widest gap-3 shadow-xl"
                   onClick={handleLaunchProject}
                 >
                   Confirm Brief & Launch <ChevronRight className="h-4 w-4" />
@@ -285,13 +285,13 @@ export default function ServiceBuilderPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-soft rounded-[10px] bg-indigo-50 border border-indigo-100 p-8">
+          <Card className="border-none shadow-soft rounded-[10px] bg-accent/10 border border-accent/20 p-8">
             <CardContent className="p-0 space-y-4">
-              <div className="flex items-center gap-3 text-indigo-700">
+              <div className="flex items-center gap-3 text-accent">
                 <Sparkles className="h-5 w-5" />
                 <h4 className="font-bold text-sm">Smart Proposal Sync</h4>
               </div>
-              <p className="text-xs text-indigo-800/70 leading-relaxed font-medium">
+              <p className="text-xs text-accent/70 leading-relaxed font-medium">
                 Confirming this brief will automatically draft an AI-powered proposal with these services pre-configured.
               </p>
             </CardContent>

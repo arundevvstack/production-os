@@ -145,22 +145,22 @@ export function UnifiedClientSelector({
           onClick={() => setOpen(!open)}
         >
           {value ? (
-            <div className="flex items-center gap-2 text-slate-800 w-[90%] overflow-hidden">
-              <Building2 className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-              <span className="font-bold text-slate-800 truncate">{value}</span>
+            <div className="flex items-center gap-2 text-primary w-[90%] overflow-hidden">
+              <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <span className="font-bold text-primary truncate">{value}</span>
             </div>
           ) : (
-            <span className="text-slate-500 text-sm font-normal">{isLoading ? "Loading Registry..." : placeholder}</span>
+            <span className="text-muted-foreground text-sm font-normal">{isLoading ? "Loading Registry..." : placeholder}</span>
           )}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
         
         {open && (
-          <div className="absolute top-[calc(100%+4px)] left-0 w-full z-[100] bg-white rounded-[10px] shadow-xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+          <div className="absolute top-[calc(100%+4px)] left-0 w-full z-[100] bg-white rounded-[10px] shadow-xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-100">
             <Command>
             <CommandInput placeholder="Search registry..." className="h-10 text-xs font-medium" />
             <CommandList className="max-h-[300px] overflow-y-auto overflow-x-hidden">
-              <CommandEmpty className="py-6 text-center text-xs text-slate-500">No client entities found.</CommandEmpty>
+              <CommandEmpty className="py-6 text-center text-xs text-muted-foreground">No client entities found.</CommandEmpty>
               <CommandGroup>
                 {consolidatedClients.map((client) => (
                   <CommandItem
@@ -170,15 +170,15 @@ export function UnifiedClientSelector({
                       onSelect(client);
                       setOpen(false);
                     }}
-                    className="text-xs cursor-pointer py-2.5 rounded-xl my-0.5 aria-selected:bg-red-50 aria-selected:text-red-700"
+                    className="text-xs cursor-pointer py-2.5 rounded-xl my-0.5 aria-selected:bg-destructive/10 aria-selected:text-destructive"
                   >
                     <div className="flex items-center justify-between w-full gap-4">
                       <div className="flex items-center gap-2 overflow-hidden w-[70%]">
-                        <Building2 className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                        <span className="font-bold text-slate-800 truncate">{client.company_name}</span>
+                        <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                        <span className="font-bold text-primary truncate">{client.company_name}</span>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
-                        <Badge className={client.isPartner ? "bg-emerald-50 text-emerald-700 border border-emerald-100 text-[8px] font-black uppercase" : "bg-indigo-50 text-indigo-700 border border-indigo-100 text-[8px] font-black uppercase"}>
+                        <Badge className={client.isPartner ? "bg-emerald-50 text-emerald-700 border border-emerald-100 text-[8px] font-black uppercase" : "bg-accent/10 text-accent border border-accent/20 text-[8px] font-black uppercase"}>
                           {client.isPartner ? "Partner" : "Prospect"}
                         </Badge>
                       </div>
@@ -196,7 +196,7 @@ export function UnifiedClientSelector({
         <button
           type="button"
           onClick={onOnboardTrigger}
-          className="h-11 px-4 rounded-[10px] bg-slate-900 text-white hover:bg-slate-800 transition-colors shrink-0 flex items-center justify-center shadow-sm"
+          className="h-11 px-4 rounded-[10px] bg-primary text-white hover:bg-primary transition-colors shrink-0 flex items-center justify-center shadow-sm"
           title="Onboard New Partner"
         >
           <Plus className="h-4 w-4" />

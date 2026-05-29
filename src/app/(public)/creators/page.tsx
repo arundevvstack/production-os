@@ -268,19 +268,19 @@ export default function PublicCreatorsNetwork() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased pb-20 relative overflow-hidden selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased pb-20 relative overflow-hidden selection:bg-destructive selection:text-white">
       
       {/* 🚀 Pure Apple Translucent Header */}
-      <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+      <header className="border-b border-border/80 bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="font-bold text-base uppercase tracking-wider text-slate-900">Define Perspective</span>
-            <Badge className="bg-red-500/10 text-red-650 border-none font-bold text-[8px] uppercase tracking-widest py-0.5 px-2 rounded-full">Directory</Badge>
+            <span className="font-bold text-base uppercase tracking-wider text-primary">Define Perspective</span>
+            <Badge className="bg-destructive/10 text-red-650 border-none font-bold text-[8px] uppercase tracking-widest py-0.5 px-2 rounded-full">Directory</Badge>
           </div>
 
           <div className="flex items-center gap-4">
             <a href="/creators/onboarding">
-              <Button className="rounded-full h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition duration-300">
+              <Button className="rounded-full h-9 bg-primary hover:bg-primary text-white font-bold text-xs shadow-md transition duration-300">
                 <Plus className="h-4 w-4 mr-1" /> Onboard Profile
               </Button>
             </a>
@@ -289,43 +289,43 @@ export default function PublicCreatorsNetwork() {
       </header>
 
       {/* ⚡ Spacious Apple-Style Hero Headline */}
-      <section className="relative py-20 bg-white border-b border-slate-200/60">
+      <section className="relative py-20 bg-white border-b border-border/60">
         <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           <div className="space-y-6">
-            <Badge className="bg-red-500/10 text-red-600 border-none font-bold text-[10px] uppercase py-1.5 px-3.5 tracking-widest rounded-full">
-              <Flame className="h-3.5 w-3.5 mr-1.5 animate-pulse text-red-600" /> Available Creators
+            <Badge className="bg-destructive/10 text-destructive border-none font-bold text-[10px] uppercase py-1.5 px-3.5 tracking-widest rounded-full">
+              <Flame className="h-3.5 w-3.5 mr-1.5 animate-pulse text-destructive" /> Available Creators
             </Badge>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 leading-[1.05]">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-primary leading-[1.05]">
               Connect with leading <br />
               <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 bg-clip-text text-transparent">
                 cinematic talent.
               </span>
             </h1>
             
-            <p className="text-base text-slate-500 leading-relaxed font-medium max-w-lg">
+            <p className="text-base text-muted-foreground leading-relaxed font-medium max-w-lg">
               Find, evaluate, and book professional actors, models, voice artists, and crew for premium advertising campaigns. Complete with media-rich verified portfolios.
             </p>
           </div>
 
           {/* AI Castings Briefing Assistant */}
-          <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm relative hover:shadow-md transition-shadow duration-300">
+          <Card className="bg-white border border-border rounded-3xl shadow-sm relative hover:shadow-md transition-shadow duration-300">
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 bg-red-50 rounded-xl">
+                  <div className="p-2 bg-destructive/10 rounded-xl">
                     <Sparkles className="h-4.5 w-4.5 text-red-650" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-xs text-slate-900">Find with AI</h3>
-                    <p className="text-[9px] text-slate-400 font-medium">Type what you need in simple English</p>
+                    <h3 className="font-bold text-xs text-primary">Find with AI</h3>
+                    <p className="text-[9px] text-muted-foreground font-medium">Type what you need in simple English</p>
                   </div>
                 </div>
                 {isAiApplied && (
                   <Badge 
                     onClick={handleClearAI} 
-                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 border-none text-[9px] font-bold cursor-pointer rounded-full px-2.5 py-0.5 transition"
+                    className="bg-muted hover:bg-secondary text-primary/80 border-none text-[9px] font-bold cursor-pointer rounded-full px-2.5 py-0.5 transition"
                   >
                     Clear Filter
                   </Badge>
@@ -338,11 +338,11 @@ export default function PublicCreatorsNetwork() {
                     placeholder="Need a high-action lead actor with stunt capabilities for a Malayalam automotive commercial campaign..."
                     value={aiBriefText}
                     onChange={(e) => setAiBriefText(e.target.value)}
-                    className="bg-slate-50 border-slate-250 h-20 text-xs rounded-xl focus:border-red-500 resize-none text-slate-800 font-bold p-3 outline-none w-full"
+                    className="bg-muted border-slate-250 h-20 text-xs rounded-xl focus:border-destructive resize-none text-primary font-bold p-3 outline-none w-full"
                     required
                   />
                   {aiBriefCorrection && (
-                    <div className="absolute left-2.5 bottom-[-8px] flex items-center gap-1 text-[9px] text-slate-500 font-bold bg-white px-2 py-0.5 rounded-lg border border-slate-200 shadow-sm animate-fade-in z-10">
+                    <div className="absolute left-2.5 bottom-[-8px] flex items-center gap-1 text-[9px] text-muted-foreground font-bold bg-white px-2 py-0.5 rounded-lg border border-border shadow-sm animate-fade-in z-10">
                       <Sparkles className="h-2.5 w-2.5 text-red-650 animate-pulse" />
                       <span>Did you mean:</span>
                       <button 
@@ -362,7 +362,7 @@ export default function PublicCreatorsNetwork() {
                 
                 {/* AI Prompt suggestions tags */}
                 <div className="space-y-1.5">
-                  <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wider block">Or select an example prompt:</span>
+                  <span className="text-[8px] text-muted-foreground font-extrabold uppercase tracking-wider block">Or select an example prompt:</span>
                   <div className="flex flex-wrap gap-1.5">
                     {[
                       { emoji: "🔥", text: "Malayalam lead with stunt skills", prompt: "Need a high-action lead actor with stunt capabilities for a Malayalam automotive commercial campaign..." },
@@ -373,7 +373,7 @@ export default function PublicCreatorsNetwork() {
                         key={idx}
                         type="button"
                         onClick={() => setAiBriefText(tag.prompt)}
-                        className="text-[9px] font-bold px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-150 rounded-xl text-slate-650 transition flex items-center gap-1 shadow-sm"
+                        className="text-[9px] font-bold px-2.5 py-1.5 bg-muted hover:bg-muted border border-slate-150 rounded-xl text-slate-650 transition flex items-center gap-1 shadow-sm"
                       >
                         <span>{tag.emoji}</span> {tag.text}
                       </button>
@@ -384,7 +384,7 @@ export default function PublicCreatorsNetwork() {
                 <Button 
                   type="submit" 
                   disabled={isAnalyzing}
-                  className="w-full bg-slate-900 hover:bg-slate-850 text-white font-bold h-10 rounded-full text-xs flex items-center justify-center gap-1.5 shadow transition-all duration-300"
+                  className="w-full bg-primary hover:bg-slate-850 text-white font-bold h-10 rounded-full text-xs flex items-center justify-center gap-1.5 shadow transition-all duration-300"
                 >
                   {isAnalyzing ? (
                     <span className="flex items-center gap-1.5">
@@ -393,7 +393,7 @@ export default function PublicCreatorsNetwork() {
                     </span>
                   ) : (
                     <>
-                      <Sparkles className="h-4 w-4 text-red-500 animate-pulse" /> Find Creators
+                      <Sparkles className="h-4 w-4 text-destructive animate-pulse" /> Find Creators
                     </>
                   )}
                 </Button>
@@ -409,25 +409,25 @@ export default function PublicCreatorsNetwork() {
         
         {/* Left Filter Options */}
         <section className="xl:col-span-1 space-y-6">
-          <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm">
+          <Card className="bg-white border border-border rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-6">
               
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h3 className="font-bold text-xs uppercase tracking-widest text-slate-800 flex items-center gap-1.5">
+              <div className="flex items-center justify-between border-b border-border pb-4">
+                <h3 className="font-bold text-xs uppercase tracking-widest text-primary flex items-center gap-1.5">
                   <Filter className="h-4 w-4 text-red-650" /> Filters
                 </h3>
               </div>
 
               {/* Category */}
               <div className="space-y-2">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Specialty</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Specialty</label>
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="bg-slate-50 border-slate-200 rounded-xl h-10 text-xs text-slate-700 font-bold">
+                  <SelectTrigger className="bg-muted border-border rounded-xl h-10 text-xs text-primary/80 font-bold">
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white text-slate-800 border-slate-200">
+                  <SelectContent className="bg-white text-primary border-border">
                     {categories.map(c => (
-                      <SelectItem key={c} value={c} className="text-xs focus:bg-red-600 focus:text-white font-bold">{c}</SelectItem>
+                      <SelectItem key={c} value={c} className="text-xs focus:bg-destructive focus:text-white font-bold">{c}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -435,14 +435,14 @@ export default function PublicCreatorsNetwork() {
 
               {/* Location */}
               <div className="space-y-2">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Location</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Location</label>
                 <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger className="bg-slate-50 border-slate-200 rounded-xl h-10 text-xs text-slate-700 font-bold">
+                  <SelectTrigger className="bg-muted border-border rounded-xl h-10 text-xs text-primary/80 font-bold">
                     <SelectValue placeholder="All Cities" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white text-slate-800 border-slate-200">
+                  <SelectContent className="bg-white text-primary border-border">
                     {locations.map(l => (
-                      <SelectItem key={l} value={l} className="text-xs focus:bg-red-600 focus:text-white font-bold">{l}</SelectItem>
+                      <SelectItem key={l} value={l} className="text-xs focus:bg-destructive focus:text-white font-bold">{l}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -450,9 +450,9 @@ export default function PublicCreatorsNetwork() {
 
               {/* Day rate range slider */}
               <div className="space-y-3">
-                <div className="flex justify-between text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="flex justify-between text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
                   <span>Max Day Rate</span>
-                  <span className="text-red-600 font-bold">₹{maxDayRate.toLocaleString()}</span>
+                  <span className="text-destructive font-bold">₹{maxDayRate.toLocaleString()}</span>
                 </div>
                 <Slider 
                   min={100000} 
@@ -466,12 +466,12 @@ export default function PublicCreatorsNetwork() {
 
               {/* Followers filter */}
               <div className="space-y-2">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Minimum Followers</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Minimum Followers</label>
                 <Select value={minFollowers.toString()} onValueChange={(val) => setMinFollowers(parseInt(val))}>
-                  <SelectTrigger className="bg-slate-50 border-slate-200 rounded-xl h-10 text-xs text-slate-700 font-bold">
+                  <SelectTrigger className="bg-muted border-border rounded-xl h-10 text-xs text-primary/80 font-bold">
                     <SelectValue placeholder="Any Reach" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white text-slate-800 border-slate-200">
+                  <SelectContent className="bg-white text-primary border-border">
                     <SelectItem value="0" className="text-xs font-bold">Any Reach</SelectItem>
                     <SelectItem value="1000" className="text-xs font-bold">1K+ Followers (Nano)</SelectItem>
                     <SelectItem value="2500" className="text-xs font-bold">2.5K+ Followers (Nano)</SelectItem>
@@ -490,8 +490,8 @@ export default function PublicCreatorsNetwork() {
               </div>
 
               {/* Switch verified */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Verified Only</span>
+              <div className="flex items-center justify-between pt-2 border-t border-border">
+                <span className="text-[9px] font-bold text-muted-foreground/80 uppercase tracking-widest">Verified Only</span>
                 <Switch 
                   checked={verifiedOnly} 
                   onCheckedChange={setVerifiedOnly}
@@ -508,15 +508,15 @@ export default function PublicCreatorsNetwork() {
           {/* Header search bar & View Toggle */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-grow w-full pb-4">
-              <Search className="absolute left-3.5 top-3.5 h-4.5 w-4.5 text-slate-400" />
+              <Search className="absolute left-3.5 top-3.5 h-4.5 w-4.5 text-muted-foreground" />
               <Input 
                 placeholder="Search skills, experience, tags..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-white border-slate-200 h-12 pl-11 text-xs rounded-xl focus:border-red-500 text-slate-800 w-full font-bold shadow-sm"
+                className="bg-white border-border h-12 pl-11 text-xs rounded-xl focus:border-destructive text-primary w-full font-bold shadow-sm"
               />
               {aiCorrection && (
-                <div className="absolute left-3.5 bottom-[-10px] flex items-center gap-1 text-[9px] text-slate-500 font-bold bg-white px-2 py-0.5 rounded-lg border border-slate-200 shadow-sm animate-fade-in z-10">
+                <div className="absolute left-3.5 bottom-[-10px] flex items-center gap-1 text-[9px] text-muted-foreground font-bold bg-white px-2 py-0.5 rounded-lg border border-border shadow-sm animate-fade-in z-10">
                   <Sparkles className="h-2.5 w-2.5 text-red-650 animate-pulse" />
                   <span>Did you mean:</span>
                   <button 
@@ -535,13 +535,13 @@ export default function PublicCreatorsNetwork() {
             </div>
 
             {/* Premium Grid/List View switcher */}
-            <div className="flex bg-slate-100 p-1 rounded-full border border-slate-200 shrink-0 shadow-sm">
+            <div className="flex bg-muted p-1 rounded-full border border-border shrink-0 shadow-sm">
               <Button 
                 type="button"
                 variant="ghost" 
                 onClick={() => setViewMode('thumbnail')} 
                 className={`rounded-full h-9 px-4 text-xs font-bold gap-1.5 transition duration-300 ${
-                  viewMode === 'thumbnail' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
+                  viewMode === 'thumbnail' ? 'bg-white text-primary shadow-sm' : 'text-muted-foreground hover:text-primary'
                 }`}
               >
                 <LayoutGrid className="h-4 w-4" /> Thumbnail
@@ -551,7 +551,7 @@ export default function PublicCreatorsNetwork() {
                 variant="ghost" 
                 onClick={() => setViewMode('list')} 
                 className={`rounded-full h-9 px-4 text-xs font-bold gap-1.5 transition duration-300 ${
-                  viewMode === 'list' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
+                  viewMode === 'list' ? 'bg-white text-primary shadow-sm' : 'text-muted-foreground hover:text-primary'
                 }`}
               >
                 <List className="h-4 w-4" /> List View
@@ -560,10 +560,10 @@ export default function PublicCreatorsNetwork() {
           </div>
 
           {/* Active listings summary */}
-          <div className="flex justify-between items-center text-xs text-slate-500 font-bold">
+          <div className="flex justify-between items-center text-xs text-muted-foreground font-bold">
             <span>Displaying <strong>{filteredTalent.length}</strong> creators</span>
             {isAiApplied && (
-              <span className="text-red-600 font-bold bg-red-500/5 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-red-500/10">
+              <span className="text-destructive font-bold bg-destructive/5 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-destructive/10">
                 <Sparkles className="h-3 w-3" /> AI Filter Active
               </span>
             )}
@@ -573,24 +573,24 @@ export default function PublicCreatorsNetwork() {
           {viewMode === 'thumbnail' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in zoom-in-95 duration-300">
               {filteredTalent.map(talent => (
-                <Card key={talent.id} className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:border-red-500/40 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between">
+                <Card key={talent.id} className="bg-white border border-border rounded-3xl overflow-hidden shadow-sm hover:border-destructive/40 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between">
                   
-                  <div className="relative aspect-[3/4] w-full overflow-hidden border-b border-slate-100">
+                  <div className="relative aspect-[3/4] w-full overflow-hidden border-b border-border">
                     <img src={talent.avatarUrl} alt={talent.fullName} className="object-cover h-full w-full group-hover:scale-105 transition duration-500" />
                     <div className="absolute top-3 left-3 flex gap-1.5">
-                      <Badge className="bg-slate-900 text-white font-bold text-[8px] uppercase tracking-widest border-none py-0.5 px-2 rounded-full">
+                      <Badge className="bg-primary text-white font-bold text-[8px] uppercase tracking-widest border-none py-0.5 px-2 rounded-full">
                         {talent.category}
                       </Badge>
                       <Badge className={`border-none font-bold text-[8px] py-0.5 px-2 rounded-full ${
-                        talent.availability === "Available" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
+                        talent.availability === "Available" ? "bg-emerald-500 text-white" : "bg-accent text-white"
                       }`}>
                         {talent.availability}
                       </Badge>
                     </div>
                     
                     {talent.verifiedLevel === "Premium" && (
-                      <div className="absolute top-3 right-3 h-6 w-6 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center border border-slate-200 shadow">
-                        <Shield className="h-3.5 w-3.5 text-red-600" />
+                      <div className="absolute top-3 right-3 h-6 w-6 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center border border-border shadow">
+                        <Shield className="h-3.5 w-3.5 text-destructive" />
                       </div>
                     )}
                   </div>
@@ -598,38 +598,38 @@ export default function PublicCreatorsNetwork() {
                   <CardContent className="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-1.5">
-                        <h3 className="font-bold text-base text-slate-900 group-hover:text-red-600 transition leading-tight">{talent.fullName}</h3>
+                        <h3 className="font-bold text-base text-primary group-hover:text-destructive transition leading-tight">{talent.fullName}</h3>
                         {["Premium", "Verified"].includes(talent.verifiedLevel) && (
-                          <CheckCircle2 className="h-4 w-4 text-red-600 fill-red-500/10 shrink-0" />
+                          <CheckCircle2 className="h-4 w-4 text-destructive fill-red-500/10 shrink-0" />
                         )}
                       </div>
-                      <p className="text-[10px] text-slate-400 flex items-center gap-1 font-bold">
-                        <MapPin className="h-3 w-3 text-red-600" /> {talent.location}
+                      <p className="text-[10px] text-muted-foreground flex items-center gap-1 font-bold">
+                        <MapPin className="h-3 w-3 text-destructive" /> {talent.location}
                       </p>
                     </div>
 
                     <div className="flex flex-wrap gap-1">
                       {talent.skills.slice(0, 2).map(s => (
-                        <Badge key={s} variant="secondary" className="bg-slate-50 text-slate-700 border border-slate-100 font-bold text-[9px] rounded-full px-2">
+                        <Badge key={s} variant="secondary" className="bg-muted text-primary/80 border border-border font-bold text-[9px] rounded-full px-2">
                           {s}
                         </Badge>
                       ))}
                     </div>
 
-                    <div className="border-t border-slate-100 pt-4 flex justify-between items-center text-xs">
+                    <div className="border-t border-border pt-4 flex justify-between items-center text-xs">
                       <div>
-                        <span className="text-[9px] text-slate-400 uppercase font-bold block">Day Rate</span>
-                        <strong className="text-slate-950 font-black">₹{talent.dayRate.toLocaleString()}</strong>
+                        <span className="text-[9px] text-muted-foreground uppercase font-bold block">Day Rate</span>
+                        <strong className="text-primary font-black">₹{talent.dayRate.toLocaleString()}</strong>
                       </div>
                       <div>
-                        <span className="text-[9px] text-slate-400 uppercase font-bold block">Followers</span>
-                        <strong className="text-red-600 font-black">{(talent.followers / 1000000).toFixed(1)}M</strong>
+                        <span className="text-[9px] text-muted-foreground uppercase font-bold block">Followers</span>
+                        <strong className="text-destructive font-black">{(talent.followers / 1000000).toFixed(1)}M</strong>
                       </div>
                     </div>
 
                     <div className="pt-2">
                       <a href={`/creators/${talent.id}`} className="w-full">
-                        <Button className="w-full rounded-full h-11 bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center justify-center gap-1 group/btn shadow shadow-red-500/10 transition">
+                        <Button className="w-full rounded-full h-11 bg-destructive hover:bg-destructive text-white font-bold text-xs flex items-center justify-center gap-1 group/btn shadow shadow-red-500/10 transition">
                           View Portfolio <ArrowRight className="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition" />
                         </Button>
                       </a>
@@ -641,37 +641,37 @@ export default function PublicCreatorsNetwork() {
           ) : (
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-350">
               {filteredTalent.map(talent => (
-                <div key={talent.id} className="bg-white border border-slate-200 rounded-3xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-sm hover:border-red-500/30 transition-all duration-300">
+                <div key={talent.id} className="bg-white border border-border rounded-3xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-sm hover:border-destructive/30 transition-all duration-300">
                   
                   <div className="flex gap-4 items-center flex-1">
-                    <Avatar className="h-16 w-16 ring-4 ring-slate-100 shadow-sm shrink-0">
+                    <Avatar className="h-16 w-16 ring-4 ring-border shadow-sm shrink-0">
                       <AvatarImage src={talent.avatarUrl} className="object-cover" />
-                      <AvatarFallback className="bg-slate-100 text-slate-800 font-bold">{talent.fullName[0]}</AvatarFallback>
+                      <AvatarFallback className="bg-muted text-primary font-bold">{talent.fullName[0]}</AvatarFallback>
                     </Avatar>
                     
                     <div className="space-y-1.5">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-bold text-base text-slate-900 leading-tight">{talent.fullName}</h3>
+                        <h3 className="font-bold text-base text-primary leading-tight">{talent.fullName}</h3>
                         {["Premium", "Verified"].includes(talent.verifiedLevel) && (
-                          <CheckCircle2 className="h-4.5 w-4.5 text-red-600 fill-red-500/10 shrink-0" />
+                          <CheckCircle2 className="h-4.5 w-4.5 text-destructive fill-red-500/10 shrink-0" />
                         )}
-                        <Badge className="bg-slate-150 text-slate-800 font-bold text-[8px] uppercase tracking-widest border-none py-0.5 px-2 rounded-full">
+                        <Badge className="bg-slate-150 text-primary font-bold text-[8px] uppercase tracking-widest border-none py-0.5 px-2 rounded-full">
                           {talent.category}
                         </Badge>
                         <Badge className={`border-none font-bold text-[8px] py-0.5 px-2 rounded-full ${
-                          talent.availability === "Available" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
+                          talent.availability === "Available" ? "bg-emerald-500 text-white" : "bg-accent text-white"
                         }`}>
                           {talent.availability}
                         </Badge>
                       </div>
                       
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1 font-bold">
-                          <MapPin className="h-3.5 w-3.5 text-red-600 shrink-0" /> {talent.location}
+                          <MapPin className="h-3.5 w-3.5 text-destructive shrink-0" /> {talent.location}
                         </span>
                         <div className="flex flex-wrap gap-1">
                           {talent.skills.slice(0, 3).map(s => (
-                            <Badge key={s} variant="secondary" className="bg-slate-50 text-slate-700 border border-slate-100 font-bold text-[9px] rounded-full px-2">
+                            <Badge key={s} variant="secondary" className="bg-muted text-primary/80 border border-border font-bold text-[9px] rounded-full px-2">
                               {s}
                             </Badge>
                           ))}
@@ -682,18 +682,18 @@ export default function PublicCreatorsNetwork() {
 
                   <div className="flex flex-wrap md:flex-nowrap items-center gap-6 text-xs w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 pt-4 md:pt-0">
                     <div className="shrink-0 text-left md:text-right">
-                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Day Rate</span>
-                      <strong className="text-slate-950 font-black text-sm">₹{talent.dayRate.toLocaleString()}</strong>
+                      <span className="text-[9px] text-muted-foreground uppercase font-bold block">Day Rate</span>
+                      <strong className="text-primary font-black text-sm">₹{talent.dayRate.toLocaleString()}</strong>
                     </div>
 
                     <div className="shrink-0 text-left md:text-right">
-                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Followers</span>
-                      <strong className="text-red-600 font-black text-sm">{(talent.followers / 1000000).toFixed(1)}M</strong>
+                      <span className="text-[9px] text-muted-foreground uppercase font-bold block">Followers</span>
+                      <strong className="text-destructive font-black text-sm">{(talent.followers / 1000000).toFixed(1)}M</strong>
                     </div>
 
                     <div className="w-full md:w-auto shrink-0">
                       <a href={`/creators/${talent.id}`}>
-                        <Button className="w-full md:w-auto rounded-full h-11 px-6 bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition">
+                        <Button className="w-full md:w-auto rounded-full h-11 px-6 bg-destructive hover:bg-destructive text-white font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition">
                           View Portfolio <ArrowRight className="h-3.5 w-3.5" />
                         </Button>
                       </a>

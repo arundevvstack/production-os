@@ -55,48 +55,48 @@ export default function TalentLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased flex flex-col justify-between selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased flex flex-col justify-between selection:bg-destructive selection:text-white">
       
       {/* Header */}
       <header className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between w-full">
         <div className="flex items-center gap-2.5">
-          <div className="h-10 w-10 bg-red-500/10 rounded-xl flex items-center justify-center font-black text-sm text-red-650 shadow-sm shrink-0">DP</div>
+          <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-red-650 shadow-sm shrink-0">DP</div>
           <div>
-            <span className="font-bold text-base tracking-tight block text-slate-900">Creator Network</span>
-            <span className="text-[9px] font-bold text-red-600 uppercase tracking-widest leading-none">Public Portal</span>
+            <span className="font-bold text-base tracking-tight block text-primary">Creator Network</span>
+            <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Public Portal</span>
           </div>
         </div>
 
-        <a href="/creators" className="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1 font-bold">
+        <a href="/creators" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1 font-bold">
           <ArrowLeft className="h-4 w-4" /> Back to Directory
         </a>
       </header>
 
       {/* Main Login */}
       <main className="max-w-md mx-auto px-6 py-12 flex-1 flex flex-col justify-center w-full">
-        <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm">
+        <Card className="bg-white border border-border rounded-3xl shadow-sm">
           <CardContent className="p-8 space-y-6">
             
             <div className="space-y-1.5 text-center">
-              <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center justify-center gap-1.5">
+              <h2 className="text-xl font-bold tracking-tight text-primary flex items-center justify-center gap-1.5">
                 <Sparkles className="h-5 w-5 text-red-650" /> Sign In to Creator Portal
               </h2>
-              <p className="text-xs text-slate-500 font-bold leading-relaxed">
+              <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                 Access your public portfolio, availability calendar, and bookings.
               </p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Email Address</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-3.5 h-4.5 w-4.5 text-slate-400" />
+                  <Mail className="absolute left-3.5 top-3.5 h-4.5 w-4.5 text-muted-foreground" />
                   <Input 
                     type="email" 
                     placeholder="creator@network.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 h-11 text-xs rounded-xl pl-11 focus:border-red-500 text-slate-800 font-bold w-full"
+                    className="bg-muted border border-border h-11 text-xs rounded-xl pl-11 focus:border-destructive text-primary font-bold w-full"
                     required
                   />
                 </div>
@@ -104,24 +104,24 @@ export default function TalentLoginPage() {
 
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Password</label>
-                  <Link href="/forgot-password" className="text-[9px] text-red-600 font-bold uppercase hover:underline">Forgot?</Link>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Password</label>
+                  <Link href="/forgot-password" className="text-[9px] text-destructive font-bold uppercase hover:underline">Forgot?</Link>
                 </div>
                 <div className="relative">
-                  <Key className="absolute left-3.5 top-3.5 h-4.5 w-4.5 text-slate-400" />
+                  <Key className="absolute left-3.5 top-3.5 h-4.5 w-4.5 text-muted-foreground" />
                   <Input 
                     type={showPassword ? "text" : "password"} 
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-slate-50 border border-slate-200 h-11 text-xs rounded-xl pl-11 pr-10 focus:border-red-500 text-slate-800 font-bold w-full"
+                    className="bg-muted border border-border h-11 text-xs rounded-xl pl-11 pr-10 focus:border-destructive text-primary font-bold w-full"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
@@ -132,7 +132,7 @@ export default function TalentLoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow shadow-red-500/10 transition"
+                className="w-full bg-destructive hover:bg-destructive text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow shadow-red-500/10 transition"
               >
                 {isSubmitting ? (
                   <>Logging in...</>
@@ -145,28 +145,28 @@ export default function TalentLoginPage() {
             </form>
 
             <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-slate-200"></div>
-              <span className="flex-shrink mx-4 text-[9px] text-slate-400 font-bold uppercase">or connect with</span>
-              <div className="flex-grow border-t border-slate-200"></div>
+              <div className="flex-grow border-t border-border"></div>
+              <span className="flex-shrink mx-4 text-[9px] text-muted-foreground font-bold uppercase">or connect with</span>
+              <div className="flex-grow border-t border-border"></div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="border-slate-200 bg-white hover:bg-slate-50 rounded-full h-10 text-xs font-bold gap-1 text-slate-700 shadow-sm transition">
+              <Button variant="outline" className="border-border bg-white hover:bg-muted rounded-full h-10 text-xs font-bold gap-1 text-primary/80 shadow-sm transition">
                 <GoogleIcon /> Google
               </Button>
-              <Button variant="outline" className="border-slate-200 bg-white hover:bg-slate-50 rounded-full h-10 text-xs font-bold gap-1 text-slate-700 shadow-sm transition">
+              <Button variant="outline" className="border-border bg-white hover:bg-muted rounded-full h-10 text-xs font-bold gap-1 text-primary/80 shadow-sm transition">
                 <Instagram className="h-4 w-4 text-[#e1306c]" /> Instagram
               </Button>
             </div>
 
-            <p className="text-[11px] text-slate-400 text-center font-bold">
+            <p className="text-[11px] text-muted-foreground text-center font-bold">
               Don't have a public profile?{" "}
               <a href="/talent/signup" className="text-red-650 font-bold hover:underline">
                 Create One Now
               </a>
             </p>
 
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-150 flex gap-2 items-start leading-relaxed text-[10px] text-slate-500 font-bold shadow-sm">
+            <div className="p-4 bg-muted rounded-2xl border border-slate-150 flex gap-2 items-start leading-relaxed text-[10px] text-muted-foreground font-bold shadow-sm">
               <Lock className="h-4.5 w-4.5 text-red-650 shrink-0 mt-0.5" />
               <span>
                 <strong>Public Registration</strong>: This form is for creators to register. It does not provide access to staff dashboards or internal team tools.
@@ -178,7 +178,7 @@ export default function TalentLoginPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 py-6 bg-white text-center text-[10px] text-slate-400 font-bold">
+      <footer className="border-t border-border py-6 bg-white text-center text-[10px] text-muted-foreground font-bold">
         © 2026 Creator Network. All rights reserved.
       </footer>
 

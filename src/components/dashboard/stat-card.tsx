@@ -25,7 +25,7 @@ export function StatCard({ title, value, description, icon: Icon, trend, classNa
           {trend && (
             <div className={cn(
               "text-xs font-medium px-2 py-1 rounded-full",
-              trend.isPositive ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+              trend.isPositive ? "bg-emerald-100 text-emerald-700" : "bg-accent/10 text-accent"
             )}>
               {trend.isPositive ? "+" : "-"}{trend.value}%
             </div>

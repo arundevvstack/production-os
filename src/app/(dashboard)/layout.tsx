@@ -63,10 +63,10 @@ export default function DashboardLayout({
         <AppSidebar />
         <SidebarInset className="bg-transparent overflow-hidden flex flex-col h-screen">
             <header className="flex h-16 shrink-0 items-center gap-2 border-b border-white/20 glass-panel px-6 md:hidden relative z-40">
-                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 text-slate-600" />
+                <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 text-muted-foreground/80" />
                 <div className="flex items-center gap-2 ml-2">
                     <div className="h-9 w-9 bg-primary rounded-xl flex items-center justify-center text-white font-black text-[10px] shadow-lg shadow-primary/20">DP</div>
-                    <span className="font-black text-sm tracking-tight text-slate-800">Media<span className="text-primary">OS</span></span>
+                    <span className="font-black text-sm tracking-tight text-primary">Media<span className="text-primary">OS</span></span>
                 </div>
             </header>
             <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto custom-scrollbar relative z-0">

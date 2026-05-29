@@ -185,10 +185,10 @@ export default function RBACPage() {
     <div className="space-y-8 font-body">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-slate-800 flex items-center gap-2.5">
+          <h1 className="text-3xl font-black tracking-tight text-primary flex items-center gap-2.5">
             <ShieldCheck className="h-8 w-8 text-primary" /> Team Access Control
           </h1>
-          <p className="text-slate-500 font-medium">Approve, suspend, and govern organizational credentials and SaaS department permissions.</p>
+          <p className="text-muted-foreground font-medium">Approve, suspend, and govern organizational credentials and SaaS department permissions.</p>
         </div>
       </div>
 
@@ -196,24 +196,24 @@ export default function RBACPage() {
         {/* Left Side: Users Grid */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-white/40 backdrop-blur-2xl">
-            <CardHeader className="p-6 border-b border-slate-100">
-              <CardTitle className="text-lg font-black text-slate-800">Workspace Directory</CardTitle>
-              <CardDescription className="text-slate-400 font-medium">Manage pending crew approvals and deactivations.</CardDescription>
+            <CardHeader className="p-6 border-b border-border">
+              <CardTitle className="text-lg font-black text-primary">Workspace Directory</CardTitle>
+              <CardDescription className="text-muted-foreground font-medium">Manage pending crew approvals and deactivations.</CardDescription>
             </CardHeader>
             <CardContent className="p-0 bg-white">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50/50 border-b">
+                  <thead className="bg-muted/50 border-b">
                     <tr>
-                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-slate-400">Crew Member</th>
-                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-slate-400">Department Role</th>
-                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-slate-400">Security Status</th>
-                      <th className="p-4 text-right font-black text-[10px] uppercase tracking-widest text-slate-400">Actions</th>
+                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Crew Member</th>
+                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Department Role</th>
+                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Security Status</th>
+                      <th className="p-4 text-right font-black text-[10px] uppercase tracking-widest text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {members?.map((member) => (
-                      <tr key={member.id} className="hover:bg-slate-50/50 transition-colors group">
+                      <tr key={member.id} className="hover:bg-muted/50 transition-colors group">
                         <td className="p-4">
                           <div className="flex items-center gap-3">
                             <Avatar className="h-9 w-9 ring-2 ring-white shadow">
@@ -222,17 +222,17 @@ export default function RBACPage() {
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col">
-                              <span className="font-black text-sm text-slate-800">{member.fullName || member.full_name}</span>
-                              <span className="text-[10px] text-slate-400 font-medium">{member.email}</span>
+                              <span className="font-black text-sm text-primary">{member.fullName || member.full_name}</span>
+                              <span className="text-[10px] text-muted-foreground font-medium">{member.email}</span>
                             </div>
                           </div>
                         </td>
                         <td className="p-4">
                           <div className="flex flex-col gap-1.5 items-start">
-                            <Badge variant="secondary" className="text-[9px] font-black uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg">
+                            <Badge variant="secondary" className="text-[9px] font-black uppercase tracking-wider bg-muted text-muted-foreground/80 px-2 py-0.5 rounded-lg">
                               {ENTERPRISE_ROLES.find(r => r.id === member.role_id)?.name || member.role_id}
                             </Badge>
-                            <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider pl-1.5 border-l-2 border-primary/20">
+                            <span className="text-[10px] text-muted-foreground font-black uppercase tracking-wider pl-1.5 border-l-2 border-primary/20">
                               {member.department || 'Production'}
                             </span>
                           </div>
@@ -244,12 +244,12 @@ export default function RBACPage() {
                             </div>
                           )}
                           {member.status === 'pending' && (
-                            <div className="flex items-center gap-1.5 text-amber-500 font-black text-[10px] uppercase tracking-wider">
+                            <div className="flex items-center gap-1.5 text-accent font-black text-[10px] uppercase tracking-wider">
                               <Loader2 className="h-3.5 w-3.5 animate-spin" /> Pending Approval
                             </div>
                           )}
                           {member.status === 'suspended' && (
-                            <div className="flex items-center gap-1.5 text-rose-500 font-black text-[10px] uppercase tracking-wider">
+                            <div className="flex items-center gap-1.5 text-accent font-black text-[10px] uppercase tracking-wider">
                               <Ban className="h-3.5 w-3.5" /> Suspended
                             </div>
                           )}
@@ -260,13 +260,13 @@ export default function RBACPage() {
                           ) : (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary/80 hover:bg-muted rounded-xl">
                                   <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="rounded-[10px] w-52 p-1.5 font-body">
                                 <DropdownMenuItem 
-                                  className="gap-2.5 cursor-pointer py-2 rounded-xl font-bold text-slate-600 text-xs"
+                                  className="gap-2.5 cursor-pointer py-2 rounded-xl font-bold text-muted-foreground/80 text-xs"
                                   onClick={() => {
                                     setEditingMember(member);
                                     setSelectedRole(member.role_id || "EMPLOYEE");
@@ -274,7 +274,7 @@ export default function RBACPage() {
                                     setIsChangeRoleOpen(true);
                                   }}
                                 >
-                                  <UserCog className="h-4 w-4 text-slate-400" /> Assign Department Role
+                                  <UserCog className="h-4 w-4 text-muted-foreground" /> Assign Department Role
                                 </DropdownMenuItem>
                                 
                                 <DropdownMenuSeparator className="my-1" />
@@ -290,7 +290,7 @@ export default function RBACPage() {
 
                                 {member.status === 'approved' && member.id !== profile?.id && (
                                   <DropdownMenuItem 
-                                    className="gap-2.5 cursor-pointer py-2 rounded-xl font-bold text-rose-600 text-xs hover:bg-rose-50"
+                                    className="gap-2.5 cursor-pointer py-2 rounded-xl font-bold text-accent text-xs hover:bg-accent/10"
                                     onClick={() => handleUpdateStatus(member.id, 'suspended')}
                                   >
                                     <Ban className="h-4 w-4" /> Suspend Credentials
@@ -310,7 +310,7 @@ export default function RBACPage() {
                                   <>
                                     <DropdownMenuSeparator className="my-1" />
                                     <DropdownMenuItem 
-                                      className="gap-2.5 cursor-pointer py-2 rounded-xl font-bold text-rose-700 text-xs hover:bg-rose-50"
+                                      className="gap-2.5 cursor-pointer py-2 rounded-xl font-bold text-accent text-xs hover:bg-accent/10"
                                       onClick={() => handleRemoveMember(member.id)}
                                     >
                                       <UserMinus className="h-4 w-4" /> Expel from Office
@@ -332,13 +332,13 @@ export default function RBACPage() {
 
         {/* Right Side: Role Matrix */}
         <div className="space-y-6">
-          <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-slate-900 text-white relative">
+          <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-primary text-white relative">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
             <CardHeader className="p-6 relative z-10">
               <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
                 <Lock className="h-5 w-5 text-primary" /> Active Access Matrix
               </CardTitle>
-              <CardDescription className="text-slate-400 font-medium">Standardized SaaS roles automatically enforced at both routing and database triggers.</CardDescription>
+              <CardDescription className="text-muted-foreground font-medium">Standardized SaaS roles automatically enforced at both routing and database triggers.</CardDescription>
             </CardHeader>
             <CardContent className="p-6 space-y-6 relative z-10 pt-0">
               {ENTERPRISE_ROLES.map((role) => (
@@ -347,7 +347,7 @@ export default function RBACPage() {
                     <span className="text-xs font-black tracking-wider uppercase text-slate-300">{role.name}</span>
                     <Badge className="bg-primary/20 text-primary text-[8px] font-black border-none tracking-widest uppercase">{role.id}</Badge>
                   </div>
-                  <p className="text-[11px] text-slate-400 font-medium leading-relaxed">{role.description}</p>
+                  <p className="text-[11px] text-muted-foreground font-medium leading-relaxed">{role.description}</p>
                 </div>
               ))}
             </CardContent>
@@ -359,26 +359,26 @@ export default function RBACPage() {
       <Dialog open={isChangeRoleOpen} onOpenChange={setIsChangeRoleOpen}>
         <DialogContent className="sm:max-w-[420px] rounded-[10px] p-6 font-body">
           <DialogHeader>
-            <DialogTitle className="text-xl font-black text-slate-800 flex items-center gap-2">
+            <DialogTitle className="text-xl font-black text-primary flex items-center gap-2">
               <UserCog className="h-5.5 w-5.5 text-primary" /> Assign Crew Credentials
             </DialogTitle>
-            <DialogDescription className="text-slate-400 font-medium">
+            <DialogDescription className="text-muted-foreground font-medium">
               Reassign {editingMember?.fullName || editingMember?.full_name} to a different operational level and department.
             </DialogDescription>
           </DialogHeader>
           <div className="py-6 space-y-5">
             <div className="space-y-2">
-              <Label className="text-xs font-black uppercase tracking-widest text-slate-500">Security Clearance</Label>
+              <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Security Clearance</Label>
               <Select 
                 value={selectedRole}
                 onValueChange={setSelectedRole}
               >
-                <SelectTrigger className="rounded-xl h-12 border-slate-200 focus:ring-primary/20">
+                <SelectTrigger className="rounded-xl h-12 border-border focus:ring-primary/20">
                   <SelectValue placeholder="Select Clearance Level" />
                 </SelectTrigger>
                 <SelectContent className="rounded-[10px] p-1.5 font-body">
                   {ENTERPRISE_ROLES.map(r => (
-                    <SelectItem key={r.id} value={r.id} className="py-2.5 rounded-xl text-xs font-bold text-slate-600 focus:bg-primary/5 focus:text-primary">
+                    <SelectItem key={r.id} value={r.id} className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">
                       {r.name}
                     </SelectItem>
                   ))}
@@ -387,20 +387,20 @@ export default function RBACPage() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-black uppercase tracking-widest text-slate-500">Enterprise Department</Label>
+              <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Enterprise Department</Label>
               <Select 
                 value={selectedDepartment}
                 onValueChange={setSelectedDepartment}
               >
-                <SelectTrigger className="rounded-xl h-12 border-slate-200 focus:ring-primary/20">
+                <SelectTrigger className="rounded-xl h-12 border-border focus:ring-primary/20">
                   <SelectValue placeholder="Select Business Department" />
                 </SelectTrigger>
                 <SelectContent className="rounded-[10px] p-1.5 font-body">
-                  <SelectItem value="Production" className="py-2.5 rounded-xl text-xs font-bold text-slate-600 focus:bg-primary/5 focus:text-primary">Production & Crew</SelectItem>
-                  <SelectItem value="Creative" className="py-2.5 rounded-xl text-xs font-bold text-slate-600 focus:bg-primary/5 focus:text-primary">Creative Operations</SelectItem>
-                  <SelectItem value="Finance" className="py-2.5 rounded-xl text-xs font-bold text-slate-600 focus:bg-primary/5 focus:text-primary">Accounts & Finance</SelectItem>
-                  <SelectItem value="Sales & Marketing" className="py-2.5 rounded-xl text-xs font-bold text-slate-600 focus:bg-primary/5 focus:text-primary">Sales & Marketing</SelectItem>
-                  <SelectItem value="Administration" className="py-2.5 rounded-xl text-xs font-bold text-slate-600 focus:bg-primary/5 focus:text-primary">General Administration</SelectItem>
+                  <SelectItem value="Production" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Production & Crew</SelectItem>
+                  <SelectItem value="Creative" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Creative Operations</SelectItem>
+                  <SelectItem value="Finance" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Accounts & Finance</SelectItem>
+                  <SelectItem value="Sales & Marketing" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">Sales & Marketing</SelectItem>
+                  <SelectItem value="Administration" className="py-2.5 rounded-xl text-xs font-bold text-muted-foreground/80 focus:bg-primary/5 focus:text-primary">General Administration</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -409,7 +409,7 @@ export default function RBACPage() {
             <Button variant="outline" onClick={() => {
               setIsChangeRoleOpen(false);
               setEditingMember(null);
-            }} className="rounded-xl h-11 w-full md:w-auto font-bold border-slate-200">Cancel</Button>
+            }} className="rounded-xl h-11 w-full md:w-auto font-bold border-border">Cancel</Button>
             <Button 
               onClick={() => handleUpdateMemberCredentials(editingMember?.id, selectedRole, selectedDepartment)} 
               className="rounded-xl h-11 w-full md:w-auto font-bold bg-primary hover:bg-primary/95 text-white"

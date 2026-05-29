@@ -77,12 +77,12 @@ import { broadcastTableUpdate } from "@/supabase/hooks/use-collection";
 type ViewMode = 'grid' | 'list' | 'timeline' | 'board';
 
 const PROJECT_COLORS = [
-  'bg-rose-500',
-  'bg-indigo-500',
+  'bg-accent',
+  'bg-accent',
   'bg-emerald-500',
-  'bg-amber-500',
-  'bg-cyan-500',
-  'bg-purple-500'
+  'bg-accent',
+  'bg-accent',
+  'bg-accent'
 ];
 
 export default function ProjectsPage() {
@@ -313,15 +313,15 @@ export default function ProjectsPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div className="space-y-1">
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900">Production <span className="text-gradient">Projects</span></h1>
-          <p className="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-primary">Production <span className="text-gradient">Projects</span></h1>
+          <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
             <Film className="h-4 w-4" /> Global content lifecycle
           </p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <div className="relative w-full sm:w-72 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input 
               placeholder="Search projects..." 
               className="pl-11 h-12 rounded-[10px] border-white/60 bg-white/40 backdrop-blur-xl focus:bg-white focus:ring-primary/20 transition-all shadow-premium"
@@ -329,7 +329,7 @@ export default function ProjectsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button onClick={() => setIsCreateOpen(true)} className="h-12 px-6 gap-3 rounded-[10px] bg-slate-900 hover:bg-slate-800 text-white font-black shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
+          <Button onClick={() => setIsCreateOpen(true)} className="h-12 px-6 gap-3 rounded-[10px] bg-primary hover:bg-primary text-white font-black shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
                 <Plus className="h-5 w-5" /> New Project
               </Button>
               <CreateProjectWizard isOpen={isCreateOpen} onOpenChange={setIsCreateOpen} onSuccess={reloadProjects} />
@@ -338,7 +338,7 @@ export default function ProjectsPage() {
 
       {/* Toolbar Section */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white/40 backdrop-blur-xl p-2 rounded-[10px] border border-white/60 shadow-premium gap-4 mx-2">
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100/50 rounded-[10px]">
+        <div className="flex items-center gap-1.5 p-1 bg-muted/50 rounded-[10px]">
           {[
             { id: 'grid', icon: LayoutGrid, label: 'Grid' },
             { id: 'list', icon: ListIcon, label: 'List' },
@@ -351,7 +351,7 @@ export default function ProjectsPage() {
               onClick={() => setViewMode(mode.id as ViewMode)}
               className={cn(
                 "h-9 px-6 gap-2 rounded-xl transition-all duration-500", 
-                viewMode === mode.id ? "bg-white shadow-md text-primary font-black" : "text-slate-500 font-bold hover:bg-white/50"
+                viewMode === mode.id ? "bg-white shadow-md text-primary font-black" : "text-muted-foreground font-bold hover:bg-white/50"
               )}
             >
               <mode.icon className="h-4 w-4" /> 
@@ -369,12 +369,12 @@ export default function ProjectsPage() {
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-10 px-5 gap-2 rounded-xl border-slate-200 bg-white/50 font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all">
+              <Button variant="outline" className="h-10 px-5 gap-2 rounded-xl border-border bg-white/50 font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all">
                 <Filter className="h-4 w-4" /> Intelligence Filter
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="rounded-[10px] w-64 glass-panel border-white/60 p-2">
-              <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 px-4 py-3">Classification</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-4 py-3">Classification</DropdownMenuLabel>
               {['all', 'in_progress', 'completed', 'on_hold'].map((status) => (
                 <DropdownMenuCheckboxItem 
                   key={status}
@@ -394,10 +394,10 @@ export default function ProjectsPage() {
       <div className="min-h-[500px] px-2 pb-12">
         {filteredProjects.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 bg-white/20 backdrop-blur-md rounded-[4rem] border-2 border-dashed border-white/60">
-            <div className="h-20 w-20 rounded-[10px] bg-slate-50 flex items-center justify-center mb-6">
+            <div className="h-20 w-20 rounded-[10px] bg-muted flex items-center justify-center mb-6">
               <Archive className="h-8 w-8 text-slate-300" />
             </div>
-            <p className="text-slate-400 font-black uppercase tracking-[0.2em] text-xs">Zero operational units detected</p>
+            <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-xs">Zero operational units detected</p>
             <Button variant="link" className="mt-4 text-primary font-black uppercase tracking-widest text-[10px]" onClick={() => setIsCreateOpen(true)}>Initialize Primary Protocol</Button>
           </div>
         ) : (
@@ -424,14 +424,14 @@ export default function ProjectsPage() {
       <AlertDialog open={!!projectToArchive} onOpenChange={(open) => !open && setProjectToArchive(null)}>
         <AlertDialogContent className="rounded-[10px] glass-panel border-white/60 p-12">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-3xl font-black tracking-tight text-slate-900">Decommission Unit?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium text-lg leading-relaxed pt-2">
-              Proceeding will move <span className="font-black text-slate-900">"{projectToArchive?.project_name}"</span> to the high-security archive vault. Primary operations will be suspended.
+            <AlertDialogTitle className="text-3xl font-black tracking-tight text-primary">Decommission Unit?</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground font-medium text-lg leading-relaxed pt-2">
+              Proceeding will move <span className="font-black text-primary">"{projectToArchive?.project_name}"</span> to the high-security archive vault. Primary operations will be suspended.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-8">
-            <AlertDialogCancel className="h-12 px-8 rounded-[10px] border-slate-200 font-black uppercase tracking-widest text-[10px]">Abort Protocol</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmArchive} className="h-12 px-8 rounded-[10px] bg-rose-600 hover:bg-rose-700 text-white font-black uppercase tracking-widest text-[10px] shadow-lg shadow-rose-600/20">
+            <AlertDialogCancel className="h-12 px-8 rounded-[10px] border-border font-black uppercase tracking-widest text-[10px]">Abort Protocol</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmArchive} className="h-12 px-8 rounded-[10px] bg-accent hover:bg-accent text-white font-black uppercase tracking-widest text-[10px] shadow-lg shadow-accent/20">
               Confirm Decommission
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -475,13 +475,13 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                   <MoreVertical className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="rounded-[10px] bg-white border border-slate-100 shadow-xl p-2 w-52 z-[100]">
+              <DropdownMenuContent align="end" className="rounded-[10px] bg-white border border-border shadow-xl p-2 w-52 z-[100]">
                 <DropdownMenuItem asChild className="rounded-xl m-1 py-3 font-bold cursor-pointer">
                   <Link href={`/projects/${project.id}`} className="gap-3">
                     <ExternalLink className="h-4 w-4" /> View Details
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-rose-500 font-bold gap-3 rounded-xl m-1 py-3 cursor-pointer focus:bg-rose-50" onClick={() => onArchive(project)}>
+                <DropdownMenuItem className="text-accent font-bold gap-3 rounded-xl m-1 py-3 cursor-pointer focus:bg-accent/10" onClick={() => onArchive(project)}>
                   <Archive className="h-4 w-4" /> Archive Project
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -495,25 +495,25 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
         <CardContent className="p-6 space-y-5 bg-white/60 backdrop-blur-3xl">
           <div className="space-y-3">
             <div className="flex justify-between items-end">
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-normal">Health Index</span>
-              <span className="text-lg font-black text-slate-900 leading-none">{project.progress || 0}%</span>
+              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-normal">Health Index</span>
+              <span className="text-lg font-black text-primary leading-none">{project.progress || 0}%</span>
             </div>
-            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+            <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
                <div 
                  className={cn("h-full transition-all duration-1000 shadow-lg", project.color?.replace('bg-', 'bg-') || 'bg-primary')} 
                  style={{ width: `${project.progress || 0}%` }} 
                />
             </div>
           </div>
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-border">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400">
+              <div className="h-8 w-8 rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
                 <Clock className="h-4 w-4" />
               </div>
-              <span className="text-[10px] font-black text-slate-700 uppercase tracking-wider">{project.deadline || 'TBD'}</span>
+              <span className="text-[10px] font-black text-primary/80 uppercase tracking-wider">{project.deadline || 'TBD'}</span>
             </div>
             <div className="flex -space-x-3">
-              <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100">
+              <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-border">
                 <AvatarFallback className="text-[8px] font-black bg-primary text-white">{(project.project_name || 'P').charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
@@ -537,7 +537,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
         </div>
 
         <div className="w-full md:w-[42%] ml-16 md:ml-0">
-          <Card className="premium-card rounded-[10px] group border border-slate-100/50 shadow-premium hover:shadow-2xl transition-all duration-700 relative overflow-hidden bg-white/60 backdrop-blur-xl">
+          <Card className="premium-card rounded-[10px] group border border-border/50 shadow-premium hover:shadow-2xl transition-all duration-700 relative overflow-hidden bg-white/60 backdrop-blur-xl">
             <div className={cn(
               "absolute top-0 bottom-0 w-1.5 transition-all duration-500 group-hover:w-2.5",
               isEven ? "right-0" : "left-0",
@@ -546,21 +546,21 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <CardContent className={cn("p-6 space-y-5", isEven ? "pr-8" : "pl-8")}>
               <div className="flex items-start justify-between">
                 <div className="space-y-1.5">
-                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                   <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-1.5">
                      <Briefcase className="h-3 w-3" /> {project.client_name}
                    </p>
                    <Link href={`/projects/${project.id}`}>
-                     <h4 className="font-black text-xl tracking-tight text-slate-900 group-hover:text-primary transition-colors leading-tight line-clamp-2">{project.project_name}</h4>
+                     <h4 className="font-black text-xl tracking-tight text-primary group-hover:text-primary transition-colors leading-tight line-clamp-2">{project.project_name}</h4>
                    </Link>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl hover:bg-slate-100 text-slate-400 shrink-0">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl hover:bg-muted text-muted-foreground shrink-0">
                       <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="rounded-[10px] bg-white border border-slate-100 shadow-xl p-2 z-[100]">
-                    <DropdownMenuItem className="text-rose-600 font-bold gap-3 rounded-xl m-1 py-3 cursor-pointer focus:bg-rose-50" onClick={() => onArchive(project)}>
+                  <DropdownMenuContent align="end" className="rounded-[10px] bg-white border border-border shadow-xl p-2 z-[100]">
+                    <DropdownMenuItem className="text-accent font-bold gap-3 rounded-xl m-1 py-3 cursor-pointer focus:bg-accent/10" onClick={() => onArchive(project)}>
                       <Archive className="h-4 w-4" /> Archive Project
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -568,33 +568,33 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
-                  <Calendar className="h-3.5 w-3.5 text-slate-400" />
-                  <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest">{project.deadline || 'TBD'}</span>
+                <div className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded-xl border border-border">
+                  <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-[10px] font-black text-primary/80 uppercase tracking-widest">{project.deadline || 'TBD'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className={cn("text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none", project.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-primary/10 text-primary')}>
                     {project.status?.replace('_', ' ')}
                   </Badge>
                   {isPilot && (
-                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none text-fuchsia-700 bg-fuchsia-100">
+                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border-none text-accent bg-accent/10">
                       Pilot
                     </Badge>
                   )}
                   {displayType && (
-                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border border-slate-200 text-slate-500 bg-white">
+                    <Badge variant="outline" className="text-[9px] uppercase font-black px-3 py-1.5 rounded-xl border border-border text-muted-foreground bg-white">
                       {displayType}
                     </Badge>
                   )}
                 </div>
               </div>
 
-              <div className="space-y-2.5 pt-4 border-t border-slate-100">
-                <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-400">
-                  <span className="flex items-center gap-1.5"><Zap className={cn("h-3 w-3", project.color?.replace('bg-', 'text-') || 'text-amber-500')} /> Progress</span>
-                  <span className="text-slate-800">{project.progress}%</span>
+              <div className="space-y-2.5 pt-4 border-t border-border">
+                <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                  <span className="flex items-center gap-1.5"><Zap className={cn("h-3 w-3", project.color?.replace('bg-', 'text-') || 'text-accent')} /> Progress</span>
+                  <span className="text-primary">{project.progress}%</span>
                 </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
                    <div className={cn("h-full transition-all duration-1000 shadow-md", project.color || "bg-primary")} style={{ width: `${project.progress}%` }} />
                 </div>
               </div>
@@ -615,47 +615,47 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
           >
             <div className={cn("absolute left-0 top-0 bottom-0 w-2 transition-all group-hover:w-3", project.color?.replace('bg-', 'bg-') || 'bg-primary')} />
             <div className="flex items-center gap-4">
-              <h3 className="font-black text-xl tracking-tight text-slate-900 group-hover:text-primary transition-colors truncate">
+              <h3 className="font-black text-xl tracking-tight text-primary group-hover:text-primary transition-colors truncate">
                 {project.project_name}
               </h3>
-              <div className="h-8 w-8 rounded-xl bg-slate-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-2 text-primary">
+              <div className="h-8 w-8 rounded-xl bg-muted flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-2 text-primary">
                 <ArrowRight className="h-4 w-4" />
               </div>
             </div>
-            <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-normal">
+            <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-normal">
               <Briefcase className="h-3.5 w-3.5" />
               {project.client_name}
             </div>
           </Link>
 
-          <div className="flex-1 px-8 py-5 md:py-0 border-y md:border-y-0 md:border-x border-slate-100/50">
+          <div className="flex-1 px-8 py-5 md:py-0 border-y md:border-y-0 md:border-x border-border/50">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 items-center">
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
-                  <div className="flex items-center gap-2 text-slate-400">
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Layers className="h-4 w-4" />
                     <span className="text-[9px] font-black uppercase tracking-normal">Progress</span>
                   </div>
                   <span className="text-xl font-black text-primary">{project.progress || 0}%</span>
                 </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                <div className="h-2 w-full bg-muted rounded-full overflow-hidden shadow-inner">
                   <div className={cn("h-full transition-all duration-1000 shadow-md", project.color?.replace('bg-', 'bg-') || 'bg-primary')} style={{ width: `${project.progress || 0}%` }} />
                 </div>
               </div>
               
-              <div className="hidden sm:flex flex-col gap-2 pl-10 border-l border-slate-100/50">
-                <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Status</span>
+              <div className="hidden sm:flex flex-col gap-2 pl-10 border-l border-border/50">
+                <span className="text-[9px] uppercase font-black text-muted-foreground tracking-normal">Status</span>
                 <div className="flex flex-col gap-2">
-                  <Badge className="w-fit text-[10px] font-black uppercase bg-slate-900 text-white border-none py-1.5 px-4 rounded-xl">
+                  <Badge className="w-fit text-[10px] font-black uppercase bg-primary text-white border-none py-1.5 px-4 rounded-xl">
                     {project.status?.replace('_', ' ')}
                   </Badge>
                   {isPilot && (
-                    <Badge variant="outline" className="w-fit text-[9px] font-black uppercase border-none bg-fuchsia-100 text-fuchsia-700 py-1 px-3 rounded-xl">
+                    <Badge variant="outline" className="w-fit text-[9px] font-black uppercase border-none bg-accent/10 text-accent py-1 px-3 rounded-xl">
                       Pilot
                     </Badge>
                   )}
                   {displayType && (
-                    <Badge variant="outline" className="w-fit text-[9px] font-black uppercase border-slate-200 text-slate-500 py-1 px-3 rounded-xl">
+                    <Badge variant="outline" className="w-fit text-[9px] font-black uppercase border-border text-muted-foreground py-1 px-3 rounded-xl">
                       {displayType}
                     </Badge>
                   )}
@@ -664,25 +664,25 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             </div>
           </div>
 
-          <div className="px-6 py-5 md:w-[30%] flex items-center justify-between gap-8 bg-slate-50/20 rounded-r-[15px]">
+          <div className="px-6 py-5 md:w-[30%] flex items-center justify-between gap-8 bg-muted/20 rounded-r-[15px]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 items-center">
               <div className="flex flex-col space-y-2">
-                <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Deadline</span>
+                <span className="text-[9px] uppercase font-black text-muted-foreground tracking-normal">Deadline</span>
                 <div className="flex items-center gap-2.5">
-                  <Calendar className="h-4 w-4 text-rose-500 shrink-0" />
-                  <span className="text-sm font-black text-slate-900 truncate">{project.deadline || 'TBD'}</span>
+                  <Calendar className="h-4 w-4 text-accent shrink-0" />
+                  <span className="text-sm font-black text-primary truncate">{project.deadline || 'TBD'}</span>
                 </div>
               </div>
               
               <div className="hidden lg:flex flex-col space-y-2">
-                <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Assigned crew</span>
+                <span className="text-[9px] uppercase font-black text-muted-foreground tracking-normal">Assigned crew</span>
                 <div className="flex -space-x-3">
                   {project.ProjectMember && project.ProjectMember.length > 0 ? (
                     project.ProjectMember.map((member: any) => {
                       const user = companyUsers?.find(u => u.id === member.user_id);
                       const name = user?.fullName || user?.full_name || user?.email || 'Unknown';
                       return (
-                        <Avatar key={member.id} className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title={`${name} (${member.role})`}>
+                        <Avatar key={member.id} className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-border transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title={`${name} (${member.role})`}>
                           <AvatarFallback className="text-[8px] font-black bg-primary text-white">
                             {name.charAt(0).toUpperCase()}
                           </AvatarFallback>
@@ -690,8 +690,8 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                       );
                     })
                   ) : (
-                    <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title="Unassigned">
-                      <AvatarFallback className="text-[8px] font-black bg-slate-200 text-slate-500">?</AvatarFallback>
+                    <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-border transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0" title="Unassigned">
+                      <AvatarFallback className="text-[8px] font-black bg-secondary text-muted-foreground">?</AvatarFallback>
                     </Avatar>
                   )}
                 </div>
@@ -701,19 +701,19 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <div className="flex items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-12 w-12 rounded-[10px] hover:bg-white text-slate-400 hover:text-slate-900 transition-all shadow-sm">
+                  <Button variant="ghost" size="icon" className="h-12 w-12 rounded-[10px] hover:bg-white text-muted-foreground hover:text-primary transition-all shadow-sm">
                     <MoreVertical className="h-6 w-6" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="rounded-[10px] w-64 bg-white border border-slate-100 p-2 shadow-2xl z-[100]">
-                  <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400 px-5 py-4">Options</DropdownMenuLabel>
+                <DropdownMenuContent align="end" className="rounded-[10px] w-64 bg-white border border-border p-2 shadow-2xl z-[100]">
+                  <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-5 py-4">Options</DropdownMenuLabel>
                   <DropdownMenuItem asChild className="rounded-xl m-1 py-3.5 font-bold cursor-pointer transition-all">
                     <Link href={`/projects/${project.id}`} className="flex items-center gap-4">
                       <ExternalLink className="h-4 w-4 text-primary" /> View Details
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-slate-100/50 my-1 mx-2" />
-                  <DropdownMenuItem className="rounded-xl m-1 py-3.5 font-bold cursor-pointer text-rose-600 focus:bg-rose-50" onClick={() => onArchive(project)}>
+                  <DropdownMenuSeparator className="bg-muted/50 my-1 mx-2" />
+                  <DropdownMenuItem className="rounded-xl m-1 py-3.5 font-bold cursor-pointer text-accent focus:bg-accent/10" onClick={() => onArchive(project)}>
                     <Archive className="h-4 w-4" /> Archive Project
                   </DropdownMenuItem>
                 </DropdownMenuContent>

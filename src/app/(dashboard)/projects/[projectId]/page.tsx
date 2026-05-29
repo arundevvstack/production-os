@@ -455,10 +455,10 @@ export default function ProjectWorkspacePage() {
 
   const getFileIcon = (fileType: string) => {
     switch(fileType?.toLowerCase()) {
-      case 'video': return <FileVideo className="h-8 w-8 text-rose-500" />;
-      case 'image': return <FileImage className="h-8 w-8 text-indigo-500" />;
-      case 'audio': return <FileAudio className="h-8 w-8 text-amber-500" />;
-      default: return <FileText className="h-8 w-8 text-slate-500" />;
+      case 'video': return <FileVideo className="h-8 w-8 text-accent" />;
+      case 'image': return <FileImage className="h-8 w-8 text-accent" />;
+      case 'audio': return <FileAudio className="h-8 w-8 text-accent" />;
+      default: return <FileText className="h-8 w-8 text-muted-foreground" />;
     }
   };
 
@@ -479,20 +479,20 @@ export default function ProjectWorkspacePage() {
       <AlertDialog open={!!pipelineChangeTarget} onOpenChange={(open) => !open && setPipelineChangeTarget(null)}>
         <AlertDialogContent className="rounded-2xl border-0 shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-black text-rose-600 flex items-center gap-2">
+            <AlertDialogTitle className="text-xl font-black text-accent flex items-center gap-2">
               <ShieldAlert className="h-5 w-5" /> Change Pipeline Type?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-600">
+            <AlertDialogDescription className="text-muted-foreground/80">
               Changing to <strong>{pipelineChangeTarget}</strong> will permanently delete all current stages, tasks, dependencies, and progress in this workspace. It will generate a completely fresh workspace based on the new template.
               <br/><br/>
               This action cannot be undone. Are you sure you want to reset the project workspace?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-xl border-slate-200">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl border-border">Cancel</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handlePipelineChangeConfirm}
-              className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl"
+              className="bg-accent hover:bg-accent text-white rounded-xl"
               disabled={isSubmitting}
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Yes, Reset Workspace'}
@@ -512,13 +512,13 @@ export default function ProjectWorkspacePage() {
           <div className="flex items-start gap-5">
             <button
               onClick={() => router.push("/projects")}
-              className="mt-1 h-9 w-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all shrink-0"
+              className="mt-1 h-9 w-9 rounded-xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary/80 hover:bg-muted transition-all shrink-0"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
             <div className="space-y-2">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none">{project.project_name}</h1>
+                <h1 className="text-3xl font-black text-primary tracking-tight leading-none">{project.project_name}</h1>
                 {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) ? (
                   <Select
                     defaultValue={project.status}
@@ -543,7 +543,7 @@ export default function ProjectWorkspacePage() {
                       }
                     }}
                   >
-                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-slate-50 border-0 text-slate-600 w-auto focus:ring-0 shadow-none">
+                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-muted border-0 text-muted-foreground/80 w-auto focus:ring-0 shadow-none">
                       <SelectValue placeholder="Phase" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl p-1.5 shadow-xl border-0">
@@ -554,7 +554,7 @@ export default function ProjectWorkspacePage() {
                     </SelectContent>
                   </Select>
                 ) : (
-                  <span className="rounded-full bg-slate-50 text-slate-500 font-black text-[10px] uppercase h-7 px-3 flex items-center">{project.status}</span>
+                  <span className="rounded-full bg-muted text-muted-foreground font-black text-[10px] uppercase h-7 px-3 flex items-center">{project.status}</span>
                 )}
                 {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) ? (
                   <Select
@@ -568,7 +568,7 @@ export default function ProjectWorkspacePage() {
                       }
                     }}
                   >
-                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-white border border-slate-200 text-slate-600 w-auto focus:ring-0 shadow-sm hover:bg-slate-50">
+                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-white border border-border text-muted-foreground/80 w-auto focus:ring-0 shadow-sm hover:bg-muted">
                       <SelectValue placeholder="Pipeline" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl p-1.5 shadow-xl border-0">
@@ -578,13 +578,13 @@ export default function ProjectWorkspacePage() {
                     </SelectContent>
                   </Select>
                 ) : (
-                  <span className="rounded-full bg-white border border-slate-200 text-slate-500 font-black text-[10px] uppercase h-7 px-3 flex items-center shadow-sm">{project.project_type || "Normal Production"}</span>
+                  <span className="rounded-full bg-white border border-border text-muted-foreground font-black text-[10px] uppercase h-7 px-3 flex items-center shadow-sm">{project.project_type || "Normal Production"}</span>
                 )}
               </div>
-              <div className="flex items-center gap-3 text-sm text-slate-400">
-                <span>Client: <span className="text-slate-600 font-bold">{project.client_name || '—'}</span></span>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span>Client: <span className="text-muted-foreground/80 font-bold">{project.client_name || '—'}</span></span>
                 <span className="opacity-30">•</span>
-                <span className="font-mono text-[10px] bg-slate-50 px-2 py-0.5 rounded text-slate-400">{projectId.slice(0, 8).toUpperCase()}</span>
+                <span className="font-mono text-[10px] bg-muted px-2 py-0.5 rounded text-muted-foreground">{projectId.slice(0, 8).toUpperCase()}</span>
               </div>
             </div>
           </div>
@@ -605,16 +605,16 @@ export default function ProjectWorkspacePage() {
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-slate-700">{liveProgress}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-[9px] font-black text-primary/80">{liveProgress}%</span>
                 </div>
                 <div>
-                  <p className="text-lg font-black text-slate-900">{liveProgress}%</p>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase">Complete</p>
+                  <p className="text-lg font-black text-primary">{liveProgress}%</p>
+                  <p className="text-[9px] text-muted-foreground font-bold uppercase">Complete</p>
                 </div>
               </div>
             </div>
             <Button
-              className="h-11 px-6 gap-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 font-black text-xs active:scale-95 transition-all"
+              className="h-11 px-6 gap-2 rounded-xl bg-primary text-white hover:bg-primary font-black text-xs active:scale-95 transition-all"
               onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' && hasFinanceAccess ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}
             >
               <Plus className="h-4 w-4" />
@@ -626,25 +626,25 @@ export default function ProjectWorkspacePage() {
         {/* Tab bar — white, bottom-border active indicator */}
         <div className="mt-8">
           <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-transparent p-0 h-auto flex flex-wrap gap-0 border-b border-slate-100 w-full justify-start rounded-none">
+            <TabsList className="bg-transparent p-0 h-auto flex flex-wrap gap-0 border-b border-border w-full justify-start rounded-none">
               {projectStages?.map(stage => (
                 <TabsTrigger
                   key={stage.id}
                   value={stage.name}
-                  className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 data-[state=active]:shadow-none transition-all"
+                  className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:shadow-none transition-all"
                 >
                   {getPhaseIcon(stage.name.toLowerCase())} {stage.name}
                 </TabsTrigger>
               ))}
-              <TabsTrigger value="assets" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
+              <TabsTrigger value="assets" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary transition-all">
                 <Package className="h-3.5 w-3.5" /> Assets
               </TabsTrigger>
               {hasFinanceAccess && (
-                <TabsTrigger value="finances" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
+                <TabsTrigger value="finances" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary transition-all">
                   <Receipt className="h-3.5 w-3.5" /> Finances
                 </TabsTrigger>
               )}
-              <TabsTrigger value="timeline" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
+              <TabsTrigger value="timeline" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-primary transition-all">
                 <Calendar className="h-3.5 w-3.5" /> Timeline
               </TabsTrigger>
             </TabsList>
@@ -661,20 +661,20 @@ export default function ProjectWorkspacePage() {
           <TabsContent key={stage.id} value={stage.name} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
               {/* Main objectives */}
-              <div className="lg:col-span-2 border-r border-slate-100">
-                <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between">
+              <div className="lg:col-span-2 border-r border-border">
+                <div className="px-8 py-6 border-b border-border flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                       {getPhaseIcon(stage.name.toLowerCase())}
                     </div>
                     <div>
-                      <h3 className="font-black text-slate-900 capitalize">{stage.name}</h3>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{phaseObjectives(stage.name).length} tasks · {phaseProgress(stage.name)}% complete</p>
+                      <h3 className="font-black text-primary capitalize">{stage.name}</h3>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">{phaseObjectives(stage.name).length} tasks · {phaseProgress(stage.name)}% complete</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Link href={`/projects/${projectId}/approvals`}>
-                      <Button size="sm" variant="outline" className="rounded-xl font-bold bg-white text-slate-700 border-slate-200 shadow-sm hover:bg-slate-50 gap-2 h-9">
+                      <Button size="sm" variant="outline" className="rounded-xl font-bold bg-white text-primary/80 border-border shadow-sm hover:bg-muted gap-2 h-9">
                         <CheckCircle2 className="h-3.5 w-3.5" /> Review
                       </Button>
                     </Link>
@@ -687,7 +687,7 @@ export default function ProjectWorkspacePage() {
                 {phaseObjectives(stage.name).length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-24 gap-4 text-slate-300">
                     <Target className="h-10 w-10" />
-                    <p className="text-sm font-bold text-slate-400">No tasks for this phase yet</p>
+                    <p className="text-sm font-bold text-muted-foreground">No tasks for this phase yet</p>
                     <Button size="sm" variant="outline" className="rounded-xl" onClick={() => setIsAddObjectiveOpen(true)}>Add First Task</Button>
                   </div>
                 ) : (
@@ -698,7 +698,7 @@ export default function ProjectWorkspacePage() {
                       const actualHrs = parseFloat(objective.actual_hours || '0');
                       const estHrs = parseFloat(objective.estimated_hours || '0');
                       return (
-                        <div key={objective.id} className="flex items-start gap-4 px-8 py-5 hover:bg-slate-50/50 transition-colors group">
+                        <div key={objective.id} className="flex items-start gap-4 px-8 py-5 hover:bg-muted/50 transition-colors group">
                           {/* Row number */}
                           <span className="text-[10px] font-black text-slate-300 w-5 pt-0.5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
 
@@ -711,18 +711,18 @@ export default function ProjectWorkspacePage() {
 
                           {/* Main content */}
                           <div className="flex-1 min-w-0 space-y-2">
-                            <p className={cn("font-bold text-sm leading-snug", isDone ? 'line-through text-slate-300' : 'text-slate-800')}>
+                            <p className={cn("font-bold text-sm leading-snug", isDone ? 'line-through text-slate-300' : 'text-primary')}>
                               {objective.title}
                             </p>
 
                             {/* Meta row */}
                             <div className="flex items-center gap-2 flex-wrap">
-                              {objective.department && <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{objective.department}</span>}
+                              {objective.department && <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">{objective.department}</span>}
                               {objective.priority && (
                                 <span className={cn("text-[9px] font-black uppercase px-1.5 py-0.5 rounded",
-                                  objective.priority === 'High' ? 'bg-red-50 text-red-500' :
-                                  objective.priority === 'Medium' ? 'bg-amber-50 text-amber-500' :
-                                  'bg-slate-100 text-slate-400'
+                                  objective.priority === 'High' ? 'bg-destructive/10 text-destructive' :
+                                  objective.priority === 'Medium' ? 'bg-accent/10 text-accent' :
+                                  'bg-muted text-muted-foreground'
                                 )}>{objective.priority}</span>
                               )}
                               {actualHrs > 0 && (
@@ -738,7 +738,7 @@ export default function ProjectWorkspacePage() {
                                 value={objective.assignee_id || 'unassigned'}
                                 onValueChange={(val) => handleAssignObjective(objective.id, val === 'unassigned' ? null : val)}
                               >
-                                <SelectTrigger className="h-7 text-[10px] font-bold w-auto max-w-[180px] bg-transparent border-0 shadow-none px-0 text-slate-400 hover:text-slate-700 focus:ring-0 gap-1.5 pl-0">
+                                <SelectTrigger className="h-7 text-[10px] font-bold w-auto max-w-[180px] bg-transparent border-0 shadow-none px-0 text-muted-foreground hover:text-primary/80 focus:ring-0 gap-1.5 pl-0">
                                   {assignee ? (
                                     <span className="flex items-center gap-1.5">
                                       <span className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[8px] font-black shrink-0">
@@ -753,7 +753,7 @@ export default function ProjectWorkspacePage() {
                                   )}
                                 </SelectTrigger>
                                 <SelectContent className="rounded-xl border-0 shadow-xl p-1.5 w-52">
-                                  <SelectItem value="unassigned" className="rounded-lg text-[10px] font-bold text-slate-400 italic">Unassigned</SelectItem>
+                                  <SelectItem value="unassigned" className="rounded-lg text-[10px] font-bold text-muted-foreground italic">Unassigned</SelectItem>
                                   {companyUsers?.map(user => (
                                     <SelectItem key={user.id} value={user.id} className="rounded-lg text-xs font-bold">
                                       <span className="flex items-center gap-2">
@@ -761,7 +761,7 @@ export default function ProjectWorkspacePage() {
                                           {(user.fullName || user.email || 'U')[0].toUpperCase()}
                                         </span>
                                         {user.fullName || user.email?.split('@')[0]}
-                                        <span className="text-slate-400 text-[9px] ml-auto">{(user.role_id || '').replace('_', ' ')}</span>
+                                        <span className="text-muted-foreground text-[9px] ml-auto">{(user.role_id || '').replace('_', ' ')}</span>
                                       </span>
                                     </SelectItem>
                                   ))}
@@ -774,7 +774,7 @@ export default function ProjectWorkspacePage() {
                           <div className="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               onClick={() => { setTimeLogObjective(objective); setIsLogTimeOpen(true); }}
-                              className="h-7 px-2.5 rounded-lg bg-slate-50 hover:bg-primary/5 text-slate-400 hover:text-primary flex items-center gap-1.5 text-[10px] font-black uppercase transition-colors"
+                              className="h-7 px-2.5 rounded-lg bg-muted hover:bg-primary/5 text-muted-foreground hover:text-primary flex items-center gap-1.5 text-[10px] font-black uppercase transition-colors"
                             >
                               <Clock className="h-3 w-3" /> Log Time
                             </button>
@@ -803,35 +803,35 @@ export default function ProjectWorkspacePage() {
                       />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xl font-black text-slate-900">{phaseProgress(stage.name)}%</span>
+                      <span className="text-xl font-black text-primary">{phaseProgress(stage.name)}%</span>
                     </div>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs font-black text-slate-700 capitalize">{stage.name}</p>
-                    <p className="text-[10px] text-slate-400 font-bold">{completedPhaseObjectives(stage.name)} of {phaseObjectives(stage.name).length} done</p>
+                    <p className="text-xs font-black text-primary/80 capitalize">{stage.name}</p>
+                    <p className="text-[10px] text-muted-foreground font-bold">{completedPhaseObjectives(stage.name)} of {phaseObjectives(stage.name).length} done</p>
                   </div>
                 </div>
 
                 {/* Stage info */}
-                <div className="space-y-3 pt-4 border-t border-slate-100">
+                <div className="space-y-3 pt-4 border-t border-border">
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
                     <span className={cn("text-[10px] font-black uppercase px-2 py-0.5 rounded-full",
                       stage.status === 'active' ? 'bg-emerald-50 text-emerald-600' :
                       stage.status === 'completed' ? 'bg-primary/10 text-primary' :
-                      'bg-slate-100 text-slate-500'
+                      'bg-muted text-muted-foreground'
                     )}>{stage.status || 'pending'}</span>
                   </div>
                   {stage.start_date && (
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Start</span>
-                      <span className="text-xs font-bold text-slate-700">{new Date(stage.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Start</span>
+                      <span className="text-xs font-bold text-primary/80">{new Date(stage.start_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                     </div>
                   )}
                   {stage.end_date && (
                     <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Due</span>
-                      <span className="text-xs font-bold text-slate-700">{new Date(stage.end_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Due</span>
+                      <span className="text-xs font-bold text-primary/80">{new Date(stage.end_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                     </div>
                   )}
                 </div>
@@ -844,24 +844,24 @@ export default function ProjectWorkspacePage() {
         <TabsContent value="assets" className="animate-in fade-in slide-in-from-bottom-2 duration-300">
           {!hasMediaAccess ? (
             <div className="flex flex-col items-center justify-center py-24 gap-4">
-              <div className="h-16 w-16 rounded-2xl bg-rose-50 flex items-center justify-center">
-                <ShieldAlert className="h-8 w-8 text-rose-400" />
+              <div className="h-16 w-16 rounded-2xl bg-accent/10 flex items-center justify-center">
+                <ShieldAlert className="h-8 w-8 text-accent" />
               </div>
-              <h2 className="text-xl font-black text-slate-800">Access Restricted</h2>
-              <p className="text-slate-400 font-medium max-w-sm text-center text-sm">Accounts profiles are blocked from browsing creative media files.</p>
+              <h2 className="text-xl font-black text-primary">Access Restricted</h2>
+              <p className="text-muted-foreground font-medium max-w-sm text-center text-sm">Accounts profiles are blocked from browsing creative media files.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-0">
               {/* Main content area */}
-              <div className="lg:col-span-3 border-r border-slate-100">
+              <div className="lg:col-span-3 border-r border-border">
 
                 {/* Folder tabs */}
-                <div className="grid grid-cols-4 border-b border-slate-100">
+                <div className="grid grid-cols-4 border-b border-border">
                   {[
-                    { id: "all", label: "All Assets", icon: FolderOpen, color: "text-slate-600", activeBg: "bg-slate-900 text-white" },
-                    { id: "pre-prod", label: "Pre-Production", icon: FileText, color: "text-blue-500", activeBg: "bg-blue-600 text-white" },
-                    { id: "production", label: "Production", icon: Camera, color: "text-rose-500", activeBg: "bg-rose-600 text-white" },
-                    { id: "post-prod", label: "Post-Production", icon: Scissors, color: "text-violet-500", activeBg: "bg-violet-600 text-white" },
+                    { id: "all", label: "All Assets", icon: FolderOpen, color: "text-muted-foreground/80", activeBg: "bg-primary text-white" },
+                    { id: "pre-prod", label: "Pre-Production", icon: FileText, color: "text-accent", activeBg: "bg-accent text-white" },
+                    { id: "production", label: "Production", icon: Camera, color: "text-accent", activeBg: "bg-accent text-white" },
+                    { id: "post-prod", label: "Post-Production", icon: Scissors, color: "text-accent", activeBg: "bg-accent text-white" },
                   ].map(f => (
                     <button
                       key={f.id}
@@ -869,11 +869,11 @@ export default function ProjectWorkspacePage() {
                       className={cn(
                         "flex flex-col items-center gap-1.5 py-5 px-4 text-center border-b-2 transition-all font-bold text-[10px] uppercase tracking-widest",
                         selectedFolderFilter === f.id
-                          ? "border-slate-900 text-slate-900 bg-slate-50"
-                          : "border-transparent text-slate-400 hover:text-slate-600 hover:bg-slate-50/50"
+                          ? "border-primary text-primary bg-muted"
+                          : "border-transparent text-muted-foreground hover:text-muted-foreground/80 hover:bg-muted/50"
                       )}
                     >
-                      <f.icon className={cn("h-5 w-5", selectedFolderFilter === f.id ? "text-slate-900" : f.color)} />
+                      <f.icon className={cn("h-5 w-5", selectedFolderFilter === f.id ? "text-primary" : f.color)} />
                       <span>{f.label}</span>
                     </button>
                   ))}
@@ -881,44 +881,44 @@ export default function ProjectWorkspacePage() {
 
                 {/* Video review player */}
                 {selectedAssetForReview && selectedAssetForReview.file_type === 'Video' && (
-                  <div className="mx-6 mt-6 rounded-2xl bg-slate-900 text-white overflow-hidden">
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+                  <div className="mx-6 mt-6 rounded-2xl bg-primary text-white overflow-hidden">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-primary">
                       <div className="flex items-center gap-3">
-                        <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+                        <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
                         <span className="text-xs font-black uppercase tracking-widest text-white/60">Live Review</span>
                         <span className="font-black text-white text-sm">{selectedAssetForReview.name}</span>
                       </div>
                       <button onClick={() => setSelectedAssetForReview(null)} className="text-white/30 hover:text-white text-xs font-bold transition-colors">Close ×</button>
                     </div>
                     <div className="relative aspect-video bg-black flex items-center justify-center group cursor-pointer">
-                      <Monitor className="h-12 w-12 text-slate-700" />
+                      <Monitor className="h-12 w-12 text-primary/80" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-5">
                         <div className="flex items-center gap-3">
-                          <button className="h-9 w-9 bg-rose-500 rounded-full flex items-center justify-center"><Play className="h-4 w-4 text-white fill-white" /></button>
-                          <div className="flex-1 bg-white/20 h-1 rounded-full"><div className="bg-rose-500 h-full w-[40%] rounded-full" /></div>
+                          <button className="h-9 w-9 bg-accent rounded-full flex items-center justify-center"><Play className="h-4 w-4 text-white fill-white" /></button>
+                          <div className="flex-1 bg-white/20 h-1 rounded-full"><div className="bg-accent h-full w-[40%] rounded-full" /></div>
                           <span className="text-xs font-mono text-white/60">00:48 / 02:30</span>
                         </div>
                       </div>
                     </div>
-                    <div className="p-5 space-y-3 border-t border-slate-800">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5" /> Timeline Feedback</p>
+                    <div className="p-5 space-y-3 border-t border-primary">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2"><MessageSquare className="h-3.5 w-3.5" /> Timeline Feedback</p>
                       <div className="space-y-2 max-h-40 overflow-y-auto">
                         {mockAnnotations.map((ann, i) => (
                           <div key={i} className="flex items-start gap-3 text-xs">
-                            <span className="font-mono font-black text-rose-400 bg-rose-950 px-2 py-0.5 rounded shrink-0">{ann.timestamp}</span>
+                            <span className="font-mono font-black text-accent bg-accent px-2 py-0.5 rounded shrink-0">{ann.timestamp}</span>
                             <div>
                               <p className="text-slate-300 font-medium">{ann.comment}</p>
-                              <p className="text-slate-600 text-[10px] font-bold uppercase mt-0.5">{ann.author}</p>
+                              <p className="text-muted-foreground/80 text-[10px] font-bold uppercase mt-0.5">{ann.author}</p>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <form onSubmit={handleAddAnnotation} className="flex gap-2 pt-3 border-t border-slate-800">
-                        <input maxLength={2} placeholder="mm" value={newAnnotation.minutes} onChange={e => setNewAnnotation({ ...newAnnotation, minutes: e.target.value })} className="w-12 bg-slate-800 border border-slate-700 text-white rounded-lg h-8 text-center text-xs font-mono" />
-                        <span className="text-slate-600 font-mono self-center">:</span>
-                        <input maxLength={2} placeholder="ss" value={newAnnotation.seconds} onChange={e => setNewAnnotation({ ...newAnnotation, seconds: e.target.value })} className="w-12 bg-slate-800 border border-slate-700 text-white rounded-lg h-8 text-center text-xs font-mono" />
-                        <input placeholder="Add feedback note..." value={newAnnotation.text} onChange={e => setNewAnnotation({ ...newAnnotation, text: e.target.value })} className="flex-1 bg-slate-800 border border-slate-700 text-white rounded-lg h-8 px-3 text-xs" />
-                        <button type="submit" className="h-8 px-4 bg-rose-500 hover:bg-rose-600 text-white text-xs font-black rounded-lg transition-colors">Tag</button>
+                      <form onSubmit={handleAddAnnotation} className="flex gap-2 pt-3 border-t border-primary">
+                        <input maxLength={2} placeholder="mm" value={newAnnotation.minutes} onChange={e => setNewAnnotation({ ...newAnnotation, minutes: e.target.value })} className="w-12 bg-primary border border-slate-700 text-white rounded-lg h-8 text-center text-xs font-mono" />
+                        <span className="text-muted-foreground/80 font-mono self-center">:</span>
+                        <input maxLength={2} placeholder="ss" value={newAnnotation.seconds} onChange={e => setNewAnnotation({ ...newAnnotation, seconds: e.target.value })} className="w-12 bg-primary border border-slate-700 text-white rounded-lg h-8 text-center text-xs font-mono" />
+                        <input placeholder="Add feedback note..." value={newAnnotation.text} onChange={e => setNewAnnotation({ ...newAnnotation, text: e.target.value })} className="flex-1 bg-primary border border-slate-700 text-white rounded-lg h-8 px-3 text-xs" />
+                        <button type="submit" className="h-8 px-4 bg-accent hover:bg-accent text-white text-xs font-black rounded-lg transition-colors">Tag</button>
                       </form>
                     </div>
                   </div>
@@ -928,21 +928,21 @@ export default function ProjectWorkspacePage() {
                 <div className="p-6">
                   {assets?.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-24 gap-5 text-slate-300">
-                      <div className="h-20 w-20 rounded-2xl bg-slate-50 flex items-center justify-center">
+                      <div className="h-20 w-20 rounded-2xl bg-muted flex items-center justify-center">
                         <UploadCloud className="h-10 w-10 text-slate-300" />
                       </div>
                       <div className="text-center">
-                        <p className="font-black text-slate-500 text-sm">No assets uploaded yet</p>
-                        <p className="text-slate-400 text-xs mt-1">Upload scripts, video packages, audio cuts, and deliverables</p>
+                        <p className="font-black text-muted-foreground text-sm">No assets uploaded yet</p>
+                        <p className="text-muted-foreground text-xs mt-1">Upload scripts, video packages, audio cuts, and deliverables</p>
                       </div>
-                      <button onClick={() => setIsAddAssetOpen(true)} className="h-10 px-6 bg-slate-900 text-white text-xs font-black rounded-xl hover:bg-slate-800 transition-colors">
+                      <button onClick={() => setIsAddAssetOpen(true)} className="h-10 px-6 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary transition-colors">
                         Upload First Asset
                       </button>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                       {assets?.map((asset) => (
-                        <div key={asset.id} className="group relative bg-white border border-slate-100 hover:border-slate-200 rounded-2xl overflow-hidden transition-all hover:shadow-md">
+                        <div key={asset.id} className="group relative bg-white border border-border hover:border-border rounded-2xl overflow-hidden transition-all hover:shadow-md">
                           {/* Thumbnail / type indicator */}
                           <div className={cn(
                             "h-28 flex items-center justify-center",
@@ -955,38 +955,38 @@ export default function ProjectWorkspacePage() {
                             {asset.file_type === 'Video' && (
                               <button onClick={() => setSelectedAssetForReview(asset)} className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
                                 <div className="h-10 w-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-                                  <Play className="h-4 w-4 text-rose-500 fill-rose-500" />
+                                  <Play className="h-4 w-4 text-accent fill-rose-500" />
                                 </div>
                               </button>
                             )}
                           </div>
                           {/* Meta */}
                           <div className="p-4">
-                            <p className="font-black text-sm text-slate-800 truncate">{asset.name}</p>
+                            <p className="font-black text-sm text-primary truncate">{asset.name}</p>
                             <div className="flex items-center justify-between mt-2">
                               <span className={cn(
                                 "text-[9px] font-black uppercase px-2 py-0.5 rounded-full",
-                                asset.file_type === 'Video' ? 'bg-rose-50 text-rose-500' :
-                                asset.file_type === 'Image' ? 'bg-indigo-50 text-indigo-500' :
-                                asset.file_type === 'Audio' ? 'bg-amber-50 text-amber-500' :
-                                'bg-slate-100 text-slate-500'
+                                asset.file_type === 'Video' ? 'bg-accent/10 text-accent' :
+                                asset.file_type === 'Image' ? 'bg-accent/10 text-accent' :
+                                asset.file_type === 'Audio' ? 'bg-accent/10 text-accent' :
+                                'bg-muted text-muted-foreground'
                               )}>{asset.file_type}</span>
-                              <span className="text-[10px] text-slate-400 font-bold">{(asset.file_size / 1000000).toFixed(1)} MB</span>
+                              <span className="text-[10px] text-muted-foreground font-bold">{(asset.file_size / 1000000).toFixed(1)} MB</span>
                             </div>
                           </div>
                           <div className="px-4 pb-4 flex gap-2">
                             {asset.file_type === 'Video' && (
-                              <button onClick={() => setSelectedAssetForReview(asset)} className="flex-1 h-7 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
+                              <button onClick={() => setSelectedAssetForReview(asset)} className="flex-1 h-7 bg-accent/10 hover:bg-accent/10 text-accent text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
                                 <Play className="h-3 w-3" /> Review
                               </button>
                             )}
                             <button
                               onClick={() => { setEditingAsset(asset); setNewAssetLink(asset.url); setIsEditAssetLinkOpen(true); }}
-                              className="flex-1 h-7 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1"
+                              className="flex-1 h-7 bg-accent/10 hover:bg-accent/10 text-accent text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1"
                             >
                               <LinkIcon className="h-3 w-3" /> Edit Link
                             </button>
-                            <a href={asset.url || '#'} target="_blank" rel="noopener noreferrer" className="flex-1 w-full h-7 bg-slate-50 hover:bg-slate-100 text-slate-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
+                            <a href={asset.url || '#'} target="_blank" rel="noopener noreferrer" className="flex-1 w-full h-7 bg-muted hover:bg-muted text-muted-foreground/80 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
                               <Download className="h-3 w-3" /> Open
                             </a>
                           </div>
@@ -1000,32 +1000,32 @@ export default function ProjectWorkspacePage() {
               {/* Sidebar */}
               <div className="p-6 space-y-6">
                 <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">Storage Governance</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-4">Storage Governance</p>
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between text-xs font-bold mb-2">
-                        <span className="text-slate-500">Pool Used</span>
-                        <span className="text-slate-800">1.4 GB / 25 GB</span>
+                        <span className="text-muted-foreground">Pool Used</span>
+                        <span className="text-primary">1.4 GB / 25 GB</span>
                       </div>
-                      <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full" style={{ width: '6%' }} />
                       </div>
                     </div>
                     <div className="space-y-2.5 text-xs">
                       <div className="flex justify-between">
-                        <span className="text-slate-400 font-medium">Total Assets</span>
-                        <span className="font-black text-slate-700">{assets?.length || 0}</span>
+                        <span className="text-muted-foreground font-medium">Total Assets</span>
+                        <span className="font-black text-primary/80">{assets?.length || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400 font-medium">Download Log</span>
+                        <span className="text-muted-foreground font-medium">Download Log</span>
                         <span className="font-black text-emerald-500">Active</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">By Type</p>
+                <div className="pt-4 border-t border-border">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-4">By Type</p>
                   <div className="space-y-2">
                     {['Video', 'Image', 'Audio', 'Document'].map(type => {
                       const count = assets?.filter(a => a.file_type === type).length || 0;
@@ -1033,16 +1033,16 @@ export default function ProjectWorkspacePage() {
                         <div key={type} className="flex items-center gap-3">
                           <div className={cn(
                             "h-7 w-7 rounded-lg flex items-center justify-center shrink-0",
-                            type === 'Video' ? 'bg-rose-50' : type === 'Image' ? 'bg-indigo-50' : type === 'Audio' ? 'bg-amber-50' : 'bg-slate-50'
+                            type === 'Video' ? 'bg-accent/10' : type === 'Image' ? 'bg-accent/10' : type === 'Audio' ? 'bg-accent/10' : 'bg-muted'
                           )}>
-                            {type === 'Video' && <FileVideo className="h-3.5 w-3.5 text-rose-400" />}
-                            {type === 'Image' && <FileImage className="h-3.5 w-3.5 text-indigo-400" />}
-                            {type === 'Audio' && <FileAudio className="h-3.5 w-3.5 text-amber-400" />}
-                            {type === 'Document' && <FileText className="h-3.5 w-3.5 text-slate-400" />}
+                            {type === 'Video' && <FileVideo className="h-3.5 w-3.5 text-accent" />}
+                            {type === 'Image' && <FileImage className="h-3.5 w-3.5 text-accent" />}
+                            {type === 'Audio' && <FileAudio className="h-3.5 w-3.5 text-accent" />}
+                            {type === 'Document' && <FileText className="h-3.5 w-3.5 text-muted-foreground" />}
                           </div>
                           <div className="flex-1 flex justify-between items-center">
-                            <span className="text-xs font-bold text-slate-600">{type}</span>
-                            <span className="text-xs font-black text-slate-800">{count}</span>
+                            <span className="text-xs font-bold text-muted-foreground/80">{type}</span>
+                            <span className="text-xs font-black text-primary">{count}</span>
                           </div>
                         </div>
                       );
@@ -1052,7 +1052,7 @@ export default function ProjectWorkspacePage() {
 
                 <button
                   onClick={() => setIsAddAssetOpen(true)}
-                  className="w-full h-11 rounded-xl bg-slate-900 text-white text-xs font-black hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+                  className="w-full h-11 rounded-xl bg-primary text-white text-xs font-black hover:bg-primary transition-colors flex items-center justify-center gap-2"
                 >
                   <UploadCloud className="h-4 w-4" /> Upload Asset
                 </button>
@@ -1069,7 +1069,7 @@ export default function ProjectWorkspacePage() {
               
               {/* Cost ledger list */}
               <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
-                <CardHeader className="bg-slate-50/50 flex flex-row items-center justify-between border-b px-8 py-6">
+                <CardHeader className="bg-muted/50 flex flex-row items-center justify-between border-b px-8 py-6">
                   <div>
                     <CardTitle className="text-lg">Expenses Cost Ledger</CardTitle>
                     <CardDescription>Log and authorize payroll indices, gear rentals, and transport costs.</CardDescription>
@@ -1086,19 +1086,19 @@ export default function ProjectWorkspacePage() {
                   ) : (
                     <div className="divide-y">
                       {projectExpenses?.map((exp) => (
-                        <div key={exp.id} className="px-8 py-5 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                        <div key={exp.id} className="px-8 py-5 flex items-center justify-between hover:bg-muted transition-colors">
                           <div className="flex items-center gap-4">
-                            <div className="h-10 w-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600">
+                            <div className="h-10 w-10 bg-muted rounded-xl flex items-center justify-center text-muted-foreground/80">
                               <Receipt className="h-5 w-5" />
                             </div>
                             <div>
-                              <p className="font-bold text-sm text-slate-800">{exp.category}</p>
-                              <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">{exp.description || 'Production Charge'}</p>
+                              <p className="font-bold text-sm text-primary">{exp.category}</p>
+                              <p className="text-[10px] text-muted-foreground font-bold uppercase mt-1">{exp.description || 'Production Charge'}</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <h4 className="font-black text-sm text-slate-800">₹{(exp.amount || 0).toLocaleString()}</h4>
-                            <p className="text-[9px] text-slate-400 font-mono mt-1">{exp.date ? new Date(exp.date).toLocaleDateString() : 'Today'}</p>
+                            <h4 className="font-black text-sm text-primary">₹{(exp.amount || 0).toLocaleString()}</h4>
+                            <p className="text-[9px] text-muted-foreground font-mono mt-1">{exp.date ? new Date(exp.date).toLocaleDateString() : 'Today'}</p>
                           </div>
                         </div>
                       ))}
@@ -1112,24 +1112,24 @@ export default function ProjectWorkspacePage() {
             <div className="space-y-6">
               <Card className="border-none shadow-sm rounded-[10px] bg-white p-8 space-y-6">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-indigo-500/60 tracking-[0.2em]">Project P&L Statement</span>
+                  <span className="text-[10px] font-black uppercase text-accent/60 tracking-[0.2em]">Project P&L Statement</span>
                   <h3 className="text-xl font-black">Profitability index</h3>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex justify-between text-xs font-medium">
-                    <span className="text-slate-400">Total Billed Subtotal</span>
-                    <span className="font-black text-slate-800">₹{totalRevenueBase.toLocaleString()}</span>
+                    <span className="text-muted-foreground">Total Billed Subtotal</span>
+                    <span className="font-black text-primary">₹{totalRevenueBase.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-xs font-medium">
-                    <span className="text-slate-400">Total Logged expenses</span>
-                    <span className="font-black text-rose-500">₹{totalExpenses.toLocaleString()}</span>
+                    <span className="text-muted-foreground">Total Logged expenses</span>
+                    <span className="font-black text-accent">₹{totalExpenses.toLocaleString()}</span>
                   </div>
                   <div className="pt-4 border-t flex justify-between items-center">
-                    <span className="text-xs text-slate-400 font-bold">Net Balance Margin</span>
+                    <span className="text-xs text-muted-foreground font-bold">Net Balance Margin</span>
                     <Badge className={cn(
                       "text-[10px] font-black uppercase tracking-widest px-3 py-1 border-none shadow-sm rounded-lg",
-                      netProfit >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-500"
+                      netProfit >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-accent/10 text-accent"
                     )}>
                       ₹{netProfit.toLocaleString()}
                     </Badge>
@@ -1175,7 +1175,7 @@ export default function ProjectWorkspacePage() {
                       {user.fullName || user.email?.split('@')[0]} <span className="text-muted-foreground text-[10px] ml-1 uppercase font-bold">({(user.role_id || "Crew").replace('_', ' ')})</span>
                     </SelectItem>
                   ))}
-                  <SelectItem value="Unassigned" className="rounded-lg m-1 text-slate-400 italic">Leave Unassigned</SelectItem>
+                  <SelectItem value="Unassigned" className="rounded-lg m-1 text-muted-foreground italic">Leave Unassigned</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1193,7 +1193,7 @@ export default function ProjectWorkspacePage() {
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <UploadCloud className="h-5 w-5 text-indigo-500" />
+              <UploadCloud className="h-5 w-5 text-accent" />
               Register Storage Asset
             </DialogTitle>
             <DialogDescription>Input asset callback parameters. RLS checks will isolate this automatically.</DialogDescription>
@@ -1250,7 +1250,7 @@ export default function ProjectWorkspacePage() {
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Receipt className="h-5 w-5 text-indigo-500 animate-pulse" />
+              <Receipt className="h-5 w-5 text-accent animate-pulse" />
               Log Production Cost
             </DialogTitle>
             <DialogDescription>Input cost parameter data. This instantly recalculates profitability metrics.</DialogDescription>
@@ -1315,7 +1315,7 @@ export default function ProjectWorkspacePage() {
               Log Time
             </DialogTitle>
             <DialogDescription>
-              Logging time for: <span className="font-bold text-slate-900">{timeLogObjective?.title}</span>
+              Logging time for: <span className="font-bold text-primary">{timeLogObjective?.title}</span>
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleLogTime} className="space-y-4 py-4">
@@ -1364,11 +1364,11 @@ export default function ProjectWorkspacePage() {
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <LinkIcon className="h-5 w-5 text-indigo-500" />
+              <LinkIcon className="h-5 w-5 text-accent" />
               Update Asset Link
             </DialogTitle>
             <DialogDescription>
-              Provide a new Google Drive or external link for: <span className="font-bold text-slate-900">{editingAsset?.name}</span>
+              Provide a new Google Drive or external link for: <span className="font-bold text-primary">{editingAsset?.name}</span>
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpdateAssetLink} className="space-y-4 py-4">
@@ -1384,7 +1384,7 @@ export default function ProjectWorkspacePage() {
               />
             </div>
             <DialogFooter className="pt-4">
-              <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold bg-indigo-600 hover:bg-indigo-700 text-white">
+              <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold bg-accent hover:bg-accent text-white">
                 {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save New Link"}
               </Button>
             </DialogFooter>

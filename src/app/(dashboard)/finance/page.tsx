@@ -109,7 +109,7 @@ export default function FinancePage() {
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Paid to Date</p>
             <h4 className="text-2xl font-bold font-headline">₹{stats.paid.toLocaleString()}</h4>
-            <p className="mt-2 text-[10px] text-rose-500 font-bold">Cleared funds</p>
+            <p className="mt-2 text-[10px] text-accent font-bold">Cleared funds</p>
           </CardContent>
         </Card>
         <Card className="border-none shadow-sm bg-white border-l-4 border-l-emerald-500">
@@ -145,7 +145,7 @@ export default function FinancePage() {
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50/50 border-b">
+              <thead className="bg-muted/50 border-b">
                 <tr>
                   <th className="p-4 text-left font-bold text-[11px] uppercase tracking-wider">Invoice #</th>
                   <th className="p-4 text-left font-bold text-[11px] uppercase tracking-wider">Client</th>
@@ -165,7 +165,7 @@ export default function FinancePage() {
                   </tr>
                 ) : (
                   filteredInvoices.map((inv) => (
-                    <tr key={inv.id} className="hover:bg-slate-50 transition-colors group">
+                    <tr key={inv.id} className="hover:bg-muted transition-colors group">
                       <td className="p-4 font-mono font-bold text-primary">{inv.invoice_number}</td>
                       <td className="p-4 font-bold">{inv.client_name}</td>
                       <td className="p-4 text-muted-foreground text-xs font-medium">{inv.issue_date}</td>

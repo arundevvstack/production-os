@@ -764,16 +764,16 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased pb-20 selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased pb-20 selection:bg-destructive selection:text-white">
       
       {/* Dynamic Banner */}
-      <div className="relative h-64 md:h-80 w-full overflow-hidden border-b border-slate-200">
+      <div className="relative h-64 md:h-80 w-full overflow-hidden border-b border-border">
         <img src={creator.bannerUrl} alt="banner" className="object-cover h-full w-full opacity-80" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#f5f5f7] via-[#f5f5f7]/20 to-transparent" />
         
         <div className="absolute top-6 left-6 z-10">
           <a href="/creators">
-            <Button className="bg-white border border-slate-200 text-slate-800 hover:bg-slate-50 rounded-full h-10 px-4 text-xs gap-1.5 shadow-sm font-bold transition">
+            <Button className="bg-white border border-border text-primary hover:bg-muted rounded-full h-10 px-4 text-xs gap-1.5 shadow-sm font-bold transition">
               <ArrowLeft className="h-4 w-4" /> Back to Creators
             </Button>
           </a>
@@ -785,27 +785,27 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
         
         {/* Left Side Profile Card */}
         <div className="lg:col-span-1 space-y-6">
-          <Card className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+          <Card className="bg-white border border-border rounded-3xl overflow-hidden shadow-sm">
             <CardContent className="p-6 space-y-6">
               
               <div className="flex flex-col items-center text-center space-y-4">
-                <Avatar className="h-32 w-32 border-4 border-white shadow-lg ring-4 ring-slate-100">
+                <Avatar className="h-32 w-32 border-4 border-white shadow-lg ring-4 ring-border">
                   <AvatarImage src={creator.avatarUrl} className="object-cover" />
-                  <AvatarFallback className="bg-slate-100 text-slate-900 font-bold">{creator.stageName[0]}</AvatarFallback>
+                  <AvatarFallback className="bg-muted text-primary font-bold">{creator.stageName[0]}</AvatarFallback>
                 </Avatar>
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-center gap-1.5">
-                    <h2 className="text-xl font-bold text-slate-900 tracking-tight">{creator.fullName}</h2>
+                    <h2 className="text-xl font-bold text-primary tracking-tight">{creator.fullName}</h2>
                     {creator.verifiedLevel === "Premium" && (
-                      <Badge className="bg-red-500/10 text-red-650 border-none text-[8px] font-bold uppercase py-0.5 px-2 rounded-full">Premium</Badge>
+                      <Badge className="bg-destructive/10 text-red-650 border-none text-[8px] font-bold uppercase py-0.5 px-2 rounded-full">Premium</Badge>
                     )}
                   </div>
-                  <span className="text-xs text-red-600 font-bold tracking-widest uppercase">{creator.category}</span>
+                  <span className="text-xs text-destructive font-bold tracking-widest uppercase">{creator.category}</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
-                  <MapPin className="h-3.5 w-3.5 text-red-600 animate-pulse" />
+                <div className="flex items-center gap-2 text-xs text-muted-foreground font-bold">
+                  <MapPin className="h-3.5 w-3.5 text-destructive animate-pulse" />
                   <span>{creator.location}</span>
                 </div>
               </div>
@@ -813,30 +813,30 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               {/* Engagement Stats (Phase 4) */}
               <div className="grid grid-cols-2 gap-4 border-t border-b border-slate-150 py-5 text-center text-xs">
                 <div className="border-r border-slate-150 space-y-1">
-                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Reach</span>
-                  <strong className="text-slate-950 font-black text-sm">{(creator.followers / 1000000).toFixed(1)}M</strong>
+                  <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest block">Reach</span>
+                  <strong className="text-primary font-black text-sm">{(creator.followers / 1000000).toFixed(1)}M</strong>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest block">Engagement</span>
-                  <strong className="text-red-600 font-black text-sm">{creator.engagementRate}</strong>
+                  <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest block">Engagement</span>
+                  <strong className="text-destructive font-black text-sm">{creator.engagementRate}</strong>
                 </div>
               </div>
 
               {/* Quick Info Grid */}
               <div className="space-y-3.5 text-xs text-slate-650 font-bold">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Day Rate</span>
-                  <strong className="text-slate-950">
+                  <span className="text-muted-foreground">Day Rate</span>
+                  <strong className="text-primary">
                     {creator.privacy?.hideDayRate ? "🔒 Quote Required" : `₹${creator.dayRate.toLocaleString()}`}
                   </strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Languages</span>
-                  <strong className="text-slate-950">{creator.languages.join(", ")}</strong>
+                  <span className="text-muted-foreground">Languages</span>
+                  <strong className="text-primary">{creator.languages.join(", ")}</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Availability</span>
-                  <span className={creator.availability === "Available" ? "text-emerald-600" : "text-amber-600"}>{creator.availability}</span>
+                  <span className="text-muted-foreground">Availability</span>
+                  <span className={creator.availability === "Available" ? "text-emerald-600" : "text-accent"}>{creator.availability}</span>
                 </div>
               </div>
 
@@ -844,7 +844,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               <div className="space-y-3 pt-2">
                 <Button 
                   onClick={() => setIsBookOpen(true)}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow shadow-red-500/10 transition"
+                  className="w-full bg-destructive hover:bg-destructive text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow shadow-red-500/10 transition"
                 >
                   <CalendarDays className="h-4 w-4" /> Book Talent
                 </Button>
@@ -853,8 +853,8 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   <Button 
                     variant="outline"
                     onClick={handleSaveProfile}
-                    className={`border-slate-200 bg-white hover:bg-slate-50 font-bold h-10 rounded-full text-xs gap-1.5 shadow-sm transition ${
-                      isSaved ? "text-red-600 border-red-500/30" : "text-slate-700"
+                    className={`border-border bg-white hover:bg-muted font-bold h-10 rounded-full text-xs gap-1.5 shadow-sm transition ${
+                      isSaved ? "text-destructive border-destructive/30" : "text-primary/80"
                     }`}
                   >
                     <Bookmark className="h-4 w-4" /> {isSaved ? "Saved" : "Save"}
@@ -862,7 +862,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   <Button 
                     variant="outline"
                     onClick={handleShareProfile}
-                    className="border-slate-200 bg-white hover:bg-slate-50 font-bold h-10 rounded-full text-xs gap-1.5 text-slate-700 shadow-sm transition"
+                    className="border-border bg-white hover:bg-muted font-bold h-10 rounded-full text-xs gap-1.5 text-primary/80 shadow-sm transition"
                   >
                     <Share2 className="h-4 w-4" /> Share
                   </Button>
@@ -872,7 +872,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 <Button 
                   onClick={handleDownloadPdf}
                   variant="ghost"
-                  className="w-full border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
+                  className="w-full border border-border text-primary/80 hover:bg-muted font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
                 >
                   <FileDown className="h-4 w-4 text-red-650" /> Download PDF Portfolio
                 </Button>
@@ -881,21 +881,21 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 <Button 
                   onClick={() => setIsEditOpen(true)}
                   variant="outline"
-                  className="w-full border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
+                  className="w-full border border-border text-primary/80 hover:bg-muted font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1.5 shadow-sm transition bg-white"
                 >
                   <UserCheck className="h-4 w-4 text-red-650" /> Edit Profile Details
                 </Button>
               </div>
 
               {/* Social Channels */}
-              <div className="pt-2 flex items-center justify-center gap-4 border-t border-slate-100">
-                <a href="#" className="h-9 w-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
+              <div className="pt-2 flex items-center justify-center gap-4 border-t border-border">
+                <a href="#" className="h-9 w-9 rounded-full bg-muted hover:bg-secondary flex items-center justify-center text-muted-foreground/80 transition">
                   <Instagram className="h-4.5 w-4.5" />
                 </a>
-                <a href="#" className="h-9 w-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
+                <a href="#" className="h-9 w-9 rounded-full bg-muted hover:bg-secondary flex items-center justify-center text-muted-foreground/80 transition">
                   <Youtube className="h-4.5 w-4.5" />
                 </a>
-                <a href="#" className="h-9 w-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
+                <a href="#" className="h-9 w-9 rounded-full bg-muted hover:bg-secondary flex items-center justify-center text-muted-foreground/80 transition">
                   <Linkedin className="h-4.5 w-4.5" />
                 </a>
               </div>
@@ -904,18 +904,18 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
           </Card>
 
           {/* AI Suggestions Panel (Phase 8) */}
-          <Card className="bg-red-500/5 border border-red-500/10 rounded-3xl shadow-sm">
+          <Card className="bg-destructive/5 border border-destructive/10 rounded-3xl shadow-sm">
             <CardContent className="p-6 space-y-4">
               <h3 className="font-bold text-xs uppercase tracking-widest text-red-650 flex items-center gap-1">
-                <Sparkles className="h-4.5 w-4.5 text-red-600 animate-pulse" /> AI Profile Insights
+                <Sparkles className="h-4.5 w-4.5 text-destructive animate-pulse" /> AI Profile Insights
               </h3>
-              <div className="space-y-3 text-[11px] font-bold text-slate-700">
-                <div className="p-3 bg-white border border-slate-100 rounded-2xl flex gap-2">
-                  <Info className="h-4 w-4 shrink-0 text-red-600" />
+              <div className="space-y-3 text-[11px] font-bold text-primary/80">
+                <div className="p-3 bg-white border border-border rounded-2xl flex gap-2">
+                  <Info className="h-4 w-4 shrink-0 text-destructive" />
                   <p className="leading-snug">Add measurements to improve your casting visibility by 40%.</p>
                 </div>
-                <div className="p-3 bg-white border border-slate-100 rounded-2xl flex gap-2">
-                  <Info className="h-4 w-4 shrink-0 text-red-600" />
+                <div className="p-3 bg-white border border-border rounded-2xl flex gap-2">
+                  <Info className="h-4 w-4 shrink-0 text-destructive" />
                   <p className="leading-snug">Fashion creators with 10+ photos get booked more frequently.</p>
                 </div>
               </div>
@@ -928,7 +928,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
           
           {/* Main Visual Reel Player */}
           {activeReelUrl && (
-            <Card className="bg-slate-900 border border-slate-200 overflow-hidden rounded-3xl shadow-sm">
+            <Card className="bg-primary border border-border overflow-hidden rounded-3xl shadow-sm">
               <CardContent className="p-0 relative aspect-video bg-black">
                 <video 
                   src={activeReelUrl}
@@ -941,17 +941,17 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
           {/* Tab Menu Options */}
           <Tabs defaultValue="reels" className="space-y-6">
-            <TabsList className="bg-slate-100 border border-slate-200 p-1 rounded-full shadow-sm">
-              <TabsTrigger value="reels" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm transition">Videos</TabsTrigger>
-              <TabsTrigger value="gallery" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm transition">Lookbook</TabsTrigger>
-              <TabsTrigger value="measurements" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm transition">Measurements</TabsTrigger>
-              <TabsTrigger value="preferences" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm transition">Preferences</TabsTrigger>
-              <TabsTrigger value="about" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm transition">About</TabsTrigger>
+            <TabsList className="bg-muted border border-border p-1 rounded-full shadow-sm">
+              <TabsTrigger value="reels" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Videos</TabsTrigger>
+              <TabsTrigger value="gallery" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Lookbook</TabsTrigger>
+              <TabsTrigger value="measurements" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Measurements</TabsTrigger>
+              <TabsTrigger value="preferences" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">Preferences</TabsTrigger>
+              <TabsTrigger value="about" className="rounded-full text-xs font-bold px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition">About</TabsTrigger>
             </TabsList>
 
             {/* Reels Tab */}
             <TabsContent value="reels" className="space-y-4 outline-none">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Featured Campaigns</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Featured Campaigns</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {creator.reels.map((reel: any) => (
                   <div 
@@ -959,15 +959,15 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                     onClick={() => setActiveReelUrl(reel.url)}
                     className={`p-4 rounded-2xl border transition cursor-pointer flex items-center justify-between shadow-sm ${
                       activeReelUrl === reel.url 
-                        ? "bg-red-500/5 border-red-500/30" 
-                        : "bg-white border-slate-200 hover:border-slate-300"
+                        ? "bg-destructive/5 border-destructive/30" 
+                        : "bg-white border-border hover:border-border"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <PlayCircle className={`h-8 w-8 ${activeReelUrl === reel.url ? "text-red-600" : "text-slate-400"}`} />
+                      <PlayCircle className={`h-8 w-8 ${activeReelUrl === reel.url ? "text-destructive" : "text-muted-foreground"}`} />
                       <div>
-                        <h4 className="font-bold text-xs text-slate-900">{reel.title}</h4>
-                        <span className="text-[10px] text-slate-400 font-bold">{reel.duration} mins</span>
+                        <h4 className="font-bold text-xs text-primary">{reel.title}</h4>
+                        <span className="text-[10px] text-muted-foreground font-bold">{reel.duration} mins</span>
                       </div>
                     </div>
                   </div>
@@ -977,10 +977,10 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Campaign Lookbook Tab */}
             <TabsContent value="gallery" className="space-y-4 outline-none">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Campaign Gallery</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Campaign Gallery</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {creator.gallery.map((img: string, idx: number) => (
-                  <div key={idx} className="aspect-[3/4] rounded-2xl overflow-hidden border border-slate-200 relative group shadow-sm bg-white">
+                  <div key={idx} className="aspect-[3/4] rounded-2xl overflow-hidden border border-border relative group shadow-sm bg-white">
                     <img src={img} alt="portfolio card" className="object-cover h-full w-full group-hover:scale-105 transition duration-500" />
                   </div>
                 ))}
@@ -989,53 +989,53 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* PHYSICAL MEASUREMENTS TAB (Phase 2) */}
             <TabsContent value="measurements" className="space-y-4 outline-none">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Measurements</h3>
-              <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm p-6">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Measurements</h3>
+              <Card className="bg-white border border-border rounded-3xl shadow-sm p-6">
                 {creator.privacy?.hideMeasurements ? (
                   <div className="flex flex-col items-center justify-center py-6 text-center space-y-2">
                     <ShieldAlert className="h-10 w-10 text-red-650 animate-pulse" />
-                    <span className="text-xs font-bold text-slate-800">Measurements are private</span>
+                    <span className="text-xs font-bold text-primary">Measurements are private</span>
                     <p className="text-[10px] text-slate-450 max-w-sm font-medium">
                       This creator has kept their measurements private. Please contact our managers to view them.
                     </p>
                   </div>
                 ) : (
-                  <CardContent className="p-0 grid grid-cols-2 md:grid-cols-3 gap-6 font-bold text-xs text-slate-800">
+                  <CardContent className="p-0 grid grid-cols-2 md:grid-cols-3 gap-6 font-bold text-xs text-primary">
                     <div className="space-y-1">
                       <span className="text-[9px] text-slate-405 block uppercase">Height</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.height}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.height}</strong>
                     </div>
                     <div className="space-y-1">
                       <span className="text-[9px] text-slate-405 block uppercase">Weight</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.weight}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.weight}</strong>
                     </div>
                     <div className="space-y-1">
                       <span className="text-[9px] text-slate-405 block uppercase">Chest</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.chest}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.chest}</strong>
                     </div>
-                    <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
+                    <div className="space-y-1 border-t border-border pt-3 md:border-t-0 md:pt-0">
                       <span className="text-[9px] text-slate-405 block uppercase">Waist</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.waist}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.waist}</strong>
                     </div>
-                    <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
+                    <div className="space-y-1 border-t border-border pt-3 md:border-t-0 md:pt-0">
                       <span className="text-[9px] text-slate-405 block uppercase">Hip</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.hip}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.hip}</strong>
                     </div>
-                    <div className="space-y-1 border-t border-slate-100 pt-3 md:border-t-0 md:pt-0">
+                    <div className="space-y-1 border-t border-border pt-3 md:border-t-0 md:pt-0">
                       <span className="text-[9px] text-slate-405 block uppercase">Shoe Size</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.shoeSize}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.shoeSize}</strong>
                     </div>
-                    <div className="space-y-1 border-t border-slate-100 pt-3">
+                    <div className="space-y-1 border-t border-border pt-3">
                       <span className="text-[9px] text-slate-405 block uppercase">Hair Color</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.hairColor}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.hairColor}</strong>
                     </div>
-                    <div className="space-y-1 border-t border-slate-100 pt-3">
+                    <div className="space-y-1 border-t border-border pt-3">
                       <span className="text-[9px] text-slate-405 block uppercase">Skin Tone</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.skinTone}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.skinTone}</strong>
                     </div>
-                    <div className="space-y-1 border-t border-slate-100 pt-3">
+                    <div className="space-y-1 border-t border-border pt-3">
                       <span className="text-[9px] text-slate-405 block uppercase">Tattoos</span>
-                      <strong className="text-slate-900 text-sm">{creator.measurements.tattoos}</strong>
+                      <strong className="text-primary text-sm">{creator.measurements.tattoos}</strong>
                     </div>
                   </CardContent>
                 )}
@@ -1047,7 +1047,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               
               {/* Comfortable List */}
               <div className="space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Comfortable Available For</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Comfortable Available For</h3>
                 <div className="flex flex-wrap gap-2">
                   {creator.preferences.comfortable.map((c: string) => (
                     <Badge key={c} className="bg-emerald-500/5 text-emerald-600 border border-emerald-500/10 text-[9px] font-bold py-1.5 px-3 rounded-full flex items-center gap-1 shadow-sm">
@@ -1058,11 +1058,11 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               </div>
 
               {/* Not Comfortable List */}
-              <div className="space-y-3 border-t border-slate-200 pt-5">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Not Comfortable With</h3>
+              <div className="space-y-3 border-t border-border pt-5">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Not Comfortable With</h3>
                 <div className="flex flex-wrap gap-2">
                   {creator.preferences.uncomfortable.map((uc: string) => (
-                    <Badge key={uc} className="bg-red-500/5 text-red-600 border border-red-500/10 text-[9px] font-bold py-1.5 px-3 rounded-full flex items-center gap-1 shadow-sm">
+                    <Badge key={uc} className="bg-destructive/5 text-destructive border border-destructive/10 text-[9px] font-bold py-1.5 px-3 rounded-full flex items-center gap-1 shadow-sm">
                       <X className="h-3.5 w-3.5" /> {uc}
                     </Badge>
                   ))}
@@ -1073,28 +1073,28 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Bio Info Tab */}
             <TabsContent value="about" className="space-y-6 outline-none">
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-6 shadow-sm">
+              <div className="bg-white border border-border rounded-3xl p-6 space-y-6 shadow-sm">
                 
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold uppercase tracking-widest text-red-650">About {creator.fullName}</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed font-bold">{creator.bio}</p>
+                  <p className="text-xs text-muted-foreground/80 leading-relaxed font-bold">{creator.bio}</p>
                 </div>
 
-                <div className="border-t border-slate-100 pt-5 space-y-2">
+                <div className="border-t border-border pt-5 space-y-2">
                   <h4 className="text-xs font-bold uppercase tracking-widest text-red-650">Skills</h4>
                   <div className="flex flex-wrap gap-2">
                     {creator.skills.map((s: string) => (
-                      <Badge key={s} className="bg-slate-50 border border-slate-100 text-slate-700 font-bold text-[9px] py-1 px-3 rounded-full">
+                      <Badge key={s} className="bg-muted border border-border text-primary/80 font-bold text-[9px] py-1 px-3 rounded-full">
                         {s}
                       </Badge>
                     ))}
                   </div>
                 </div>
 
-                <div className="border-t border-slate-100 pt-5 space-y-2 text-xs">
+                <div className="border-t border-border pt-5 space-y-2 text-xs">
                   <h4 className="text-xs font-bold uppercase tracking-widest text-red-650">Experience</h4>
                   <div className="space-y-2">
-                    <p className="text-slate-600 flex items-center gap-1 font-bold">
+                    <p className="text-muted-foreground/80 flex items-center gap-1 font-bold">
                       <Award className="h-4 w-4 text-red-650" /> {creator.experience}
                     </p>
                   </div>
@@ -1110,24 +1110,24 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
       {/* Booking Form Modal */}
       <Dialog open={isBookOpen} onOpenChange={setIsBookOpen}>
-        <DialogContent className="bg-white text-[#1d1d1f] border-slate-200 rounded-3xl p-6 max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-white text-[#1d1d1f] border-border rounded-3xl p-6 max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-slate-900 leading-tight flex items-center gap-1">
+            <DialogTitle className="text-base font-bold text-primary leading-tight flex items-center gap-1">
               <Zap className="h-5 w-5 text-red-650" /> Send Booking Request
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs font-bold leading-normal">
+            <DialogDescription className="text-muted-foreground text-xs font-bold leading-normal">
               Fill out the campaign shoot details below to propose a shoot contract.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleBookingRequest} className="space-y-4 pt-3">
             <div className="space-y-1.5">
-              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Project Name</label>
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Project Name</label>
               <Input 
                 type="text" 
                 value={bookingForm.projectName}
                 onChange={(e) => setBookingForm({ ...bookingForm, projectName: e.target.value })}
-                className="bg-slate-50 border border-slate-200 text-slate-800 rounded-xl text-xs h-10 font-bold"
+                className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
                 placeholder="e.g. Pulse Energy Summer TVC"
                 required
               />
@@ -1135,23 +1135,23 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Shoot Date</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Shoot Date</label>
                 <Input 
                   type="date" 
                   value={bookingForm.shootDate}
                   onChange={(e) => setBookingForm({ ...bookingForm, shootDate: e.target.value })}
-                  className="bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-primary/80 rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Location</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Location</label>
                 <Input 
                   type="text" 
                   value={bookingForm.location}
                   onChange={(e) => setBookingForm({ ...bookingForm, location: e.target.value })}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
@@ -1159,44 +1159,44 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Proposed Budget (₹)</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Proposed Budget (₹)</label>
                 <Input 
                   type="number" 
                   value={bookingForm.budget}
                   onChange={(e) => setBookingForm({ ...bookingForm, budget: e.target.value })}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Deliverables</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Deliverables</label>
                 <Input 
                   type="text" 
                   value={bookingForm.deliverables}
                   onChange={(e) => setBookingForm({ ...bookingForm, deliverables: e.target.value })}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-primary rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Requirements & Notes</label>
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Requirements & Notes</label>
               <textarea 
                 value={bookingForm.requirements}
                 onChange={(e) => setBookingForm({ ...bookingForm, requirements: e.target.value })}
-                className="bg-slate-50 border border-slate-200 text-slate-805 rounded-xl text-xs h-16 w-full p-2.5 outline-none font-bold"
+                className="bg-muted border border-border text-slate-805 rounded-xl text-xs h-16 w-full p-2.5 outline-none font-bold"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-1 text-[10px] font-bold text-slate-600">
+            <div className="grid grid-cols-2 gap-4 pt-1 text-[10px] font-bold text-muted-foreground/80">
               <label className="flex items-center gap-1.5 cursor-pointer">
                 <input 
                   type="checkbox" 
                   checked={bookingForm.travelRequired}
                   onChange={(e) => setBookingForm({ ...bookingForm, travelRequired: e.target.checked })}
-                  className="rounded border-slate-350 text-red-600 focus:ring-red-500 h-4 w-4"
+                  className="rounded border-slate-350 text-destructive focus:ring-red-500 h-4 w-4"
                 />
                 Travel Required?
               </label>
@@ -1206,17 +1206,17 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   type="checkbox" 
                   checked={bookingForm.accommodationRequired}
                   onChange={(e) => setBookingForm({ ...bookingForm, accommodationRequired: e.target.checked })}
-                  className="rounded border-slate-350 text-red-600 focus:ring-red-500 h-4 w-4"
+                  className="rounded border-slate-350 text-destructive focus:ring-red-500 h-4 w-4"
                 />
                 Accommodation?
               </label>
             </div>
 
             <DialogFooter className="pt-4 gap-2">
-              <Button type="button" variant="ghost" onClick={() => setIsBookOpen(false)} className="rounded-full border border-slate-200 hover:bg-slate-50 text-xs font-bold bg-white text-slate-700 h-10 shadow-sm transition">
+              <Button type="button" variant="ghost" onClick={() => setIsBookOpen(false)} className="rounded-full border border-border hover:bg-muted text-xs font-bold bg-white text-primary/80 h-10 shadow-sm transition">
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold h-10 px-5 shadow shadow-red-500/10 transition">
+              <Button type="submit" disabled={isSubmitting} className="bg-destructive hover:bg-destructive text-white rounded-full text-xs font-bold h-10 px-5 shadow shadow-red-500/10 transition">
                 {isSubmitting ? "Sending Request..." : "Send Request"}
               </Button>
             </DialogFooter>
@@ -1226,9 +1226,9 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
       {/* PDF Lookbook Share Preview Modal (Phase 6) */}
       <Dialog open={isPdfOpen} onOpenChange={setIsPdfOpen}>
-        <DialogContent className="bg-white text-slate-900 border-slate-200 rounded-3xl p-6 max-w-sm font-sans">
-          <DialogHeader className="border-b border-slate-100 pb-3">
-            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-slate-900">
+        <DialogContent className="bg-white text-primary border-border rounded-3xl p-6 max-w-sm font-sans">
+          <DialogHeader className="border-b border-border pb-3">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-primary">
               <FileDown className="h-5 w-5 text-red-650" /> PDF Portfolio Lookbook
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-450 font-bold">
@@ -1237,18 +1237,18 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
           </DialogHeader>
 
           <div className="py-4 space-y-4 text-xs font-bold">
-            <div className="border border-slate-200 p-4 bg-slate-50/50 rounded-2xl flex items-center gap-3">
+            <div className="border border-border p-4 bg-muted/50 rounded-2xl flex items-center gap-3">
               <Avatar className="h-10 w-10 ring-2 ring-slate-150 shadow shrink-0">
                 <AvatarImage src={creator.avatarUrl} className="object-cover" />
                 <AvatarFallback>{creator.stageName[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <h4 className="text-slate-900 font-bold leading-tight">{creator.fullName}</h4>
+                <h4 className="text-primary font-bold leading-tight">{creator.fullName}</h4>
                 <span className="text-[10px] text-red-605 font-bold uppercase tracking-widest">{creator.category}</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-[10px] text-slate-650 bg-slate-50 p-3 rounded-2xl border border-slate-150">
+            <div className="grid grid-cols-2 gap-3 text-[10px] text-slate-650 bg-muted p-3 rounded-2xl border border-slate-150">
               <div>Height: <strong>{creator.measurements.height}</strong></div>
               <div>Weight: <strong>{creator.measurements.weight}</strong></div>
               <div>Waist: <strong>{creator.measurements.waist}</strong></div>
@@ -1256,16 +1256,16 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
             </div>
             
             {/* Share QR Simulation */}
-            <div className="flex items-center justify-center p-3 bg-white border border-slate-200 rounded-2xl gap-3">
-              <QrCode className="h-12 w-12 text-slate-800 shrink-0" />
-              <div className="text-[9px] text-slate-400 font-medium">
+            <div className="flex items-center justify-center p-3 bg-white border border-border rounded-2xl gap-3">
+              <QrCode className="h-12 w-12 text-primary shrink-0" />
+              <div className="text-[9px] text-muted-foreground font-medium">
                 Scan QR to view interactive digital reel and lock bookings on DP Media OS.
               </div>
             </div>
           </div>
 
           <DialogFooter className="pt-2 gap-2">
-            <Button onClick={triggerPdfDownload} className="w-full bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold h-11 shadow-sm transition">
+            <Button onClick={triggerPdfDownload} className="w-full bg-destructive hover:bg-destructive text-white rounded-full text-xs font-bold h-11 shadow-sm transition">
               Download Lookbook PDF
             </Button>
           </DialogFooter>
@@ -1274,9 +1274,9 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
       {/* Profile Sharing Infrastructure Modal (Phase 6) */}
       <Dialog open={isShareOpen} onOpenChange={setIsShareOpen}>
-        <DialogContent className="bg-white text-slate-900 border-slate-200 rounded-3xl p-6 max-w-sm font-sans">
-          <DialogHeader className="border-b border-slate-100 pb-3">
-            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-slate-900">
+        <DialogContent className="bg-white text-primary border-border rounded-3xl p-6 max-w-sm font-sans">
+          <DialogHeader className="border-b border-border pb-3">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-primary">
               <Share2 className="h-5 w-5 text-red-650" /> Share Creator Profile
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-450 font-bold">
@@ -1305,7 +1305,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   setIsShareOpen(false);
                   toast({ title: "LinkedIn Opened", description: "Opening LinkedIn share tab..." });
                 }}
-                className="w-full bg-blue-700 hover:bg-blue-800 text-white rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition"
+                className="w-full bg-accent hover:bg-accent text-white rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition"
               >
                 <Linkedin className="h-4 w-4" /> Share on LinkedIn
               </Button>
@@ -1321,23 +1321,23 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   });
                 }}
                 variant="outline"
-                className="w-full border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition bg-white"
+                className="w-full border border-border hover:bg-muted text-primary/80 rounded-full text-xs font-bold h-11 flex items-center justify-center gap-2 transition bg-white"
               >
                 <Check className="h-4 w-4 text-red-650" /> Copy Profile Link
               </Button>
             </div>
 
             {/* Profile QR Code */}
-            <div className="border border-slate-150 p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 text-center">
-              <QrCode className="h-20 w-20 text-slate-800" />
-              <span className="text-[9px] text-slate-400 font-medium">
+            <div className="border border-slate-150 p-4 bg-muted rounded-2xl flex flex-col items-center gap-2 text-center">
+              <QrCode className="h-20 w-20 text-primary" />
+              <span className="text-[9px] text-muted-foreground font-medium">
                 Direct QR Code to mobile portfolio lookbook.
               </span>
             </div>
           </div>
 
           <DialogFooter>
-            <Button onClick={() => setIsShareOpen(false)} variant="ghost" className="w-full border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-full text-xs font-bold h-10 transition bg-white shadow-sm">
+            <Button onClick={() => setIsShareOpen(false)} variant="ghost" className="w-full border border-border text-primary/80 hover:bg-muted rounded-full text-xs font-bold h-10 transition bg-white shadow-sm">
               Close
             </Button>
           </DialogFooter>
@@ -1346,9 +1346,9 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
       {/* Edit Profile Details Modal (Phase 1, 2, 3, 4) */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="bg-white text-slate-900 border-slate-200 rounded-3xl p-6 max-w-2xl max-h-[90vh] overflow-y-auto font-sans">
-          <DialogHeader className="border-b border-slate-100 pb-3">
-            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-slate-900">
+        <DialogContent className="bg-white text-primary border-border rounded-3xl p-6 max-w-2xl max-h-[90vh] overflow-y-auto font-sans">
+          <DialogHeader className="border-b border-border pb-3">
+            <DialogTitle className="text-base font-bold flex items-center gap-1.5 text-primary">
               <UserCheck className="h-5 w-5 text-red-650" /> Edit Talent Profile Details
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-450 font-bold">
@@ -1360,25 +1360,25 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
             
             {/* Section 1: Basic Identity */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Basic Identity</h3>
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Basic Identity</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Full Name</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Full Name</label>
                   <Input 
                     type="text" 
                     value={editForm.fullName}
                     onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Stage Name</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Stage Name</label>
                   <Input 
                     type="text" 
                     value={editForm.stageName}
                     onChange={(e) => setEditForm({ ...editForm, stageName: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                     required
                   />
                 </div>
@@ -1386,65 +1386,65 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5 col-span-2">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">City & Country Location</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">City & Country Location</label>
                   <Input 
                     type="text" 
                     value={editForm.location}
                     onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Day Rate (₹)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Day Rate (₹)</label>
                   <Input 
                     type="number" 
                     value={editForm.dayRate}
                     onChange={(e) => setEditForm({ ...editForm, dayRate: Number(e.target.value) })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Bio Description</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Bio Description</label>
                 <textarea 
                   value={editForm.bio}
                   onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                  className="bg-slate-50 border border-slate-200 text-slate-805 rounded-xl text-xs h-16 w-full p-2.5 outline-none font-bold"
+                  className="bg-muted border border-border text-slate-805 rounded-xl text-xs h-16 w-full p-2.5 outline-none font-bold"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Category</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Category</label>
                   <Input 
                     type="text" 
                     value={editForm.category}
                     onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Verified Level</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Verified Level</label>
                   <select 
                     value={editForm.verifiedLevel}
                     onChange={(e) => setEditForm({ ...editForm, verifiedLevel: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 px-2 font-bold outline-none"
+                    className="w-full bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 px-2 font-bold outline-none"
                   >
                     <option value="Premium">Premium</option>
                     <option value="Standard">Standard</option>
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Availability</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Availability</label>
                   <select 
                     value={editForm.availability}
                     onChange={(e) => setEditForm({ ...editForm, availability: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 px-2 font-bold outline-none"
+                    className="w-full bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 px-2 font-bold outline-none"
                   >
                     <option value="Available">Available</option>
                     <option value="Booked">Booked</option>
@@ -1454,34 +1454,34 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Reach (Total Followers, e.g. 7800000)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Reach (Total Followers, e.g. 7800000)</label>
                   <Input 
                     type="number" 
                     value={editForm.followers}
                     onChange={(e) => setEditForm({ ...editForm, followers: Number(e.target.value) })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Engagement Rate (e.g. 8.2%)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Engagement Rate (e.g. 8.2%)</label>
                   <Input 
                     type="text" 
                     value={editForm.engagementRate}
                     onChange={(e) => setEditForm({ ...editForm, engagementRate: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Languages spoken (comma separated)</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Languages spoken (comma separated)</label>
                 <Input 
                   type="text" 
                   value={editForm.languages}
                   onChange={(e) => setEditForm({ ...editForm, languages: e.target.value })}
-                  className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                  className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   required
                 />
               </div>
@@ -1489,93 +1489,93 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Section 2: Physical Appearance (Phase 2) */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Physical Details</h3>
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Physical Details</h3>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Height (e.g. 185 cm)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Height (e.g. 185 cm)</label>
                   <Input 
                     type="text" 
                     value={editForm.height}
                     onChange={(e) => setEditForm({ ...editForm, height: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Weight (e.g. 78 kg)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Weight (e.g. 78 kg)</label>
                   <Input 
                     type="text" 
                     value={editForm.weight}
                     onChange={(e) => setEditForm({ ...editForm, weight: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Chest (e.g. 40 in)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Chest (e.g. 40 in)</label>
                   <Input 
                     type="text" 
                     value={editForm.chest}
                     onChange={(e) => setEditForm({ ...editForm, chest: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Waist (e.g. 32 in)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Waist (e.g. 32 in)</label>
                   <Input 
                     type="text" 
                     value={editForm.waist}
                     onChange={(e) => setEditForm({ ...editForm, waist: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Hip (e.g. 38 in)</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Hip (e.g. 38 in)</label>
                   <Input 
                     type="text" 
                     value={editForm.hip}
                     onChange={(e) => setEditForm({ ...editForm, hip: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Shoe Size</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Shoe Size</label>
                   <Input 
                     type="text" 
                     value={editForm.shoeSize}
                     onChange={(e) => setEditForm({ ...editForm, shoeSize: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Hair Color</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Hair Color</label>
                   <Input 
                     type="text" 
                     value={editForm.hairColor}
                     onChange={(e) => setEditForm({ ...editForm, hairColor: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Skin Tone</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Skin Tone</label>
                   <Input 
                     type="text" 
                     value={editForm.skinTone}
                     onChange={(e) => setEditForm({ ...editForm, skinTone: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Tattoo Details</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Tattoo Details</label>
                   <Input 
                     type="text" 
                     value={editForm.tattoos}
                     onChange={(e) => setEditForm({ ...editForm, tattoos: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
               </div>
@@ -1583,33 +1583,33 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Section 3: Social Links (Phase 4) */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Social Media Channels</h3>
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Social Media Channels</h3>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Instagram</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Instagram</label>
                   <Input 
                     type="text" 
                     value={editForm.instagram}
                     onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">YouTube</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">YouTube</label>
                   <Input 
                     type="text" 
                     value={editForm.youtube}
                     onChange={(e) => setEditForm({ ...editForm, youtube: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">LinkedIn</label>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">LinkedIn</label>
                   <Input 
                     type="text" 
                     value={editForm.linkedin}
                     onChange={(e) => setEditForm({ ...editForm, linkedin: e.target.value })}
-                    className="bg-slate-50 border border-slate-200 text-slate-850 rounded-xl text-xs h-10 font-bold"
+                    className="bg-muted border border-border text-slate-850 rounded-xl text-xs h-10 font-bold"
                   />
                 </div>
               </div>
@@ -1617,11 +1617,11 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Section 4: Content Preference Toggles (Phase 3) */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Campaign Preferences</h3>
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Campaign Preferences</h3>
               
               <div className="space-y-2">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Comfortable With</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-slate-700 font-bold">
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Comfortable With</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-primary/80 font-bold">
                   {[
                     "Western Wear", "Traditional Wear", "Corporate Ads", 
                     "Action Sequences", "Night Shoots", "Live Hosting", 
@@ -1629,7 +1629,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   ].map((option) => {
                     const isChecked = editForm.comfortable.includes(option);
                     return (
-                      <label key={option} className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                      <label key={option} className="flex items-center gap-2 cursor-pointer bg-muted border border-slate-150 p-2.5 rounded-xl hover:bg-muted transition shadow-sm">
                         <input 
                           type="checkbox"
                           checked={isChecked}
@@ -1639,7 +1639,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                               : editForm.comfortable.filter(c => c !== option);
                             setEditForm({ ...editForm, comfortable: newComfortable });
                           }}
-                          className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                          className="rounded border-border text-red-650 focus:ring-red-500 h-4 w-4"
                         />
                         {option}
                       </label>
@@ -1649,8 +1649,8 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
               </div>
 
               <div className="space-y-2 pt-2">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Not Comfortable With</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-slate-700 font-bold">
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Not Comfortable With</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-[10px] text-primary/80 font-bold">
                   {[
                     "Smoking Scenes", "Alcohol Promotions", "Political Campaigns", 
                     "Religious Campaigns", "Intimate Scenes", "Late Night Shoots", 
@@ -1658,7 +1658,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                   ].map((option) => {
                     const isChecked = editForm.uncomfortable.includes(option);
                     return (
-                      <label key={option} className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                      <label key={option} className="flex items-center gap-2 cursor-pointer bg-muted border border-slate-150 p-2.5 rounded-xl hover:bg-muted transition shadow-sm">
                         <input 
                           type="checkbox"
                           checked={isChecked}
@@ -1668,7 +1668,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                               : editForm.uncomfortable.filter(uc => uc !== option);
                             setEditForm({ ...editForm, uncomfortable: newUncomfortable });
                           }}
-                          className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                          className="rounded border-border text-red-650 focus:ring-red-500 h-4 w-4"
                         />
                         {option}
                       </label>
@@ -1680,16 +1680,16 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Section 5: Creator Privacy & Protection Controls */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Creator Privacy Controls</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px] text-slate-700 font-bold">
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Creator Privacy Controls</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[10px] text-primary/80 font-bold">
                 
                 {/* Hide Measurements */}
-                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                <label className="flex items-center gap-2 cursor-pointer bg-muted border border-slate-150 p-2.5 rounded-xl hover:bg-muted transition shadow-sm">
                   <input 
                     type="checkbox"
                     checked={editForm.hideMeasurements}
                     onChange={(e) => setEditForm({ ...editForm, hideMeasurements: e.target.checked })}
-                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                    className="rounded border-border text-red-650 focus:ring-red-500 h-4 w-4"
                   />
                   <div>
                     <span className="block">Hide Physical Measurements</span>
@@ -1698,12 +1698,12 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 </label>
 
                 {/* Hide Day Rate */}
-                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                <label className="flex items-center gap-2 cursor-pointer bg-muted border border-slate-150 p-2.5 rounded-xl hover:bg-muted transition shadow-sm">
                   <input 
                     type="checkbox"
                     checked={editForm.hideDayRate}
                     onChange={(e) => setEditForm({ ...editForm, hideDayRate: e.target.checked })}
-                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                    className="rounded border-border text-red-650 focus:ring-red-500 h-4 w-4"
                   />
                   <div>
                     <span className="block">Hide Financial Day Rate</span>
@@ -1712,12 +1712,12 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 </label>
 
                 {/* Restrict Direct Messaging */}
-                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                <label className="flex items-center gap-2 cursor-pointer bg-muted border border-slate-150 p-2.5 rounded-xl hover:bg-muted transition shadow-sm">
                   <input 
                     type="checkbox"
                     checked={editForm.restrictDms}
                     onChange={(e) => setEditForm({ ...editForm, restrictDms: e.target.checked })}
-                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                    className="rounded border-border text-red-650 focus:ring-red-500 h-4 w-4"
                   />
                   <div>
                     <span className="block">Restrict Direct Messaging</span>
@@ -1726,12 +1726,12 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                 </label>
 
                 {/* Exclude from search index */}
-                <label className="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-150 p-2.5 rounded-xl hover:bg-slate-100 transition shadow-sm">
+                <label className="flex items-center gap-2 cursor-pointer bg-muted border border-slate-150 p-2.5 rounded-xl hover:bg-muted transition shadow-sm">
                   <input 
                     type="checkbox"
                     checked={editForm.noIndex}
                     onChange={(e) => setEditForm({ ...editForm, noIndex: e.target.checked })}
-                    className="rounded border-slate-300 text-red-650 focus:ring-red-500 h-4 w-4"
+                    className="rounded border-border text-red-650 focus:ring-red-500 h-4 w-4"
                   />
                   <div>
                     <span className="block">No Search Indexing</span>
@@ -1744,10 +1744,10 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Section 6: Video Reels & Showreels */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Video Reels</h3>
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Video Reels</h3>
               
-              <div className="space-y-3 p-3 bg-slate-50 border border-slate-150 rounded-2xl">
-                <h4 className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">Reel 1 Details</h4>
+              <div className="space-y-3 p-3 bg-muted border border-slate-150 rounded-2xl">
+                <h4 className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-widest">Reel 1 Details</h4>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-1.5 col-span-2">
                     <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Reel 1 Title</label>
@@ -1755,7 +1755,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                       type="text" 
                       value={editForm.reel1Title}
                       onChange={(e) => setEditForm({ ...editForm, reel1Title: e.target.value })}
-                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                      className="bg-white border border-border text-slate-850 rounded-xl text-xs h-9 font-bold"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -1764,7 +1764,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                       type="text" 
                       value={editForm.reel1Duration}
                       onChange={(e) => setEditForm({ ...editForm, reel1Duration: e.target.value })}
-                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                      className="bg-white border border-border text-slate-850 rounded-xl text-xs h-9 font-bold"
                     />
                   </div>
                 </div>
@@ -1774,13 +1774,13 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                     type="text" 
                     value={editForm.reel1Url}
                     onChange={(e) => setEditForm({ ...editForm, reel1Url: e.target.value })}
-                    className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                    className="bg-white border border-border text-slate-850 rounded-xl text-xs h-9 font-bold"
                   />
                 </div>
               </div>
 
-              <div className="space-y-3 p-3 bg-slate-50 border border-slate-150 rounded-2xl">
-                <h4 className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest">Reel 2 Details</h4>
+              <div className="space-y-3 p-3 bg-muted border border-slate-150 rounded-2xl">
+                <h4 className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-widest">Reel 2 Details</h4>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-1.5 col-span-2">
                     <label className="text-[8px] font-bold text-slate-450 uppercase tracking-widest block">Reel 2 Title</label>
@@ -1788,7 +1788,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                       type="text" 
                       value={editForm.reel2Title}
                       onChange={(e) => setEditForm({ ...editForm, reel2Title: e.target.value })}
-                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                      className="bg-white border border-border text-slate-850 rounded-xl text-xs h-9 font-bold"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -1797,7 +1797,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                       type="text" 
                       value={editForm.reel2Duration}
                       onChange={(e) => setEditForm({ ...editForm, reel2Duration: e.target.value })}
-                      className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                      className="bg-white border border-border text-slate-850 rounded-xl text-xs h-9 font-bold"
                     />
                   </div>
                 </div>
@@ -1807,7 +1807,7 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
                     type="text" 
                     value={editForm.reel2Url}
                     onChange={(e) => setEditForm({ ...editForm, reel2Url: e.target.value })}
-                    className="bg-white border border-slate-200 text-slate-850 rounded-xl text-xs h-9 font-bold"
+                    className="bg-white border border-border text-slate-850 rounded-xl text-xs h-9 font-bold"
                   />
                 </div>
               </div>
@@ -1815,23 +1815,23 @@ export default function PublicCreatorPortfolioPage({ params }: PageProps) {
 
             {/* Section 7: Lookbook Photo Gallery */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-1">Lookbook Photo Gallery</h3>
+              <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-muted-foreground border-b border-border pb-1">Lookbook Photo Gallery</h3>
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Lookbook Gallery Image URLs (comma separated)</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Lookbook Gallery Image URLs (comma separated)</label>
                 <textarea 
                   value={editForm.galleryUrls}
                   onChange={(e) => setEditForm({ ...editForm, galleryUrls: e.target.value })}
-                  className="bg-slate-50 border border-slate-200 text-slate-805 rounded-xl text-xs h-20 w-full p-2.5 outline-none font-bold"
+                  className="bg-muted border border-border text-slate-805 rounded-xl text-xs h-20 w-full p-2.5 outline-none font-bold"
                   placeholder="Paste direct image URLs..."
                 />
               </div>
             </div>
 
-            <DialogFooter className="pt-4 border-t border-slate-100 gap-2">
-              <Button type="button" variant="ghost" onClick={() => setIsEditOpen(false)} className="rounded-full border border-slate-200 hover:bg-slate-50 text-xs font-bold bg-white text-slate-700 h-11 transition shadow-sm">
+            <DialogFooter className="pt-4 border-t border-border gap-2">
+              <Button type="button" variant="ghost" onClick={() => setIsEditOpen(false)} className="rounded-full border border-border hover:bg-muted text-xs font-bold bg-white text-primary/80 h-11 transition shadow-sm">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold h-11 px-6 shadow shadow-red-500/10 transition">
+              <Button type="submit" className="bg-destructive hover:bg-destructive text-white rounded-full text-xs font-bold h-11 px-6 shadow shadow-red-500/10 transition">
                 Save Profile Edits
               </Button>
             </DialogFooter>

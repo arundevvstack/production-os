@@ -405,30 +405,30 @@ export default function InvoicesPage() {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs font-bold text-slate-500">
+                <div className="p-3 rounded-xl bg-muted border border-border flex flex-col gap-1.5">
+                  <div className="flex justify-between text-xs font-bold text-muted-foreground">
                     <span>Subtotal:</span>
                     <span>₹{(parseFloat(newInvoice.total) || 0).toLocaleString()}</span>
                   </div>
                   {newInvoice.gst_type === "Intra-state" && (
                     <>
-                      <div className="flex justify-between text-[10px] font-bold text-slate-400">
+                      <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
                         <span>CGST (9%):</span>
                         <span>₹{((parseFloat(newInvoice.total) || 0) * 0.09).toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] font-bold text-slate-400">
+                      <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
                         <span>SGST (9%):</span>
                         <span>₹{((parseFloat(newInvoice.total) || 0) * 0.09).toLocaleString()}</span>
                       </div>
                     </>
                   )}
                   {newInvoice.gst_type === "Inter-state" && (
-                    <div className="flex justify-between text-[10px] font-bold text-slate-400">
+                    <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
                       <span>IGST (18%):</span>
                       <span>₹{((parseFloat(newInvoice.total) || 0) * 0.18).toLocaleString()}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm font-black text-slate-900 border-t pt-1.5 mt-1">
+                  <div className="flex justify-between text-sm font-black text-primary border-t pt-1.5 mt-1">
                     <span>Total Payable:</span>
                     <span>
                       ₹{
@@ -507,7 +507,7 @@ export default function InvoicesPage() {
         <CardContent className="p-0 bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50/50 border-b">
+              <thead className="bg-muted/50 border-b">
                 <tr>
                   <th className="p-4 text-left font-bold text-[11px] uppercase tracking-wider">Invoice #</th>
                   <th className="p-4 text-left font-bold text-[11px] uppercase tracking-wider">Context</th>
@@ -524,7 +524,7 @@ export default function InvoicesPage() {
                   </tr>
                 ) : (
                   invoices?.map((inv) => (
-                    <tr key={inv.id} className="hover:bg-slate-50 transition-colors group">
+                    <tr key={inv.id} className="hover:bg-muted transition-colors group">
                       <td className="p-4">
                         <div className="flex flex-col">
                           <span className="font-mono font-bold text-primary">{inv.invoice_number}</span>
@@ -570,7 +570,7 @@ export default function InvoicesPage() {
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem onClick={() => handleCopyLink(inv)} className="gap-2 py-2 cursor-pointer">
-                                <Copy className="h-4 w-4 text-slate-500" /> Copy Access Link
+                                <Copy className="h-4 w-4 text-muted-foreground" /> Copy Access Link
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -578,7 +578,7 @@ export default function InvoicesPage() {
                           <Button 
                             variant="ghost" 
                             size="icon" 
-                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-rose-500 hover:text-rose-600 hover:bg-rose-50"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-accent hover:text-accent hover:bg-accent/10"
                             onClick={() => setInvoiceToDelete(inv)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -610,7 +610,7 @@ export default function InvoicesPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} className="bg-rose-500 hover:bg-rose-600 rounded-xl">
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-accent hover:bg-accent rounded-xl">
               Confirm Delete
             </AlertDialogAction>
           </AlertDialogFooter>

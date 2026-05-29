@@ -300,7 +300,7 @@ function AccountCenterContent() {
           <h1 className="text-4xl font-bold text-primary">Account Center</h1>
           <p className="text-muted-foreground">Manage your personal presence and workspace configuration.</p>
         </div>
-        <Button variant="ghost" className="rounded-xl px-6 text-rose-500 hover:bg-rose-50" onClick={handleLogout}>
+        <Button variant="ghost" className="rounded-xl px-6 text-accent hover:bg-accent/10" onClick={handleLogout}>
           <LogOut className="h-4 w-4 mr-2" /> Logout
         </Button>
       </div>
@@ -430,7 +430,7 @@ function AccountCenterContent() {
                         "p-4 rounded-[10px] border-2 transition-all text-left flex flex-col gap-3 group relative",
                         themeColors.primary === preset.primary && themeColors.accent === preset.accent
                           ? "border-primary bg-primary/5 shadow-md"
-                          : "border-slate-100 hover:border-slate-200 bg-white"
+                          : "border-border hover:border-border bg-white"
                       )}
                     >
                       <div className="flex gap-1.5">
@@ -463,7 +463,7 @@ function AccountCenterContent() {
                         <p className="text-[10px] text-muted-foreground uppercase font-bold">Headers & Navigation</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="h-10 w-10 rounded-xl shadow-sm border border-slate-200" style={{ backgroundColor: themeColors.primary }} />
+                        <div className="h-10 w-10 rounded-xl shadow-sm border border-border" style={{ backgroundColor: themeColors.primary }} />
                         <Input 
                           type="color" 
                           value={themeColors.primary}
@@ -484,7 +484,7 @@ function AccountCenterContent() {
                         <p className="text-[10px] text-muted-foreground uppercase font-bold">Buttons & Highlighting</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="h-10 w-10 rounded-xl shadow-sm border border-slate-200" style={{ backgroundColor: themeColors.accent }} />
+                        <div className="h-10 w-10 rounded-xl shadow-sm border border-border" style={{ backgroundColor: themeColors.accent }} />
                         <Input 
                           type="color" 
                           value={themeColors.accent}
@@ -501,8 +501,8 @@ function AccountCenterContent() {
                   </div>
                 </div>
 
-                <div className="bg-slate-50/50 rounded-[10px] p-8 border border-slate-100 flex flex-col justify-center">
-                  <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-6">Live Theme Preview</h4>
+                <div className="bg-muted/50 rounded-[10px] p-8 border border-border flex flex-col justify-center">
+                  <h4 className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-6">Live Theme Preview</h4>
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-xl flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: themeColors.primary }}>
@@ -513,7 +513,7 @@ function AccountCenterContent() {
                         <p className="text-[10px] text-muted-foreground uppercase font-bold">Navigation State</p>
                       </div>
                     </div>
-                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
                       <div className="h-full w-2/3 rounded-full" style={{ backgroundColor: themeColors.primary }} />
                     </div>
                     <Button 

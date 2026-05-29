@@ -23,22 +23,22 @@ const features = [
   {
     title: "Manage your production",
     description: "Keep track of all your video campaigns, rentals, and team schedules in one place.",
-    icon: <Radio className="w-8 h-8 text-red-600" />,
-    bgColor: "bg-red-500/10",
+    icon: <Radio className="w-8 h-8 text-destructive" />,
+    bgColor: "bg-destructive/10",
     image: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=2070&auto=format&fit=crop"
   },
   {
     title: "AI Media Assistant",
     description: "Quickly find clips, generate subtitles, and organize your editing workflow.",
-    icon: <Sparkles className="w-8 h-8 text-red-600" />,
-    bgColor: "bg-red-500/10",
+    icon: <Sparkles className="w-8 h-8 text-destructive" />,
+    bgColor: "bg-destructive/10",
     image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2070&auto=format&fit=crop"
   },
   {
     title: "Review & Feedback",
     description: "Share videos with clients and get precise feedback on every frame securely.",
-    icon: <ShieldCheck className="w-8 h-8 text-red-600" />,
-    bgColor: "bg-red-500/10",
+    icon: <ShieldCheck className="w-8 h-8 text-destructive" />,
+    bgColor: "bg-destructive/10",
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2070&auto=format&fit=crop"
   }
 ];
@@ -121,10 +121,10 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Ambient gradients */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-destructive/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white border border-slate-200 shadow-2xl rounded-3xl overflow-hidden">
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white border border-border shadow-2xl rounded-3xl overflow-hidden">
         
         {/* LEFT — Account Center Login */}
         <div className="flex flex-col justify-center p-8 lg:p-12 relative bg-white">
@@ -136,10 +136,10 @@ export default function LoginPage() {
                 <Logo />
               </div>
 
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+              <h1 className="text-3xl font-black text-primary tracking-tight leading-tight">
                 Welcome Back
               </h1>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Log in to manage your projects, team, and media.
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function LoginPage() {
             {/* Login Form */}
             <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-slate-700 ml-1" htmlFor="email">
+                <Label className="text-sm font-semibold text-primary/80 ml-1" htmlFor="email">
                   Email Address
                 </Label>
                 <Input
@@ -157,16 +157,16 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-400 focus:ring-red-500/20 focus:border-red-500 text-sm font-medium transition"
+                  className="h-12 rounded-xl border-border bg-muted focus:bg-white text-primary placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium transition"
                 />
               </div>
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between ml-1">
-                  <Label className="text-sm font-semibold text-slate-700" htmlFor="password">
+                  <Label className="text-sm font-semibold text-primary/80" htmlFor="password">
                     Password
                   </Label>
-                  <Link href="/forgot-password" className="text-xs font-semibold text-red-600 hover:underline">
+                  <Link href="/forgot-password" className="text-xs font-semibold text-destructive hover:underline">
                     Forgot Password?
                   </Link>
                 </div>
@@ -178,13 +178,13 @@ export default function LoginPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-400 focus:ring-red-500/20 focus:border-red-500 text-sm font-medium w-full pr-12 transition"
+                    className="h-12 rounded-xl border-border bg-muted focus:bg-white text-primary placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium w-full pr-12 transition"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -195,7 +195,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-sm active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-lg shadow-red-500/20 transition duration-300"
+                className="w-full h-12 bg-destructive hover:bg-destructive text-white font-black rounded-xl text-sm active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-lg shadow-red-500/20 transition duration-300"
               >
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -212,15 +212,15 @@ export default function LoginPage() {
             </div>
 
             {/* Register link */}
-            <div className="text-center border-t border-slate-100 pt-5">
-              <p className="text-sm text-slate-500">
+            <div className="text-center border-t border-border pt-5">
+              <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
-                <Link href="/signup" className="font-bold text-red-600 hover:underline">
+                <Link href="/signup" className="font-bold text-destructive hover:underline">
                   Sign up
                 </Link>
               </p>
-              <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                <Link href="/talent/login" className="hover:text-indigo-600 transition">Talent Portal</Link>
+              <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                <Link href="/talent/login" className="hover:text-accent transition">Talent Portal</Link>
                 <span className="text-slate-200">|</span>
                 <Link href="/client/login" className="hover:text-emerald-600 transition">Business Portal</Link>
               </div>
@@ -230,7 +230,7 @@ export default function LoginPage() {
         </div>
 
         {/* RIGHT — Cinematic Showcase */}
-        <div className="hidden md:block relative p-4 lg:p-6 bg-slate-950">
+        <div className="hidden md:block relative p-4 lg:p-6 bg-primary">
           <div className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-indigo-600/5 mix-blend-overlay z-10 pointer-events-none" />
           
           {/* Account Center info overlay at bottom */}

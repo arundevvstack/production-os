@@ -168,14 +168,14 @@ export default function ArchivesPage() {
         </div>
       </div>
 
-      <Card className="border-none shadow-soft bg-indigo-50 border border-indigo-100 rounded-[10px]">
+      <Card className="border-none shadow-soft bg-accent/10 border border-accent/20 rounded-[10px]">
         <CardContent className="p-6 flex items-start gap-4">
-          <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
+          <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-accent shadow-sm shrink-0">
             <Info className="h-5 w-5" />
           </div>
           <div className="space-y-1">
-            <h4 className="font-bold text-indigo-900 text-sm">Vault Retention Policy</h4>
-            <p className="text-xs text-indigo-800/70 leading-relaxed">
+            <h4 className="font-bold text-accent text-sm">Vault Retention Policy</h4>
+            <p className="text-xs text-accent/70 leading-relaxed">
               Archived items are retained indefinitely until you choose to <strong>Permanently Delete</strong> them.
               Restoring an item will move it back to its original production or CRM stage.
             </p>
@@ -252,18 +252,18 @@ export default function ArchivesPage() {
       <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
         <AlertDialogContent className="rounded-[10px] p-8">
           <AlertDialogHeader>
-            <div className="h-14 w-14 bg-rose-50 rounded-[10px] flex items-center justify-center text-rose-500 mb-4">
+            <div className="h-14 w-14 bg-accent/10 rounded-[10px] flex items-center justify-center text-accent mb-4">
               <AlertTriangle className="h-8 w-8" />
             </div>
             <AlertDialogTitle className="text-2xl font-black tracking-tighter">Confirm Permanent Purge?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium text-base">
+            <AlertDialogDescription className="text-muted-foreground font-medium text-base">
               You are about to permanently delete <strong>{itemToDelete?.company_name || itemToDelete?.project_name}</strong>.
               This action is irreversible and will scrub all associated metadata from your cloud records.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-6">
             <AlertDialogCancel className="rounded-xl h-12 font-bold">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handlePermanentDelete} className="bg-rose-500 hover:bg-rose-600 rounded-xl h-12 font-black uppercase text-xs tracking-widest px-8">
+            <AlertDialogAction onClick={handlePermanentDelete} className="bg-accent hover:bg-accent rounded-xl h-12 font-black uppercase text-xs tracking-widest px-8">
               Scrub Permanently
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -277,7 +277,7 @@ export default function ArchivesPage() {
               <RotateCcw className="h-8 w-8" />
             </div>
             <AlertDialogTitle className="text-2xl font-black tracking-tighter">Restore to Active?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium">
+            <AlertDialogDescription className="text-muted-foreground font-medium">
               This will move <strong>{itemToRestore?.company_name || itemToRestore?.project_name}</strong> back into your main workspace operations.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -299,21 +299,21 @@ function ArchiveCard({ item, onRestore, onDelete }: { item: any, onRestore: (i: 
 
   return (
     <Card className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white hover:shadow-md transition-all">
-      <CardHeader className="bg-slate-50/50 pb-4 px-6 pt-6">
+      <CardHeader className="bg-muted/50 pb-4 px-6 pt-6">
         <div className="flex justify-between items-start">
-          <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-slate-400 shadow-sm">
+          <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-muted-foreground shadow-sm">
             {item.archive_type === 'project' ? <Film className="h-5 w-5" /> :
              (item.archive_type === 'prospect' || item.archive_type === 'lead') ? <Users className="h-5 w-5" /> :
              <Building2 className="h-5 w-5" />}
           </div>
-          <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-slate-200 text-slate-400">
+          <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-border text-muted-foreground">
             {item.archive_type || "Archived"}
           </Badge>
         </div>
         <CardTitle className="text-lg font-bold mt-4 truncate">
           {displayName}
         </CardTitle>
-        <CardDescription className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1.5 mt-1">
+        <CardDescription className="text-[10px] font-bold uppercase text-muted-foreground flex items-center gap-1.5 mt-1">
           <History className="h-3 w-3" /> Moved to vault on {archivedDate}
         </CardDescription>
       </CardHeader>
@@ -328,7 +328,7 @@ function ArchiveCard({ item, onRestore, onDelete }: { item: any, onRestore: (i: 
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-xl h-10 w-10 text-rose-400 hover:text-rose-600 hover:bg-rose-50"
+          className="rounded-xl h-10 w-10 text-accent hover:text-accent hover:bg-accent/10"
           onClick={() => onDelete(item)}
         >
           <Trash2 className="h-4 w-4" />

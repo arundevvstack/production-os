@@ -111,7 +111,7 @@ export function AppSidebar() {
 
           return (
             <SidebarGroup key={group.label} className="py-1">
-                <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-normal text-slate-500 mb-1 h-4">{group.label}</SidebarGroupLabel>
+                <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-normal text-muted-foreground mb-1 h-4">{group.label}</SidebarGroupLabel>
                 <SidebarMenu className="gap-0.5">
                     {visibleItems.map((item) => {
                       const isActive = isNavItemActive(item);
@@ -121,11 +121,11 @@ export function AppSidebar() {
                               "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                               isActive 
                                 ? "bg-primary/10 text-primary hover:bg-primary/15" 
-                                : "hover:bg-slate-200/50 text-slate-700 hover:text-slate-900"
+                                : "hover:bg-secondary/50 text-primary/80 hover:text-primary"
                             )}>
                             <Link href={item.url} className="flex items-center gap-3 w-full">
                                 {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                                <item.icon className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-primary" : "text-slate-500")} />
+                                <item.icon className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-primary" : "text-muted-foreground")} />
                                 <span className={cn("text-[13px] tracking-tight", isActive ? "font-black" : "font-medium")}>{item.title}</span>
                             </Link>
                             </SidebarMenuButton>
@@ -138,18 +138,18 @@ export function AppSidebar() {
         })}
 
         <SidebarGroup className="py-2 border-t border-white/10 mt-1">
-            <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-normal text-slate-500 mb-1">Systems</SidebarGroupLabel>
+            <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-normal text-muted-foreground mb-1">Systems</SidebarGroupLabel>
             <SidebarMenu className="gap-0.5">
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild isActive={pathname?.startsWith('/settings') && !pathname?.includes('/rbac')} tooltip="Global Settings" className={cn(
                       "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                       (pathname?.startsWith('/settings') && !pathname?.includes('/rbac'))
                         ? "bg-primary/10 text-primary hover:bg-primary/15"
-                        : "hover:bg-slate-200/50 text-slate-700 hover:text-slate-900"
+                        : "hover:bg-secondary/50 text-primary/80 hover:text-primary"
                   )}>
                       <Link href="/settings" className="flex items-center gap-3 w-full">
                           {(pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                          <Settings2 className={cn("size-4 transition-transform group-hover/btn:scale-110", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "text-primary" : "text-slate-500")} />
+                          <Settings2 className={cn("size-4 transition-transform group-hover/btn:scale-110", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "text-primary" : "text-muted-foreground")} />
                           <span className={cn("text-[13px] tracking-tight", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "font-black" : "font-medium")}>Preferences</span>
                       </Link>
                   </SidebarMenuButton>
@@ -161,11 +161,11 @@ export function AppSidebar() {
                       "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                       pathname?.includes('/rbac')
                         ? "bg-primary/10 text-primary hover:bg-primary/15"
-                        : "hover:bg-slate-200/50 text-slate-700 hover:text-slate-900"
+                        : "hover:bg-secondary/50 text-primary/80 hover:text-primary"
                   )}>
                       <Link href="/settings/rbac" className="flex items-center gap-3 w-full">
                           {pathname?.includes('/rbac') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                          <ShieldCheck className={cn("size-4 transition-transform group-hover/btn:scale-110", pathname?.includes('/rbac') ? "text-primary" : "text-slate-500")} />
+                          <ShieldCheck className={cn("size-4 transition-transform group-hover/btn:scale-110", pathname?.includes('/rbac') ? "text-primary" : "text-muted-foreground")} />
                           <span className={cn("text-[13px] tracking-tight", pathname?.includes('/rbac') ? "font-black" : "font-medium")}>Access Control</span>
                       </Link>
                   </SidebarMenuButton>
@@ -173,8 +173,8 @@ export function AppSidebar() {
                 )}
 
                 <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleLogout} tooltip="Log Out" className="h-7 rounded-lg px-3 hover:bg-rose-500/10 hover:text-rose-600 text-slate-700 font-normal group transition-colors">
-                    <LogOut className="size-4 text-slate-600 transition-transform group-hover:translate-x-1" />
+                <SidebarMenuButton onClick={handleLogout} tooltip="Log Out" className="h-7 rounded-lg px-3 hover:bg-accent/10 hover:text-accent text-primary/80 font-normal group transition-colors">
+                    <LogOut className="size-4 text-muted-foreground/80 transition-transform group-hover:translate-x-1" />
                     <span className="text-[13px]">Log Out</span>
                 </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -195,8 +195,8 @@ export function AppSidebar() {
           </Avatar>
           {state !== "collapsed" && (
             <div className="flex flex-col min-w-0">
-              <span className="text-[13px] font-black tracking-tight truncate text-slate-900 leading-none">{profile?.fullName}</span>
-              <span className="text-[9px] font-black text-slate-400 truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-wider">
+              <span className="text-[13px] font-black tracking-tight truncate text-primary leading-none">{profile?.fullName}</span>
+              <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-wider">
                 <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]" /> {company?.name || 'Workspace'}
               </span>
             </div>

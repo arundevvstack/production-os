@@ -148,21 +148,21 @@ export function LiveTimer() {
       {/* Expanded Interface */}
       {isExpanded && !activeEntry && (
         <Card className="mb-4 w-80 p-4 border-none shadow-2xl rounded-2xl bg-white/90 backdrop-blur-xl border border-white">
-          <div className="flex items-center gap-2 mb-4 text-slate-800">
+          <div className="flex items-center gap-2 mb-4 text-primary">
             <Clock className="h-4 w-4 text-primary" />
             <h4 className="font-black uppercase tracking-widest text-[10px]">Start Time Entry</h4>
           </div>
           
           <div className="space-y-3">
             <Select value={selectedObjectiveId} onValueChange={setSelectedObjectiveId}>
-              <SelectTrigger className="w-full h-10 bg-slate-100 border-none font-bold text-xs rounded-xl">
+              <SelectTrigger className="w-full h-10 bg-muted border-none font-bold text-xs rounded-xl">
                 <SelectValue placeholder="Select an Objective (Optional)" />
               </SelectTrigger>
-              <SelectContent className="max-h-60 bg-white shadow-2xl rounded-xl z-[100] border border-slate-100">
-                <SelectItem value="none" className="text-xs font-black text-slate-400">General (No Objective)</SelectItem>
+              <SelectContent className="max-h-60 bg-white shadow-2xl rounded-xl z-[100] border border-border">
+                <SelectItem value="none" className="text-xs font-black text-muted-foreground">General (No Objective)</SelectItem>
                 {objectives.map(obj => (
                   <SelectItem key={obj.id} value={obj.id} className="text-xs font-bold py-2">
-                    <span className="text-slate-400 font-black mr-2">[{obj.project?.project_name || 'General'}]</span>
+                    <span className="text-muted-foreground font-black mr-2">[{obj.project?.project_name || 'General'}]</span>
                     {obj.title}
                   </SelectItem>
                 ))}
@@ -172,7 +172,7 @@ export function LiveTimer() {
             <Button 
               onClick={startTimer}
               disabled={isLoading}
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-black rounded-xl h-10 shadow-lg shadow-slate-900/20"
+              className="w-full bg-primary hover:bg-primary text-white font-black rounded-xl h-10 shadow-lg shadow-slate-900/20"
             >
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Start Clock"}
             </Button>
@@ -186,8 +186,8 @@ export function LiveTimer() {
         className={cn(
           "flex items-center gap-4 h-14 rounded-full px-6 shadow-2xl transition-all duration-500",
           activeEntry 
-            ? "bg-rose-500 hover:bg-rose-600 shadow-rose-500/30 text-white w-auto" 
-            : "bg-slate-900 hover:bg-slate-800 shadow-slate-900/30 text-white cursor-pointer"
+            ? "bg-accent hover:bg-accent shadow-accent/30 text-white w-auto" 
+            : "bg-primary hover:bg-primary shadow-slate-900/30 text-white cursor-pointer"
         )}
       >
         {activeEntry ? (
