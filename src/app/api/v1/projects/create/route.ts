@@ -112,7 +112,23 @@ export async function POST(req: Request) {
     // Distribute stage timelines based on weights
     const stageTimelines = distributeStageTimelines(projectStart, projectEnd, template.stages);
 
-    // Run everything in a single Prisma transaction
+    // ─── Pre-compute assignees OUTSIDE the transaction ───────────────────────
+    // Running async parallel queries inside a Prisma interactive transaction
+    // holds the connection open and causes "Transaction not found" errors.
+    // We resolve all assignees first, then the transaction only does writes.
+    const uniqueDepartments = [...new Set(
+      template.stages.flatMap(s => s.objectives.map(o => o.department))
+    )];
+
+    const departmentAssigneeMap: Record<string, string | null> = {};
+    await Promise.all(
+      uniqueDepartments.map(async (dept) => {
+        departmentAssigneeMap[dept] = await findBestAssignee(prisma as any, company_id, dept);
+      })
+    );
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // Run all WRITES in a single transaction (no async sub-queries inside)
     const result = await prisma.$transaction(
       async (tx) => {
         // 1. Create the project
@@ -143,9 +159,7 @@ export async function POST(req: Request) {
         }
 
         // 3. Create stages + objectives
-        // We'll collect title→id map for dependency wiring after
         const objectiveTitleToId: Record<string, string> = {};
-        // Collect dependency declarations: childId → [parent titles]
         const pendingDependencies: { childId: string; dependsOnTitles: string[] }[] = [];
 
         for (let si = 0; si < template.stages.length; si++) {
@@ -170,12 +184,10 @@ export async function POST(req: Request) {
           for (const objDef of stageDef.objectives) {
             // Compute due date: stage_start + (offset_ratio × stage_duration)
             const dueDateMs = stageStart.getTime() + Math.round(objDef.offset_ratio * stageMs);
-            const dueDate = new Date(dueDateMs);
-            // Clamp due date to within stage bounds
-            const clampedDue = new Date(Math.min(dueDate.getTime(), stageEnd.getTime()));
+            const clampedDue = new Date(Math.min(dueDateMs, stageEnd.getTime()));
 
-            // Auto-assign based on department + workload
-            const assigneeId = await findBestAssignee(tx, company_id, objDef.department);
+            // Use pre-computed assignee — no query inside tx
+            const assigneeId = departmentAssigneeMap[objDef.department] ?? null;
 
             const createdObj = await tx.objective.create({
               data: {
@@ -206,26 +218,23 @@ export async function POST(req: Request) {
           }
         }
 
-        // 4. Wire all dependency chains now that all objectives have IDs
+        // 4. Wire dependency chains
+        // Use create + ignore-duplicate instead of upsert to avoid stalling the tx
         for (const dep of pendingDependencies) {
           for (const parentTitle of dep.dependsOnTitles) {
             const parentId = objectiveTitleToId[parentTitle];
             if (parentId && parentId !== dep.childId) {
-              // Use upsert to avoid duplicate dependency errors
-              await tx.objectiveDependency.upsert({
-                where: {
-                  parent_id_child_id: {
+              try {
+                await tx.objectiveDependency.create({
+                  data: {
                     parent_id: parentId,
                     child_id: dep.childId,
+                    type: 'blocking',
                   },
-                },
-                create: {
-                  parent_id: parentId,
-                  child_id: dep.childId,
-                  type: 'blocking',
-                },
-                update: {},
-              });
+                });
+              } catch {
+                // Ignore duplicate dependency error
+              }
             }
           }
         }
@@ -262,7 +271,7 @@ export async function POST(req: Request) {
         };
       },
       {
-        timeout: 30000, // 30s timeout for large transaction
+        timeout: 60000, // 60s — write-only tx is fast, but generous for slow DBs
       }
     );
 
