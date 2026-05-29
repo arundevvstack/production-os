@@ -31,7 +31,6 @@ import {
   RefreshCcw,
   Sparkles
 } from "lucide-react";
-} from "lucide-react";
 import imageCompression from 'browser-image-compression';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '@/lib/cropImage';
