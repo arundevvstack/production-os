@@ -122,10 +122,15 @@ function AccountCenterContent() {
         pan: company.bank_details?.pan || ""
       });
     }
-    if (settings?.theme) {
+    if (tenantProfile?.theme_preference) {
       setThemeColors({
-        primary: settings.theme.primary || "#1e3a8a",
-        accent: settings.theme.accent || "#ff4b82"
+        primary: (tenantProfile.theme_preference as any).primary || "#1e3a8a",
+        accent: (tenantProfile.theme_preference as any).accent || "#ff4b82"
+      });
+    } else if (settings?.theme) {
+      setThemeColors({
+        primary: (settings.theme as any).primary || "#1e3a8a",
+        accent: (settings.theme as any).accent || "#ff4b82"
       });
     }
   }, [tenantProfile, company, settings]);
@@ -191,21 +196,20 @@ function AccountCenterContent() {
   };
 
   const handleSaveTheme = async () => {
-    if (!companyId) return;
-    const { error } = await supabase.from('CompanySettings').upsert({
-      id: settings?.id || crypto.randomUUID(),
-      company_id: companyId,
-      theme: {
+    if (!tenantProfile?.id) return;
+    const { error } = await supabase.from('User').update({
+      theme_preference: {
         primary: themeColors.primary,
         accent: themeColors.accent,
-      },
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'company_id' });
+      }
+    }).eq('id', tenantProfile.id);
 
     if (error) {
       toast({ variant: "destructive", title: "Theme Save Failed", description: error.message });
     } else {
-      toast({ title: "Branding Updated", description: "Workspace theme variables have been synced." });
+      toast({ title: "Branding Updated", description: "Your personal theme preferences have been saved." });
+      // Force reload to apply theme immediately
+      window.location.reload();
     }
   };
 
@@ -310,18 +314,22 @@ function AccountCenterContent() {
           <TabsTrigger value="profile" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
             <UserIcon className="h-4 w-4" /> Profile
           </TabsTrigger>
-          <TabsTrigger value="company" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
-            <Building2 className="h-4 w-4" /> Company
-          </TabsTrigger>
           <TabsTrigger value="theme" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
             <Palette className="h-4 w-4" /> Theme
           </TabsTrigger>
-          <TabsTrigger value="modules" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
-            <Puzzle className="h-4 w-4" /> Modules
-          </TabsTrigger>
-          <TabsTrigger value="security" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
-            <Lock className="h-4 w-4" /> Security
-          </TabsTrigger>
+          {tenantProfile?.role_id !== 'EMPLOYEE' && (
+            <>
+              <TabsTrigger value="company" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
+                <Building2 className="h-4 w-4" /> Company
+              </TabsTrigger>
+              <TabsTrigger value="modules" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
+                <Puzzle className="h-4 w-4" /> Modules
+              </TabsTrigger>
+              <TabsTrigger value="security" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
+                <Lock className="h-4 w-4" /> Security
+              </TabsTrigger>
+            </>
+          )}
         </TabsList>
 
         {/* PROFILE TAB */}
@@ -339,6 +347,7 @@ function AccountCenterContent() {
                     ref={fileInputRef} 
                     accept="image/*"
                     onChange={handleImageUpload}
+                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                   <Avatar className={cn(
                     "h-24 w-24 ring-4 ring-white shadow-xl transition-all",
@@ -349,16 +358,18 @@ function AccountCenterContent() {
                       {profileData.name.substring(0,2).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
-                  <div className={cn(
-                    "absolute inset-0 bg-black/40 rounded-full flex items-center justify-center transition-opacity",
-                    isUploading ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                  )}>
-                    {isUploading ? (
-                      <Loader2 className="h-6 w-6 text-white animate-spin" />
-                    ) : (
-                      <Camera className="h-6 w-6 text-white" />
-                    )}
-                  </div>
+                  {tenantProfile?.role_id !== 'EMPLOYEE' && (
+                    <div className={cn(
+                      "absolute inset-0 bg-black/40 rounded-full flex items-center justify-center transition-opacity",
+                      isUploading ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    )}>
+                      {isUploading ? (
+                        <Loader2 className="h-6 w-6 text-white animate-spin" />
+                      ) : (
+                        <Camera className="h-6 w-6 text-white" />
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <CardTitle className="text-2xl font-bold">{profileData.name || "User"}</CardTitle>
@@ -377,6 +388,7 @@ function AccountCenterContent() {
                     onChange={(e) => setProfileData({...profileData, name: e.target.value})} 
                     className="rounded-xl" 
                     placeholder="Enter your name"
+                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                 </div>
                 <div className="space-y-2">
@@ -386,6 +398,7 @@ function AccountCenterContent() {
                     onChange={(e) => setProfileData({...profileData, avatar: e.target.value})} 
                     className="rounded-xl" 
                     placeholder="https://..."
+                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
@@ -395,10 +408,13 @@ function AccountCenterContent() {
                     onChange={(e) => setProfileData({...profileData, bio: e.target.value})} 
                     className="rounded-xl" 
                     placeholder="Tell us about yourself"
+                    disabled={tenantProfile?.role_id === 'EMPLOYEE'}
                   />
                 </div>
               </div>
-              <Button onClick={handleSaveProfile} className="rounded-xl px-8 font-bold">Save Profile</Button>
+              {tenantProfile?.role_id !== 'EMPLOYEE' && (
+                <Button onClick={handleSaveProfile} className="rounded-xl px-8 font-bold">Save Profile</Button>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

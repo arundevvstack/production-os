@@ -336,10 +336,14 @@ export default function ProjectsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button onClick={() => setIsCreateOpen(true)} className="h-12 px-6 gap-3 rounded-[10px] bg-primary hover:bg-primary text-white font-black shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
+          {profile?.role_id !== 'EMPLOYEE' && (
+            <>
+              <Button onClick={() => setIsCreateOpen(true)} className="h-12 px-6 gap-3 rounded-[10px] bg-primary hover:bg-primary text-white font-black shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
                 <Plus className="h-5 w-5" /> New Project
               </Button>
               <CreateProjectWizard isOpen={isCreateOpen} onOpenChange={setIsCreateOpen} onSuccess={reloadProjects} />
+            </>
+          )}
         </div>
       </div>
 
@@ -631,7 +635,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             </div>
             <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-normal">
               <Briefcase className="h-3.5 w-3.5" />
-              {project.client_name}
+              {project.client_name || 'Internal / Unassigned'}
             </div>
           </Link>
 
