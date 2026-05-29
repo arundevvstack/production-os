@@ -69,7 +69,7 @@ import {
 import { ListTree, IndianRupee, Zap, Target, Cpu } from "lucide-react";
 import { CONTENT_VERTICALS } from "../clients/page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UnifiedClientSelector } from "@/components/unified-client-selector";
+// UnifiedClientSelector not used in dialog (replaced with native input+datalist to avoid Radix FocusScope conflicts)
 import { ENTERPRISE_TEMPLATES, DEFAULT_TIMELINE_DAYS } from "@/lib/enterprise-workflow-templates";
 import { broadcastTableUpdate } from "@/supabase/hooks/use-collection";
 
@@ -437,24 +437,36 @@ export default function ProjectsPage() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Client</Label>
-                    <UnifiedClientSelector
-                      companyId={companyId || ''}
-                      value={newProject.client_name}
-                      onSelect={(clientData) => {
-                        const lead = leads?.find(l => l.company_name === clientData.company_name);
-                        setNewProject(prev => ({
-                          ...prev, 
-                          client_name: clientData.company_name,
-                          service_category: clientData.service_vertical || prev.service_category,
-                          service: clientData.sub_vertical || prev.service,
-                          budget: lead?.deal_value ? lead.deal_value.toString() : prev.budget
-                        }));
-                        if (lead) setSelectedLeadId(lead.id);
-                      }}
-                      placeholder="Select Client / Prospect..."
-                      className="h-12 rounded-[10px] border-slate-200 bg-white shadow-sm font-bold"
-                      showOnboardOption={false}
-                    />
+                    <div className="relative">
+                      <input
+                        list="client-list"
+                        type="text"
+                        placeholder="Type to search clients..."
+                        value={newProject.client_name}
+                        onChange={(e) => {
+                          const typed = e.target.value;
+                          setNewProject(prev => ({ ...prev, client_name: typed }));
+                          // Auto-fill from leads when an exact match is found
+                          const lead = leads?.find(l => l.company_name === typed);
+                          if (lead) {
+                            setSelectedLeadId(lead.id);
+                            setNewProject(prev => ({
+                              ...prev,
+                              client_name: typed,
+                              service_category: lead.service_vertical || prev.service_category,
+                              service: lead.sub_vertical || prev.service,
+                              budget: lead.deal_value ? lead.deal_value.toString() : prev.budget
+                            }));
+                          }
+                        }}
+                        className="h-12 w-full rounded-[10px] border border-slate-200 bg-white shadow-sm font-bold px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40"
+                      />
+                      <datalist id="client-list">
+                        {leads?.map(l => l.company_name).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).map(name => (
+                          <option key={name} value={name} />
+                        ))}
+                      </datalist>
+                    </div>
                   </div>
                 </div>
 
