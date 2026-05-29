@@ -97,6 +97,11 @@ export default function ProjectWorkspacePage() {
   const [timeLogObjective, setTimeLogObjective] = useState<any>(null);
   const [newTimeEntry, setNewTimeEntry] = useState({ hours: "", notes: "", is_billable: true });
   
+  // Asset Edit Link State
+  const [isEditAssetLinkOpen, setIsEditAssetLinkOpen] = useState(false);
+  const [editingAsset, setEditingAsset] = useState<any>(null);
+  const [newAssetLink, setNewAssetLink] = useState("");
+  
   // Form States
   const [newObjective, setNewObjective] = useState({ title: "", assignedTo: "" });
   const [newAsset, setNewAsset] = useState({ name: "", url: "", file_type: "Video", folder: "pre-prod" });
@@ -246,6 +251,25 @@ export default function ProjectWorkspacePage() {
       setTimeLogObjective(null);
       setNewTimeEntry({ hours: '', notes: '', is_billable: true });
       refetchObjectives();
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: 'Error', description: err.message });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdateAssetLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingAsset || !newAssetLink) return;
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from('Asset').update({ url: newAssetLink }).eq('id', editingAsset.id);
+      if (error) throw error;
+      toast({ title: 'Link Updated', description: 'Asset link updated successfully.' });
+      setIsEditAssetLinkOpen(false);
+      setEditingAsset(null);
+      setNewAssetLink("");
+      refetchAssets();
     } catch (err: any) {
       toast({ variant: 'destructive', title: 'Error', description: err.message });
     } finally {
@@ -866,6 +890,12 @@ export default function ProjectWorkspacePage() {
                                 <Play className="h-3 w-3" /> Review
                               </button>
                             )}
+                            <button
+                              onClick={() => { setEditingAsset(asset); setNewAssetLink(asset.url); setIsEditAssetLinkOpen(true); }}
+                              className="flex-1 h-7 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1"
+                            >
+                              <LinkIcon className="h-3 w-3" /> Edit Link
+                            </button>
                             <a href={asset.url} target="_blank" rel="noopener noreferrer" className="flex-1">
                               <button className="w-full h-7 bg-slate-50 hover:bg-slate-100 text-slate-600 text-[10px] font-black uppercase rounded-lg transition-colors flex items-center justify-center gap-1">
                                 <Download className="h-3 w-3" /> Open
@@ -1233,6 +1263,39 @@ export default function ProjectWorkspacePage() {
             <DialogFooter className="pt-4">
               <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold">
                 {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save Time Log"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog: Edit Asset Link */}
+      <Dialog open={isEditAssetLinkOpen} onOpenChange={setIsEditAssetLinkOpen}>
+        <DialogContent className="sm:max-w-[450px] rounded-[10px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <LinkIcon className="h-5 w-5 text-indigo-500" />
+              Update Asset Link
+            </DialogTitle>
+            <DialogDescription>
+              Provide a new Google Drive or external link for: <span className="font-bold text-slate-900">{editingAsset?.name}</span>
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleUpdateAssetLink} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>External Link (Google Drive, Dropbox, etc.)</Label>
+              <Input
+                type="url"
+                placeholder="https://drive.google.com/..."
+                value={newAssetLink}
+                onChange={(e) => setNewAssetLink(e.target.value)}
+                required
+                className="rounded-xl"
+              />
+            </div>
+            <DialogFooter className="pt-4">
+              <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold bg-indigo-600 hover:bg-indigo-700 text-white">
+                {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Save New Link"}
               </Button>
             </DialogFooter>
           </form>
