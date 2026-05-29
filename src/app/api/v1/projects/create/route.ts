@@ -85,6 +85,7 @@ export async function POST(req: Request) {
     const {
       company_id,
       user_id,
+      assignee_id,
       project_name,
       client_name,
       client_id,
@@ -148,11 +149,12 @@ export async function POST(req: Request) {
         });
 
         // 2. Add creator as Project Manager
-        if (user_id) {
+        const projectManagerId = assignee_id || user_id;
+        if (projectManagerId) {
           await tx.projectMember.create({
             data: {
               project_id: newProject.id,
-              user_id,
+              user_id: projectManagerId,
               role: 'Project Manager',
             },
           });
