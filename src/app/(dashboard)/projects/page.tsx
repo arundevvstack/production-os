@@ -835,7 +835,7 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
             </div>
             <div className="flex -space-x-3">
               <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100">
-                <AvatarFallback className="text-[8px] font-black bg-primary text-white">{project.name.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarFallback className="text-[8px] font-black bg-primary text-white">{(project.project_name || 'P').charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -975,7 +975,7 @@ function ProjectCard({ project, view, index, onArchive }: { project: any, view: 
                 <span className="text-[9px] uppercase font-black text-slate-400 tracking-normal">Assigned crew</span>
                 <div className="flex -space-x-3">
                   <Avatar className="h-8 w-8 border-2 border-white shadow-xl ring-1 ring-slate-100 transition-transform hover:scale-125 hover:z-20 cursor-pointer shrink-0">
-                    <AvatarFallback className="text-[8px] font-black bg-primary text-white">{project.name.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback className="text-[8px] font-black bg-primary text-white">{(project.project_name || 'P').charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </div>
               </div>
