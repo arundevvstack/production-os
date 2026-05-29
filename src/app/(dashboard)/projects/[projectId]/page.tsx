@@ -166,6 +166,11 @@ export default function ProjectWorkspacePage() {
     return roleId !== 'ACCOUNTS';
   }, [roleId]);
 
+  // RBAC Gated access filter: employee team blocked from financial data
+  const hasFinanceAccess = useMemo(() => {
+    return roleId !== 'EMPLOYEE';
+  }, [roleId]);
+
   // --- DERIVED CALCULATIONS ---
   const currentTab = activeTab || projectStages?.[0]?.name || "assets";
 
@@ -528,10 +533,10 @@ export default function ProjectWorkspacePage() {
             </div>
             <Button
               className="h-11 px-6 gap-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 font-black text-xs active:scale-95 transition-all"
-              onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}
+              onClick={() => activeTab === 'assets' ? setIsAddAssetOpen(true) : (activeTab === 'finances' && hasFinanceAccess ? setIsLogExpenseOpen(true) : setIsAddObjectiveOpen(true))}
             >
               <Plus className="h-4 w-4" />
-              {activeTab === 'assets' ? 'Upload Asset' : (activeTab === 'finances' ? 'Log Cost' : 'Add Task')}
+              {activeTab === 'assets' ? 'Upload Asset' : (activeTab === 'finances' && hasFinanceAccess ? 'Log Cost' : 'Add Task')}
             </Button>
           </div>
         </div>
@@ -552,9 +557,11 @@ export default function ProjectWorkspacePage() {
               <TabsTrigger value="assets" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
                 <Package className="h-3.5 w-3.5" /> Assets
               </TabsTrigger>
-              <TabsTrigger value="finances" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
-                <Receipt className="h-3.5 w-3.5" /> Finances
-              </TabsTrigger>
+              {hasFinanceAccess && (
+                <TabsTrigger value="finances" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
+                  <Receipt className="h-3.5 w-3.5" /> Finances
+                </TabsTrigger>
+              )}
               <TabsTrigger value="timeline" className="rounded-none px-5 py-3 gap-2 text-slate-400 font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-slate-900 data-[state=active]:text-slate-900 transition-all">
                 <Calendar className="h-3.5 w-3.5" /> Timeline
               </TabsTrigger>
@@ -973,6 +980,7 @@ export default function ProjectWorkspacePage() {
         </TabsContent>
 
         {/* 💳 FINANCES TABCONTENT (Budget & Cost Ledgers) */}
+        {hasFinanceAccess && (
         <TabsContent value="finances" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-2">
             <div className="lg:col-span-2 space-y-6">
@@ -1049,6 +1057,7 @@ export default function ProjectWorkspacePage() {
             </div>
           </div>
         </TabsContent>
+        )}
 
       
         <TabsContent value="timeline" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
