@@ -204,7 +204,7 @@ export default function DashboardPage() {
               <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground">
                 Command, <span className="text-gradient">{profile?.fullName?.split(' ')[0] || 'Administrator'}</span>
               </h1>
-              <div className="flex items-center gap-1.5 px-3 py-1 bg-primary shadow-lg shadow-primary/20 text-white rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-white/20">
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary rounded-full text-[9px] font-black uppercase tracking-[0.2em] border border-primary/20 shadow-sm">
                 <Zap className="h-3 w-3 fill-current animate-pulse" /> {profile?.role_id ? `${profile.role_id.replace('_', ' ')} STATUS` : 'SUPER ADMIN STATUS'}
               </div>
             </div>
@@ -298,25 +298,30 @@ export default function DashboardPage() {
           </Card>
 
           {/* Activity Logs */}
-          <Card className="border-none shadow-premium rounded-[10px] bg-primary text-white overflow-hidden">
-            <CardHeader className="p-6 pb-4 border-b border-white/10">
-              <CardTitle className="text-lg font-black flex items-center gap-2">
-                <Activity className="h-5 w-5 text-foreground" /> Operational Audit Logs
+          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+            <CardHeader className="p-6 pb-4 border-b border-white/40 relative z-10">
+              <CardTitle className="text-lg font-black flex items-center gap-2 text-foreground">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Activity className="h-4 w-4 text-primary" />
+                </div>
+                Operational Audit Logs
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-6 relative z-10">
               {activityLogs?.length === 0 ? (
                 <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider text-center py-8">Zero system logs generated.</p>
               ) : (
-                <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+                <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
                   {activityLogs?.map((log) => (
-                    <div key={log.id} className="text-xs space-y-1 p-2 rounded-xl bg-white/5 border border-white/5">
-                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-wider text-muted-foreground">
+                    <div key={log.id} className="text-xs space-y-2 p-3 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md transition-all group relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
+                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-wider text-muted-foreground pl-2">
                         <span>{log.user_name}</span>
-                        <span>{format(new Date(log.created_at), 'HH:mm | MMM d')}</span>
+                        <span className="text-primary/70">{format(new Date(log.created_at), 'HH:mm | MMM d')}</span>
                       </div>
-                      <p className="font-bold text-slate-200">{log.action}</p>
-                      <p className="text-[10px] text-muted-foreground">{log.details}</p>
+                      <p className="font-black text-foreground pl-2">{log.action}</p>
+                      <p className="text-[11px] text-muted-foreground font-medium pl-2">{log.details}</p>
                     </div>
                   ))}
                 </div>
@@ -418,24 +423,29 @@ export default function DashboardPage() {
           </Card>
 
           {/* Pending crew panel for managers */}
-          <Card className="border-none shadow-premium rounded-[10px] bg-primary text-white overflow-hidden">
-            <CardHeader className="p-6 border-b border-white/10">
-              <CardTitle className="text-base font-black flex items-center gap-2">
-                <UserCheck className="h-5 w-5 text-foreground" /> Crew Enlistment Alerts
+          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+            <CardHeader className="p-6 border-b border-white/40 relative z-10">
+              <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <UserCheck className="h-4 w-4 text-primary" />
+                </div>
+                Crew Enlistment Alerts
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-6 relative z-10">
               {companyUsers?.filter(u => u.status === 'pending').length === 0 ? (
                 <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider text-center py-8">Zero pending registrations.</p>
               ) : (
-                <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+                <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
                   {companyUsers?.filter(u => u.status === 'pending').map((member) => (
-                    <div key={member.id} className="flex justify-between items-center p-2 rounded-xl bg-white/5 border border-white/5">
-                      <div className="min-w-0">
-                        <p className="text-xs font-black text-slate-200 truncate">{member.fullName}</p>
-                        <p className="text-[9px] text-muted-foreground font-medium truncate">{member.email}</p>
+                    <div key={member.id} className="flex justify-between items-center p-3 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md transition-all group relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
+                      <div className="min-w-0 pl-2">
+                        <p className="text-xs font-black text-foreground truncate">{member.fullName}</p>
+                        <p className="text-[10px] text-muted-foreground font-medium truncate">{member.email}</p>
                       </div>
-                      <Button onClick={() => handleApproveUser(member.id)} className="h-8 px-3 rounded-lg font-bold text-[10px] bg-primary hover:bg-primary/95 text-white">Approve</Button>
+                      <Button onClick={() => handleApproveUser(member.id)} className="h-8 px-3 rounded-lg font-bold text-[10px] bg-primary/10 text-primary hover:bg-primary hover:text-white shadow-none border border-primary/20 hover:border-transparent transition-all">Approve</Button>
                     </div>
                   ))}
                 </div>
@@ -637,21 +647,24 @@ export default function DashboardPage() {
           </Card>
 
           {/* Secure lock warning for accounts */}
-          <Card className="border-none shadow-premium rounded-[10px] bg-primary text-white relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 relative z-10">
-              <CardTitle className="text-base font-black flex items-center gap-2">
-                <Lock className="h-5 w-5 text-foreground" /> Access Gates Active
+          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+            <CardHeader className="p-6 border-b border-white/40 relative z-10">
+              <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Lock className="h-4 w-4 text-primary" />
+                </div>
+                Access Gates Active
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 relative z-10 pt-0 space-y-4">
-              <p className="text-xs text-muted-foreground font-medium prospecting-relaxed">
+            <CardContent className="p-6 relative z-10 pt-4 space-y-4">
+              <p className="text-xs text-muted-foreground font-medium leading-relaxed">
                 As a finance crew member, your profile is locked under strict tenant isolation policies. You do not have permissions to access:
               </p>
-              <ul className="text-[10px] font-black uppercase tracking-wider text-muted-foreground space-y-2">
-                <li className="flex items-center gap-2 text-accent/80"><Ban className="h-3 w-3" /> CRM client funnels</li>
-                <li className="flex items-center gap-2 text-accent/80"><Ban className="h-3 w-3" /> Project production edits</li>
-                <li className="flex items-center gap-2 text-accent/80"><Ban className="h-3 w-3" /> Administration configurations</li>
+              <ul className="text-[10px] font-black uppercase tracking-wider text-muted-foreground space-y-3">
+                <li className="flex items-center gap-2"><div className="h-4 w-4 bg-accent/10 rounded flex items-center justify-center"><Ban className="h-3 w-3 text-accent" /></div> CRM client funnels</li>
+                <li className="flex items-center gap-2"><div className="h-4 w-4 bg-accent/10 rounded flex items-center justify-center"><Ban className="h-3 w-3 text-accent" /></div> Project production edits</li>
+                <li className="flex items-center gap-2"><div className="h-4 w-4 bg-accent/10 rounded flex items-center justify-center"><Ban className="h-3 w-3 text-accent" /></div> Administration configurations</li>
               </ul>
             </CardContent>
           </Card>
@@ -751,21 +764,24 @@ export default function DashboardPage() {
           </Card>
 
           {/* Secure lock warning for sales */}
-          <Card className="border-none shadow-premium rounded-[10px] bg-primary text-white relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 relative z-10">
-              <CardTitle className="text-base font-black flex items-center gap-2">
-                <Lock className="h-5 w-5 text-foreground" /> Operational Boundary
+          <Card className="border border-white/60 shadow-premium rounded-[10px] bg-white/40 backdrop-blur-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+            <CardHeader className="p-6 border-b border-white/40 relative z-10">
+              <CardTitle className="text-base font-black flex items-center gap-2 text-foreground">
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Lock className="h-4 w-4 text-primary" />
+                </div>
+                Operational Boundary
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 relative z-10 pt-0 space-y-4">
-              <p className="text-xs text-muted-foreground font-medium prospecting-relaxed">
+            <CardContent className="p-6 relative z-10 pt-4 space-y-4">
+              <p className="text-xs text-muted-foreground font-medium leading-relaxed">
                 As a marketing strategist, your profile is locked under strict tenant isolation policies. You do not have permissions to access:
               </p>
-              <ul className="text-[10px] font-black uppercase tracking-wider text-muted-foreground space-y-2">
-                <li className="flex items-center gap-2 text-accent/80"><Ban className="h-3 w-3" /> Detailed Invoice edits</li>
-                <li className="flex items-center gap-2 text-accent/80"><Ban className="h-3 w-3" /> Expenses ledger and tax filing</li>
-                <li className="flex items-center gap-2 text-accent/80"><Ban className="h-3 w-3" /> Platform configurations</li>
+              <ul className="text-[10px] font-black uppercase tracking-wider text-muted-foreground space-y-3">
+                <li className="flex items-center gap-2"><div className="h-4 w-4 bg-accent/10 rounded flex items-center justify-center"><Ban className="h-3 w-3 text-accent" /></div> Detailed Invoice edits</li>
+                <li className="flex items-center gap-2"><div className="h-4 w-4 bg-accent/10 rounded flex items-center justify-center"><Ban className="h-3 w-3 text-accent" /></div> Expenses ledger and tax filing</li>
+                <li className="flex items-center gap-2"><div className="h-4 w-4 bg-accent/10 rounded flex items-center justify-center"><Ban className="h-3 w-3 text-accent" /></div> Platform configurations</li>
               </ul>
             </CardContent>
           </Card>
