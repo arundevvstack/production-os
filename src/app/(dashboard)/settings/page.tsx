@@ -31,7 +31,11 @@ import {
   RefreshCcw,
   Sparkles
 } from "lucide-react";
+} from "lucide-react";
 import imageCompression from 'browser-image-compression';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '@/lib/cropImage';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
@@ -68,6 +72,16 @@ function AccountCenterContent() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Crop State
+  const [cropData, setCropData] = useState({
+    imageSrc: '',
+    crop: { x: 0, y: 0 },
+    zoom: 1,
+    croppedAreaPixels: null as any,
+    isOpen: false,
+    originalFile: null as File | null
+  });
+
   // Profile State
   const [profileData, setProfileData] = useState({
     name: "",
@@ -180,8 +194,8 @@ function AccountCenterContent() {
     if (!tenantProfile?.id) return;
     const { error } = await supabase.from('User').update({
       fullName: profileData.name,
-      bio: profileData.bio,
       avatar: profileData.avatar,
+      // bio: profileData.bio, // TODO: Add 'bio' column to Supabase User table
     }).eq('id', tenantProfile.id);
 
     if (error) {
@@ -263,30 +277,50 @@ function AccountCenterContent() {
     router.push('/login');
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const uid = user?.id;
-
-    if (!file || !uid) return;
+    if (!file) return;
 
     if (!file.type.startsWith('image/')) {
       toast({ variant: "destructive", title: "Invalid File", description: "Please upload an image file." });
       return;
     }
 
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      setCropData(prev => ({
+        ...prev,
+        imageSrc: reader.result?.toString() || '',
+        isOpen: true,
+        originalFile: file
+      }));
+    });
+    reader.readAsDataURL(file);
+  };
+
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+    setCropData(prev => ({ ...prev, croppedAreaPixels }));
+  };
+
+  const processAndUploadCroppedImage = async () => {
+    const { imageSrc, croppedAreaPixels, originalFile } = cropData;
+    const uid = user?.id;
+    if (!imageSrc || !croppedAreaPixels || !originalFile || !uid) return;
+
+    setCropData(prev => ({ ...prev, isOpen: false }));
     setIsUploading(true);
+
     try {
-      // Compress the image to ensure it's under 2MB
+      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+      if (!croppedImage) throw new Error("Could not crop image");
+
       const options = {
         maxSizeMB: 2,
         maxWidthOrHeight: 1024,
         useWebWorker: true,
       };
       
-      let finalFile = file;
-      if (file.size > 2 * 1024 * 1024 || file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp') {
-         finalFile = await imageCompression(file, options);
-      }
+      const finalFile = await imageCompression(croppedImage, options);
 
       const fileExt = finalFile.name.split('.').pop() || 'jpg';
       const fileName = `${uid}-${Math.random()}.${fileExt}`;
@@ -313,6 +347,7 @@ function AccountCenterContent() {
       toast({ variant: "destructive", title: "Upload Failed", description: error.message });
     } finally {
       setIsUploading(false);
+      setCropData({ imageSrc: '', crop: { x: 0, y: 0 }, zoom: 1, croppedAreaPixels: null, isOpen: false, originalFile: null });
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
@@ -786,6 +821,47 @@ function AccountCenterContent() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={cropData.isOpen} onOpenChange={(open) => setCropData(prev => ({ ...prev, isOpen: open }))}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Crop Profile Image</DialogTitle>
+          </DialogHeader>
+          <div className="relative h-[300px] w-full bg-slate-900 rounded-xl overflow-hidden mt-4">
+            <Cropper
+              image={cropData.imageSrc}
+              crop={cropData.crop}
+              zoom={cropData.zoom}
+              aspect={1}
+              cropShape="round"
+              showGrid={false}
+              onCropChange={(crop) => setCropData(prev => ({ ...prev, crop }))}
+              onZoomChange={(zoom) => setCropData(prev => ({ ...prev, zoom }))}
+              onCropComplete={onCropComplete}
+            />
+          </div>
+          <div className="pt-4">
+            <Label className="text-xs mb-2 block">Zoom</Label>
+            <input
+              type="range"
+              value={cropData.zoom}
+              min={1}
+              max={3}
+              step={0.1}
+              aria-labelledby="Zoom"
+              onChange={(e) => setCropData(prev => ({ ...prev, zoom: Number(e.target.value) }))}
+              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
+            />
+          </div>
+          <DialogFooter className="mt-6">
+            <Button variant="outline" onClick={() => setCropData(prev => ({ ...prev, isOpen: false }))}>Cancel</Button>
+            <Button onClick={processAndUploadCroppedImage} disabled={isUploading}>
+              {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Check className="mr-2 h-4 w-4" />}
+              Crop & Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
