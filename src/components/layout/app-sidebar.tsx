@@ -232,13 +232,17 @@ export function AppSidebar() {
           <DropdownMenuContent align="end" className="w-56 rounded-[12px] p-2 bg-white/90 backdrop-blur-3xl border-white/60 shadow-premium">
             <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-wider text-muted-foreground">My Account</DropdownMenuLabel>
             
-            <DropdownMenuItem className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary" onClick={() => fileInputRef.current?.click()}>
-              <Camera className="mr-2 h-4 w-4" />
-              Change Thumbnail
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
-              <Link href="/archives"><Archive className="mr-2 h-4 w-4" /> Archives</Link>
-            </DropdownMenuItem>
+            {profile?.role_id !== 'EMPLOYEE' && (
+              <>
+                <DropdownMenuItem className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary" onClick={() => fileInputRef.current?.click()}>
+                  <Camera className="mr-2 h-4 w-4" />
+                  Change Thumbnail
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
+                  <Link href="/archives"><Archive className="mr-2 h-4 w-4" /> Archives</Link>
+                </DropdownMenuItem>
+              </>
+            )}
             <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
               <Link href="/settings"><Settings2 className="mr-2 h-4 w-4" /> Preferences</Link>
             </DropdownMenuItem>

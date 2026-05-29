@@ -8,7 +8,7 @@ import { useTenant } from "@/hooks/use-tenant";
  * Dynamically injects CSS variables for theming, ensuring a fallback to default styles.
  */
 export function ThemeSync() {
-  const { settings, isLoading } = useTenant();
+  const { settings, profile, isLoading } = useTenant();
 
   useEffect(() => {
     // Do not run the effect until the tenant data has finished loading.
@@ -17,7 +17,8 @@ export function ThemeSync() {
     }
 
     const root = document.documentElement;
-    const theme = settings?.theme;
+    // Prefer user's specific theme, fallback to workspace theme
+    const theme = (profile?.theme_preference as any) || (settings?.theme as any);
 
     // Handle the primary color
     if (theme?.primary) {
@@ -46,7 +47,7 @@ export function ThemeSync() {
       root.style.removeProperty('--accent');
     }
 
-  }, [settings?.theme, isLoading]);
+  }, [settings?.theme, profile?.theme_preference, isLoading]);
 
   return null;
 }

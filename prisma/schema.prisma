@@ -113,6 +113,7 @@ model User {
   id                 String   @id // Usually from Supabase Auth
   company_id         String?
   role_id            String? // Stores role NAME string: SUPER_ADMIN, MANAGER, EMPLOYEE, etc.
+  theme_preference   Json?
   email              String   @unique
   fullName           String
   avatar             String?  // Profile picture URL
