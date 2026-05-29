@@ -30,7 +30,7 @@ export default async function ClientPortalLayout({ children }: { children: React
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-slate-50 w-full overflow-hidden">
+      <div className="flex h-screen bg-muted w-full overflow-hidden">
         {/* Client Sidebar Component would go here */}
         <main className="flex-1 overflow-y-auto w-full">
           {children}

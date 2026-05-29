@@ -134,13 +134,13 @@ export const INDUSTRIES = [
 ];
 
 export const CONTENT_VERTICALS = [
-  { id: 'advertising', name: 'Advertising & Brand Films', icon: Megaphone, color: 'bg-rose-500', 
+  { id: 'advertising', name: 'Advertising & Brand Films', icon: Megaphone, color: 'bg-accent', 
     services: ['TV Commercials', 'Digital Ads', 'Brand Story Films', 'Product Launch Ads', 'Festival Campaign Ads', 'Luxury Brand Commercials'] 
   },
-  { id: 'ecommerce', name: 'Product & E-commerce', icon: Package, color: 'bg-blue-500', 
+  { id: 'ecommerce', name: 'Product & E-commerce', icon: Package, color: 'bg-accent', 
     services: ['Product Commercial Videos', 'Amazon Product Videos', 'Flipkart Listing Videos', 'Product Demo Videos', 'Unboxing Videos', 'Product Photography'] 
   },
-  { id: 'social', name: 'Social Media Content', icon: Smartphone, color: 'bg-purple-500', 
+  { id: 'social', name: 'Social Media Content', icon: Smartphone, color: 'bg-accent', 
     services: ['Instagram Reels', 'YouTube Shorts', 'Influencer Content', 'Social Media Ad Creatives', 'Monthly Content Packages'] 
   },
   { id: 'corporate', name: 'Corporate Videos', icon: Building2, color: 'bg-slate-700', 
@@ -149,28 +149,28 @@ export const CONTENT_VERTICALS = [
   { id: 'realestate', name: 'Real Estate Videos', icon: Home, color: 'bg-emerald-600', 
     services: ['Property Walkthrough Video', 'Luxury Property Ads', 'Drone Property Tour', 'Architecture Showcase', 'Construction Progress Video'] 
   },
-  { id: 'events', name: 'Event Videos', icon: Ticket, color: 'bg-amber-500', 
+  { id: 'events', name: 'Event Videos', icon: Ticket, color: 'bg-accent', 
     services: ['Event Coverage', 'Conference Highlight Video', 'Event Aftermovie', 'Product Launch Event Video', 'Brand Activation Coverage'] 
   },
-  { id: 'startups', name: 'Startup & App Videos', icon: Rocket, color: 'bg-cyan-500', 
+  { id: 'startups', name: 'Startup & App Videos', icon: Rocket, color: 'bg-accent', 
     services: ['App Explainer Video', 'SaaS Product Demo', 'Startup Pitch Video', 'UI Demo Video', 'Animated Explainer Video'] 
   },
-  { id: 'entertainment', name: 'Entertainment Production', icon: Film, color: 'bg-indigo-600', 
+  { id: 'entertainment', name: 'Entertainment Production', icon: Film, color: 'bg-accent', 
     services: ['Music Video', 'Short Film', 'Fashion Film', 'Web Series', 'Creative Campaign Video'] 
   },
-  { id: 'podcasts', name: 'Podcast & Interviews', icon: Mic, color: 'bg-orange-500', 
+  { id: 'podcasts', name: 'Podcast & Interviews', icon: Mic, color: 'bg-accent', 
     services: ['Video Podcast Production', 'Interview Video', 'Customer Testimonial Video', 'Founder Story Video'] 
   },
   { id: 'educational', name: 'Educational Content', icon: BookOpen, color: 'bg-lime-600', 
     services: ['Online Course Video', 'Training Modules', 'Educational Explainer Video', 'Coaching Center Promo'] 
   },
-  { id: 'animation', name: 'Animation & Motion', icon: Play, color: 'bg-red-500', 
+  { id: 'animation', name: 'Animation & Motion', icon: Play, color: 'bg-destructive', 
     services: ['Motion Graphics Video', '2D Animation', '3D Animation', 'Infographic Animation'] 
   },
   { id: 'post', name: 'Post Production', icon: Scissors, color: 'bg-slate-500', 
     services: ['Video Editing', 'Color Grading', 'Sound Design', 'Visual Effects (VFX)', 'Subtitles'] 
   },
-  { id: 'ai', name: 'AI Generated Content', icon: Sparkles, color: 'bg-fuchsia-500', 
+  { id: 'ai', name: 'AI Generated Content', icon: Sparkles, color: 'bg-accent', 
     services: ['AI Commercials', 'AI Product Ads', 'AI Fashion Campaigns', 'AI Cinematic Videos', 'AI Social Media Ads'] 
   },
 ];
@@ -563,8 +563,8 @@ export default function ClientsPage() {
   if (isTenantLoading || isLeadsLoading || isClientsLoading || isProjectsLoading || isProposalsLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-[85vh] gap-3">
-        <Loader2 className="h-8 w-8 animate-spin text-red-600" />
-        <p className="text-xs font-black uppercase text-slate-500 tracking-widest">Loading Relationship Architectures...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-destructive" />
+        <p className="text-xs font-black uppercase text-muted-foreground tracking-widest">Loading Relationship Architectures...</p>
       </div>
     );
   }
@@ -573,29 +573,29 @@ export default function ClientsPage() {
     <div className="space-y-8">
       
       {/* Cinematic Header Block */}
-      <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-200">
+      <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-border">
         {/* Background glow */}
-        <div className="absolute -top-4 -left-4 w-72 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-4 -left-4 w-72 h-32 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="h-8 w-1 bg-red-500 rounded-full shadow-lg shadow-red-500/30" />
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-red-500">DP Media OS</span>
+            <div className="h-8 w-1 bg-destructive rounded-full shadow-lg shadow-red-500/30" />
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-destructive">DP Media OS</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-none">Clients Intelligence Hub</h1>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Unified Relationship Directory & Pipeline</p>
+          <h1 className="text-4xl font-black text-primary tracking-tight leading-none">Clients Intelligence Hub</h1>
+          <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-2">Unified Relationship Directory & Pipeline</p>
         </div>
         
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Filter company profiles..." 
-              className="pl-10 h-11 w-64 rounded-[10px] bg-white border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-red-500 focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm" 
+              className="pl-10 h-11 w-64 rounded-[10px] bg-white border border-border text-primary placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button onClick={() => setIsOnboardOpen(true)} className="gap-2 rounded-[10px] bg-red-600 hover:bg-red-500 text-white h-11 px-6 font-black text-xs uppercase tracking-wider shadow-lg shadow-red-500/20 transition-all hover:scale-[1.02]">
+          <Button onClick={() => setIsOnboardOpen(true)} className="gap-2 rounded-[10px] bg-destructive hover:bg-destructive text-white h-11 px-6 font-black text-xs uppercase tracking-wider shadow-lg shadow-red-500/20 transition-all hover:scale-[1.02]">
             <Plus className="h-4 w-4" /> Onboard Partner
           </Button>
         </div>
@@ -611,30 +611,30 @@ export default function ClientsPage() {
         ].map(({ label, value, sub, icon: Icon, color }) => (
           <div key={label} className={cn(
             "relative overflow-hidden rounded-[10px] p-5 border transition-all duration-300 hover:scale-[1.02] group",
-            "bg-white border-slate-100 hover:border-slate-200 shadow-sm shadow-slate-100/50 hover:shadow-md"
+            "bg-white border-border hover:border-border shadow-sm shadow-slate-100/50 hover:shadow-md"
           )}>
             <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none",
-              color === 'red' ? 'bg-red-500/5' : color === 'indigo' ? 'bg-indigo-500/5' : 'bg-emerald-500/5'
+              color === 'red' ? 'bg-destructive/5' : color === 'indigo' ? 'bg-accent/5' : 'bg-emerald-500/5'
             )} />
             <div className="flex items-start justify-between mb-3">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{label}</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
               <div className={cn("h-8 w-8 rounded-xl flex items-center justify-center",
-                color === 'red' ? 'bg-red-50 text-red-500 border border-red-100' : color === 'indigo' ? 'bg-indigo-50 text-indigo-500 border border-indigo-100' : 'bg-emerald-50 text-emerald-500 border border-emerald-100'
+                color === 'red' ? 'bg-destructive/10 text-destructive border border-red-100' : color === 'indigo' ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-emerald-50 text-emerald-500 border border-emerald-100'
               )}>
                 <Icon className="h-4 w-4" />
               </div>
             </div>
-            <div className="text-2xl font-black text-slate-800 tracking-tight">{value}</div>
-            <p className="text-[10px] text-slate-500 mt-1 font-medium">{sub}</p>
+            <div className="text-2xl font-black text-primary tracking-tight">{value}</div>
+            <p className="text-[10px] text-muted-foreground mt-1 font-medium">{sub}</p>
             <div className={cn("absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500",
-              color === 'red' ? 'bg-red-500' : color === 'indigo' ? 'bg-indigo-500' : 'bg-emerald-500'
+              color === 'red' ? 'bg-destructive' : color === 'indigo' ? 'bg-accent' : 'bg-emerald-500'
             )} />
           </div>
         ))}
       </div>
 
       {/* Directory Navigation Tabs */}
-      <div className="flex items-center gap-1 p-1.5 rounded-[10px] bg-slate-200/50 border border-slate-300/40 w-fit backdrop-blur-xl shadow-sm">
+      <div className="flex items-center gap-1 p-1.5 rounded-[10px] bg-secondary/50 border border-border/40 w-fit backdrop-blur-xl shadow-sm">
         {[
           { id: 'directory', label: 'Active Partners', icon: Building2 },
           { id: 'pipeline', label: 'Prospect Pipelines', icon: Activity },
@@ -646,8 +646,8 @@ export default function ClientsPage() {
             className={cn(
               "flex items-center gap-2 px-5 h-9 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200",
               activeTab === id
-                ? 'bg-red-600 text-white shadow-md shadow-red-500/20'
-                : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/80'
+                ? 'bg-destructive text-white shadow-md shadow-red-500/20'
+                : 'text-muted-foreground hover:text-primary hover:bg-secondary/80'
             )}
           >
             <Icon className={cn("h-3.5 w-3.5", id === 'intelligence_hub' && activeTab === id && 'animate-pulse')} />
@@ -660,90 +660,90 @@ export default function ClientsPage() {
       {activeTab === 'directory' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           {existingClients.length === 0 ? (
-            <div className="col-span-full py-20 text-center bg-slate-50 rounded-[10px] border border-dashed border-slate-200 text-slate-450">
-              <Building2 className="h-12 w-12 mx-auto mb-4 opacity-30 text-slate-400" />
-              <p className="text-xs font-black uppercase tracking-widest text-slate-500">No onboarded partner clients detected.</p>
+            <div className="col-span-full py-20 text-center bg-muted rounded-[10px] border border-dashed border-border text-slate-450">
+              <Building2 className="h-12 w-12 mx-auto mb-4 opacity-30 text-muted-foreground" />
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">No onboarded partner clients detected.</p>
               {!searchQuery && (
-                <Button variant="outline" size="sm" className="rounded-xl mt-4 border-slate-200 text-slate-650 hover:bg-slate-50" onClick={() => setIsOnboardOpen(true)}>Add Client</Button>
+                <Button variant="outline" size="sm" className="rounded-xl mt-4 border-border text-slate-650 hover:bg-muted" onClick={() => setIsOnboardOpen(true)}>Add Client</Button>
               )}
             </div>
           ) : (
             existingClients.map((client) => {
               const activeProj = projects?.filter(p => p.client_name === client.company_name && p.status === 'in_progress') || [];
               const companyProposals = proposals?.filter(p => p.client_name === client.company_name) || [];              return (
-                <div key={client.id} className="group relative rounded-[10px] overflow-hidden border border-slate-100 bg-white flex flex-col transition-all duration-300 hover:border-red-500/20 hover:shadow-xl hover:shadow-slate-200/50">
+                <div key={client.id} className="group relative rounded-[10px] overflow-hidden border border-border bg-white flex flex-col transition-all duration-300 hover:border-destructive/20 hover:shadow-xl hover:shadow-slate-200/50">
                   {/* Top gradient accent */}
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   {/* BG glow on hover */}
-                  <div className="absolute -top-12 -right-12 w-40 h-40 bg-red-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                  <div className="absolute -top-12 -right-12 w-40 h-40 bg-destructive/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
                   <div className="relative p-6 pb-5">
                     <div className="flex justify-between items-start mb-5">
-                      <div className="h-12 w-12 rounded-[10px] bg-red-50 text-red-500 border border-red-100 flex items-center justify-center shadow-sm shadow-red-500/5 group-hover:scale-105 transition-transform">
+                      <div className="h-12 w-12 rounded-[10px] bg-destructive/10 text-destructive border border-red-100 flex items-center justify-center shadow-sm shadow-red-500/5 group-hover:scale-105 transition-transform">
                         <Building2 className="h-5 w-5" />
                       </div>
-                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500 bg-slate-50 border border-slate-100 rounded-lg px-2 py-1">
+                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground bg-muted border border-border rounded-lg px-2 py-1">
                         {client.industry || 'Media'}
                       </span>
                     </div>
-                    <h3 className="font-black text-xl text-slate-800 group-hover:text-red-600 transition-colors tracking-tight">
+                    <h3 className="font-black text-xl text-primary group-hover:text-destructive transition-colors tracking-tight">
                       {client.company_name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-1.5">
-                      <Zap className="h-3 w-3 text-red-500" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-red-500/80">{client.service_vertical || 'Media Production'}</span>
+                      <Zap className="h-3 w-3 text-destructive" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-destructive/80">{client.service_vertical || 'Media Production'}</span>
                     </div>
                   </div>
 
                   <div className="px-6 pb-5 space-y-2.5 flex-1">
-                    <div className="h-px bg-slate-100" />
+                    <div className="h-px bg-muted" />
                     <div className="pt-2 space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className="h-7 w-7 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
-                          <Mail className="h-3 w-3 text-slate-400" />
+                        <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
+                          <Mail className="h-3 w-3 text-muted-foreground" />
                         </div>
-                        <span className="text-xs text-slate-600 truncate">{client.email || 'poc@company.com'}</span>
+                        <span className="text-xs text-muted-foreground/80 truncate">{client.email || 'poc@company.com'}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="h-7 w-7 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
-                          <User className="h-3 w-3 text-slate-400" />
+                        <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
+                          <User className="h-3 w-3 text-muted-foreground" />
                         </div>
-                        <span className="text-xs text-slate-600">PoC: <span className="font-bold text-slate-800">{client.contact_person || 'Unassigned'}</span></span>
+                        <span className="text-xs text-muted-foreground/80">PoC: <span className="font-bold text-primary">{client.contact_person || 'Unassigned'}</span></span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="h-7 w-7 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
-                          <Briefcase className="h-3 w-3 text-slate-400" />
+                        <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
+                          <Briefcase className="h-3 w-3 text-muted-foreground" />
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-black text-red-600 bg-red-50 border border-red-100 rounded-lg px-2 py-0.5">{activeProj.length} Projects</span>
-                          <span className="text-[10px] font-bold text-slate-500">{companyProposals.length} Proposals</span>
+                          <span className="text-[10px] font-black text-destructive bg-destructive/10 border border-red-100 rounded-lg px-2 py-0.5">{activeProj.length} Projects</span>
+                          <span className="text-[10px] font-bold text-muted-foreground">{companyProposals.length} Proposals</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-slate-100">
+                  <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-border">
                     <button
                       onClick={() => { setSelectedHubCompany(client.company_name); setActiveTab('intelligence_hub'); }}
-                      className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-red-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-red-200 rounded-xl h-9 px-4 transition-all"
+                      className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 hover:text-destructive bg-muted hover:bg-muted border border-border hover:border-red-200 rounded-xl h-9 px-4 transition-all"
                     >
-                      <Sparkles className="h-3.5 w-3.5 text-red-500" /> Enter Hub
+                      <Sparkles className="h-3.5 w-3.5 text-destructive" /> Enter Hub
                     </button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-600">
+                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-muted text-muted-foreground hover:text-muted-foreground/80">
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="rounded-[10px] w-48 bg-white border border-slate-200 text-slate-700 shadow-lg">
-                        <DropdownMenuItem asChild className="rounded-xl hover:bg-slate-50 cursor-pointer">
-                          <Link href={`/clients/${client.id}`} className="gap-2"><ExternalLink className="h-3.5 w-3.5 text-slate-500" /> Portfolio View</Link>
+                      <DropdownMenuContent align="end" className="rounded-[10px] w-48 bg-white border border-border text-primary/80 shadow-lg">
+                        <DropdownMenuItem asChild className="rounded-xl hover:bg-muted cursor-pointer">
+                          <Link href={`/clients/${client.id}`} className="gap-2"><ExternalLink className="h-3.5 w-3.5 text-muted-foreground" /> Portfolio View</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-slate-600 rounded-xl hover:bg-slate-50 cursor-pointer" onClick={() => setClientToArchive(client)}>
+                        <DropdownMenuItem className="gap-2 text-muted-foreground/80 rounded-xl hover:bg-muted cursor-pointer" onClick={() => setClientToArchive(client)}>
                           <Archive className="h-3.5 w-3.5" /> Archive Partner
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-slate-100" />
-                        <DropdownMenuItem className="gap-2 text-red-600 rounded-xl hover:bg-red-50 cursor-pointer font-bold" onClick={() => setClientToPermanentDelete(client)}>
+                        <DropdownMenuSeparator className="bg-muted" />
+                        <DropdownMenuItem className="gap-2 text-destructive rounded-xl hover:bg-destructive/10 cursor-pointer font-bold" onClick={() => setClientToPermanentDelete(client)}>
                           <Trash2 className="h-3.5 w-3.5" /> Delete Client
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -760,7 +760,7 @@ export default function ClientsPage() {
       {activeTab === 'pipeline' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           {prospectClients.length === 0 ? (
-            <div className="col-span-full py-20 text-center bg-slate-100/50 rounded-[10px] border border-dashed border-slate-200 text-slate-400">
+            <div className="col-span-full py-20 text-center bg-muted/50 rounded-[10px] border border-dashed border-border text-muted-foreground">
               <Users className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p className="text-xs font-black uppercase tracking-widest">No active prospect leads in sales pipeline.</p>
             </div>
@@ -769,42 +769,42 @@ export default function ClientsPage() {
               const masterPartner = leads?.find(l => l.company_name === prospect.company_name && (l.stage === 'client' || l.stage === 'won'));
 
               return (
-                <div key={prospect.id} className="group relative rounded-[10px] overflow-hidden border border-slate-100 bg-white flex flex-col transition-all duration-300 hover:border-indigo-500/20 hover:shadow-xl hover:shadow-slate-200/50">
+                <div key={prospect.id} className="group relative rounded-[10px] overflow-hidden border border-border bg-white flex flex-col transition-all duration-300 hover:border-accent/20 hover:shadow-xl hover:shadow-slate-200/50">
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute -top-12 -right-12 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                  <div className="absolute -top-12 -right-12 w-40 h-40 bg-accent/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   <div className="relative p-6 pb-5">
                     <div className="flex justify-between items-start mb-5">
-                      <span className="text-[8px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg px-2.5 py-1">
+                      <span className="text-[8px] font-black uppercase tracking-widest text-accent bg-accent/10 border border-accent/20 rounded-lg px-2.5 py-1">
                         {prospect.stage}
                       </span>
-                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500 bg-slate-50 border border-slate-100 rounded-lg px-2 py-1">
+                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground bg-muted border border-border rounded-lg px-2 py-1">
                         {prospect.industry || 'Media'}
                       </span>
                     </div>
-                    <h3 className="font-black text-xl text-slate-800 tracking-tight">
+                    <h3 className="font-black text-xl text-primary tracking-tight">
                       {prospect.company_name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-1.5">
-                      <Zap className="h-3 w-3 text-red-500" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{prospect.service_vertical || 'General Scope'}</span>
+                      <Zap className="h-3 w-3 text-destructive" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{prospect.service_vertical || 'General Scope'}</span>
                     </div>
                   </div>
 
                   <div className="px-6 pb-5 space-y-3 flex-1">
-                    <div className="h-px bg-slate-100" />
+                    <div className="h-px bg-muted" />
                     <div className="pt-2 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Projected Contract</span>
-                        <span className="text-sm font-black text-slate-800">₹{prospect.deal_value?.toLocaleString()}</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Projected Contract</span>
+                        <span className="text-sm font-black text-primary">₹{prospect.deal_value?.toLocaleString()}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">PoC</span>
-                        <span className="text-xs font-bold text-slate-600">{prospect.contact_person || 'Unassigned'}</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">PoC</span>
+                        <span className="text-xs font-bold text-muted-foreground/80">{prospect.contact_person || 'Unassigned'}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Status</span>
                         <span className={cn("text-[8px] font-black uppercase tracking-widest border rounded-lg px-2 py-0.5",
-                          masterPartner ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 'text-indigo-600 bg-indigo-50 border-indigo-100'
+                          masterPartner ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 'text-accent bg-accent/10 border-accent/20'
                         )}>
                           {masterPartner ? "Linked Partner" : "New Account"}
                         </span>
@@ -812,15 +812,15 @@ export default function ClientsPage() {
                     </div>
                   </div>
 
-                  <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-slate-100">
+                  <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-border">
                     <button
                       onClick={() => { setSelectedHubCompany(prospect.company_name); setActiveTab('intelligence_hub'); }}
-                      className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-slate-300 rounded-xl h-9 px-4 transition-all"
+                      className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 hover:text-primary bg-muted hover:bg-muted border border-border hover:border-border rounded-xl h-9 px-4 transition-all"
                     >
-                      <Sparkles className="h-3.5 w-3.5 text-red-500" /> Enter Hub
+                      <Sparkles className="h-3.5 w-3.5 text-destructive" /> Enter Hub
                     </button>
                     <Link href={`/crm/${prospect.id}`}>
-                      <button className="h-9 w-9 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-all border border-slate-200 hover:border-slate-300">
+                      <button className="h-9 w-9 rounded-xl hover:bg-muted text-muted-foreground hover:text-muted-foreground/80 flex items-center justify-center transition-all border border-border hover:border-border">
                         <ExternalLink className="h-4 w-4" />
                       </button>
                     </Link>
@@ -837,15 +837,15 @@ export default function ClientsPage() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           
           {/* Quick Select Client Bar */}
-          <div className="relative overflow-hidden rounded-[10px] border border-slate-200 bg-white shadow-sm p-6">
+          <div className="relative overflow-hidden rounded-[10px] border border-border bg-white shadow-sm p-6">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
-            <div className="absolute -top-16 -right-8 w-48 h-48 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-16 -right-8 w-48 h-48 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
             <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 relative">
               <div>
-                <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-red-500" /> Matrix Relationship Cockpit
+                <h2 className="text-xl font-black text-primary tracking-tight flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-destructive" /> Matrix Relationship Cockpit
                 </h2>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">Cross-Module Pipeline Graph Integrations</p>
+                <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Cross-Module Pipeline Graph Integrations</p>
               </div>
               <div className="flex gap-3">
                 <UnifiedClientSelector 
@@ -853,7 +853,7 @@ export default function ClientsPage() {
                   value={selectedHubCompany}
                   onSelect={(c) => setSelectedHubCompany(c.company_name)}
                   placeholder="Select Client Organization..."
-                  className="bg-white border border-slate-200 text-slate-800 rounded-[10px] h-11"
+                  className="bg-white border border-border text-primary rounded-[10px] h-11"
                   showOnboardOption={false}
                 />
               </div>
@@ -868,40 +868,40 @@ export default function ClientsPage() {
               <div className="xl:col-span-4 flex flex-col gap-6">
                 
                 {/* Org Card */}
-                <Card className="bg-white border border-slate-200 rounded-2xl shadow-premium overflow-hidden relative group hover:border-red-500/20 transition-all duration-300">
+                <Card className="bg-white border border-border rounded-2xl shadow-premium overflow-hidden relative group hover:border-destructive/20 transition-all duration-300">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-indigo-500" />
                   <CardContent className="p-6 space-y-5">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em] flex items-center gap-1.5">
+                      <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
                         <Building2 className="h-4 w-4" /> Corporate Registry
                       </h3>
-                      <Badge className="bg-red-50 text-red-600 border-none font-bold text-[8px] uppercase tracking-wider">
+                      <Badge className="bg-destructive/10 text-destructive border-none font-bold text-[8px] uppercase tracking-wider">
                         {selectedHubGraph.masterProfile?.industry || 'Lifestyle'}
                       </Badge>
                     </div>
 
                     <div className="space-y-4 text-xs">
-                      <div className="flex items-start gap-3 text-slate-600">
-                        <MapPin className="h-4.5 w-4.5 text-red-500 shrink-0 mt-0.5" />
+                      <div className="flex items-start gap-3 text-muted-foreground/80">
+                        <MapPin className="h-4.5 w-4.5 text-destructive shrink-0 mt-0.5" />
                         <div>
-                          <span className="text-[9px] font-black uppercase text-slate-400 block leading-none">Billing Address</span>
-                          <span className="font-bold text-slate-800 block mt-1">{selectedHubGraph.masterProfile?.billing_address || "Registry context pending update."}</span>
+                          <span className="text-[9px] font-black uppercase text-muted-foreground block leading-none">Billing Address</span>
+                          <span className="font-bold text-primary block mt-1">{selectedHubGraph.masterProfile?.billing_address || "Registry context pending update."}</span>
                         </div>
                       </div>
                       
-                      <div className="flex items-start gap-3 text-slate-600">
-                        <FileText className="h-4.5 w-4.5 text-red-500 shrink-0 mt-0.5" />
+                      <div className="flex items-start gap-3 text-muted-foreground/80">
+                        <FileText className="h-4.5 w-4.5 text-destructive shrink-0 mt-0.5" />
                         <div>
-                          <span className="text-[9px] font-black uppercase text-slate-400 block leading-none">GSTIN Code</span>
-                          <span className="font-mono font-bold text-slate-600 block mt-1">{selectedHubGraph.masterProfile?.gstin || "NO GSTIN ON RECORD"}</span>
+                          <span className="text-[9px] font-black uppercase text-muted-foreground block leading-none">GSTIN Code</span>
+                          <span className="font-mono font-bold text-muted-foreground/80 block mt-1">{selectedHubGraph.masterProfile?.gstin || "NO GSTIN ON RECORD"}</span>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 text-slate-600">
-                        <Activity className="h-4.5 w-4.5 text-red-500 shrink-0 mt-0.5" />
+                      <div className="flex items-start gap-3 text-muted-foreground/80">
+                        <Activity className="h-4.5 w-4.5 text-destructive shrink-0 mt-0.5" />
                         <div>
-                          <span className="text-[9px] font-black uppercase text-slate-400 block leading-none">Onboarded Category</span>
-                          <span className="font-bold text-slate-800 block mt-1">{selectedHubGraph.masterProfile?.service_vertical || "General Media"}</span>
+                          <span className="text-[9px] font-black uppercase text-muted-foreground block leading-none">Onboarded Category</span>
+                          <span className="font-bold text-primary block mt-1">{selectedHubGraph.masterProfile?.service_vertical || "General Media"}</span>
                         </div>
                       </div>
                     </div>
@@ -909,40 +909,40 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* 📊 Premium Client Engagement & Sentiment Index (Intelligence Upgrade) */}
-                <Card className="bg-white border border-slate-200 rounded-2xl shadow-premium overflow-hidden hover:border-red-500/20 transition-all duration-300">
+                <Card className="bg-white border border-border rounded-2xl shadow-premium overflow-hidden hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 space-y-4">
-                    <h3 className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em] flex items-center gap-1.5">
+                    <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
                       <Sparkles className="h-4 w-4" /> Sentiment & Risk Matrix
                     </h3>
                     
                     <div className="space-y-3.5">
                       <div className="space-y-1">
-                        <div className="flex justify-between text-[10px] font-bold text-slate-600 uppercase">
+                        <div className="flex justify-between text-[10px] font-bold text-muted-foreground/80 uppercase">
                           <span>Partnership Health Index</span>
                           <span className="text-emerald-600">98.4% Exceptional</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-emerald-500 rounded-full" style={{ width: "98.4%" }} />
                         </div>
                       </div>
 
                       <div className="space-y-1">
-                        <div className="flex justify-between text-[10px] font-bold text-slate-600 uppercase">
+                        <div className="flex justify-between text-[10px] font-bold text-muted-foreground/80 uppercase">
                           <span>Revision Loops Average</span>
-                          <span className="text-indigo-600">1.2 Cycles (Low Risk)</span>
+                          <span className="text-accent">1.2 Cycles (Low Risk)</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-indigo-500 rounded-full" style={{ width: "25%" }} />
+                        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-accent rounded-full" style={{ width: "25%" }} />
                         </div>
                       </div>
 
                       <div className="space-y-1">
-                        <div className="flex justify-between text-[10px] font-bold text-slate-600 uppercase">
+                        <div className="flex justify-between text-[10px] font-bold text-muted-foreground/80 uppercase">
                           <span>Average Invoice Clearance</span>
-                          <span className="text-amber-600">12 Days (Fast Clear)</span>
+                          <span className="text-accent">12 Days (Fast Clear)</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-amber-500 rounded-full" style={{ width: "40%" }} />
+                        <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-accent rounded-full" style={{ width: "40%" }} />
                         </div>
                       </div>
                     </div>
@@ -950,31 +950,31 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* Contacts Registry */}
-                <Card className="bg-white border border-slate-200 rounded-2xl shadow-premium flex-1 flex flex-col min-h-[260px] hover:border-red-500/20 transition-all duration-300">
+                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[260px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
-                    <h3 className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em] flex items-center gap-1.5 mb-4 shrink-0">
+                    <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5 mb-4 shrink-0">
                       <Users className="h-4 w-4" /> Contacts Registry
                     </h3>
 
                     <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 custom-scrollbar mb-4">
                       {selectedHubGraph.contacts.map((contact, idx) => (
-                        <div key={idx} className="p-3 bg-slate-50 hover:bg-slate-100/50 rounded-xl border border-slate-100 space-y-1.5 shadow-sm transition">
+                        <div key={idx} className="p-3 bg-muted hover:bg-muted/50 rounded-xl border border-border space-y-1.5 shadow-sm transition">
                           <div className="flex items-center justify-between text-[11px] font-black">
-                            <span className="text-slate-800 flex items-center gap-1.5"><User className="h-3 w-3 text-slate-400" /> {contact.name}</span>
-                            <Badge className="bg-slate-200 text-slate-600 border-none text-[8px] font-bold">{contact.role}</Badge>
+                            <span className="text-primary flex items-center gap-1.5"><User className="h-3 w-3 text-muted-foreground" /> {contact.name}</span>
+                            <Badge className="bg-secondary text-muted-foreground/80 border-none text-[8px] font-bold">{contact.role}</Badge>
                           </div>
-                          <div className="flex items-center gap-2 text-[9px] text-slate-500 font-medium">
-                            <Mail className="h-3.5 w-3.5 text-slate-400" />
+                          <div className="flex items-center gap-2 text-[9px] text-muted-foreground font-medium">
+                            <Mail className="h-3.5 w-3.5 text-muted-foreground" />
                             <span>{contact.email}</span>
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/60 space-y-2.5 shrink-0">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block">Add Organization Contact</span>
-                      <p className="text-[9px] text-slate-500 leading-relaxed font-medium">New contacts can be registered directly through a new opportunity linked to this organization profile.</p>
-                      <Button onClick={() => setIsQuickOppOpen(true)} className="w-full bg-slate-200 hover:bg-slate-300 border border-slate-300 text-slate-700 text-[9px] font-black uppercase tracking-wider rounded-xl h-8.5 shadow-sm transition">
+                    <div className="p-4 bg-muted rounded-xl border border-border/60 space-y-2.5 shrink-0">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Add Organization Contact</span>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed font-medium">New contacts can be registered directly through a new opportunity linked to this organization profile.</p>
+                      <Button onClick={() => setIsQuickOppOpen(true)} className="w-full bg-secondary hover:bg-secondary border border-border text-primary/80 text-[9px] font-black uppercase tracking-wider rounded-xl h-8.5 shadow-sm transition">
                         Launch Lead Form
                       </Button>
                     </div>
@@ -986,28 +986,28 @@ export default function ClientsPage() {
               <div className="xl:col-span-4 flex flex-col gap-6">
                 
                 {/* Opportunities Pipeline */}
-                <Card className="bg-white border border-slate-200 rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-red-500/20 transition-all duration-300">
+                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <div className="flex justify-between items-center shrink-0 mb-4">
-                      <h3 className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em] flex items-center gap-1.5">
+                      <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
                         <Layers className="h-4 w-4" /> Sales Opportunities ({selectedHubGraph.activeOpps.length})
                       </h3>
-                      <Button onClick={() => setIsQuickOppOpen(true)} size="sm" className="bg-red-600 hover:bg-red-700 text-white rounded-lg h-7 px-2.5 text-[8px] font-black uppercase tracking-widest">
+                      <Button onClick={() => setIsQuickOppOpen(true)} size="sm" className="bg-destructive hover:bg-destructive text-white rounded-lg h-7 px-2.5 text-[8px] font-black uppercase tracking-widest">
                         + Lead
                       </Button>
                     </div>
 
                     <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 custom-scrollbar">
                       {selectedHubGraph.activeOpps.length === 0 ? (
-                        <div className="text-center py-20 text-[9px] font-bold text-slate-400 uppercase tracking-widest">No active deals listed.</div>
+                        <div className="text-center py-20 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">No active deals listed.</div>
                       ) : (
                         selectedHubGraph.activeOpps.map((opp) => (
-                          <div key={opp.id} className="p-4 bg-slate-50 hover:bg-slate-100/50 rounded-xl border border-slate-100 flex items-center justify-between gap-3 shadow-sm transition">
+                          <div key={opp.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border flex items-center justify-between gap-3 shadow-sm transition">
                             <div className="space-y-1">
-                              <span className="text-xs font-bold text-slate-800 block">{opp.service_vertical}</span>
-                              <span className="text-[9px] text-slate-500 font-bold block mt-0.5">Budget: <strong className="text-slate-700">₹{opp.deal_value?.toLocaleString()}</strong></span>
+                              <span className="text-xs font-bold text-primary block">{opp.service_vertical}</span>
+                              <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">Budget: <strong className="text-primary/80">₹{opp.deal_value?.toLocaleString()}</strong></span>
                             </div>
-                            <Badge className="bg-indigo-50 text-indigo-600 border border-indigo-100 text-[8px] font-black uppercase">{opp.stage}</Badge>
+                            <Badge className="bg-accent/10 text-accent border border-accent/20 text-[8px] font-black uppercase">{opp.stage}</Badge>
                           </div>
                         ))
                       )}
@@ -1016,14 +1016,14 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* Proposals Ledger */}
-                <Card className="bg-white border border-slate-200 rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-red-500/20 transition-all duration-300">
+                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <div className="flex justify-between items-center shrink-0 mb-4">
-                      <h3 className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em] flex items-center gap-1.5">
+                      <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
                         <FileText className="h-4 w-4" /> Proposals Vault ({selectedHubGraph.relatedProposals.length})
                       </h3>
                       <Link href={`/proposals?source=crm&companyName=${encodeURIComponent(selectedHubCompany)}&vertical=${encodeURIComponent(selectedHubGraph.masterProfile?.service_vertical || '')}&industry=${encodeURIComponent(selectedHubGraph.masterProfile?.industry || '')}`}>
-                        <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white rounded-lg h-7 px-2.5 text-[8px] font-black uppercase tracking-widest">
+                        <Button size="sm" className="bg-destructive hover:bg-destructive text-white rounded-lg h-7 px-2.5 text-[8px] font-black uppercase tracking-widest">
                           + Proposal
                         </Button>
                       </Link>
@@ -1031,16 +1031,16 @@ export default function ClientsPage() {
 
                     <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 custom-scrollbar">
                       {selectedHubGraph.relatedProposals.length === 0 ? (
-                        <div className="text-center py-20 text-[9px] font-bold text-slate-400 uppercase tracking-widest">No strategic proposals drafted.</div>
+                        <div className="text-center py-20 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">No strategic proposals drafted.</div>
                       ) : (
                         selectedHubGraph.relatedProposals.map((prop) => (
-                          <div key={prop.id} className="p-4 bg-slate-50 hover:bg-slate-100/50 rounded-xl border border-slate-100 flex items-center justify-between gap-3 shadow-sm transition">
+                          <div key={prop.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border flex items-center justify-between gap-3 shadow-sm transition">
                             <div className="space-y-1">
-                              <span className="text-xs font-bold text-slate-800 block">{prop.title}</span>
-                              <span className="text-[9px] text-slate-500 font-bold block mt-0.5">{prop.proposal_number}</span>
+                              <span className="text-xs font-bold text-primary block">{prop.title}</span>
+                              <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">{prop.proposal_number}</span>
                             </div>
                             <Badge className={cn("px-1.5 py-0.5 rounded text-[8px] font-black uppercase border",
-                              prop.status === 'signed' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-red-50 text-red-600 border-red-100'
+                              prop.status === 'signed' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-destructive/10 text-destructive border-red-100'
                             )}>
                               {prop.status}
                             </Badge>
@@ -1056,34 +1056,34 @@ export default function ClientsPage() {
               <div className="xl:col-span-4 flex flex-col gap-6">
                 
                 {/* Active Projects */}
-                <Card className="bg-white border border-slate-200 rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-red-500/20 transition-all duration-300">
+                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
-                    <h3 className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em] flex items-center gap-1.5 mb-4 shrink-0">
+                    <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5 mb-4 shrink-0">
                       <Briefcase className="h-4 w-4" /> Production Workspaces ({selectedHubGraph.relatedProjects.length})
                     </h3>
 
                     <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 custom-scrollbar">
                       {selectedHubGraph.relatedProjects.length === 0 ? (
-                        <div className="text-center py-20 text-[9px] font-bold text-slate-400 uppercase tracking-widest">No active project workspaces.</div>
+                        <div className="text-center py-20 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">No active project workspaces.</div>
                       ) : (
                         selectedHubGraph.relatedProjects.map((proj) => (
-                          <div key={proj.id} className="p-4 bg-slate-50 hover:bg-slate-100/50 rounded-xl border border-slate-100 space-y-3.5 shadow-sm transition">
+                          <div key={proj.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border space-y-3.5 shadow-sm transition">
                             <div className="flex justify-between items-center">
-                              <span className="text-xs font-bold text-slate-800">{proj.project_name}</span>
-                              <Badge className="bg-white border border-slate-200 text-slate-500 text-[8px] font-bold uppercase">{proj.status}</Badge>
+                              <span className="text-xs font-bold text-primary">{proj.project_name}</span>
+                              <Badge className="bg-white border border-border text-muted-foreground text-[8px] font-bold uppercase">{proj.status}</Badge>
                             </div>
                             
                             <div className="space-y-1">
-                              <div className="flex justify-between text-[9px] text-slate-500 font-bold uppercase">
+                              <div className="flex justify-between text-[9px] text-muted-foreground font-bold uppercase">
                                 <span>Progress</span>
                                 <span>{proj.progress}%</span>
                               </div>
-                              <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
-                                <div className="h-full bg-red-500 rounded-full" style={{ width: `${proj.progress}%` }} />
+                              <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
+                                <div className="h-full bg-destructive rounded-full" style={{ width: `${proj.progress}%` }} />
                               </div>
                             </div>
 
-                            <div className="flex justify-between items-center text-[9px] text-slate-400 font-bold">
+                            <div className="flex justify-between items-center text-[9px] text-muted-foreground font-bold">
                               <span>Budget: ₹{proj.budget?.toLocaleString()}</span>
                             </div>
                           </div>
@@ -1094,10 +1094,10 @@ export default function ClientsPage() {
                 </Card>
 
                 {/* Ledger & Invoices */}
-                <Card className="bg-white border border-slate-200 rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-red-500/20 transition-all duration-300">
+                <Card className="bg-white border border-border rounded-2xl shadow-premium flex-1 flex flex-col min-h-[300px] hover:border-destructive/20 transition-all duration-300">
                   <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
                     <div className="flex justify-between items-center mb-4 shrink-0">
-                      <h3 className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em] flex items-center gap-1.5">
+                      <h3 className="text-[10px] font-black uppercase text-destructive tracking-[0.2em] flex items-center gap-1.5">
                         <DollarSign className="h-4 w-4" /> Financial Ledger (LTV)
                       </h3>
                       <Badge className="bg-emerald-50 text-emerald-600 border border-emerald-100 text-[9px] font-black">
@@ -1107,15 +1107,15 @@ export default function ClientsPage() {
 
                     <div className="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 custom-scrollbar">
                       {selectedHubGraph.relatedInvoices.length === 0 ? (
-                        <div className="text-center py-20 text-[9px] font-bold text-slate-400 uppercase tracking-widest">No billing invoices issued.</div>
+                        <div className="text-center py-20 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">No billing invoices issued.</div>
                       ) : (
                         selectedHubGraph.relatedInvoices.map((inv) => (
-                          <div key={inv.id} className="p-4 bg-slate-50 hover:bg-slate-100/50 rounded-xl border border-slate-100 flex items-center justify-between gap-3 shadow-sm transition">
+                          <div key={inv.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border flex items-center justify-between gap-3 shadow-sm transition">
                             <div className="space-y-1">
-                              <span className="text-xs font-bold text-slate-800 block">{inv.invoice_number}</span>
-                              <span className="text-[9px] text-slate-500 font-bold block mt-0.5">Total: <strong className="text-slate-700">₹{inv.total?.toLocaleString()}</strong></span>
+                              <span className="text-xs font-bold text-primary block">{inv.invoice_number}</span>
+                              <span className="text-[9px] text-muted-foreground font-bold block mt-0.5">Total: <strong className="text-primary/80">₹{inv.total?.toLocaleString()}</strong></span>
                             </div>
-                            <Badge className={inv.payment_status === 'paid' ? "bg-emerald-50 text-emerald-600 border border-emerald-100 text-[8px] font-black" : "bg-red-50 text-red-600 border-red-100 text-[8px] font-black"}>
+                            <Badge className={inv.payment_status === 'paid' ? "bg-emerald-50 text-emerald-600 border border-emerald-100 text-[8px] font-black" : "bg-destructive/10 text-destructive border-red-100 text-[8px] font-black"}>
                               {inv.payment_status}
                             </Badge>
                           </div>
@@ -1128,9 +1128,9 @@ export default function ClientsPage() {
 
             </div>
           ) : (
-            <Card className="border-2 border-dashed border-slate-200 p-24 text-center rounded-2xl bg-white shadow-premium">
-              <Sparkles className="h-14 w-14 mx-auto mb-5 text-red-500 opacity-20 animate-pulse" />
-              <p className="text-xs font-black uppercase tracking-widest text-slate-400">Search and Select an organization above to activate Matrix Hub</p>
+            <Card className="border-2 border-dashed border-border p-24 text-center rounded-2xl bg-white shadow-premium">
+              <Sparkles className="h-14 w-14 mx-auto mb-5 text-destructive opacity-20 animate-pulse" />
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Search and Select an organization above to activate Matrix Hub</p>
             </Card>
           )}
 
@@ -1139,46 +1139,46 @@ export default function ClientsPage() {
 
       {/* QUICK ADD OPPORTUNITY MODAL (HUB ACCESSORY) */}
       <Dialog open={isQuickOppOpen} onOpenChange={setIsQuickOppOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-[10px] bg-white border border-slate-250 text-slate-800 shadow-2xl">
+        <DialogContent className="sm:max-w-[425px] rounded-[10px] bg-white border border-slate-250 text-primary shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-2xl font-black text-slate-800">
-              <Sparkles className="h-6 w-6 text-red-500" />
+            <DialogTitle className="flex items-center gap-2 text-2xl font-black text-primary">
+              <Sparkles className="h-6 w-6 text-destructive" />
               Create Sales Lead
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-muted-foreground text-xs">
               Register a recurring opportunity for {selectedHubCompany}.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleQuickAddOpportunity} className="space-y-5 py-4">
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Service Category</Label>
+              <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Service Category</Label>
               <Select 
                 value={quickOpp.service_vertical} 
                 onValueChange={(val) => setQuickOpp({...quickOpp, service_vertical: val, sub_vertical: CONTENT_VERTICALS.find(v => v.name === val)?.services[0] || ""})}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-white border-slate-200 text-slate-800">
+                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-primary">
                   <SelectValue placeholder="Select vertical" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-slate-200 text-slate-700">
+                <SelectContent className="bg-white border border-border text-primary/80">
                   {CONTENT_VERTICALS.map(v => (
-                    <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-red-600 focus:text-white">{v.name}</SelectItem>
+                    <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-destructive focus:text-white">{v.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Service Vertical</Label>
+              <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Service Vertical</Label>
               <Select 
                 value={quickOpp.sub_vertical} 
                 onValueChange={(val) => setQuickOpp({...quickOpp, sub_vertical: val})}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-white border-slate-200 text-slate-800">
+                <SelectTrigger className="rounded-xl h-11 bg-white border-border text-primary">
                   <SelectValue placeholder="Select service" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-slate-200 text-slate-700">
+                <SelectContent className="bg-white border border-border text-primary/80">
                   {CONTENT_VERTICALS.find(v => v.name === quickOpp.service_vertical)?.services.map(s => (
-                    <SelectItem key={s} value={s} className="text-xs focus:bg-red-600 focus:text-white">{s}</SelectItem>
+                    <SelectItem key={s} value={s} className="text-xs focus:bg-destructive focus:text-white">{s}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -1186,33 +1186,33 @@ export default function ClientsPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Budget (₹)</Label>
+                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Budget (₹)</Label>
                 <Input 
                   type="number"
                   placeholder="250000" 
                   value={quickOpp.deal_value}
                   onChange={(e) => setQuickOpp({...quickOpp, deal_value: e.target.value})}
-                  className="rounded-xl h-11 bg-white border-slate-200 text-slate-800"
+                  className="rounded-xl h-11 bg-white border-border text-primary"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Stage</Label>
+                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Stage</Label>
                 <Select onValueChange={(val) => setQuickOpp({...quickOpp, stage: val})} value={quickOpp.stage}>
-                  <SelectTrigger className="rounded-xl h-11 bg-white border-slate-200 text-slate-800">
+                  <SelectTrigger className="rounded-xl h-11 bg-white border-border text-primary">
                     <SelectValue placeholder="Select stage" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-slate-200 text-slate-700">
-                    <SelectItem value="lead" className="text-xs focus:bg-red-600 focus:text-white">Lead</SelectItem>
-                    <SelectItem value="contact" className="text-xs focus:bg-red-600 focus:text-white">Contacted</SelectItem>
-                    <SelectItem value="proposal" className="text-xs focus:bg-red-600 focus:text-white">Proposal Sent</SelectItem>
-                    <SelectItem value="negotiation" className="text-xs focus:bg-red-600 focus:text-white">In Negotiation</SelectItem>
+                  <SelectContent className="bg-white border border-border text-primary/80">
+                    <SelectItem value="lead" className="text-xs focus:bg-destructive focus:text-white">Lead</SelectItem>
+                    <SelectItem value="contact" className="text-xs focus:bg-destructive focus:text-white">Contacted</SelectItem>
+                    <SelectItem value="proposal" className="text-xs focus:bg-destructive focus:text-white">Proposal Sent</SelectItem>
+                    <SelectItem value="negotiation" className="text-xs focus:bg-destructive focus:text-white">In Negotiation</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <DialogFooter className="pt-4">
-              <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl h-12 font-black uppercase text-xs tracking-widest shadow-lg shadow-red-600/10">
+              <Button type="submit" className="w-full bg-destructive hover:bg-destructive text-white rounded-xl h-12 font-black uppercase text-xs tracking-widest shadow-lg shadow-red-600/10">
                 Initialize Opportunity
               </Button>
             </DialogFooter>
@@ -1222,22 +1222,22 @@ export default function ClientsPage() {
 
       {/* ORIGINAL ONBOARD CLIENT DIALOG (FULLY PRESERVED) */}
       <Dialog open={isOnboardOpen} onOpenChange={(open) => !open && resetOnboarding()}>
-        <DialogContent className="sm:max-w-[1000px] rounded-[10px] p-0 overflow-hidden border border-slate-200 shadow-2xl h-[90vh] max-h-[900px] flex flex-col bg-white text-slate-800">
+        <DialogContent className="sm:max-w-[1000px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] max-h-[900px] flex flex-col bg-white text-primary">
           <div className="flex flex-col flex-1 min-h-0 bg-[#F8FAFC]">
             {/* Header - Fixed Height */}
-            <div className="p-8 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 text-slate-800">
+            <div className="p-8 border-b border-border bg-white flex items-center justify-between shrink-0 text-primary">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 bg-red-600 rounded-[10px] flex items-center justify-center text-white shadow-lg">
+                <div className="h-12 w-12 bg-destructive rounded-[10px] flex items-center justify-center text-white shadow-lg">
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <div>
-                  <DialogTitle className="text-2xl font-black text-slate-900">Add New Client</DialogTitle>
-                  <DialogDescription className="text-slate-500 text-xs mt-0.5">Enter client details and select services.</DialogDescription>
+                  <DialogTitle className="text-2xl font-black text-primary">Add New Client</DialogTitle>
+                  <DialogDescription className="text-muted-foreground text-xs mt-0.5">Enter client details and select services.</DialogDescription>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className={cn("h-2 w-2 rounded-full", onboardStep === 'info' ? "bg-red-600" : "bg-slate-200")} />
-                <div className={cn("h-2 w-2 rounded-full", onboardStep === 'services' ? "bg-red-600" : "bg-slate-200")} />
+                <div className={cn("h-2 w-2 rounded-full", onboardStep === 'info' ? "bg-destructive" : "bg-secondary")} />
+                <div className={cn("h-2 w-2 rounded-full", onboardStep === 'services' ? "bg-destructive" : "bg-secondary")} />
               </div>
             </div>
 
@@ -1247,81 +1247,81 @@ export default function ClientsPage() {
                 <div className="flex-1 p-10 space-y-8 animate-in fade-in slide-in-from-left-4 duration-300 overflow-y-auto custom-scrollbar">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <Label htmlFor="companyName" className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Company Name</Label>
+                      <Label htmlFor="companyName" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Company Name</Label>
                       <Input 
                         id="companyName" 
                         placeholder="e.g. RedBull Media House" 
                         value={newClient.company_name}
                         onChange={(e) => setNewClient({...newClient, company_name: e.target.value})}
                         required
-                        className="rounded-xl h-12 bg-white border-slate-200 text-slate-800"
+                        className="rounded-xl h-12 bg-white border-border text-primary"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="industry" className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Industry</Label>
+                      <Label htmlFor="industry" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Industry</Label>
                       <Select onValueChange={(val) => setNewClient({...newClient, industry: val})} value={newClient.industry}>
-                        <SelectTrigger className="rounded-xl h-12 bg-white border-slate-200 text-slate-800">
+                        <SelectTrigger className="rounded-xl h-12 bg-white border-border text-primary">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="bg-white border border-slate-250 text-slate-700">
-                          {INDUSTRIES.map(i => <SelectItem key={i} value={i} className="text-xs focus:bg-red-600 focus:text-white">{i}</SelectItem>)}
+                        <SelectContent className="bg-white border border-slate-250 text-primary/80">
+                          {INDUSTRIES.map(i => <SelectItem key={i} value={i} className="text-xs focus:bg-destructive focus:text-white">{i}</SelectItem>)}
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="contactPerson" className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Contact Person (Optional)</Label>
+                      <Label htmlFor="contactPerson" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Contact Person (Optional)</Label>
                       <div className="relative">
-                        <User className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
+                        <User className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
                         <Input 
                           id="contactPerson" 
                           placeholder="e.g. Sarah Jenkins" 
                           value={newClient.contact_person}
                           onChange={(e) => setNewClient({...newClient, contact_person: e.target.value})}
-                          className="rounded-xl h-12 pl-10 bg-white border-slate-200 text-slate-800"
+                          className="rounded-xl h-12 pl-10 bg-white border-border text-primary"
                         />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Primary Contact Email</Label>
+                      <Label htmlFor="email" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Primary Contact Email</Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
+                        <Mail className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
                         <Input 
                           id="email" 
                           type="email"
                           placeholder="poc@client.com" 
                           value={newClient.email}
                           onChange={(e) => setNewClient({...newClient, email: e.target.value})}
-                          className="rounded-xl h-12 pl-10 bg-white border-slate-200 text-slate-800"
+                          className="rounded-xl h-12 pl-10 bg-white border-border text-primary"
                         />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="gstin" className="text-[10px] font-black uppercase text-slate-500 tracking-widest">GSTIN (Optional)</Label>
+                      <Label htmlFor="gstin" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">GSTIN (Optional)</Label>
                       <Input 
                         id="gstin" 
                         placeholder="e.g. 22AAAAA0000A1Z5" 
                         value={newClient.gstin}
                         onChange={(e) => setNewClient({...newClient, gstin: e.target.value})}
-                        className="rounded-xl h-12 uppercase font-mono bg-white border-slate-200 text-slate-800"
+                        className="rounded-xl h-12 uppercase font-mono bg-white border-border text-primary"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="billingAddress" className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Billing Address (Optional)</Label>
+                      <Label htmlFor="billingAddress" className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Billing Address (Optional)</Label>
                       <Textarea 
                         id="billingAddress" 
                         placeholder="Complete billing address for invoices..." 
                         value={newClient.billing_address}
                         onChange={(e) => setNewClient({...newClient, billing_address: e.target.value})}
-                        className="rounded-xl min-h-[100px] bg-white border-slate-200 text-slate-800"
+                        className="rounded-xl min-h-[100px] bg-white border-border text-primary"
                       />
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="flex-1 flex min-h-0 overflow-hidden animate-in fade-in slide-in-from-right-4 duration-300">
-                  <div className="flex-1 flex flex-col p-8 bg-slate-50 border-r border-slate-200 min-h-0 overflow-hidden">
+                  <div className="flex-1 flex flex-col p-8 bg-muted border-r border-border min-h-0 overflow-hidden">
                     <div className="mb-6 shrink-0">
-                      <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">01. Select Category</h3>
+                      <h3 className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-4">01. Select Category</h3>
                       <div className="overflow-x-auto pb-4 custom-scrollbar">
                         <div className="flex gap-3">
                           {CONTENT_VERTICALS.map((vertical) => (
@@ -1330,8 +1330,8 @@ export default function ClientsPage() {
                               className={cn(
                                 "cursor-pointer transition-all duration-300 border-2 rounded-[10px] group shrink-0 w-40 h-32 flex items-center justify-center text-center p-4",
                                 selectedVerticalId === vertical.id 
-                                  ? "border-red-600 shadow-md bg-white" 
-                                  : "border-transparent hover:border-slate-300 bg-white/70"
+                                  ? "border-destructive shadow-md bg-white" 
+                                  : "border-transparent hover:border-border bg-white/70"
                               )}
                               onClick={() => setSelectedVerticalId(vertical.id)}
                             >
@@ -1339,7 +1339,7 @@ export default function ClientsPage() {
                                 <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center text-white", vertical.color)}>
                                   <vertical.icon className="h-4 w-4" />
                                 </div>
-                                <span className="text-[9px] font-black leading-tight uppercase tracking-tight text-slate-800">{vertical.name}</span>
+                                <span className="text-[9px] font-black leading-tight uppercase tracking-tight text-primary">{vertical.name}</span>
                               </div>
                             </Card>
                           ))}
@@ -1348,7 +1348,7 @@ export default function ClientsPage() {
                     </div>
 
                     <div className="flex-1 flex flex-col min-h-0">
-                      <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">02. Select Services</h3>
+                      <h3 className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-4">02. Select Services</h3>
                       {activeVertical ? (
                         <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-4">
@@ -1360,40 +1360,40 @@ export default function ClientsPage() {
                                   className={cn(
                                     "flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer bg-white",
                                     isSelected 
-                                      ? "bg-red-50 border-red-200 shadow-sm" 
-                                      : "border-slate-200 hover:border-slate-300"
+                                      ? "bg-destructive/10 border-red-200 shadow-sm" 
+                                      : "border-border hover:border-border"
                                   )}
                                   onClick={() => toggleService(activeVertical.id, service)}
                                 >
                                   <Checkbox 
                                     checked={isSelected} 
-                                    className="h-5 w-5 rounded border-2 border-slate-300" 
+                                    className="h-5 w-5 rounded border-2 border-border" 
                                     onCheckedChange={() => toggleService(activeVertical.id, service)}
                                   />
-                                  <p className={cn("text-xs font-bold", isSelected ? "text-red-600" : "text-slate-600")}>{service}</p>
+                                  <p className={cn("text-xs font-bold", isSelected ? "text-destructive" : "text-muted-foreground/80")}>{service}</p>
                                 </div>
                               );
                             })}
                           </div>
                         </div>
                       ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[10px] text-slate-400 bg-slate-50">
-                          <Zap className="h-10 w-10 mb-2 text-red-500 animate-pulse" />
+                        <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-[10px] text-muted-foreground bg-muted">
+                          <Zap className="h-10 w-10 mb-2 text-destructive animate-pulse" />
                           <p className="text-[10px] font-black uppercase tracking-widest">Select a category above to view services</p>
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <aside className="w-80 border-l border-slate-200 bg-white flex flex-col shrink-0 min-h-0 overflow-hidden">
-                    <div className="p-6 border-b border-slate-200 shrink-0">
-                      <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Scope Synthesis</h4>
-                      <p className="text-xs font-bold text-slate-800">Client Profile Summary</p>
+                  <aside className="w-80 border-l border-border bg-white flex flex-col shrink-0 min-h-0 overflow-hidden">
+                    <div className="p-6 border-b border-border shrink-0">
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Scope Synthesis</h4>
+                      <p className="text-xs font-bold text-primary">Client Profile Summary</p>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6 custom-scrollbar min-h-0 text-slate-700">
+                    <div className="flex-1 overflow-y-auto p-6 custom-scrollbar min-h-0 text-primary/80">
                       <div className="space-y-6">
                         {totalServicesCount === 0 ? (
-                           <div className="text-center py-12 text-[10px] font-bold text-slate-400 uppercase tracking-widest">No services defined</div>
+                           <div className="text-center py-12 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">No services defined</div>
                         ) : (
                           Object.entries(selectedServices).map(([vId, services]) => {
                             const v = CONTENT_VERTICALS.find(x => x.id === vId);
@@ -1401,13 +1401,13 @@ export default function ClientsPage() {
                               <div key={vId} className="space-y-2">
                                 <div className="flex items-center gap-2">
                                   <div className={cn("h-4 w-1 rounded-full", v?.color)} />
-                                  <h5 className="text-[9px] font-black uppercase text-slate-400">{v?.name}</h5>
+                                  <h5 className="text-[9px] font-black uppercase text-muted-foreground">{v?.name}</h5>
                                 </div>
                                 <div className="space-y-1 pl-3">
                                   {services.map(s => (
-                                    <div key={s} className="flex items-center justify-between text-[10px] font-bold text-slate-600">
+                                    <div key={s} className="flex items-center justify-between text-[10px] font-bold text-muted-foreground/80">
                                       <span className="flex-1 pr-2">• {s}</span>
-                                      <button onClick={(e) => { e.stopPropagation(); toggleService(vId, s); }} className="text-red-500 hover:text-red-600">
+                                      <button onClick={(e) => { e.stopPropagation(); toggleService(vId, s); }} className="text-destructive hover:text-destructive">
                                         <X className="h-3 w-3" />
                                       </button>
                                     </div>
@@ -1419,10 +1419,10 @@ export default function ClientsPage() {
                         )}
                       </div>
                     </div>
-                    <div className="p-6 border-t border-slate-200 bg-slate-50 shrink-0">
+                    <div className="p-6 border-t border-border bg-muted shrink-0">
                       <div className="flex justify-between items-center">
-                        <span className="text-[9px] font-black uppercase text-slate-400">Services Registry</span>
-                        <Badge className="bg-red-600 text-white font-black h-5 text-[10px] px-2">{totalServicesCount}</Badge>
+                        <span className="text-[9px] font-black uppercase text-muted-foreground">Services Registry</span>
+                        <Badge className="bg-destructive text-white font-black h-5 text-[10px] px-2">{totalServicesCount}</Badge>
                       </div>
                     </div>
                   </aside>
@@ -1431,15 +1431,15 @@ export default function ClientsPage() {
             </div>
 
             {/* Footer - Fixed Height */}
-            <div className="p-8 border-t border-slate-200 shrink-0 bg-white flex items-center justify-between">
+            <div className="p-8 border-t border-border shrink-0 bg-white flex items-center justify-between">
               {onboardStep === 'info' ? (
                 <>
-                  <Button variant="ghost" onClick={() => setIsOnboardOpen(false)} className="rounded-xl font-bold text-slate-400 hover:text-slate-600">Cancel</Button>
+                  <Button variant="ghost" onClick={() => setIsOnboardOpen(false)} className="rounded-xl font-bold text-muted-foreground hover:text-muted-foreground/80">Cancel</Button>
                   <div className="flex gap-3">
                     <Button 
                       onClick={() => handleOnboardClient(true)} 
                       disabled={!newClient.company_name || isSubmitting}
-                      className="rounded-[10px] h-12 px-8 bg-red-600 hover:bg-red-700 text-white font-black uppercase text-xs tracking-widest gap-2 shadow-lg shadow-red-500/20"
+                      className="rounded-[10px] h-12 px-8 bg-destructive hover:bg-destructive text-white font-black uppercase text-xs tracking-widest gap-2 shadow-lg shadow-red-500/20"
                     >
                       {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronRight className="h-4 w-4" />}
                       Configure Services
@@ -1448,13 +1448,13 @@ export default function ClientsPage() {
                 </>
               ) : (
                 <>
-                  <Button variant="ghost" onClick={() => setOnboardStep('info')} className="rounded-xl font-bold gap-2 text-slate-400 hover:text-slate-600">
+                  <Button variant="ghost" onClick={() => setOnboardStep('info')} className="rounded-xl font-bold gap-2 text-muted-foreground hover:text-muted-foreground/80">
                     <ChevronLeft className="h-4 w-4" /> Details
                   </Button>
                   <Button 
                     onClick={() => handleOnboardClient(false)} 
                     disabled={isSubmitting}
-                    className="rounded-[10px] h-12 px-10 bg-red-600 hover:bg-red-700 text-white font-black uppercase text-xs tracking-widest gap-2 shadow-lg shadow-red-500/20"
+                    className="rounded-[10px] h-12 px-10 bg-destructive hover:bg-destructive text-white font-black uppercase text-xs tracking-widest gap-2 shadow-lg shadow-red-500/20"
                   >
                     {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
                     Finalize Onboarding
@@ -1468,19 +1468,19 @@ export default function ClientsPage() {
 
       {/* Cascading Archive Alert Dialog */}
       <AlertDialog open={!!clientToArchive} onOpenChange={(open) => !open && setClientToArchive(null)}>
-        <AlertDialogContent className="rounded-[10px] bg-white border border-slate-200 text-slate-800 shadow-2xl">
+        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-primary shadow-2xl">
           <AlertDialogHeader>
-            <div className="h-12 w-12 bg-red-50 rounded-[10px] flex items-center justify-center text-red-500 mb-4">
+            <div className="h-12 w-12 bg-destructive/10 rounded-[10px] flex items-center justify-center text-destructive mb-4">
               <Archive className="h-6 w-6" />
             </div>
             <AlertDialogTitle className="text-slate-850">Delete Client Record?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium">
+            <AlertDialogDescription className="text-muted-foreground font-medium">
               This will move "{clientToArchive?.company_name}" and associated active projects to archives.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-6">
-            <AlertDialogCancel className="rounded-xl h-12 font-bold text-slate-500">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmArchive} className="bg-red-600 hover:bg-red-700 rounded-xl text-white">Confirm Deletion</AlertDialogAction>
+            <AlertDialogCancel className="rounded-xl h-12 font-bold text-muted-foreground">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmArchive} className="bg-destructive hover:bg-destructive rounded-xl text-white">Confirm Deletion</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -1488,17 +1488,17 @@ export default function ClientsPage() {
       <AlertDialog open={!!clientToPermanentDelete} onOpenChange={(open) => !open && setClientToPermanentDelete(null)}>
         <AlertDialogContent className="rounded-[10px] p-8 max-w-md border-0 bg-white">
           <AlertDialogHeader>
-            <div className="h-12 w-12 bg-red-50 rounded-[10px] flex items-center justify-center text-red-500 mb-4">
+            <div className="h-12 w-12 bg-destructive/10 rounded-[10px] flex items-center justify-center text-destructive mb-4">
               <Trash2 className="h-6 w-6" />
             </div>
             <AlertDialogTitle className="text-slate-850">Permanently Delete Client?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium">
+            <AlertDialogDescription className="text-muted-foreground font-medium">
               This will permanently delete "{clientToPermanentDelete?.company_name}" and ALL associated projects from the database. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-6">
-            <AlertDialogCancel className="rounded-xl h-12 font-bold text-slate-500">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmPermanentDelete} className="bg-red-600 hover:bg-red-700 rounded-xl text-white font-bold h-12 px-6">Delete Forever</AlertDialogAction>
+            <AlertDialogCancel className="rounded-xl h-12 font-bold text-muted-foreground">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmPermanentDelete} className="bg-destructive hover:bg-destructive rounded-xl text-white font-bold h-12 px-6">Delete Forever</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

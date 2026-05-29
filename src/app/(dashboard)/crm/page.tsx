@@ -475,7 +475,7 @@ export default function CRMPage() {
       <div className="flex h-full items-center justify-center h-[80vh]">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Initializing CRM...</p>
+          <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Initializing CRM...</p>
         </div>
       </div>
     );
@@ -484,12 +484,12 @@ export default function CRMPage() {
   if (!isAuthorized) {
     return (
       <div className="flex flex-col items-center justify-center h-[80vh] text-center space-y-6 font-body">
-        <div className="p-4 bg-rose-50 rounded-full text-rose-500 shadow-xl shadow-rose-100/50">
+        <div className="p-4 bg-accent/10 rounded-full text-accent shadow-xl shadow-rose-100/50">
           <Lock className="h-12 w-12" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">Security Clearance Blocked</h2>
-          <p className="text-slate-500 font-medium max-w-sm">You do not possess the required credentials to access the Corporate Growth pipeline.</p>
+          <h2 className="text-2xl font-black text-primary tracking-tight">Security Clearance Blocked</h2>
+          <p className="text-muted-foreground font-medium max-w-sm">You do not possess the required credentials to access the Corporate Growth pipeline.</p>
         </div>
         <Link href="/dashboard">
           <Button className="rounded-xl h-11 px-6 font-bold gap-2">
@@ -512,24 +512,24 @@ export default function CRMPage() {
     <div className="space-y-8">
       
       {/* Cinematic Header Block */}
-      <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-200">
+      <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-border">
         {/* Background glow */}
-        <div className="absolute -top-4 -left-4 w-72 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-4 -left-4 w-72 h-32 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="h-8 w-1 bg-red-500 rounded-full shadow-lg shadow-red-500/30" />
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-red-500">DP Media OS</span>
+            <div className="h-8 w-1 bg-destructive rounded-full shadow-lg shadow-red-500/30" />
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-destructive">DP Media OS</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-none">Leads</h1>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Track potential projects and manage client relations.</p>
+          <h1 className="text-4xl font-black text-primary tracking-tight leading-none">Leads</h1>
+          <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-2">Track potential projects and manage client relations.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Find a lead..." 
-              className="pl-10 h-11 rounded-[10px] bg-white border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:border-red-500 focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm"
+              className="pl-10 h-11 rounded-[10px] bg-white border border-border text-primary placeholder:text-muted-foreground focus:border-destructive focus:ring-1 focus:ring-red-500/20 transition-all shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -537,37 +537,37 @@ export default function CRMPage() {
           
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2 rounded-[10px] bg-red-600 hover:bg-red-500 text-white h-11 px-6 font-black text-xs uppercase tracking-wider shadow-lg shadow-red-500/20 transition-all hover:scale-[1.02]">
+              <Button className="gap-2 rounded-[10px] bg-destructive hover:bg-destructive text-white h-11 px-6 font-black text-xs uppercase tracking-wider shadow-lg shadow-red-500/20 transition-all hover:scale-[1.02]">
                 <Plus className="h-4 w-4" /> Add Lead
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[460px] rounded-[10px] p-0 border border-slate-100 bg-white text-slate-900 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
-              <div className="relative p-8 pb-6 border-b border-slate-100">
+            <DialogContent className="sm:max-w-[460px] rounded-[10px] p-0 border border-border bg-white text-primary shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+              <div className="relative p-8 pb-6 border-b border-border">
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/20 to-transparent" />
-                <div className="absolute -top-8 -right-8 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -top-8 -right-8 w-32 h-32 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
                 <DialogHeader className="relative">
-                  <DialogTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
-                    <div className="h-10 w-10 rounded-[10px] bg-red-50 border border-red-100 flex items-center justify-center">
-                      <Sparkles className="h-5 w-5 text-red-500" />
+                  <DialogTitle className="flex items-center gap-3 text-2xl font-black text-primary">
+                    <div className="h-10 w-10 rounded-[10px] bg-destructive/10 border border-red-100 flex items-center justify-center">
+                      <Sparkles className="h-5 w-5 text-destructive" />
                     </div>
                     Add New Lead
                   </DialogTitle>
-                  <DialogDescription className="text-slate-500 text-xs mt-1">
+                  <DialogDescription className="text-muted-foreground text-xs mt-1">
                     Enter details for a new potential project.
                   </DialogDescription>
                 </DialogHeader>
               </div>
               <form onSubmit={handleAddLead} className="p-8 space-y-5">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Lead Type</Label>
+                  <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Lead Type</Label>
                   <Select 
                     value={newLead.lead_type} 
                     onValueChange={(val) => setNewLead(prev => ({...prev, lead_type: val}))}
                   >
-                    <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                    <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
                       <SelectValue placeholder="Select Type" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                    <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
                       <SelectItem value="Prospect" className="text-xs font-bold rounded-xl m-1 cursor-pointer">Prospect</SelectItem>
                       <SelectItem value="Client" className="text-xs font-bold rounded-xl m-1 cursor-pointer">Client (Direct Onboard)</SelectItem>
                     </SelectContent>
@@ -575,7 +575,7 @@ export default function CRMPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">
+                  <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">
                     Company Name
                   </Label>
                   <Input 
@@ -601,7 +601,7 @@ export default function CRMPage() {
                         }));
                       }
                     }}
-                    className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                    className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
                     required
                   />
                   <datalist id="company-names">
@@ -613,33 +613,33 @@ export default function CRMPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Contact Person</Label>
+                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Contact Person</Label>
                     <Input 
                       placeholder="John Doe" 
                       value={newLead.contact_person}
                       onChange={(e) => setNewLead(prev => ({...prev, contact_person: e.target.value}))}
-                      className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                      className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Email</Label>
+                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Email</Label>
                     <Input 
                       type="email" 
                       placeholder="john@doe.com" 
                       value={newLead.email}
                       onChange={(e) => setNewLead(prev => ({...prev, email: e.target.value}))}
-                      className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                      className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Phone / WhatsApp</Label>
+                  <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Phone / WhatsApp</Label>
                   <Input 
                     placeholder="+91 99999 99999" 
                     value={newLead.phone}
                     onChange={(e) => setNewLead(prev => ({...prev, phone: e.target.value, whatsapp: e.target.value}))}
-                    className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                    className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
                   />
                 </div>
 
@@ -647,35 +647,35 @@ export default function CRMPage() {
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Service Category</Label>
+                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Service Category</Label>
                         <Select 
                           value={newLead.service_vertical} 
                           onValueChange={(val) => setNewLead(prev => ({...prev, service_vertical: val, sub_vertical: ""}))}
                         >
-                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
                             <SelectValue placeholder="Select Vertical" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
                             {CONTENT_VERTICALS.map(v => (
-                              <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{v.name}</SelectItem>
+                              <SelectItem key={v.id} value={v.name} className="text-xs focus:bg-destructive/10 focus:text-destructive rounded-xl cursor-pointer">{v.name}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Service</Label>
+                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Service</Label>
                         <Select 
                           disabled={!newLead.service_vertical}
                           value={newLead.sub_vertical} 
                           onValueChange={(val) => setNewLead(prev => ({...prev, sub_vertical: val}))}
                         >
-                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 disabled:opacity-40 shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary disabled:opacity-40 shadow-sm">
                             <SelectValue placeholder={newLead.service_vertical ? "Select Service" : "Select Category First"} />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
                             {activeVertical?.services.map(s => (
-                              <SelectItem key={s} value={s} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{s}</SelectItem>
+                              <SelectItem key={s} value={s} className="text-xs focus:bg-destructive/10 focus:text-destructive rounded-xl cursor-pointer">{s}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -684,24 +684,24 @@ export default function CRMPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Expected Deal (₹)</Label>
+                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Expected Deal (₹)</Label>
                         <Input 
                           type="number"
                           placeholder="25000" 
                           value={newLead.deal_value}
                           onChange={(e) => setNewLead(prev => ({...prev, deal_value: e.target.value}))}
-                          className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                          className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Status</Label>
+                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Status</Label>
                         <Select onValueChange={(val) => setNewLead(prev => ({...prev, stage: val}))} value={newLead.stage}>
-                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
                             <SelectValue placeholder="Select Stage" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
                             {PIPELINE_STAGES.filter(s => !['won', 'lost', 'client'].includes(s.id)).map(s => (
-                              <SelectItem key={s.id} value={s.id} className="text-xs focus:bg-red-50 focus:text-red-700 rounded-xl cursor-pointer">{s.name}</SelectItem>
+                              <SelectItem key={s.id} value={s.id} className="text-xs focus:bg-destructive/10 focus:text-destructive rounded-xl cursor-pointer">{s.name}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -709,12 +709,12 @@ export default function CRMPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Notes</Label>
+                      <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Notes</Label>
                       <Textarea 
                         placeholder="Enter Prospect Details..." 
                         value={newLead.notes}
                         onChange={(e) => setNewLead(prev => ({...prev, notes: e.target.value}))}
-                        className="rounded-[10px] bg-slate-50 border-slate-200 text-slate-800 text-sm shadow-sm"
+                        className="rounded-[10px] bg-muted border-border text-primary text-sm shadow-sm"
                       />
                     </div>
                   </>
@@ -724,15 +724,15 @@ export default function CRMPage() {
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Industry</Label>
+                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Industry</Label>
                         <Select 
                           value={newLead.industry} 
                           onValueChange={(val) => setNewLead(prev => ({...prev, industry: val}))}
                         >
-                          <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                          <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
                             <SelectValue placeholder="Select Industry" />
                           </SelectTrigger>
-                          <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl max-h-[200px] overflow-y-auto">
+                          <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl max-h-[200px] overflow-y-auto">
                             <SelectItem value="Luxury & Lifestyle" className="text-xs rounded-xl m-1 cursor-pointer">Luxury & Lifestyle</SelectItem>
                             <SelectItem value="Tech & SaaS" className="text-xs rounded-xl m-1 cursor-pointer">Tech & SaaS</SelectItem>
                             <SelectItem value="Gaming & Esports" className="text-xs rounded-xl m-1 cursor-pointer">Gaming & Esports</SelectItem>
@@ -743,36 +743,36 @@ export default function CRMPage() {
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">GSTIN (Optional)</Label>
+                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">GSTIN (Optional)</Label>
                         <Input 
                           placeholder="GSTIN Code" 
                           value={newLead.gstin}
                           onChange={(e) => setNewLead(prev => ({...prev, gstin: e.target.value}))}
-                          className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 placeholder:text-slate-400 shadow-sm"
+                          className="rounded-[10px] h-11 bg-muted border-border text-primary placeholder:text-muted-foreground shadow-sm"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Billing Address</Label>
+                      <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Billing Address</Label>
                       <Textarea 
                         placeholder="Corporate Billing Address" 
                         value={newLead.billing_address}
                         onChange={(e) => setNewLead(prev => ({...prev, billing_address: e.target.value}))}
-                        className="rounded-[10px] bg-slate-50 border-slate-200 text-slate-800 text-sm shadow-sm"
+                        className="rounded-[10px] bg-muted border-border text-primary text-sm shadow-sm"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Roadmap Template</Label>
+                      <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Roadmap Template</Label>
                       <Select 
                         value={newLead.template} 
                         onValueChange={(val) => setNewLead(prev => ({...prev, template: val}))}
                       >
-                        <SelectTrigger className="rounded-[10px] h-11 bg-slate-50 border-slate-200 text-slate-800 shadow-sm">
+                        <SelectTrigger className="rounded-[10px] h-11 bg-muted border-border text-primary shadow-sm">
                           <SelectValue placeholder="Select Onboarding Template" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white border-slate-100 text-slate-800 rounded-[10px] shadow-xl">
+                        <SelectContent className="bg-white border-border text-primary rounded-[10px] shadow-xl">
                           <SelectItem value="Brand Identity" className="text-xs rounded-xl m-1 cursor-pointer">Brand Identity</SelectItem>
                           <SelectItem value="AI TVC" className="text-xs rounded-xl m-1 cursor-pointer">AI TVC</SelectItem>
                           <SelectItem value="Corporate Film" className="text-xs rounded-xl m-1 cursor-pointer">Corporate Film</SelectItem>
@@ -784,7 +784,7 @@ export default function CRMPage() {
                 )}
 
                 <DialogFooter className="pt-2">
-                  <Button type="submit" disabled={isSubmitting} className="w-full rounded-[10px] h-12 font-black text-xs uppercase tracking-widest bg-red-600 hover:bg-red-500 text-white shadow-xl shadow-red-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                  <Button type="submit" disabled={isSubmitting} className="w-full rounded-[10px] h-12 font-black text-xs uppercase tracking-widest bg-destructive hover:bg-destructive text-white shadow-xl shadow-red-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
                     {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                     {newLead.lead_type === "Client" ? "Onboard Client" : "Add Lead"}
                   </Button>
@@ -796,9 +796,9 @@ export default function CRMPage() {
           <Button 
             variant="outline" 
             onClick={() => setShowAnalytics(!showAnalytics)} 
-            className="gap-2 rounded-[10px] h-11 px-5 font-black text-xs uppercase tracking-wider border-slate-200 bg-white text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 shadow-sm transition-all"
+            className="gap-2 rounded-[10px] h-11 px-5 font-black text-xs uppercase tracking-wider border-border bg-white text-muted-foreground/80 hover:text-primary hover:bg-muted hover:border-border shadow-sm transition-all"
           >
-            <BarChart3 className="h-4 w-4 text-red-500" /> 
+            <BarChart3 className="h-4 w-4 text-destructive" /> 
             {showAnalytics ? "Hide Insights" : "Pipeline Insights"}
           </Button>
         </div>
@@ -806,11 +806,11 @@ export default function CRMPage() {
 
       {/* Collapsible CRM Intelligence Hub */}
       {showAnalytics && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 shrink-0 bg-slate-50/50 p-6 rounded-[10px] border border-slate-200/50 backdrop-blur-md">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 shrink-0 bg-muted/50 p-6 rounded-[10px] border border-border/50 backdrop-blur-md">
           {/* Funnel Widget */}
-          <div className="bg-white p-5 rounded-[10px] border border-slate-100 shadow-sm space-y-4">
+          <div className="bg-white p-5 rounded-[10px] border border-border shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-50">
-              <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
+              <h3 className="text-xs font-black uppercase text-muted-foreground tracking-wider flex items-center gap-1.5">
                 <Target className="h-4 w-4 text-primary" /> Sales Funnel Conversion
               </h3>
               <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] font-black uppercase">Active stages</Badge>
@@ -825,15 +825,15 @@ export default function CRMPage() {
                 return (
                   <div key={stage.id} className="space-y-1">
                     <div className="flex items-center justify-between text-[11px] font-bold">
-                      <span className="text-slate-600 uppercase tracking-tighter">{stage.name}</span>
-                      <span className="text-slate-400">{percentage}% (₹{(stageVal/1000).toFixed(0)}k)</span>
+                      <span className="text-muted-foreground/80 uppercase tracking-tighter">{stage.name}</span>
+                      <span className="text-muted-foreground">{percentage}% (₹{(stageVal/1000).toFixed(0)}k)</span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                       <div 
                         className={cn("h-full rounded-full transition-all duration-500", 
-                          stage.id === 'lead' ? 'bg-amber-400' :
-                          stage.id === 'contact' ? 'bg-sky-400' :
-                          stage.id === 'proposal' ? 'bg-indigo-400' : 'bg-primary'
+                          stage.id === 'lead' ? 'bg-accent' :
+                          stage.id === 'contact' ? 'bg-accent' :
+                          stage.id === 'proposal' ? 'bg-accent' : 'bg-primary'
                         )}
                         style={{ width: `${percentage}%` }}
                       />
@@ -845,9 +845,9 @@ export default function CRMPage() {
           </div>
 
           {/* Forecasting & Probability Weighting */}
-          <div className="bg-white p-5 rounded-[10px] border border-slate-100 shadow-sm space-y-4">
+          <div className="bg-white p-5 rounded-[10px] border border-border shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-50">
-              <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
+              <h3 className="text-xs font-black uppercase text-muted-foreground tracking-wider flex items-center gap-1.5">
                 <TrendingUp className="h-4 w-4 text-emerald-500" /> Probability Weighted Forecast
               </h3>
               <ArrowUpRight className="h-4 w-4 text-emerald-500" />
@@ -871,18 +871,18 @@ export default function CRMPage() {
                   <>
                     <div className="flex items-center justify-between">
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Weighted Value</span>
-                        <span className="text-2xl font-black text-slate-800">₹{Math.round(weightedSum).toLocaleString()}</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Weighted Value</span>
+                        <span className="text-2xl font-black text-primary">₹{Math.round(weightedSum).toLocaleString()}</span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Blended Win Rate</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Blended Win Rate</span>
                         <span className="text-xl font-black text-emerald-600">{blendWinRate}%</span>
                       </div>
                     </div>
                     
                     <div className="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100/50 space-y-2">
                       <span className="text-[9px] font-black uppercase tracking-wider text-emerald-700 block">Forecast Model Insights</span>
-                      <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
+                      <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">
                         Based on deal-stage probability vectors, the corporate ledger forecasts an enterprise realization of <strong className="text-emerald-700">₹{Math.round(weightedSum).toLocaleString()}</strong> out of the raw ₹{totalActiveVal.toLocaleString()} active pipeline.
                       </p>
                     </div>
@@ -893,12 +893,12 @@ export default function CRMPage() {
           </div>
 
           {/* Service Vertical Share */}
-          <div className="bg-white p-5 rounded-[10px] border border-slate-100 shadow-sm space-y-4">
+          <div className="bg-white p-5 rounded-[10px] border border-border shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-50">
-              <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
-                <PieChart className="h-4 w-4 text-indigo-500" /> Departmental Distribution
+              <h3 className="text-xs font-black uppercase text-muted-foreground tracking-wider flex items-center gap-1.5">
+                <PieChart className="h-4 w-4 text-accent" /> Departmental Distribution
               </h3>
-              <Activity className="h-4 w-4 text-indigo-500" />
+              <Activity className="h-4 w-4 text-accent" />
             </div>
 
             <div className="space-y-2.5 pt-1 overflow-y-auto max-h-[140px] custom-scrollbar pr-1">
@@ -929,12 +929,12 @@ export default function CRMPage() {
                       <div className="flex items-center gap-2 max-w-[65%]">
                         <span className={cn("h-2 w-2 rounded-full shrink-0", 
                           idx === 0 ? "bg-primary" : 
-                          idx === 1 ? "bg-indigo-500" :
-                          idx === 2 ? "bg-sky-500" : "bg-slate-400"
+                          idx === 1 ? "bg-accent" :
+                          idx === 2 ? "bg-accent" : "bg-slate-400"
                         )} />
-                        <span className="text-slate-600 truncate">{name}</span>
+                        <span className="text-muted-foreground/80 truncate">{name}</span>
                       </div>
-                      <span className="text-slate-500">{share}% (₹{(stat.val/1000).toFixed(0)}k)</span>
+                      <span className="text-muted-foreground">{share}% (₹{(stat.val/1000).toFixed(0)}k)</span>
                     </div>
                   );
                 });
@@ -952,7 +952,7 @@ export default function CRMPage() {
               <span>Pipeline Leads</span>
               <Target className="h-4 w-4 text-primary" />
             </div>
-            <div className="text-2xl font-black font-headline text-slate-800">{filteredLeads.length}</div>
+            <div className="text-2xl font-black font-headline text-primary">{filteredLeads.length}</div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Active CRM opportunities</p>
           </CardContent>
         </Card>
@@ -962,7 +962,7 @@ export default function CRMPage() {
               <span>Pipeline Value</span>
               <IndianRupee className="h-4 w-4 text-emerald-500" />
             </div>
-            <div className="text-2xl font-black font-headline text-slate-800">
+            <div className="text-2xl font-black font-headline text-primary">
               ₹{filteredLeads.reduce((sum, l) => sum + (l.deal_value || 0), 0).toLocaleString()}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Estimated project contracts</p>
@@ -970,11 +970,11 @@ export default function CRMPage() {
         </Card>
         <Card className="border-none shadow-sm bg-white border-l-4 border-l-blue-500 rounded-[10px]">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between text-blue-600 mb-2 text-[10px] font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-accent mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Negotiations</span>
-              <Building2 className="h-4 w-4 text-blue-500" />
+              <Building2 className="h-4 w-4 text-accent" />
             </div>
-            <div className="text-2xl font-black font-headline text-slate-800">
+            <div className="text-2xl font-black font-headline text-primary">
               {filteredLeads.filter(l => ['proposal', 'negotiation'].includes(l.stage || '')).length}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Critical discussion phase</p>
@@ -982,11 +982,11 @@ export default function CRMPage() {
         </Card>
         <Card className="border-none shadow-sm bg-white border-l-4 border-l-purple-500 rounded-[10px]">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between text-purple-600 mb-2 text-[10px] font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-accent mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Realtime Sync</span>
-              <Zap className="h-4 w-4 text-purple-500 animate-pulse" />
+              <Zap className="h-4 w-4 text-accent animate-pulse" />
             </div>
-            <div className="text-sm font-black text-slate-700 flex items-center gap-1.5 mt-1">
+            <div className="text-sm font-black text-primary/80 flex items-center gap-1.5 mt-1">
               <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block"></span>
               Live Ledger Connected
             </div>
@@ -1005,15 +1005,15 @@ export default function CRMPage() {
               return (
                 <div 
                   key={stage.id} 
-                  className="flex flex-col gap-4 w-[320px] shrink-0 h-full bg-slate-50/50 rounded-[10px] p-3 border border-slate-200/50"
+                  className="flex flex-col gap-4 w-[320px] shrink-0 h-full bg-muted/50 rounded-[10px] p-3 border border-border/50"
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, stage.id)}
                 >
                   <div className="flex items-center justify-between px-3 shrink-0 py-2">
                     <div className="flex items-center gap-2">
-                      <div className={cn("h-2.5 w-2.5 rounded-full", stage.color || 'bg-slate-200')} />
-                      <h3 className="font-bold text-xs uppercase tracking-widest text-slate-600">{stage.name}</h3>
-                      <Badge variant="secondary" className="h-5 px-1.5 text-[9px] font-black bg-white border border-slate-100 shadow-sm">{leadsInStage.length}</Badge>
+                      <div className={cn("h-2.5 w-2.5 rounded-full", stage.color || 'bg-secondary')} />
+                      <h3 className="font-bold text-xs uppercase tracking-widest text-muted-foreground/80">{stage.name}</h3>
+                      <Badge variant="secondary" className="h-5 px-1.5 text-[9px] font-black bg-white border border-border shadow-sm">{leadsInStage.length}</Badge>
                     </div>
                     <span className="text-[10px] font-bold text-muted-foreground bg-white px-2 py-0.5 rounded-full shadow-sm">
                       ₹{(totalValue / 100000).toFixed(1)}L
@@ -1035,12 +1035,12 @@ export default function CRMPage() {
                             </Link>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0 rounded-lg hover:bg-slate-50">
-                                  <MoreHorizontal className="h-4 w-4 text-slate-400" />
+                                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0 rounded-lg hover:bg-muted">
+                                  <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="rounded-xl w-52 shadow-2xl border-slate-100">
-                                <DropdownMenuLabel className="text-[10px] font-black uppercase text-slate-400 px-3 py-2 tracking-widest">Lead Actions</DropdownMenuLabel>
+                              <DropdownMenuContent align="end" className="rounded-xl w-52 shadow-2xl border-border">
+                                <DropdownMenuLabel className="text-[10px] font-black uppercase text-muted-foreground px-3 py-2 tracking-widest">Lead Actions</DropdownMenuLabel>
                                 <DropdownMenuItem asChild className="rounded-lg m-1 py-2 cursor-pointer">
                                   <Link href={`/crm/${lead.id}`} className="flex items-center gap-2">
                                     <Target className="h-3.5 w-3.5" /> View Lead
@@ -1053,16 +1053,16 @@ export default function CRMPage() {
                                   <CheckCircle2 className="h-3.5 w-3.5 mr-2" /> Convert to Project
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild className="rounded-lg m-1 py-2 cursor-pointer">
-                                  <Link href={`/client/client_${lead.id}`} className="flex items-center gap-2 text-slate-500">
+                                  <Link href={`/client/client_${lead.id}`} className="flex items-center gap-2 text-muted-foreground">
                                     <Building2 className="h-3.5 w-3.5" /> View Client Profile
                                   </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator className="bg-slate-50" />
-                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-slate-600 focus:text-slate-700 focus:bg-slate-50" onClick={() => setLeadToArchive(lead)}>
+                                <DropdownMenuSeparator className="bg-muted" />
+                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-muted-foreground/80 focus:text-primary/80 focus:bg-muted" onClick={() => setLeadToArchive(lead)}>
                                   <Archive className="h-3.5 w-3.5" /> Archive Lead
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator className="bg-slate-50" />
-                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-rose-500 font-bold focus:text-rose-600 focus:bg-rose-50 force-cache-bust-1" onClick={() => setLeadToPermanentDelete(lead)}>
+                                <DropdownMenuSeparator className="bg-muted" />
+                                <DropdownMenuItem className="rounded-lg m-1 py-2 cursor-pointer text-accent font-bold focus:text-accent focus:bg-accent/10 force-cache-bust-1" onClick={() => setLeadToPermanentDelete(lead)}>
                                   <Trash2 className="h-3.5 w-3.5" /> Delete Lead
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
@@ -1076,7 +1076,7 @@ export default function CRMPage() {
                                 <span className="truncate">{lead.service_vertical || 'General Production'}</span>
                               </div>
                               {lead.sub_vertical && (
-                                <span className="text-[9px] text-muted-foreground font-bold uppercase pl-5 border-l border-slate-100 ml-1.5 mt-0.5">
+                                <span className="text-[9px] text-muted-foreground font-bold uppercase pl-5 border-l border-border ml-1.5 mt-0.5">
                                   {lead.sub_vertical}
                                 </span>
                               )}
@@ -1100,7 +1100,7 @@ export default function CRMPage() {
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full border-2 border-dashed border-slate-200 h-24 hover:bg-white hover:border-primary/20 hover:shadow-sm transition-all rounded-[10px] group shrink-0"
+                      className="w-full border-2 border-dashed border-border h-24 hover:bg-white hover:border-primary/20 hover:shadow-sm transition-all rounded-[10px] group shrink-0"
                       onClick={() => {
                         setNewLead({...newLead, stage: stage.id});
                         setIsAddOpen(true);
@@ -1122,17 +1122,17 @@ export default function CRMPage() {
       <AlertDialog open={!!leadToArchive} onOpenChange={(open) => !open && setLeadToArchive(null)}>
         <AlertDialogContent className="rounded-[10px] p-8">
           <AlertDialogHeader>
-            <div className="h-12 w-12 bg-rose-50 rounded-[10px] flex items-center justify-center text-rose-500 mb-4">
+            <div className="h-12 w-12 bg-accent/10 rounded-[10px] flex items-center justify-center text-accent mb-4">
               <Archive className="h-6 w-6" />
             </div>
             <AlertDialogTitle className="text-2xl font-bold">Delete Lead Record?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium">
+            <AlertDialogDescription className="text-muted-foreground font-medium">
               This will move "{leadToArchive?.company_name}" to your archives. It will no longer appear in the active sales pipeline.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-6">
             <AlertDialogCancel className="rounded-xl h-11 font-bold">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmArchive} className="bg-rose-500 hover:bg-rose-600 rounded-xl h-11 font-bold px-8">
+            <AlertDialogAction onClick={handleConfirmArchive} className="bg-accent hover:bg-accent rounded-xl h-11 font-bold px-8">
               Confirm Deletion
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1141,17 +1141,17 @@ export default function CRMPage() {
       <AlertDialog open={!!leadToPermanentDelete} onOpenChange={(open) => !open && setLeadToPermanentDelete(null)}>
         <AlertDialogContent className="rounded-3xl p-8 max-w-md border-0 bg-white">
           <AlertDialogHeader>
-            <div className="h-12 w-12 bg-rose-50 rounded-[10px] flex items-center justify-center text-rose-500 mb-4">
+            <div className="h-12 w-12 bg-accent/10 rounded-[10px] flex items-center justify-center text-accent mb-4">
               <Trash2 className="h-6 w-6" />
             </div>
             <AlertDialogTitle className="text-2xl font-bold">Permanently Delete Lead?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium">
+            <AlertDialogDescription className="text-muted-foreground font-medium">
               This will permanently delete "{leadToPermanentDelete?.company_name}" from the database. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-6">
             <AlertDialogCancel className="rounded-xl h-11 font-bold">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmPermanentDelete} className="bg-rose-500 hover:bg-rose-600 rounded-xl h-11 font-bold px-8">
+            <AlertDialogAction onClick={handleConfirmPermanentDelete} className="bg-accent hover:bg-accent rounded-xl h-11 font-bold px-8">
               Delete Forever
             </AlertDialogAction>
           </AlertDialogFooter>

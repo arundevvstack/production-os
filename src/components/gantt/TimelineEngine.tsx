@@ -77,21 +77,21 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
     return (
       <Card className="border-2 border-dashed p-12 text-center bg-white rounded-[10px]">
         <Activity className="h-12 w-12 text-slate-200 mx-auto mb-4" />
-        <h3 className="font-bold text-slate-500 uppercase tracking-widest text-sm">No Timeline Data</h3>
-        <p className="text-xs text-slate-400 mt-2">Add objectives with start and due dates to generate the timeline.</p>
+        <h3 className="font-bold text-muted-foreground uppercase tracking-widest text-sm">No Timeline Data</h3>
+        <p className="text-xs text-muted-foreground mt-2">Add objectives with start and due dates to generate the timeline.</p>
       </Card>
     );
   }
 
   return (
     <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
-      <div className="flex items-center justify-between bg-white p-4 rounded-[10px] border border-slate-200 shadow-sm">
+      <div className="flex items-center justify-between bg-white p-4 rounded-[10px] border border-border shadow-sm">
         <div className="flex items-center gap-3">
           <Calendar className="h-5 w-5 text-primary" />
-          <h3 className="font-black text-slate-800 tracking-tight uppercase">Dynamic Timeline Engine</h3>
+          <h3 className="font-black text-primary tracking-tight uppercase">Dynamic Timeline Engine</h3>
         </div>
         <div className="flex gap-2">
-          <Badge variant="outline" className="bg-slate-50 font-bold uppercase tracking-wider text-[10px]">
+          <Badge variant="outline" className="bg-muted font-bold uppercase tracking-wider text-[10px]">
             {sortedObjectives.length} Dependencies
           </Badge>
           <Badge className="bg-emerald-50 text-emerald-600 font-bold uppercase tracking-wider text-[10px] border-none">
@@ -102,17 +102,17 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
 
       <Card className="border-none shadow-xl rounded-[10px] bg-white overflow-hidden p-0 relative">
         {/* Timeline Grid Container */}
-        <div className="overflow-x-auto custom-scrollbar bg-slate-50 relative pb-10">
+        <div className="overflow-x-auto custom-scrollbar bg-muted relative pb-10">
           
           <div className="min-w-max">
             {/* Header / Dates */}
-            <div className="flex border-b border-slate-200 sticky top-0 bg-slate-100 z-10 shadow-sm" style={{ paddingLeft: '250px' }}>
+            <div className="flex border-b border-border sticky top-0 bg-muted z-10 shadow-sm" style={{ paddingLeft: '250px' }}>
               {days.map((d, i) => {
                 const isToday = new Date().toDateString() === d.toDateString();
                 return (
                   <div key={i} className={cn(
-                    "flex-none w-14 border-r border-slate-200/50 flex flex-col items-center justify-center py-2 relative",
-                    isToday ? "bg-primary/5 text-primary" : "text-slate-500"
+                    "flex-none w-14 border-r border-border/50 flex flex-col items-center justify-center py-2 relative",
+                    isToday ? "bg-primary/5 text-primary" : "text-muted-foreground"
                   )}>
                     <span className="text-[9px] font-black uppercase">{d.toLocaleDateString('en-US', { weekday: 'short' })}</span>
                     <span className={cn("text-xs font-bold", isToday && "bg-primary text-white h-5 w-5 rounded-full flex items-center justify-center mt-0.5")}>
@@ -139,21 +139,21 @@ export function TimelineEngine({ objectives, startDate }: TimelineEngineProps) {
 
                 const getPhaseColor = (p: string) => {
                   switch(p) {
-                    case 'pre-prod': return 'bg-indigo-500 shadow-indigo-500/20';
-                    case 'production': return 'bg-rose-500 shadow-rose-500/20';
+                    case 'pre-prod': return 'bg-accent shadow-accent/20';
+                    case 'production': return 'bg-accent shadow-accent/20';
                     case 'post-prod': return 'bg-emerald-500 shadow-emerald-500/20';
-                    default: return 'bg-slate-800 shadow-slate-800/20';
+                    default: return 'bg-primary shadow-slate-800/20';
                   }
                 };
 
                 return (
-                  <div key={obj.id} className="flex relative items-center group h-10 hover:bg-slate-100/50 transition-colors">
+                  <div key={obj.id} className="flex relative items-center group h-10 hover:bg-muted/50 transition-colors">
                     {/* Track Label */}
-                    <div className="sticky left-0 w-[250px] bg-slate-50 z-20 flex items-center px-4 border-r border-slate-200/50 h-full group-hover:bg-slate-100">
+                    <div className="sticky left-0 w-[250px] bg-muted z-20 flex items-center px-4 border-r border-border/50 h-full group-hover:bg-muted">
                       <div className="truncate pr-4 flex flex-col justify-center w-full">
-                        <span className="text-xs font-bold text-slate-700 truncate">{obj.title}</span>
+                        <span className="text-xs font-bold text-primary/80 truncate">{obj.title}</span>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[8px] font-black uppercase text-slate-400 tracking-wider">
+                          <span className="text-[8px] font-black uppercase text-muted-foreground tracking-wider">
                             {obj.phase.replace('-', ' ')}
                           </span>
                           {obj.status === 'done' && <Zap className="h-2.5 w-2.5 text-emerald-500" />}

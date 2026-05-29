@@ -125,19 +125,19 @@ export default function AICommandCenter() {
   };
 
   return (
-    <div className="-m-4 md:-m-8 lg:-m-12 min-h-screen bg-slate-50 text-slate-900 font-sans antialiased pb-12 relative overflow-hidden">
+    <div className="-m-4 md:-m-8 lg:-m-12 min-h-screen bg-muted text-primary font-sans antialiased pb-12 relative overflow-hidden">
       
-      {/* Hero Header Banner (Clean border-slate-200 with no outer margins) */}
-      <header className="relative py-6 border-b border-slate-200 bg-white shadow-sm">
+      {/* Hero Header Banner (Clean border-border with no outer margins) */}
+      <header className="relative py-6 border-b border-border bg-white shadow-sm">
         <div className="w-full mx-auto px-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
-            <Badge className="bg-red-50 text-red-600 border-none font-bold text-[9px] uppercase tracking-widest px-3 py-1">
-              <Sparkles className="h-3 w-3 mr-1 animate-pulse text-red-500" /> AI Command Active
+            <Badge className="bg-destructive/10 text-destructive border-none font-bold text-[9px] uppercase tracking-widest px-3 py-1">
+              <Sparkles className="h-3 w-3 mr-1 animate-pulse text-destructive" /> AI Command Active
             </Badge>
-            <h1 className="text-2xl font-black tracking-tight flex items-center gap-2 uppercase text-slate-800">
+            <h1 className="text-2xl font-black tracking-tight flex items-center gap-2 uppercase text-primary">
               AI Command Center
             </h1>
-            <p className="text-xs text-slate-500 font-bold">
+            <p className="text-xs text-muted-foreground font-bold">
               Real-time campaign forecast, talent scheduling, and active client updates.
             </p>
           </div>
@@ -147,9 +147,9 @@ export default function AICommandCenter() {
               disabled={isUpdatingMemory}
               onClick={handleClearMemory}
               variant="outline" 
-              className="rounded-xl h-10 border-slate-200 bg-white hover:bg-slate-50 text-xs font-black gap-2 text-slate-700 shadow-sm"
+              className="rounded-xl h-10 border-border bg-white hover:bg-muted text-xs font-black gap-2 text-primary/80 shadow-sm"
             >
-              <RefreshCw className={`h-4 w-4 text-red-500 ${isUpdatingMemory ? 'animate-spin' : ''}`} /> Re-index Memory
+              <RefreshCw className={`h-4 w-4 text-destructive ${isUpdatingMemory ? 'animate-spin' : ''}`} /> Re-index Memory
             </Button>
           </div>
         </div>
@@ -161,40 +161,40 @@ export default function AICommandCenter() {
         {/* Left Side: Business Summary & Data Registry */}
         <section className="xl:col-span-1 space-y-6">
           
-          <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <Card className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
             <CardContent className="p-6 space-y-6">
               
-              <h3 className="font-black text-xs uppercase tracking-widest text-slate-400 flex items-center gap-1.5 border-b border-slate-100 pb-4">
-                <BarChart3 className="h-4.5 w-4.5 text-red-500" /> Business Summary
+              <h3 className="font-black text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-1.5 border-b border-border pb-4">
+                <BarChart3 className="h-4.5 w-4.5 text-destructive" /> Business Summary
               </h3>
 
               <div className="grid grid-cols-1 gap-4">
                 
                 {/* Stat blocks in Light Theme */}
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest block leading-none">Projected Monthly Revenue</span>
+                <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Projected Monthly Revenue</span>
                   <div className="flex justify-between items-baseline mt-1.5">
-                    <strong className="text-lg font-black text-slate-800">{stats.projectedRevenue}</strong>
+                    <strong className="text-lg font-black text-primary">{stats.projectedRevenue}</strong>
                     <span className="text-[10px] text-emerald-600 font-bold">{stats.revenueGrowth}</span>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest block leading-none">Roster Utilization</span>
+                <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Roster Utilization</span>
                   <div className="flex justify-between items-baseline mt-1.5">
-                    <strong className="text-lg font-black text-slate-800">{stats.utilizationRate}</strong>
-                    <span className="text-[10px] text-red-600 font-bold">Target: 85%</span>
+                    <strong className="text-lg font-black text-primary">{stats.utilizationRate}</strong>
+                    <span className="text-[10px] text-destructive font-bold">Target: 85%</span>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest block leading-none">Active Pipeline Risks</span>
+                <div className="p-4 rounded-xl bg-muted border border-border space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block leading-none">Active Pipeline Risks</span>
                   <div className="flex justify-between items-center mt-1.5">
-                    <strong className={`text-lg font-black ${stats.activeRisks > 0 ? 'text-amber-600' : 'text-slate-500'}`}>
+                    <strong className={`text-lg font-black ${stats.activeRisks > 0 ? 'text-accent' : 'text-muted-foreground'}`}>
                       {stats.activeRisks} Flagged
                     </strong>
                     {stats.activeRisks > 0 && (
-                      <Badge className="bg-amber-50 text-amber-600 border-none font-bold text-[8px]">Action Required</Badge>
+                      <Badge className="bg-accent/10 text-accent border-none font-bold text-[8px]">Action Required</Badge>
                     )}
                   </div>
                 </div>
@@ -205,24 +205,24 @@ export default function AICommandCenter() {
           </Card>
 
           {/* System Database Registry */}
-          <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm">
+          <Card className="bg-white border border-border rounded-2xl shadow-sm">
             <CardContent className="p-5 space-y-4">
-              <h3 className="font-black text-xs uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
-                <Database className="h-4 w-4 text-red-500" /> System Database
+              <h3 className="font-black text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                <Database className="h-4 w-4 text-destructive" /> System Database
               </h3>
               
               <div className="space-y-3 text-xs leading-relaxed">
-                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-slate-500 font-bold">Indexed Projects</span>
-                  <strong className="text-slate-800 font-black">28 Campaigns</strong>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-muted border border-border">
+                  <span className="text-muted-foreground font-bold">Indexed Projects</span>
+                  <strong className="text-primary font-black">28 Campaigns</strong>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-slate-500 font-bold">Casting Match Accuracy</span>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-muted border border-border">
+                  <span className="text-muted-foreground font-bold">Casting Match Accuracy</span>
                   <strong className="text-emerald-600 font-black">94.8%</strong>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-slate-500 font-bold">Pricing Success Models</span>
-                  <strong className="text-slate-800 font-black">12 Verified</strong>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-muted border border-border">
+                  <span className="text-muted-foreground font-bold">Pricing Success Models</span>
+                  <strong className="text-primary font-black">12 Verified</strong>
                 </div>
               </div>
             </CardContent>
@@ -248,8 +248,8 @@ export default function AICommandCenter() {
                 onClick={() => setActiveSegment(seg.id as any)}
                 className={`rounded-xl h-8 px-4 text-[10px] font-bold tracking-wider uppercase border transition-all ${
                   activeSegment === seg.id 
-                    ? "bg-red-600 border-red-500 text-white shadow-sm" 
-                    : "bg-white border-slate-200 hover:bg-slate-50 text-slate-600"
+                    ? "bg-destructive border-destructive text-white shadow-sm" 
+                    : "bg-white border-border hover:bg-muted text-muted-foreground/80"
                 }`}
               >
                 {seg.label}
@@ -260,11 +260,11 @@ export default function AICommandCenter() {
           {/* Realtime Floating Insight Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredInsights.map(insight => (
-              <Card key={insight.id} className="bg-white border border-slate-200 rounded-xl shadow-sm hover:border-red-500/20 transition-all duration-300">
+              <Card key={insight.id} className="bg-white border border-border rounded-xl shadow-sm hover:border-destructive/20 transition-all duration-300">
                 <CardContent className="p-4 flex gap-3 items-start">
                   
                   <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
-                    insight.urgency === 'High' ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-600'
+                    insight.urgency === 'High' ? 'bg-accent/10 text-accent' : 'bg-destructive/10 text-destructive'
                   }`}>
                     {insight.urgency === 'High' ? (
                       <AlertTriangle className="h-4 w-4 animate-pulse" />
@@ -275,10 +275,10 @@ export default function AICommandCenter() {
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5">
-                      <Badge className="bg-red-50 text-red-600 border-none text-[8px] font-black uppercase tracking-wider py-0 px-2">{insight.category}</Badge>
-                      <span className="text-[9px] text-slate-500 font-black uppercase tracking-wider">Urgency: {insight.urgency}</span>
+                      <Badge className="bg-destructive/10 text-destructive border-none text-[8px] font-black uppercase tracking-wider py-0 px-2">{insight.category}</Badge>
+                      <span className="text-[9px] text-muted-foreground font-black uppercase tracking-wider">Urgency: {insight.urgency}</span>
                     </div>
-                    <p className="text-xs text-slate-700 font-bold leading-relaxed">{insight.text}</p>
+                    <p className="text-xs text-primary/80 font-bold leading-relaxed">{insight.text}</p>
                   </div>
 
                 </CardContent>
@@ -286,34 +286,34 @@ export default function AICommandCenter() {
             ))}
 
             {filteredInsights.length === 0 && (
-              <div className="col-span-full py-10 text-center text-slate-500 bg-white border border-dashed border-slate-200 rounded-xl text-xs font-semibold">
+              <div className="col-span-full py-10 text-center text-muted-foreground bg-white border border-dashed border-border rounded-xl text-xs font-semibold">
                 No active insight warnings matched your segment criteria or security role clearance.
               </div>
             )}
           </div>
 
           {/* Interactive Global AI Assistant Chat Box */}
-          <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <Card className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-black text-sm text-slate-800 flex items-center gap-1.5">
-                <Bot className="h-4.5 w-4.5 text-red-500 animate-pulse" /> Global Operational Assistant
+              <h3 className="font-black text-sm text-primary flex items-center gap-1.5">
+                <Bot className="h-4.5 w-4.5 text-destructive animate-pulse" /> Global Operational Assistant
               </h3>
 
               {/* Chat Log */}
-              <div className="h-48 overflow-y-auto space-y-3 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700">
+              <div className="h-48 overflow-y-auto space-y-3 p-4 rounded-xl bg-muted border border-border text-xs font-bold text-primary/80">
                 {chatLog.map(chat => (
                   <div key={chat.id} className={`flex gap-2.5 items-start ${
                     chat.sender === 'user' ? 'justify-end' : 'justify-start'
                   }`}>
                     {chat.sender === 'assistant' && (
-                      <div className="h-6 w-6 rounded-full bg-red-50 flex items-center justify-center text-red-600 shrink-0 mt-0.5">
+                      <div className="h-6 w-6 rounded-full bg-destructive/10 flex items-center justify-center text-destructive shrink-0 mt-0.5">
                         <Bot className="h-3.5 w-3.5" />
                       </div>
                     )}
                     <div className={`p-3 rounded-2xl leading-relaxed max-w-[80%] ${
                       chat.sender === 'user' 
-                        ? 'bg-red-600 text-white rounded-tr-none shadow-sm' 
-                        : 'bg-white text-slate-700 border border-slate-200 rounded-tl-none shadow-sm'
+                        ? 'bg-destructive text-white rounded-tr-none shadow-sm' 
+                        : 'bg-white text-primary/80 border border-border rounded-tl-none shadow-sm'
                     }`}>
                       {chat.text}
                     </div>
@@ -327,53 +327,53 @@ export default function AICommandCenter() {
                   placeholder="e.g. Find Malayalam anchors in Kochi..." 
                   value={assistantQuery}
                   onChange={(e) => setAssistantQuery(e.target.value)}
-                  className="bg-white border-slate-200 h-10 text-xs rounded-xl flex-grow focus:border-red-500 text-slate-800 font-bold"
+                  className="bg-white border-border h-10 text-xs rounded-xl flex-grow focus:border-destructive text-primary font-bold"
                 />
-                <Button type="submit" className="rounded-xl h-10 bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4">
+                <Button type="submit" className="rounded-xl h-10 bg-destructive hover:bg-destructive text-white font-bold text-xs px-4">
                   <Send className="h-4 w-4" />
                 </Button>
               </form>
 
               {/* Query suggestions */}
-              <div className="flex flex-wrap gap-1.5 text-[9px] text-slate-400 font-black uppercase tracking-wider">
+              <div className="flex flex-wrap gap-1.5 text-[9px] text-muted-foreground font-black uppercase tracking-wider">
                 <span>Try asking:</span>
-                <button type="button" onClick={() => setAssistantQuery("Show delayed projects")} className="hover:text-red-500 transition">“Show delayed projects”</button>
+                <button type="button" onClick={() => setAssistantQuery("Show delayed projects")} className="hover:text-destructive transition">“Show delayed projects”</button>
                 <span>•</span>
-                <button type="button" onClick={() => setAssistantQuery("Find Malayalam anchors")} className="hover:text-red-500 transition">“Find Malayalam anchors”</button>
+                <button type="button" onClick={() => setAssistantQuery("Find Malayalam anchors")} className="hover:text-destructive transition">“Find Malayalam anchors”</button>
                 <span>•</span>
-                <button type="button" onClick={() => setAssistantQuery("Which clients have overdue invoices?")} className="hover:text-red-500 transition">“Overdue invoices”</button>
+                <button type="button" onClick={() => setAssistantQuery("Which clients have overdue invoices?")} className="hover:text-destructive transition">“Overdue invoices”</button>
               </div>
 
             </CardContent>
           </Card>
 
           {/* AI Automation Approval Queue */}
-          <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm">
+          <Card className="bg-white border border-border rounded-2xl shadow-sm">
             <CardContent className="p-6 space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="font-black text-sm text-slate-800 flex items-center gap-1.5">
-                  <Clock className="h-4.5 w-4.5 text-red-500" /> AI Task Automation Clearance Queue
+                <h3 className="font-black text-sm text-primary flex items-center gap-1.5">
+                  <Clock className="h-4.5 w-4.5 text-destructive" /> AI Task Automation Clearance Queue
                 </h3>
-                <Badge className="bg-amber-50 text-amber-600 border-none font-bold text-[8px]">Human Verification Active</Badge>
+                <Badge className="bg-accent/10 text-accent border-none font-bold text-[8px]">Human Verification Active</Badge>
               </div>
 
               <div className="space-y-4">
                 {automations.map(auto => (
-                  <div key={auto.id} className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div key={auto.id} className="p-4 rounded-xl bg-muted border border-border flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <Badge className="bg-red-50 text-red-600 border-none text-[8px] font-black uppercase py-0 px-2">{auto.type}</Badge>
+                        <Badge className="bg-destructive/10 text-destructive border-none text-[8px] font-black uppercase py-0 px-2">{auto.type}</Badge>
                         <span className={`text-[9px] font-bold ${
-                          auto.status.includes("Pending") ? "text-amber-600" : "text-emerald-600"
+                          auto.status.includes("Pending") ? "text-accent" : "text-emerald-600"
                         }`}>{auto.status}</span>
                       </div>
-                      <p className="text-xs text-slate-700 font-bold mt-2">{auto.desc}</p>
+                      <p className="text-xs text-primary/80 font-bold mt-2">{auto.desc}</p>
                     </div>
 
                     {auto.status.includes("Pending") && (
                       <Button 
                         onClick={() => handleApproveAutomation(auto.id, auto.desc)}
-                        className="rounded-xl h-8 px-4 text-[10px] font-black bg-red-600 hover:bg-red-700 text-white shrink-0 shadow-sm transition"
+                        className="rounded-xl h-8 px-4 text-[10px] font-black bg-destructive hover:bg-destructive text-white shrink-0 shadow-sm transition"
                       >
                         Approve & Execute
                       </Button>
@@ -386,8 +386,8 @@ export default function AICommandCenter() {
           </Card>
 
           {/* Secure access alert footer */}
-          <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex gap-3 text-[10px] text-slate-500 leading-relaxed font-bold">
-            <Lock className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+          <div className="p-4 bg-muted border border-border rounded-2xl flex gap-3 text-[10px] text-muted-foreground leading-relaxed font-bold">
+            <Lock className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
             <span>
               <strong>Secure Access Active</strong>: Under role permissions validation settings, your active employee profile controls the visible department widgets. Financial recommendations require direct Accounts clearance before execution.
             </span>

@@ -142,7 +142,7 @@ export async function POST(req: Request) {
             project_category: project_category ?? null,
             budget: budget ? parseFloat(budget) : 0,
             deadline: projectEnd,
-            color: color ?? 'bg-indigo-500',
+            color: color ?? 'bg-accent',
             status: 'active',
             progress: 0,
           },

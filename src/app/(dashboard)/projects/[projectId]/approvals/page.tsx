@@ -124,10 +124,10 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 flex-col md:flex-row overflow-hidden">
+    <div className="flex h-screen bg-muted flex-col md:flex-row overflow-hidden">
       
       {/* LEFT: Video Player */}
-      <div className="flex-1 flex flex-col relative h-[50vh] md:h-full border-r border-slate-200">
+      <div className="flex-1 flex flex-col relative h-[50vh] md:h-full border-r border-border">
         <div className="absolute top-4 left-4 z-10">
           <Button variant="secondary" size="sm" onClick={() => router.back()} className="rounded-full shadow-lg bg-white/90 backdrop-blur-md">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Workspace
@@ -164,7 +164,7 @@ export default function ApprovalsPage() {
             </div>
           </div>
         ) : (
-          <div className="flex-1 bg-slate-100 flex items-center justify-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+          <div className="flex-1 bg-muted flex items-center justify-center text-muted-foreground font-bold uppercase tracking-widest text-xs">
             No assets available for review
           </div>
         )}
@@ -172,16 +172,16 @@ export default function ApprovalsPage() {
 
       {/* RIGHT: Comments & Annotations */}
       <div className="w-full md:w-[400px] flex flex-col bg-white h-[50vh] md:h-full z-20 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
-        <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+        <div className="p-6 border-b border-border bg-muted/50 flex items-center justify-between">
           <div>
-            <h2 className="font-black text-lg text-slate-800 tracking-tight">Review & Annotate</h2>
-            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mt-1">Client Feedback Loop</p>
+            <h2 className="font-black text-lg text-primary tracking-tight">Review & Annotate</h2>
+            <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mt-1">Client Feedback Loop</p>
           </div>
           <div className="flex gap-2">
             <Button size="icon" variant="outline" className="rounded-full text-emerald-600 bg-emerald-50 border-emerald-200">
               <CheckCircle2 className="h-4 w-4" />
             </Button>
-            <Button size="icon" variant="outline" className="rounded-full text-rose-600 bg-rose-50 border-rose-200">
+            <Button size="icon" variant="outline" className="rounded-full text-accent bg-accent/10 border-accent/20">
               <XCircle className="h-4 w-4" />
             </Button>
           </div>
@@ -197,17 +197,17 @@ export default function ApprovalsPage() {
               </Avatar>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase text-slate-800">{comment.user?.full_name || 'User'}</span>
+                  <span className="text-[10px] font-black uppercase text-primary">{comment.user?.full_name || 'User'}</span>
                   {comment.timestamp && (
                     <Badge variant="outline" 
-                      className="cursor-pointer hover:bg-primary hover:text-white transition-colors text-[9px] bg-slate-100"
+                      className="cursor-pointer hover:bg-primary hover:text-white transition-colors text-[9px] bg-muted"
                       onClick={() => jumpToTime(comment.timestamp)}
                     >
                       <Clock className="h-3 w-3 mr-1" /> {comment.timestamp}
                     </Badge>
                   )}
                 </div>
-                <Card className="p-3 bg-slate-50 border-slate-100 text-sm font-medium text-slate-600 rounded-2xl rounded-tl-none shadow-sm group-hover:shadow-md transition-shadow">
+                <Card className="p-3 bg-muted border-border text-sm font-medium text-muted-foreground/80 rounded-2xl rounded-tl-none shadow-sm group-hover:shadow-md transition-shadow">
                   {comment.content.replace(`[${comment.timestamp}] `, '')}
                 </Card>
               </div>
@@ -215,14 +215,14 @@ export default function ApprovalsPage() {
           ))}
         </div>
 
-        <div className="p-4 border-t border-slate-100 bg-white">
+        <div className="p-4 border-t border-border bg-white">
           <form onSubmit={handleAddComment} className="flex gap-2">
             <div className="flex-1 relative">
               <Input 
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment at current timestamp..." 
-                className="h-12 rounded-full pl-12 bg-slate-50 border-slate-200 font-medium pr-4"
+                className="h-12 rounded-full pl-12 bg-muted border-border font-medium pr-4"
               />
               <div className="absolute left-1 top-1 h-10 w-10 bg-primary/10 text-primary flex items-center justify-center rounded-full font-mono font-black text-xs">
                 {formatTime(currentTime)}

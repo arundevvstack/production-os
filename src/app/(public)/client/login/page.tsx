@@ -55,48 +55,48 @@ export default function ClientLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased flex flex-col justify-between">
+    <div className="min-h-screen bg-muted text-primary font-sans antialiased flex flex-col justify-between">
       
       {/* Premium White Header */}
-      <header className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between w-full border-b border-slate-200 bg-white">
+      <header className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between w-full border-b border-border bg-white">
         <div className="flex items-center gap-2.5">
-          <div className="h-10 w-10 bg-slate-900 rounded-xl flex items-center justify-center font-black text-sm text-white shadow-sm">DP</div>
+          <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center font-black text-sm text-white shadow-sm">DP</div>
           <div>
-            <span className="font-black text-base tracking-tight block text-slate-800">Define Perspective</span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">Partner Portal</span>
+            <span className="font-black text-base tracking-tight block text-primary">Define Perspective</span>
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Partner Portal</span>
           </div>
         </div>
 
-        <a href="/login" className="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1 font-bold">
+        <a href="/login" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1 font-bold">
           Employee OS <ArrowUpRight className="h-4 w-4" />
         </a>
       </header>
 
       {/* Main Login */}
       <main className="max-w-md mx-auto px-6 py-12 flex-1 flex flex-col justify-center w-full">
-        <Card className="bg-white border-slate-200/80 shadow-premium rounded-2xl">
+        <Card className="bg-white border-border/80 shadow-premium rounded-2xl">
           <CardContent className="p-8 space-y-6">
             
             <div className="space-y-1.5 text-center">
-              <h2 className="text-xl font-black tracking-tight text-slate-800 flex items-center justify-center gap-1.5">
-                <Building2 className="h-5 w-5 text-slate-700" /> Partner Sign In
+              <h2 className="text-xl font-black tracking-tight text-primary flex items-center justify-center gap-1.5">
+                <Building2 className="h-5 w-5 text-primary/80" /> Partner Sign In
               </h2>
-              <p className="text-[11px] text-slate-400 font-medium">
+              <p className="text-[11px] text-muted-foreground font-medium">
                 Review proposed contracts, approve design assets, and monitor payments.
               </p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Client Email</label>
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest block">Client Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input 
                     type="email" 
                     placeholder="partner@brand.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl pl-9 focus:border-slate-800 text-slate-800 w-full"
+                    className="bg-muted border-border h-10 text-xs rounded-xl pl-9 focus:border-primary text-primary w-full"
                     required
                   />
                 </div>
@@ -104,24 +104,24 @@ export default function ClientLoginPage() {
 
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Access Key</label>
-                  <Link href="/forgot-password" className="text-[9px] text-slate-500 font-black uppercase hover:underline">Forgot?</Link>
+                  <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Access Key</label>
+                  <Link href="/forgot-password" className="text-[9px] text-muted-foreground font-black uppercase hover:underline">Forgot?</Link>
                 </div>
                 <div className="relative">
-                  <Key className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Key className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input 
                     type={showPassword ? "text" : "password"} 
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl pl-9 pr-10 focus:border-slate-800 text-slate-800 w-full"
+                    className="bg-muted border-border h-10 text-xs rounded-xl pl-9 pr-10 focus:border-primary text-primary w-full"
                     required
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
@@ -132,7 +132,7 @@ export default function ClientLoginPage() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold h-11 rounded-xl text-xs flex items-center justify-center gap-1 shadow-sm"
+                className="w-full bg-primary hover:bg-primary text-white font-bold h-11 rounded-xl text-xs flex items-center justify-center gap-1 shadow-sm"
               >
                 {isSubmitting ? (
                   <>Verifying key...</>
@@ -145,17 +145,17 @@ export default function ClientLoginPage() {
             </form>
 
             <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-slate-200"></div>
-              <span className="flex-shrink mx-4 text-[9px] text-slate-400 font-bold uppercase">or access with</span>
-              <div className="flex-grow border-t border-slate-200"></div>
+              <div className="flex-grow border-t border-border"></div>
+              <span className="flex-shrink mx-4 text-[9px] text-muted-foreground font-bold uppercase">or access with</span>
+              <div className="flex-grow border-t border-border"></div>
             </div>
 
-            <Button variant="outline" className="w-full border-slate-200 bg-white hover:bg-slate-50 rounded-xl h-10 text-xs font-bold gap-1 text-slate-700 shadow-sm">
+            <Button variant="outline" className="w-full border-border bg-white hover:bg-muted rounded-xl h-10 text-xs font-bold gap-1 text-primary/80 shadow-sm">
               <GoogleIcon /> Sign In with Google Workspace
             </Button>
 
-            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 flex gap-2.5 items-start leading-relaxed text-[9px] text-slate-500">
-              <Lock className="h-4.5 w-4.5 text-slate-600 shrink-0 mt-0.5" />
+            <div className="p-3.5 bg-muted rounded-xl border border-border/80 flex gap-2.5 items-start leading-relaxed text-[9px] text-muted-foreground">
+              <Lock className="h-4.5 w-4.5 text-muted-foreground/80 shrink-0 mt-0.5" />
               <span>
                 <strong>Confidential Workspace Guard</strong>: Partner accounts are subject to Strict Client isolation rules. Internal campaigns and customer relationship records are 100% hidden.
               </span>
@@ -166,7 +166,7 @@ export default function ClientLoginPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 py-6 bg-white text-center text-[10px] text-slate-400 font-medium">
+      <footer className="border-t border-border py-6 bg-white text-center text-[10px] text-muted-foreground font-medium">
         © 2026 Define Perspective Ltd. All rights reserved. Secure Partner Access.
       </footer>
 

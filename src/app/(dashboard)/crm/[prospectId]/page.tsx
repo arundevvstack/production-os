@@ -190,7 +190,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
         <div>
           <h1 className="text-3xl font-bold text-primary">{prospect.company_name}</h1>
           <p className="text-muted-foreground flex items-center gap-2">
-            Prospect ID: <span className="font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded uppercase">{prospectId.slice(0,8)}</span>
+            Prospect ID: <span className="font-mono text-[10px] bg-muted px-2 py-0.5 rounded uppercase">{prospectId.slice(0,8)}</span>
           </p>
         </div>
         <div className="ml-auto flex items-center gap-3">
@@ -226,7 +226,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
-            <CardHeader className="bg-slate-50/50 pb-6 border-b">
+            <CardHeader className="bg-muted/50 pb-6 border-b">
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg">Deal Progression</CardTitle>
@@ -264,7 +264,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                       {!isLast && (
                         <div className={cn(
                           "absolute left-[15px] top-8 w-0.5 h-[calc(100%+8px)] z-0",
-                          idx < currentStageIndex ? "bg-primary" : "bg-slate-100"
+                          idx < currentStageIndex ? "bg-primary" : "bg-muted"
                         )} />
                       )}
                       
@@ -272,7 +272,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                         "relative z-10 h-8 w-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-500",
                         isCompleted 
                           ? "bg-primary text-white shadow-lg shadow-primary/20 scale-110" 
-                          : "bg-slate-100 text-slate-300"
+                          : "bg-muted text-slate-300"
                       )}>
                         {isCompleted ? <CheckCircle2 className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
                       </div>
@@ -281,7 +281,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                         <div className="flex items-center justify-between">
                           <span className={cn(
                             "text-[11px] font-black uppercase tracking-widest transition-colors",
-                            isCompleted ? "text-primary" : "text-slate-400"
+                            isCompleted ? "text-primary" : "text-muted-foreground"
                           )}>
                             {s.name}
                           </span>
@@ -319,7 +319,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
           </Card>
 
           <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
-            <CardHeader className="bg-indigo-50/30">
+            <CardHeader className="bg-accent/10/30">
               <CardTitle className="text-lg flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" /> Drafted Proposals
               </CardTitle>
@@ -335,7 +335,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
               ) : (
                 <div className="divide-y">
                   {proposals?.map(prop => (
-                    <div key={prop.id} className="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors group">
+                    <div key={prop.id} className="p-6 flex items-center justify-between hover:bg-muted transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                           <FileText className="h-5 w-5" />
@@ -448,7 +448,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                   </div>
                 </div>
                 {prospect.sub_vertical && (
-                  <div className="flex items-center gap-4 pl-4 border-l-2 border-slate-100">
+                  <div className="flex items-center gap-4 pl-4 border-l-2 border-border">
                     <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center text-primary">
                       <ListTree className="h-4 w-4" />
                     </div>

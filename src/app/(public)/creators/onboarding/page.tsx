@@ -67,21 +67,21 @@ export default function PublicCreatorsOnboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased flex flex-col justify-between selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] font-sans antialiased flex flex-col justify-between selection:bg-destructive selection:text-white">
       
       {/* Top Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-md">
+      <header className="border-b border-border bg-white/80 backdrop-blur-md">
         <div className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="h-10 w-10 bg-red-500/10 rounded-xl flex items-center justify-center font-black text-sm text-red-600 shadow-sm shrink-0">DP</div>
+            <div className="h-10 w-10 bg-destructive/10 rounded-xl flex items-center justify-center font-black text-sm text-destructive shadow-sm shrink-0">DP</div>
             <div>
-              <span className="font-bold text-base tracking-tight block text-slate-900">Creator Network</span>
-              <span className="text-[9px] font-bold text-red-600 uppercase tracking-widest leading-none">Talent Registration</span>
+              <span className="font-bold text-base tracking-tight block text-primary">Creator Network</span>
+              <span className="text-[9px] font-bold text-destructive uppercase tracking-widest leading-none">Talent Registration</span>
             </div>
           </div>
 
           <a href="/creators">
-            <Button variant="ghost" className="text-xs font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full h-9 px-4 border border-slate-200 shadow-sm bg-white transition">
+            <Button variant="ghost" className="text-xs font-bold text-muted-foreground hover:text-primary hover:bg-muted rounded-full h-9 px-4 border border-border shadow-sm bg-white transition">
               <ArrowLeft className="h-4 w-4 mr-1" /> Exit
             </Button>
           </a>
@@ -92,15 +92,15 @@ export default function PublicCreatorsOnboarding() {
       <main className="max-w-xl mx-auto px-6 py-16 flex-1 flex flex-col justify-center w-full">
         
         {/* Progress Tracker */}
-        <div className="flex items-center justify-between text-xs mb-8 text-slate-400 font-bold uppercase tracking-widest px-1">
-          <span className={step >= 1 ? "text-red-600 font-bold" : ""}>1. Details</span>
+        <div className="flex items-center justify-between text-xs mb-8 text-muted-foreground font-bold uppercase tracking-widest px-1">
+          <span className={step >= 1 ? "text-destructive font-bold" : ""}>1. Details</span>
           <ChevronRight className="h-3.5 w-3.5 text-slate-300" />
-          <span className={step >= 2 ? "text-red-600 font-bold" : ""}>2. Skills</span>
+          <span className={step >= 2 ? "text-destructive font-bold" : ""}>2. Skills</span>
           <ChevronRight className="h-3.5 w-3.5 text-slate-300" />
-          <span className={step >= 3 ? "text-red-600 font-bold" : ""}>3. Review</span>
+          <span className={step >= 3 ? "text-destructive font-bold" : ""}>3. Review</span>
         </div>
 
-        <Card className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+        <Card className="bg-white border border-border rounded-3xl shadow-sm overflow-hidden">
           <CardContent className="p-8 space-y-6">
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -109,10 +109,10 @@ export default function PublicCreatorsOnboarding() {
               {step === 1 && (
                 <div className="space-y-5">
                   <div className="space-y-1.5">
-                    <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-1.5 leading-tight">
+                    <h2 className="text-xl font-bold tracking-tight text-primary flex items-center gap-1.5 leading-tight">
                       <Sparkles className="h-5 w-5 text-red-650" /> Create your profile
                     </h2>
-                    <p className="text-xs text-slate-500 font-bold leading-relaxed">
+                    <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                       Choose your profile type and enter your details to register.
                     </p>
                   </div>
@@ -121,69 +121,69 @@ export default function PublicCreatorsOnboarding() {
                     <div 
                       onClick={() => setUserType("Talent")}
                       className={`p-4 rounded-2xl border text-center cursor-pointer transition shadow-sm ${
-                        userType === "Talent" ? "bg-red-500/5 border-red-500/30 text-red-650" : "bg-slate-50 border-slate-200/85 hover:bg-slate-100 text-slate-700"
+                        userType === "Talent" ? "bg-destructive/5 border-destructive/30 text-red-650" : "bg-muted border-border/85 hover:bg-muted text-primary/80"
                       }`}
                     >
-                      <Users className="h-5 w-5 mx-auto mb-2 text-red-600" />
+                      <Users className="h-5 w-5 mx-auto mb-2 text-destructive" />
                       <span className="font-bold text-xs block">Actor / Model</span>
                     </div>
 
                     <div 
                       onClick={() => setUserType("Influencer")}
                       className={`p-4 rounded-2xl border text-center cursor-pointer transition shadow-sm ${
-                        userType === "Influencer" ? "bg-red-500/5 border-red-500/30 text-red-650" : "bg-slate-50 border-slate-200/85 hover:bg-slate-100 text-slate-700"
+                        userType === "Influencer" ? "bg-destructive/5 border-destructive/30 text-red-650" : "bg-muted border-border/85 hover:bg-muted text-primary/80"
                       }`}
                     >
-                      <Flame className="h-5 w-5 mx-auto mb-2 text-red-600" />
+                      <Flame className="h-5 w-5 mx-auto mb-2 text-destructive" />
                       <span className="font-bold text-xs block">Creator / Influencer</span>
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Full Legal Name</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Full Legal Name</label>
                     <Input 
                       type="text" 
                       placeholder="e.g. Aparna Balamurali"
                       value={formData.fullName}
                       onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                      className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl focus:border-red-500 text-slate-800 font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
                       required
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Stage Name (Optional)</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Stage Name (Optional)</label>
                     <Input 
                       type="text" 
                       placeholder="e.g. Aparna"
                       value={formData.stageName}
                       onChange={(e) => setFormData({...formData, stageName: e.target.value})}
-                      className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl focus:border-red-500 text-slate-800 font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Category</label>
+                      <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Category</label>
                       <select 
                         value={formData.category} 
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        className="bg-slate-50 border border-slate-200 h-10 px-3 text-xs rounded-xl focus:border-red-500 text-slate-700 w-full outline-none font-bold"
+                        className="bg-muted border border-border h-10 px-3 text-xs rounded-xl focus:border-destructive text-primary/80 w-full outline-none font-bold"
                       >
                         {categories.map(c => (
-                          <option key={c} value={c} className="bg-white text-slate-800 font-bold">{c}</option>
+                          <option key={c} value={c} className="bg-white text-primary font-bold">{c}</option>
                         ))}
                       </select>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Day Rate (₹)</label>
+                      <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Day Rate (₹)</label>
                       <Input 
                         type="number" 
                         placeholder="e.g. 150000"
                         value={formData.dayRate}
                         onChange={(e) => setFormData({...formData, dayRate: e.target.value})}
-                        className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl focus:border-red-500 text-slate-800 font-bold"
+                        className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
                         required
                       />
                     </div>
@@ -193,7 +193,7 @@ export default function PublicCreatorsOnboarding() {
                     <Button 
                       type="button" 
                       onClick={handleNext}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow-sm transition"
+                      className="w-full bg-destructive hover:bg-destructive text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow-sm transition"
                     >
                       Next Step <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -205,52 +205,52 @@ export default function PublicCreatorsOnboarding() {
               {step === 2 && (
                 <div className="space-y-5">
                   <div className="space-y-1.5">
-                    <h2 className="text-xl font-bold tracking-tight text-slate-900 leading-tight">Skills & Reach</h2>
-                    <p className="text-xs text-slate-500 font-bold leading-relaxed">
+                    <h2 className="text-xl font-bold tracking-tight text-primary leading-tight">Skills & Reach</h2>
+                    <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                       Highlight your specialties and add reach stats for advertising matches.
                     </p>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Skills (Comma Separated)</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Skills (Comma Separated)</label>
                     <Input 
                       type="text" 
                       placeholder="e.g. Method Acting, Classical Dance, Dialect Voiceover"
                       value={formData.skills}
                       onChange={(e) => setFormData({...formData, skills: e.target.value})}
-                      className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl focus:border-red-500 text-slate-800 font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Languages (Comma Separated)</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Languages (Comma Separated)</label>
                     <Input 
                       type="text" 
                       placeholder="e.g. Malayalam, English, Tamil"
                       value={formData.languages}
                       onChange={(e) => setFormData({...formData, languages: e.target.value})}
-                      className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl focus:border-red-500 text-slate-800 font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Instagram Handle</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Instagram Handle</label>
                     <Input 
                       type="text" 
                       placeholder="@username"
                       value={formData.instagram}
                       onChange={(e) => setFormData({...formData, instagram: e.target.value})}
-                      className="bg-slate-50 border-slate-200 h-10 text-xs rounded-xl focus:border-red-500 text-slate-800 font-bold"
+                      className="bg-muted border-border h-10 text-xs rounded-xl focus:border-destructive text-primary font-bold"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Biography / About You</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Biography / About You</label>
                     <textarea 
                       placeholder="Short professional intro for directors..."
                       value={formData.bio}
                       onChange={(e) => setFormData({...formData, bio: e.target.value})}
-                      className="bg-slate-50 border border-slate-200 h-20 text-xs rounded-xl focus:border-red-500 text-slate-800 w-full p-3 resize-none focus:outline-none font-bold"
+                      className="bg-muted border border-border h-20 text-xs rounded-xl focus:border-destructive text-primary w-full p-3 resize-none focus:outline-none font-bold"
                     />
                   </div>
 
@@ -259,14 +259,14 @@ export default function PublicCreatorsOnboarding() {
                       type="button" 
                       onClick={handleBack} 
                       variant="ghost" 
-                      className="rounded-full border border-slate-200 hover:bg-slate-50 font-bold h-11 text-xs text-slate-700 bg-white shadow-sm transition"
+                      className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition"
                     >
                       Back
                     </Button>
                     <Button 
                       type="button" 
                       onClick={handleNext}
-                      className="bg-red-600 hover:bg-red-700 text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow-sm transition"
+                      className="bg-destructive hover:bg-destructive text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow-sm transition"
                     >
                       Review Details <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -278,45 +278,45 @@ export default function PublicCreatorsOnboarding() {
               {step === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-1.5">
-                    <h2 className="text-xl font-bold tracking-tight text-slate-900 leading-tight font-sans">Review Profile</h2>
-                    <p className="text-xs text-slate-500 font-bold leading-relaxed">
+                    <h2 className="text-xl font-bold tracking-tight text-primary leading-tight font-sans">Review Profile</h2>
+                    <p className="text-xs text-muted-foreground font-bold leading-relaxed">
                       Check your profile details before submitting.
                     </p>
                   </div>
 
-                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 shadow-sm">
+                  <div className="p-5 rounded-2xl bg-muted border border-border space-y-4 shadow-sm">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-12 w-12 border-2 border-red-550 shadow-sm ring-4 ring-white">
-                        <AvatarFallback className="bg-slate-100 text-slate-900 font-bold">{formData.fullName.substring(0, 2).toUpperCase()}</AvatarFallback>
+                        <AvatarFallback className="bg-muted text-primary font-bold">{formData.fullName.substring(0, 2).toUpperCase()}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <h4 className="font-bold text-sm text-slate-900">{formData.fullName}</h4>
-                        <span className="text-[10px] text-red-600 font-bold uppercase block mt-0.5">{formData.category}</span>
+                        <h4 className="font-bold text-sm text-primary">{formData.fullName}</h4>
+                        <span className="text-[10px] text-destructive font-bold uppercase block mt-0.5">{formData.category}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2 text-xs border-t border-slate-150 pt-4 font-bold text-slate-650">
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Target Day Rate:</span>
-                        <strong className="text-slate-900">₹{parseFloat(formData.dayRate || "0").toLocaleString()}</strong>
+                        <span className="text-muted-foreground">Target Day Rate:</span>
+                        <strong className="text-primary">₹{parseFloat(formData.dayRate || "0").toLocaleString()}</strong>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Locations Base:</span>
-                        <strong className="text-slate-900">{formData.location}</strong>
+                        <span className="text-muted-foreground">Locations Base:</span>
+                        <strong className="text-primary">{formData.location}</strong>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Languages:</span>
-                        <strong className="text-slate-900">{formData.languages}</strong>
+                        <span className="text-muted-foreground">Languages:</span>
+                        <strong className="text-primary">{formData.languages}</strong>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Skills:</span>
-                        <strong className="text-slate-900">{formData.skills}</strong>
+                        <span className="text-muted-foreground">Skills:</span>
+                        <strong className="text-primary">{formData.skills}</strong>
                       </div>
                     </div>
                   </div>
 
-                  <div className="text-[10px] text-slate-500 font-bold bg-slate-50 p-3 rounded-xl border border-slate-150 flex gap-2 items-start leading-relaxed shadow-sm">
-                    <Lock className="h-4.5 w-4.5 text-red-600 shrink-0 mt-0.5" />
+                  <div className="text-[10px] text-muted-foreground font-bold bg-muted p-3 rounded-xl border border-slate-150 flex gap-2 items-start leading-relaxed shadow-sm">
+                    <Lock className="h-4.5 w-4.5 text-destructive shrink-0 mt-0.5" />
                     <span>
                       <strong>Public Registration</strong>: This form is for creators to register. It does not provide access to staff dashboards or internal team tools.
                     </span>
@@ -327,14 +327,14 @@ export default function PublicCreatorsOnboarding() {
                       type="button" 
                       onClick={handleBack} 
                       variant="ghost" 
-                      className="rounded-full border border-slate-200 hover:bg-slate-50 font-bold h-11 text-xs text-slate-700 bg-white shadow-sm transition"
+                      className="rounded-full border border-border hover:bg-muted font-bold h-11 text-xs text-primary/80 bg-white shadow-sm transition"
                     >
                       Modify
                     </Button>
                     <Button 
                       type="submit" 
                       disabled={isSubmitting}
-                      className="bg-red-600 hover:bg-red-700 text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow-sm transition"
+                      className="bg-destructive hover:bg-destructive text-white font-bold h-11 rounded-full text-xs flex items-center justify-center gap-1 shadow-sm transition"
                     >
                       {isSubmitting ? (
                         <>Registering...</>
@@ -355,7 +355,7 @@ export default function PublicCreatorsOnboarding() {
       </main>
 
       {/* Footer copyright */}
-      <footer className="border-t border-slate-200 py-6 bg-white text-center text-[10px] text-slate-400 font-bold">
+      <footer className="border-t border-border py-6 bg-white text-center text-[10px] text-muted-foreground font-bold">
         © 2026 Creator Network. All rights reserved.
       </footer>
 

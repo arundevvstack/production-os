@@ -16,8 +16,8 @@ export default function TeamDetailPage({ params }: PageProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-slate-800 tracking-tight">Team Member Profile</h2>
-          <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Internal Workspace Directory</p>
+          <h2 className="text-xl font-black text-primary tracking-tight">Team Member Profile</h2>
+          <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider">Internal Workspace Directory</p>
         </div>
       </div>
 

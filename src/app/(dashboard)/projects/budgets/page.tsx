@@ -114,7 +114,7 @@ export default function BudgetsPage() {
         </Card>
         <Card className="border-none shadow-sm bg-white border-l-4 border-l-blue-500">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-blue-600 mb-2 font-bold uppercase text-[10px]">
+            <div className="flex items-center gap-2 text-accent mb-2 font-bold uppercase text-[10px]">
               <PieChart className="h-3 w-3" /> Spent to Date
             </div>
             <div className="text-2xl font-bold font-headline">₹{totalSpent.toLocaleString()}</div>
@@ -122,7 +122,7 @@ export default function BudgetsPage() {
         </Card>
         <Card className="border-none shadow-sm bg-white border-l-4 border-l-rose-500">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-rose-600 mb-2 font-bold uppercase text-[10px]">
+            <div className="flex items-center gap-2 text-accent mb-2 font-bold uppercase text-[10px]">
               <Filter className="h-3 w-3" /> Remaining
             </div>
             <div className="text-2xl font-bold font-headline">₹{variance.toLocaleString()}</div>
@@ -163,7 +163,7 @@ export default function BudgetsPage() {
                         <div className="flex items-center gap-3">
                           <Progress 
                             value={Math.min(utilization, 100)} 
-                            className={`h-1.5 ${isOver ? 'bg-rose-100' : 'bg-muted'}`}
+                            className={`h-1.5 ${isOver ? 'bg-accent/10' : 'bg-muted'}`}
                           />
                           <span className="text-[10px] font-bold">
                             {Math.round(utilization)}%

@@ -215,10 +215,10 @@ export default function ProductionSchedulePage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-primary">
               Fleet & <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-rose-500 to-orange-500">Resource Planner</span>
             </h1>
-            <Badge className="bg-slate-900 text-white border-none font-bold text-[9px] uppercase tracking-widest px-3 py-1">
+            <Badge className="bg-primary text-white border-none font-bold text-[9px] uppercase tracking-widest px-3 py-1">
               Realtime Engine
             </Badge>
           </div>
@@ -227,7 +227,7 @@ export default function ProductionSchedulePage() {
         <div className="flex items-center gap-3">
           {(roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || isSuperAdmin) && (
             <>
-              <Button variant="outline" className="rounded-[10px] border-slate-200 bg-white shadow-sm font-bold text-xs h-12" onClick={() => setIsNewResourceOpen(true)}>
+              <Button variant="outline" className="rounded-[10px] border-border bg-white shadow-sm font-bold text-xs h-12" onClick={() => setIsNewResourceOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" /> Register Item
               </Button>
               <Button className="rounded-[10px] shadow-lg shadow-primary/20 font-bold text-xs h-12 gap-2" onClick={() => setIsBookResourceOpen(true)}>
@@ -242,54 +242,54 @@ export default function ProductionSchedulePage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-2">
         <Card className="premium-card bg-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
           <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Utilization index</p>
+            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-wider">Utilization index</p>
             <div className="h-1 w-8 bg-primary rounded-full"></div>
           </div>
           <div className="py-6 space-y-2">
             <h2 className="text-5xl font-black text-primary tracking-tight">{utilizationStats.rate}%</h2>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Active Gear Allocations</p>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Active Gear Allocations</p>
           </div>
-          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
             <div className="bg-primary h-full rounded-full transition-all duration-1000" style={{ width: `${utilizationStats.rate}%` }}></div>
           </div>
         </Card>
 
         <Card className="premium-card bg-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
           <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Inventory Pool</p>
-            <div className="h-1 w-8 bg-indigo-500 rounded-full"></div>
+            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-wider">Inventory Pool</p>
+            <div className="h-1 w-8 bg-accent rounded-full"></div>
           </div>
           <div className="py-6">
-            <h2 className="text-5xl font-black text-slate-800 tracking-tight">{utilizationStats.total}</h2>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Registered Assets</p>
+            <h2 className="text-5xl font-black text-primary tracking-tight">{utilizationStats.total}</h2>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Registered Assets</p>
           </div>
-          <p className="text-[10px] text-indigo-500 font-black uppercase tracking-widest flex items-center gap-1.5">
+          <p className="text-[10px] text-accent font-black uppercase tracking-widest flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5" /> Fleet Registered
           </p>
         </Card>
 
         <Card className="premium-card bg-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
           <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Servicing & Maintenance</p>
-            <div className="h-1 w-8 bg-amber-500 rounded-full"></div>
+            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-wider">Servicing & Maintenance</p>
+            <div className="h-1 w-8 bg-accent rounded-full"></div>
           </div>
           <div className="py-6">
-            <h2 className="text-5xl font-black text-amber-500 tracking-tight">{utilizationStats.maintenance}</h2>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Active servicing tickets</p>
+            <h2 className="text-5xl font-black text-accent tracking-tight">{utilizationStats.maintenance}</h2>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Active servicing tickets</p>
           </div>
-          <p className="text-[10px] text-amber-500 font-black uppercase tracking-widest flex items-center gap-1.5">
+          <p className="text-[10px] text-accent font-black uppercase tracking-widest flex items-center gap-1.5">
             <Wrench className="h-3.5 w-3.5" /> Scheduled checks
           </p>
         </Card>
 
-        <Card className="premium-card bg-slate-900 text-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
+        <Card className="premium-card bg-primary text-white shadow-xl border-none rounded-[10px] p-8 flex flex-col justify-between">
           <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase text-slate-500 tracking-wider">Conflict Shield</p>
+            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-wider">Conflict Shield</p>
             <div className="h-1 w-8 bg-emerald-500 rounded-full"></div>
           </div>
           <div className="py-6">
             <h2 className="text-4xl font-black text-emerald-400 tracking-tight leading-none">Blocked</h2>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-2">Double-booking blocks active</p>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-2">Double-booking blocks active</p>
           </div>
           <p className="text-[10px] text-emerald-400 font-black uppercase tracking-widest flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5" /> Enforced at db layer
@@ -301,17 +301,17 @@ export default function ProductionSchedulePage() {
         {/* Bookings Timeline */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-3">
+            <h3 className="text-2xl font-black tracking-tight text-primary flex items-center gap-3">
               <CalendarIcon className="h-6 w-6 text-primary" /> Active Timeline
             </h3>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Confirmed reservations</span>
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Confirmed reservations</span>
           </div>
 
           <div className="space-y-4">
             {bookings?.length === 0 ? (
               <Card className="border-2 border-dashed flex flex-col items-center justify-center p-24 text-muted-foreground bg-white rounded-[10px]">
                 <CalendarIcon className="h-12 w-12 mb-4 opacity-15" />
-                <p className="font-bold text-sm uppercase tracking-widest text-slate-400">No scheduled gear reservations.</p>
+                <p className="font-bold text-sm uppercase tracking-widest text-muted-foreground">No scheduled gear reservations.</p>
                 <Button variant="link" className="mt-2 text-primary font-bold text-xs" onClick={() => setIsBookResourceOpen(true)}>Book first item</Button>
               </Card>
             ) : (
@@ -321,15 +321,15 @@ export default function ProductionSchedulePage() {
                 return (
                   <Card key={booking.id} className="border-none shadow-sm hover:shadow-md transition-all overflow-hidden rounded-[10px] bg-white">
                     <div className="flex flex-col sm:flex-row">
-                      <div className="bg-slate-50 p-6 sm:w-48 flex flex-col justify-center items-center text-center border-r border-slate-100">
+                      <div className="bg-muted p-6 sm:w-48 flex flex-col justify-center items-center text-center border-r border-border">
                         <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1.5">
                           Timeline range
                         </span>
-                        <h4 className="font-bold text-sm text-slate-700 leading-tight">
+                        <h4 className="font-bold text-sm text-primary/80 leading-tight">
                           {new Date(booking.start_date).toLocaleDateString()}
                         </h4>
-                        <span className="text-[10px] text-slate-400 my-1">to</span>
-                        <h4 className="font-bold text-sm text-slate-700 leading-tight">
+                        <span className="text-[10px] text-muted-foreground my-1">to</span>
+                        <h4 className="font-bold text-sm text-primary/80 leading-tight">
                           {new Date(booking.end_date).toLocaleDateString()}
                         </h4>
                       </div>
@@ -339,21 +339,21 @@ export default function ProductionSchedulePage() {
                             <span className="p-1.5 bg-primary/10 rounded-lg text-primary">
                               {linkedResource?.type === 'Space' ? <MapPin className="h-4 w-4" /> : <Video className="h-4 w-4" />}
                             </span>
-                            <h4 className="font-black text-lg text-slate-800">{linkedResource?.name || 'Unknown gear'}</h4>
-                            <Badge className="bg-slate-100 text-slate-600 border-none font-bold text-[9px] uppercase tracking-wider">
+                            <h4 className="font-black text-lg text-primary">{linkedResource?.name || 'Unknown gear'}</h4>
+                            <Badge className="bg-muted text-muted-foreground/80 border-none font-bold text-[9px] uppercase tracking-wider">
                               {linkedResource?.type}
                             </Badge>
                           </div>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium pl-1">
-                            <Laptop className="h-4 w-4 text-slate-400" />
-                            Assigned Project: <span className="font-bold text-slate-700">{linkedProject?.project_name || 'Active Campaign'}</span>
+                            <Laptop className="h-4 w-4 text-muted-foreground" />
+                            Assigned Project: <span className="font-bold text-primary/80">{linkedProject?.project_name || 'Active Campaign'}</span>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button 
                             variant="ghost" 
                             size="icon" 
-                            className="h-10 w-10 text-rose-500 hover:bg-rose-50 rounded-xl"
+                            className="h-10 w-10 text-accent hover:bg-accent/10 rounded-xl"
                             onClick={() => handleReleaseResource(booking.id, booking.resource_id)}
                           >
                             <Trash2 className="h-5 w-5" />
@@ -370,8 +370,8 @@ export default function ProductionSchedulePage() {
 
         {/* Resource Pool List */}
         <div className="space-y-6">
-          <h3 className="text-2xl font-black tracking-tight text-slate-900 flex items-center gap-3">
-            <Sliders className="h-6 w-6 text-indigo-500" /> Resource Pool
+          <h3 className="text-2xl font-black tracking-tight text-primary flex items-center gap-3">
+            <Sliders className="h-6 w-6 text-accent" /> Resource Pool
           </h3>
 
           <Card className="border-none shadow-xl rounded-[10px] bg-white overflow-hidden p-6">
@@ -382,8 +382,8 @@ export default function ProductionSchedulePage() {
                 resources?.map((res) => (
                   <div key={res.id} className="py-4 flex items-center justify-between group">
                     <div>
-                      <h4 className="font-bold text-sm text-slate-800 group-hover:text-primary transition-colors">{res.name}</h4>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">{res.type} • Status: {res.status}</p>
+                      <h4 className="font-bold text-sm text-primary group-hover:text-primary transition-colors">{res.name}</h4>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1">{res.type} • Status: {res.status}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge className={cn(
@@ -406,7 +406,7 @@ export default function ProductionSchedulePage() {
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-indigo-500" />
+              <Sparkles className="h-5 w-5 text-accent" />
               Register New Asset
             </DialogTitle>
             <DialogDescription>Add cameras, studios, drones, or crew members to the pool.</DialogDescription>

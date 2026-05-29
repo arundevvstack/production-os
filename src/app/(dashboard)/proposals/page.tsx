@@ -1090,8 +1090,8 @@ function ProposalsContent() {
   if (isTenantLoading || isProposalsLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-[80vh] gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-red-600" />
-        <p className="text-xs font-black uppercase text-slate-500 tracking-widest">Loading Vault Intelligence...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-destructive" />
+        <p className="text-xs font-black uppercase text-muted-foreground tracking-widest">Loading Vault Intelligence...</p>
       </div>
     );
   }
@@ -1105,29 +1105,29 @@ function ProposalsContent() {
     const taxableSubtotal = Math.max(0, subtotal - content.discount_amount);
 
     return (
-      <div className="min-h-screen text-zinc-900 flex flex-col p-0 space-y-6 antialiased font-sans transition-all duration-300">
+      <div className="min-h-screen text-primary flex flex-col p-0 space-y-6 antialiased font-sans transition-all duration-300">
         
         {/* Executive Header Command bar */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-200/80 pb-6 shrink-0 bg-white p-6 rounded-2xl shadow-sm shadow-zinc-100">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border/80 pb-6 shrink-0 bg-white p-6 rounded-2xl shadow-sm shadow-zinc-100">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => { setEditingProposal(null); reloadProposals(); }} 
-              className="p-3 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 transition shadow-sm"
+              className="p-3 rounded-xl border border-border bg-muted text-muted-foreground hover:text-primary hover:bg-muted transition shadow-sm"
               title="Close to Pipeline"
             >
               <X className="h-4 w-4" />
             </button>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-black text-zinc-900 tracking-tight">{editingProposal.title}</h1>
+                <h1 className="text-2xl font-black text-primary tracking-tight">{editingProposal.title}</h1>
                 <Badge className={cn("px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border shadow-sm",
                   editingProposal.status === 'signed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                  editingProposal.status === 'sent' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-red-50 text-red-700 border-red-200'
+                  editingProposal.status === 'sent' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-destructive/10 text-destructive border-red-200'
                 )}>
                   {editingProposal.status}
                 </Badge>
               </div>
-              <p className="text-zinc-500 text-xs mt-1">
+              <p className="text-muted-foreground text-xs mt-1">
                 Ref: {editingProposal.proposal_number} • Version: {content.current_version_name} • Client: {editingProposal.client_name}
               </p>
             </div>
@@ -1135,23 +1135,23 @@ function ProposalsContent() {
 
           {/* Mode Pill Toggle (Apple Style) */}
           <div className="flex items-center gap-3">
-            <div className="bg-zinc-100 p-1.5 rounded-2xl flex gap-1 shadow-inner border border-zinc-200/50">
+            <div className="bg-muted p-1.5 rounded-2xl flex gap-1 shadow-inner border border-border/50">
               <Button 
                 onClick={() => setActiveBuilderTab('editor')} 
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'editor' ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/40' : 'text-zinc-500 hover:text-zinc-800'
+                  activeBuilderTab === 'editor' ? 'bg-white text-primary shadow-sm border border-border/40' : 'text-muted-foreground hover:text-primary'
                 )}
               >
-                <Edit3 className="h-3.5 w-3.5 mr-2 text-red-500" /> Proposal Builder
+                <Edit3 className="h-3.5 w-3.5 mr-2 text-destructive" /> Proposal Builder
               </Button>
               <Button 
                 onClick={() => setActiveBuilderTab('pricing')} 
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'pricing' ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/40' : 'text-zinc-500 hover:text-zinc-800'
+                  activeBuilderTab === 'pricing' ? 'bg-white text-primary shadow-sm border border-border/40' : 'text-muted-foreground hover:text-primary'
                 )}
               >
                 <DollarSign className="h-3.5 w-3.5 mr-2 text-emerald-500" /> Pricing & Taxes
@@ -1161,16 +1161,16 @@ function ProposalsContent() {
                 variant="ghost" 
                 size="sm" 
                 className={cn("rounded-xl text-xs font-bold uppercase h-9 px-4 transition-all duration-200", 
-                  activeBuilderTab === 'client_portal' ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/40' : 'text-zinc-500 hover:text-zinc-800'
+                  activeBuilderTab === 'client_portal' ? 'bg-white text-primary shadow-sm border border-border/40' : 'text-muted-foreground hover:text-primary'
                 )}
               >
-                <Eye className="h-3.5 w-3.5 mr-2 text-indigo-500" /> Client View
+                <Eye className="h-3.5 w-3.5 mr-2 text-accent" /> Client View
               </Button>
             </div>
 
             <Button 
               onClick={() => saveEditingProposal(content)} 
-              className="bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800 rounded-xl h-10 px-5 font-black text-xs uppercase shadow-md shadow-zinc-200"
+              className="bg-primary border border-primary text-white hover:bg-primary rounded-xl h-10 px-5 font-black text-xs uppercase shadow-md shadow-zinc-200"
             >
               Save Changes
             </Button>
@@ -1186,12 +1186,12 @@ function ProposalsContent() {
           <div className="xl:col-span-3 flex flex-col gap-6 overflow-y-auto pr-2 custom-scrollbar">
             
             {/* Stage Pipeline */}
-            <Card className="bg-white border border-zinc-200 rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
-                <h3 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2">
-                  <Activity className="h-3.5 w-3.5 text-zinc-400" /> Status
+                <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
+                  <Activity className="h-3.5 w-3.5 text-muted-foreground" /> Status
                 </h3>
-                <div className="space-y-4 pt-2 relative border-l border-zinc-100 pl-4 ml-2">
+                <div className="space-y-4 pt-2 relative border-l border-border pl-4 ml-2">
                   {[
                     { id: 'draft', label: 'Created', desc: 'AI proposal generated', active: true },
                     { id: 'internal', label: 'Pending Approval', desc: 'Internal review pending', active: content.approvals.sales_executive.approved },
@@ -1200,10 +1200,10 @@ function ProposalsContent() {
                   ].map((stage) => (
                     <div key={stage.id} className="relative group">
                       <div className={cn("absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white transition-all duration-300",
-                        stage.active ? "bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]" : "bg-zinc-200"
+                        stage.active ? "bg-destructive shadow-[0_0_6px_rgba(239,68,68,0.5)]" : "bg-secondary"
                       )} />
-                      <span className="text-xs font-bold block tracking-tight text-zinc-900">{stage.label}</span>
-                      <span className="text-xs text-zinc-500 block">{stage.desc}</span>
+                      <span className="text-xs font-bold block tracking-tight text-primary">{stage.label}</span>
+                      <span className="text-xs text-muted-foreground block">{stage.desc}</span>
                     </div>
                   ))}
                 </div>
@@ -1211,10 +1211,10 @@ function ProposalsContent() {
             </Card>
 
             {/* Internal Multi-stage Approvals Chain */}
-            <Card className="bg-white border border-zinc-200 rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
-                <h3 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-zinc-400" /> Approvals
+                <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-muted-foreground" /> Approvals
                 </h3>
                 
                 <div className="space-y-3 pt-1">
@@ -1226,11 +1226,11 @@ function ProposalsContent() {
                   ].map((app) => {
                     const status = content.approvals[app.key as keyof ProposalApprovals];
                     return (
-                      <div key={app.key} className="flex flex-col gap-2 p-3 bg-zinc-50 rounded-xl border border-zinc-200/50">
+                      <div key={app.key} className="flex flex-col gap-2 p-3 bg-muted rounded-xl border border-border/50">
                         <div className="flex items-center justify-between">
                           <div>
-                            <span className="text-xs font-bold text-zinc-800 block">{app.label}</span>
-                            <span className="text-[10px] text-zinc-500 font-semibold">
+                            <span className="text-xs font-bold text-primary block">{app.label}</span>
+                            <span className="text-[10px] text-muted-foreground font-semibold">
                               {status.approved ? `Approved by ${status.signed_by}` : 'Pending review'}
                             </span>
                           </div>
@@ -1243,7 +1243,7 @@ function ProposalsContent() {
                               <Button 
                                 onClick={() => signInternalApproval(app.key as keyof ProposalApprovals, true)}
                                 size="sm" 
-                                className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg h-6 px-2.5 text-[10px] font-bold uppercase tracking-wider"
+                                className="bg-primary hover:bg-primary text-white rounded-lg h-6 px-2.5 text-[10px] font-bold uppercase tracking-wider"
                               >
                                 Sign
                               </Button>
@@ -1254,7 +1254,7 @@ function ProposalsContent() {
                                 }}
                                 size="sm" 
                                 variant="outline"
-                                className="border-zinc-200 text-red-600 hover:bg-red-50 rounded-lg h-6 px-2.5 text-[10px] font-bold uppercase tracking-wider"
+                                className="border-border text-destructive hover:bg-destructive/10 rounded-lg h-6 px-2.5 text-[10px] font-bold uppercase tracking-wider"
                               >
                                 Revise
                               </Button>
@@ -1262,7 +1262,7 @@ function ProposalsContent() {
                           )}
                         </div>
                         {status.comments && (
-                          <div className="text-xs text-red-600 bg-red-50/50 border border-red-100 rounded-lg p-2 font-medium">
+                          <div className="text-xs text-destructive bg-destructive/10/50 border border-red-100 rounded-lg p-2 font-medium">
                             {status.comments}
                           </div>
                         )}
@@ -1274,17 +1274,17 @@ function ProposalsContent() {
             </Card>
 
             {/* Version History Log */}
-            <Card className="bg-white border border-zinc-200 rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2">
-                    <History className="h-4 w-4 text-zinc-400" /> Versions
+                  <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
+                    <History className="h-4 w-4 text-muted-foreground" /> Versions
                   </h3>
                   <Button 
                     onClick={() => setIsVersionDialogOpen(true)}
                     size="sm" 
                     variant="outline" 
-                    className="border-zinc-200 text-[10px] font-bold uppercase rounded-lg h-7 px-2.5 text-zinc-600"
+                    className="border-border text-[10px] font-bold uppercase rounded-lg h-7 px-2.5 text-muted-foreground/80"
                   >
                     New Version
                   </Button>
@@ -1292,15 +1292,15 @@ function ProposalsContent() {
                 
                 <div className="space-y-2.5">
                   {content.version_history.map((ver: VersionRecord, idx: number) => (
-                    <div key={idx} className="p-3 bg-zinc-50 rounded-xl border border-zinc-200/50 flex flex-col gap-1 shadow-sm">
+                    <div key={idx} className="p-3 bg-muted rounded-xl border border-border/50 flex flex-col gap-1 shadow-sm">
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-zinc-900">{ver.version} - Iteration</span>
-                        <Badge className="bg-zinc-200 text-zinc-700 text-[10px] border-none font-bold">
+                        <span className="text-xs font-bold text-primary">{ver.version} - Iteration</span>
+                        <Badge className="bg-secondary text-primary/80 text-[10px] border-none font-bold">
                           {ver.created_by}
                         </Badge>
                       </div>
                       <span className="text-xs text-zinc-650 font-bold">₹{ver.total.toLocaleString()}</span>
-                      <p className="text-xs text-zinc-500 italic font-medium">{ver.description}</p>
+                      <p className="text-xs text-muted-foreground italic font-medium">{ver.description}</p>
                     </div>
                   ))}
                 </div>
@@ -1311,53 +1311,53 @@ function ProposalsContent() {
           {/* ==========================================
               CENTER WORKSPACE: EDITOR OR SERVICE ENGINE
               ========================================== */}
-          <div className="xl:col-span-6 bg-white border border-zinc-200 rounded-2xl p-6 md:p-8 overflow-y-auto custom-scrollbar flex flex-col min-h-[500px] shadow-sm">
+          <div className="xl:col-span-6 bg-white border border-border rounded-2xl p-6 md:p-8 overflow-y-auto custom-scrollbar flex flex-col min-h-[500px] shadow-sm">
             
             {activeBuilderTab === 'editor' && (
               <div className="space-y-6 flex-1">
                 {content.isPreview && (
-                  <div className="bg-amber-500/10 border border-amber-200 text-amber-800 p-4 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-between shadow-sm">
+                  <div className="bg-accent/10 border border-accent/20 text-accent p-4 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-between shadow-sm">
                     <span className="flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-amber-600 animate-pulse" />
+                      <Sparkles className="h-4 w-4 text-accent animate-pulse" />
                       Preview Mode: Custom AI strategy disabled. Configure GEMINI_API_KEY to unlock.
                     </span>
                   </div>
                 )}
-                <div className="flex items-center justify-between border-b border-zinc-200/80 pb-4">
-                  <h2 className="text-lg font-black text-zinc-950 tracking-tight flex items-center gap-2">
-                    <Edit3 className="h-5 w-5 text-red-500" /> Proposal Builder
+                <div className="flex items-center justify-between border-b border-border/80 pb-4">
+                  <h2 className="text-lg font-black text-primary tracking-tight flex items-center gap-2">
+                    <Edit3 className="h-5 w-5 text-destructive" /> Proposal Builder
                   </h2>
-                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Apple Whitespace layout</span>
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Apple Whitespace layout</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Proposal Title</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Proposal Title</Label>
                     <Input 
                       value={content.proposal_title}
                       onChange={(e) => {
                         const copy = { ...content, proposal_title: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-950 font-bold h-11 focus-visible:ring-zinc-200"
+                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Client Name</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Client Name</Label>
                     <Input 
                       value={content.client}
                       onChange={(e) => {
                         const copy = { ...content, client: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-950 font-bold h-11 focus-visible:ring-zinc-200"
+                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 border-t border-zinc-100 pt-4">
+                <div className="grid grid-cols-2 gap-4 border-t border-border pt-4">
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Client GST IN</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Client GST IN</Label>
                     <Input 
                       value={content.client_gstin || ""}
                       placeholder="e.g. 32AABCC8345C1Z2"
@@ -1365,11 +1365,11 @@ function ProposalsContent() {
                         const copy = { ...content, client_gstin: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-950 font-bold h-11 focus-visible:ring-zinc-200"
+                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Billing Address</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Billing Address</Label>
                     <Input 
                       value={content.client_address || ""}
                       placeholder="Corporate headquarters location..."
@@ -1377,20 +1377,20 @@ function ProposalsContent() {
                         const copy = { ...content, client_address: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-950 font-bold h-11 focus-visible:ring-zinc-200"
+                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
 
                 {/* Section Navigation */}
-                <div className="space-y-6 border-t border-zinc-100 pt-6">
+                <div className="space-y-6 border-t border-border pt-6">
                   <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
                     {content.sections.map((sec: { title: string; content: string }, idx: number) => (
                       <button 
                         key={idx}
                         onClick={() => setActiveSectionIdx(idx)}
                         className={cn("px-4 py-2 text-xs font-bold uppercase rounded-xl border tracking-wider transition shrink-0 shadow-sm h-9",
-                          activeSectionIdx === idx ? 'bg-zinc-900 text-white border-zinc-900' : 'bg-white border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50'
+                          activeSectionIdx === idx ? 'bg-primary text-white border-primary' : 'bg-white border-border text-muted-foreground/80 hover:text-primary hover:bg-muted'
                         )}
                       >
                         {idx + 1}. {sec.title.slice(0, 15)}...
@@ -1399,9 +1399,9 @@ function ProposalsContent() {
                   </div>
 
                   {content.sections[activeSectionIdx] && (
-                    <div className="space-y-4 bg-zinc-50 p-6 rounded-2xl border border-zinc-200/80 shadow-inner">
+                    <div className="space-y-4 bg-muted p-6 rounded-2xl border border-border/80 shadow-inner">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Section {activeSectionIdx + 1} Content</span>
+                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Section {activeSectionIdx + 1} Content</span>
                         <Input 
                           value={content.sections[activeSectionIdx].title}
                           onChange={(e) => {
@@ -1409,7 +1409,7 @@ function ProposalsContent() {
                             secs[activeSectionIdx].title = e.target.value;
                             setEditingProposal({ ...editingProposal, parsedContent: { ...content, sections: secs } });
                           }}
-                          className="bg-white border-zinc-200 rounded-lg text-sm font-bold text-zinc-900 max-w-[200px] h-8 focus-visible:ring-zinc-200"
+                          className="bg-white border-border rounded-lg text-sm font-bold text-primary max-w-[200px] h-8 focus-visible:ring-border"
                         />
                       </div>
 
@@ -1420,7 +1420,7 @@ function ProposalsContent() {
                           secs[activeSectionIdx].content = e.target.value;
                           setEditingProposal({ ...editingProposal, parsedContent: { ...content, sections: secs } });
                         }}
-                        className="bg-white border-zinc-200 rounded-xl min-h-[250px] text-zinc-700 font-medium leading-relaxed text-sm p-4 custom-scrollbar focus-visible:ring-zinc-200"
+                        className="bg-white border-border rounded-xl min-h-[250px] text-primary/80 font-medium leading-relaxed text-sm p-4 custom-scrollbar focus-visible:ring-border"
                       />
                     </div>
                   )}
@@ -1430,34 +1430,34 @@ function ProposalsContent() {
 
             {activeBuilderTab === 'pricing' && (
               <div className="space-y-6 flex-1">
-                <div className="flex items-center justify-between border-b border-zinc-200/80 pb-4">
-                  <h2 className="text-lg font-black text-zinc-950 tracking-tight flex items-center gap-2">
+                <div className="flex items-center justify-between border-b border-border/80 pb-4">
+                  <h2 className="text-lg font-black text-primary tracking-tight flex items-center gap-2">
                     <Building2 className="h-5 w-5 text-emerald-500" /> Pricing & Taxes
                   </h2>
                   <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full">GST ACTIVE</span>
                 </div>
 
                 {/* Preset Loaders */}
-                <div className="p-4 bg-zinc-50 border border-zinc-200/80 rounded-2xl space-y-3">
-                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">Load Preset</span>
+                <div className="p-4 bg-muted border border-border/80 rounded-2xl space-y-3">
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block">Load Preset</span>
                   <div className="grid grid-cols-3 gap-3">
                     <Button 
                       onClick={() => applyServiceTemplate('video_production')} 
-                      className="bg-white hover:bg-zinc-100 border border-zinc-200 text-xs font-bold uppercase text-zinc-700 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-primary/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
-                      <Zap className="h-4 w-4 text-amber-500" /> Brand Commercial
+                      <Zap className="h-4 w-4 text-accent" /> Brand Commercial
                     </Button>
                     <Button 
                       onClick={() => applyServiceTemplate('ai_commercials')} 
-                      className="bg-white hover:bg-zinc-100 border border-zinc-200 text-xs font-bold uppercase text-zinc-700 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-primary/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
-                      <BrainCircuit className="h-4 w-4 text-purple-500" /> Neural AI Spot
+                      <BrainCircuit className="h-4 w-4 text-accent" /> Neural AI Spot
                     </Button>
                     <Button 
                       onClick={() => applyServiceTemplate('cgi_3d')} 
-                      className="bg-white hover:bg-zinc-100 border border-zinc-200 text-xs font-bold uppercase text-zinc-700 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
+                      className="bg-white hover:bg-muted border border-border text-xs font-bold uppercase text-primary/80 rounded-xl py-3.5 h-auto flex flex-col gap-1.5 shadow-sm"
                     >
-                      <Layers className="h-4 w-4 text-indigo-500" /> CGI & Unreal 3D
+                      <Layers className="h-4 w-4 text-accent" /> CGI & Unreal 3D
                     </Button>
                   </div>
                 </div>
@@ -1466,49 +1466,49 @@ function ProposalsContent() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold uppercase text-zinc-650 tracking-wider">Scope & Pricing</span>
-                    <Button onClick={addLineItem} size="sm" className="bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider h-9 px-4 shadow-sm">
+                    <Button onClick={addLineItem} size="sm" className="bg-primary hover:bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-wider h-9 px-4 shadow-sm">
                       <Plus className="h-3.5 w-3.5 mr-1" /> Add Item
                     </Button>
                   </div>
 
                   <div className="space-y-3">
                     {content.line_items.map((item: LineItem) => (
-                      <div key={item.id} className="p-4 bg-zinc-50 rounded-xl border border-zinc-200/80 flex flex-col gap-3 shadow-sm">
+                      <div key={item.id} className="p-4 bg-muted rounded-xl border border-border/80 flex flex-col gap-3 shadow-sm">
                         <div className="flex items-start justify-between gap-3">
                           <Input 
                             value={item.name} 
                             onChange={(e) => updateLineItem(item.id, 'name', e.target.value)}
-                            className="bg-transparent border-none p-0 text-sm font-bold text-zinc-900 focus-visible:ring-0 flex-1 h-auto"
+                            className="bg-transparent border-none p-0 text-sm font-bold text-primary focus-visible:ring-0 flex-1 h-auto"
                           />
-                          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg text-zinc-400 hover:text-red-500 hover:bg-red-50" onClick={() => removeLineItem(item.id)}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => removeLineItem(item.id)}>
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                         <div className="grid grid-cols-3 gap-3 items-center">
                           <div className="space-y-1">
-                            <span className="text-[10px] font-semibold uppercase text-zinc-500 tracking-wider block">Category</span>
+                            <span className="text-[10px] font-semibold uppercase text-muted-foreground tracking-wider block">Category</span>
                             <Input 
                               value={item.category} 
                               onChange={(e) => updateLineItem(item.id, 'category', e.target.value)}
-                              className="bg-white border-zinc-200 rounded-lg text-xs text-zinc-800 font-bold h-8 focus-visible:ring-zinc-200"
+                              className="bg-white border-border rounded-lg text-xs text-primary font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                           <div className="space-y-1">
-                            <span className="text-[10px] font-semibold uppercase text-zinc-500 tracking-wider block">Quantity / Days</span>
+                            <span className="text-[10px] font-semibold uppercase text-muted-foreground tracking-wider block">Quantity / Days</span>
                             <Input 
                               type="number"
                               value={item.quantity} 
                               onChange={(e) => updateLineItem(item.id, 'quantity', parseInt(e.target.value) || 1)}
-                              className="bg-white border-zinc-200 rounded-lg text-xs text-zinc-800 font-bold h-8 focus-visible:ring-zinc-200"
+                              className="bg-white border-border rounded-lg text-xs text-primary font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                           <div className="space-y-1">
-                            <span className="text-[10px] font-semibold uppercase text-zinc-500 tracking-wider block">Unit Price (₹)</span>
+                            <span className="text-[10px] font-semibold uppercase text-muted-foreground tracking-wider block">Unit Price (₹)</span>
                             <Input 
                               type="number"
                               value={item.unit_price} 
                               onChange={(e) => updateLineItem(item.id, 'unit_price', parseFloat(e.target.value) || 0)}
-                              className="bg-white border-zinc-200 rounded-lg text-xs text-zinc-800 font-bold h-8 focus-visible:ring-zinc-200"
+                              className="bg-white border-border rounded-lg text-xs text-primary font-bold h-8 focus-visible:ring-border"
                             />
                           </div>
                         </div>
@@ -1518,9 +1518,9 @@ function ProposalsContent() {
                 </div>
 
                 {/* Tax Jurisdiction & Payment Schedule config */}
-                <div className="grid grid-cols-2 gap-4 border-t border-zinc-200/80 pt-6">
+                <div className="grid grid-cols-2 gap-4 border-t border-border/80 pt-6">
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Tax Type</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tax Type</Label>
                     <Select 
                       value={content.tax_type} 
                       onValueChange={(val: any) => {
@@ -1528,19 +1528,19 @@ function ProposalsContent() {
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
                     >
-                      <SelectTrigger className="rounded-xl border-zinc-200 bg-zinc-50 text-xs font-bold text-zinc-850 h-11 focus-visible:ring-zinc-200">
+                      <SelectTrigger className="rounded-xl border-border bg-muted text-xs font-bold text-zinc-850 h-11 focus-visible:ring-border">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-white text-zinc-800 rounded-xl shadow-lg border-zinc-100">
-                        <SelectItem value="Intra-state" className="focus:bg-zinc-100 rounded-lg py-2">Intra-state (9% CGST + 9% SGST)</SelectItem>
-                        <SelectItem value="Inter-state" className="focus:bg-zinc-100 rounded-lg py-2">Inter-state (18% IGST)</SelectItem>
-                        <SelectItem value="Export" className="focus:bg-zinc-100 rounded-lg py-2">Export / SEZ (0%)</SelectItem>
-                        <SelectItem value="Exempt" className="focus:bg-zinc-100 rounded-lg py-2">GST Exempt (0%)</SelectItem>
+                      <SelectContent className="bg-white text-primary rounded-xl shadow-lg border-border">
+                        <SelectItem value="Intra-state" className="focus:bg-muted rounded-lg py-2">Intra-state (9% CGST + 9% SGST)</SelectItem>
+                        <SelectItem value="Inter-state" className="focus:bg-muted rounded-lg py-2">Inter-state (18% IGST)</SelectItem>
+                        <SelectItem value="Export" className="focus:bg-muted rounded-lg py-2">Export / SEZ (0%)</SelectItem>
+                        <SelectItem value="Exempt" className="focus:bg-muted rounded-lg py-2">GST Exempt (0%)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Discount Amount (₹)</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Discount Amount (₹)</Label>
                     <Input 
                       type="number"
                       value={content.discount_amount}
@@ -1548,14 +1548,14 @@ function ProposalsContent() {
                         const copy = { ...content, discount_amount: parseFloat(e.target.value) || 0 };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-950 font-bold h-11 focus-visible:ring-zinc-200"
+                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Payment Terms</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Payment Terms</Label>
                     <Input 
                       value={content.payment_terms}
                       placeholder="e.g. 50% Advance, 50% Handover"
@@ -1563,11 +1563,11 @@ function ProposalsContent() {
                         const copy = { ...content, payment_terms: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-950 font-bold h-11 focus-visible:ring-zinc-200"
+                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Due Date</Label>
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Due Date</Label>
                     <Input 
                       type="date"
                       value={content.due_date}
@@ -1575,35 +1575,35 @@ function ProposalsContent() {
                         const copy = { ...content, due_date: e.target.value };
                         setEditingProposal({ ...editingProposal, parsedContent: copy });
                       }}
-                      className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-950 font-bold h-11 focus-visible:ring-zinc-200"
+                      className="border-border bg-muted rounded-xl text-primary font-bold h-11 focus-visible:ring-border"
                     />
                   </div>
                 </div>
 
                 {/* Milestone Weightage */}
-                <div className="space-y-3 border-t border-zinc-200/80 pt-6">
+                <div className="space-y-3 border-t border-border/80 pt-6">
                   <span className="text-xs font-bold uppercase text-zinc-650 tracking-wider block">Payment Milestones</span>
                   <div className="grid grid-cols-3 gap-3">
                     {content.milestones.map((m: Milestone) => (
-                      <div key={m.id} className="p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-1.5 shadow-sm">
+                      <div key={m.id} className="p-4 bg-muted border border-border rounded-xl space-y-1.5 shadow-sm">
                         <span className="text-xs font-bold text-zinc-850 block">{m.title}</span>
                         <div className="flex items-center justify-between text-xs font-bold">
-                          <span className="text-zinc-500">Weight: {m.percentage}%</span>
-                          <span className="text-zinc-900 font-black">₹{m.amount.toLocaleString()}</span>
+                          <span className="text-muted-foreground">Weight: {m.percentage}%</span>
+                          <span className="text-primary font-black">₹{m.amount.toLocaleString()}</span>
                         </div>
-                        <p className="text-xs text-zinc-500 leading-relaxed font-medium">{m.trigger_condition}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed font-medium">{m.trigger_condition}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Terms conditions editor */}
-                <div className="space-y-2 border-t border-zinc-200/80 pt-6">
-                  <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Terms & Conditions</Label>
+                <div className="space-y-2 border-t border-border/80 pt-6">
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Terms & Conditions</Label>
                   <Textarea 
                     value={content.terms_conditions}
                     onChange={(e) => setEditingProposal({ ...editingProposal, parsedContent: { ...content, terms_conditions: e.target.value } })}
-                    className="border-zinc-200 bg-zinc-50 rounded-xl text-zinc-700 text-sm min-h-[80px] p-3"
+                    className="border-border bg-muted rounded-xl text-primary/80 text-sm min-h-[80px] p-3"
                   />
                 </div>
               </div>
@@ -1612,81 +1612,81 @@ function ProposalsContent() {
             {activeBuilderTab === 'client_portal' && (
               <div className="space-y-6 flex-1">
                 
-                <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between shadow-sm">
+                <div className="p-4 bg-accent/10 border border-accent/20 rounded-2xl flex items-center justify-between shadow-sm">
                   <div className="flex items-center gap-3">
-                    <Globe className="h-6 w-6 text-indigo-600" />
+                    <Globe className="h-6 w-6 text-accent" />
                     <div>
-                      <span className="text-xs font-black text-zinc-900 block">Client View</span>
-                      <span className="text-xs text-zinc-500 block">Secure client view page</span>
+                      <span className="text-xs font-black text-primary block">Client View</span>
+                      <span className="text-xs text-muted-foreground block">Secure client view page</span>
                     </div>
                   </div>
-                  <Badge className="bg-indigo-600 text-white text-xs font-bold uppercase shadow">INVESTOR READY</Badge>
+                  <Badge className="bg-accent text-white text-xs font-bold uppercase shadow">INVESTOR READY</Badge>
                 </div>
 
                 {/* Live Portal Cover Slide (Apple Keynote Layout) */}
-                <div className="bg-white p-8 rounded-2xl border border-zinc-200 space-y-6 relative overflow-hidden shadow-sm">
-                  <div className="absolute right-0 top-0 h-40 w-40 bg-red-500/5 rounded-full blur-[60px]" />
+                <div className="bg-white p-8 rounded-2xl border border-border space-y-6 relative overflow-hidden shadow-sm">
+                  <div className="absolute right-0 top-0 h-40 w-40 bg-destructive/5 rounded-full blur-[60px]" />
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <div className="h-6 w-1 bg-red-600 rounded-full" />
-                      <span className="text-xs font-bold uppercase text-red-600 tracking-wider block">Define Perspective</span>
+                      <div className="h-6 w-1 bg-destructive rounded-full" />
+                      <span className="text-xs font-bold uppercase text-destructive tracking-wider block">Define Perspective</span>
                     </div>
-                    <h2 className="text-3xl font-black text-zinc-900 tracking-tight leading-none pt-2">{content.proposal_title}</h2>
-                    <p className="text-zinc-500 text-xs font-medium">Prepared exclusively for {content.client}</p>
+                    <h2 className="text-3xl font-black text-primary tracking-tight leading-none pt-2">{content.proposal_title}</h2>
+                    <p className="text-muted-foreground text-xs font-medium">Prepared exclusively for {content.client}</p>
                   </div>
 
                   {/* Summary of Deliverables */}
                   <div className="border-t border-zinc-150 pt-6 space-y-4">
-                    <span className="text-xs font-bold uppercase text-zinc-500 tracking-wider block">Scope & Pricing Summary</span>
+                    <span className="text-xs font-bold uppercase text-muted-foreground tracking-wider block">Scope & Pricing Summary</span>
                     <div className="space-y-2.5">
                       {content.line_items.map((item: LineItem, idx: number) => (
-                        <div key={idx} className="flex items-center justify-between text-xs font-bold py-1.5 border-b border-zinc-100">
-                          <span className="text-zinc-700">{item.name} <strong className="text-zinc-400 font-bold">x{item.quantity}</strong></span>
-                          <span className="text-zinc-950 font-black">₹{(item.unit_price * item.quantity).toLocaleString()}</span>
+                        <div key={idx} className="flex items-center justify-between text-xs font-bold py-1.5 border-b border-border">
+                          <span className="text-primary/80">{item.name} <strong className="text-muted-foreground font-bold">x{item.quantity}</strong></span>
+                          <span className="text-primary font-black">₹{(item.unit_price * item.quantity).toLocaleString()}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* GST Invoice Details */}
-                  <div className="p-4 bg-zinc-50 rounded-xl space-y-2 border border-zinc-150 text-xs font-bold text-zinc-600">
+                  <div className="p-4 bg-muted rounded-xl space-y-2 border border-zinc-150 text-xs font-bold text-muted-foreground/80">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
-                      <span className="text-zinc-900">₹{subtotal.toLocaleString()}</span>
+                      <span className="text-primary">₹{subtotal.toLocaleString()}</span>
                     </div>
                     {content.discount_amount > 0 && (
-                      <div className="flex justify-between text-red-600">
+                      <div className="flex justify-between text-destructive">
                         <span>Discount Applied:</span>
                         <span>- ₹{content.discount_amount.toLocaleString()}</span>
                       </div>
                     )}
                     {content.tax_type === "Intra-state" && (
                       <>
-                        <div className="flex justify-between text-xs text-zinc-500">
+                        <div className="flex justify-between text-xs text-muted-foreground">
                           <span>CGST (9%):</span>
                           <span>₹{(taxableSubtotal * 0.09).toLocaleString()}</span>
                         </div>
-                        <div className="flex justify-between text-xs text-zinc-500">
+                        <div className="flex justify-between text-xs text-muted-foreground">
                           <span>SGST (9%):</span>
                           <span>₹{(taxableSubtotal * 0.09).toLocaleString()}</span>
                         </div>
                       </>
                     )}
                     {content.tax_type === "Inter-state" && (
-                      <div className="flex justify-between text-xs text-zinc-500">
+                      <div className="flex justify-between text-xs text-muted-foreground">
                         <span>IGST (18%):</span>
                         <span>₹{(taxableSubtotal * 0.18).toLocaleString()}</span>
                       </div>
                     )}
-                    <div className="flex justify-between text-sm font-black text-zinc-950 border-t border-zinc-200 pt-2 mt-1">
+                    <div className="flex justify-between text-sm font-black text-primary border-t border-border pt-2 mt-1">
                       <span>Total Value (Inc. Tax):</span>
-                      <span className="text-red-600 text-lg">₹{computedFinancials.total.toLocaleString()}</span>
+                      <span className="text-destructive text-lg">₹{computedFinancials.total.toLocaleString()}</span>
                     </div>
                   </div>
 
                   {/* Terms and conditions signature lock */}
-                  <div className="text-xs text-zinc-650 bg-zinc-50 border border-zinc-250 p-4 rounded-xl leading-relaxed">
-                    <strong className="text-zinc-700 block mb-1">Terms of Agreement:</strong>
+                  <div className="text-xs text-zinc-650 bg-muted border border-zinc-250 p-4 rounded-xl leading-relaxed">
+                    <strong className="text-primary/80 block mb-1">Terms of Agreement:</strong>
                     {content.terms_conditions}
                   </div>
                 </div>
@@ -1701,26 +1701,26 @@ function ProposalsContent() {
                           <UserCheck className="h-5 w-5" />
                         </div>
                         <div>
-                          <h4 className="text-sm font-black text-zinc-900 block">Verified Signature</h4>
-                          <span className="text-xs text-zinc-500 block">Legal authorization certificate issued.</span>
+                          <h4 className="text-sm font-black text-primary block">Verified Signature</h4>
+                          <span className="text-xs text-muted-foreground block">Legal authorization certificate issued.</span>
                         </div>
                       </div>
 
-                      <div className="p-4 bg-white rounded-xl border border-zinc-200 space-y-2 text-xs text-zinc-650 font-bold">
-                        <div className="flex justify-between"><span className="text-zinc-400">Signatory:</span><span className="text-emerald-700 font-black">{content.client_signature.name}</span></div>
-                        <div className="flex justify-between"><span className="text-zinc-400">Timestamp:</span><span className="text-zinc-800">{new Date(content.client_signature.signed_at || '').toLocaleString()}</span></div>
-                        <div className="flex justify-between"><span className="text-zinc-400">Audit Node IP:</span><span className="text-zinc-800">{content.client_signature.ip_address}</span></div>
-                        <div className="flex justify-between"><span className="text-zinc-400">Certificate ID:</span><span className="text-zinc-800">{content.client_signature.certificate_id}</span></div>
+                      <div className="p-4 bg-white rounded-xl border border-border space-y-2 text-xs text-zinc-650 font-bold">
+                        <div className="flex justify-between"><span className="text-muted-foreground">Signatory:</span><span className="text-emerald-700 font-black">{content.client_signature.name}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Timestamp:</span><span className="text-primary">{new Date(content.client_signature.signed_at || '').toLocaleString()}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Audit Node IP:</span><span className="text-primary">{content.client_signature.ip_address}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Certificate ID:</span><span className="text-primary">{content.client_signature.certificate_id}</span></div>
                       </div>
                     </CardContent>
                   </Card>
                 ) : (
-                  <Card className="bg-zinc-50 border border-zinc-200 rounded-2xl shadow-sm text-zinc-800">
+                  <Card className="bg-muted border border-border rounded-2xl shadow-sm text-primary">
                     <CardContent className="p-6 space-y-4">
-                      <h4 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2">
+                      <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
                         <Lock className="h-3.5 w-3.5" /> Sign Proposal
                       </h4>
-                      <p className="text-xs text-zinc-500 leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         Type your name below to sign the proposal and approve the agreement.
                       </p>
                       
@@ -1729,11 +1729,11 @@ function ProposalsContent() {
                           placeholder="Type full legal name to authorize..."
                           value={signatureName}
                           onChange={(e) => setSignatureName(e.target.value)}
-                          className="bg-white border-zinc-200 rounded-xl h-11 text-xs font-bold text-zinc-950 focus-visible:ring-zinc-200"
+                          className="bg-white border-border rounded-xl h-11 text-xs font-bold text-primary focus-visible:ring-border"
                         />
                         <Button 
                           onClick={handleClientDigitalSignature}
-                          className="w-full bg-zinc-900 hover:bg-zinc-855 text-white rounded-xl h-12 font-black uppercase text-xs tracking-widest shadow-md shadow-zinc-300"
+                          className="w-full bg-primary hover:bg-zinc-855 text-white rounded-xl h-12 font-black uppercase text-xs tracking-widest shadow-md shadow-zinc-300"
                         >
                           Approve & Sign
                         </Button>
@@ -1751,51 +1751,51 @@ function ProposalsContent() {
           <div className="xl:col-span-3 flex flex-col gap-6 overflow-y-auto pr-2 custom-scrollbar">
             
             {/* Real-time Profitability margin */}
-            <Card className="bg-white border border-zinc-200 rounded-2xl shadow-sm text-zinc-850 relative overflow-hidden">
+            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850 relative overflow-hidden">
               <CardContent className="p-6 space-y-4">
-                <h3 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-zinc-400" /> AI Analysis
+                <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" /> AI Analysis
                 </h3>
 
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase text-zinc-500 tracking-wider">Win Probability</span>
-                    <span className="text-xl font-black text-zinc-900">{winProbability}%</span>
+                    <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-wider">Win Probability</span>
+                    <span className="text-xl font-black text-primary">{winProbability}%</span>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[10px] font-bold uppercase text-zinc-500 tracking-wider">Profit Margin</span>
+                    <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-wider">Profit Margin</span>
                     <span className={cn("text-xl font-black", 
-                      computedFinancials.margin >= 50 ? 'text-emerald-600' : 'text-amber-600'
+                      computedFinancials.margin >= 50 ? 'text-emerald-600' : 'text-accent'
                     )}>{computedFinancials.margin}%</span>
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <div className="h-2 w-full bg-zinc-100 rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                     <div 
                       className={cn("h-full rounded-full transition-all duration-500",
-                        computedFinancials.margin >= 50 ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]' : 'bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.4)]'
+                        computedFinancials.margin >= 50 ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.4)]' : 'bg-accent shadow-[0_0_6px_rgba(245,158,11,0.4)]'
                       )}
                       style={{ width: `${computedFinancials.margin}%` }}
                     />
                   </div>
-                  <span className="text-xs text-zinc-500 block pt-1">Minimum target profit is 50%</span>
+                  <span className="text-xs text-muted-foreground block pt-1">Minimum target profit is 50%</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Crew Estimator */}
-            <Card className="bg-white border border-zinc-200 rounded-2xl shadow-sm text-zinc-855">
+            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-855">
               <CardContent className="p-6 space-y-4">
-                <h3 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2">
-                  <Users className="h-4 w-4 text-zinc-400" /> Estimated Crew
+                <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
+                  <Users className="h-4 w-4 text-muted-foreground" /> Estimated Crew
                 </h3>
 
                 <div className="space-y-2 pt-1">
                   {activeStaffing.map((staff, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-xs py-2 border-b border-zinc-100">
-                      <span className="font-bold text-zinc-700">{staff.role} <strong className="text-zinc-400">x{staff.count}</strong></span>
-                      <span className="font-black text-zinc-950">₹{staff.day_rate.toLocaleString()}/day</span>
+                    <div key={idx} className="flex items-center justify-between text-xs py-2 border-b border-border">
+                      <span className="font-bold text-primary/80">{staff.role} <strong className="text-muted-foreground">x{staff.count}</strong></span>
+                      <span className="font-black text-primary">₹{staff.day_rate.toLocaleString()}/day</span>
                     </div>
                   ))}
                 </div>
@@ -1803,17 +1803,17 @@ function ProposalsContent() {
             </Card>
 
             {/* AI Risk auditing */}
-            <Card className="bg-white border border-zinc-200 rounded-2xl shadow-sm text-zinc-850">
+            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850">
               <CardContent className="p-6 space-y-4">
-                <h3 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-zinc-400" /> Risks & Suggestions
+                <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-muted-foreground" /> Risks & Suggestions
                 </h3>
 
                 <div className="space-y-3 pt-1">
                   {activeRisks.map((risk, idx) => (
-                    <div key={idx} className="p-3 bg-zinc-50 border border-zinc-150 rounded-xl flex gap-2 items-start shadow-sm">
-                      <Lightbulb className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
-                      <p className="text-xs text-zinc-600 font-medium leading-relaxed">{risk}</p>
+                    <div key={idx} className="p-3 bg-muted border border-zinc-150 rounded-xl flex gap-2 items-start shadow-sm">
+                      <Lightbulb className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                      <p className="text-xs text-muted-foreground/80 font-medium leading-relaxed">{risk}</p>
                     </div>
                   ))}
                   <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-xl flex gap-2 items-start shadow-sm">
@@ -1825,22 +1825,22 @@ function ProposalsContent() {
             </Card>
 
             {/* Comments Feed */}
-            <Card className="bg-white border border-zinc-200 rounded-2xl shadow-sm text-zinc-850 flex-1 flex flex-col min-h-[250px]">
+            <Card className="bg-white border border-border rounded-2xl shadow-sm text-zinc-850 flex-1 flex flex-col min-h-[250px]">
               <CardContent className="p-6 flex flex-col flex-1 h-full min-h-0">
-                <h3 className="text-xs font-bold uppercase text-zinc-500 tracking-wider flex items-center gap-2 shrink-0 mb-4">
-                  <MessageCircle className="h-4 w-4 text-zinc-400" /> Comments
+                <h3 className="text-xs font-bold uppercase text-muted-foreground tracking-wider flex items-center gap-2 shrink-0 mb-4">
+                  <MessageCircle className="h-4 w-4 text-muted-foreground" /> Comments
                 </h3>
 
                 <div className="flex-1 overflow-y-auto pr-1 space-y-3 min-h-0 custom-scrollbar mb-4">
                   {content.comments.map((comm: ProposalComment) => (
                     <div key={comm.id} className={cn("p-3 rounded-xl border text-xs leading-relaxed shadow-sm",
-                      comm.is_client ? 'bg-indigo-50 border-indigo-100' : 'bg-zinc-50 border-zinc-150'
+                      comm.is_client ? 'bg-accent/10 border-accent/20' : 'bg-muted border-zinc-150'
                     )}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className={cn("font-black", comm.is_client ? 'text-indigo-700' : 'text-zinc-800')}>{comm.user}</span>
-                        <span className="text-[10px] text-zinc-500">{new Date(comm.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span className={cn("font-black", comm.is_client ? 'text-accent' : 'text-primary')}>{comm.user}</span>
+                        <span className="text-[10px] text-muted-foreground">{new Date(comm.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
-                      <p className="text-zinc-700 font-bold">{comm.text}</p>
+                      <p className="text-primary/80 font-bold">{comm.text}</p>
                     </div>
                   ))}
                 </div>
@@ -1853,11 +1853,11 @@ function ProposalsContent() {
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') addComment(activeBuilderTab === 'client_portal');
                     }}
-                    className="bg-zinc-50 border-zinc-200 rounded-xl text-xs h-9 text-zinc-950 focus-visible:ring-zinc-200"
+                    className="bg-muted border-border rounded-xl text-xs h-9 text-primary focus-visible:ring-border"
                   />
                   <Button 
                     onClick={() => addComment(activeBuilderTab === 'client_portal')}
-                    className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl h-9 w-9 shrink-0 p-0 shadow-sm"
+                    className="bg-primary hover:bg-primary text-white rounded-xl h-9 w-9 shrink-0 p-0 shadow-sm"
                   >
                     <Send className="h-3.5 w-3.5" />
                   </Button>
@@ -1869,27 +1869,27 @@ function ProposalsContent() {
 
         {/* Dialog for creating a new version */}
         <Dialog open={isVersionDialogOpen} onOpenChange={setIsVersionDialogOpen}>
-          <DialogContent className="bg-white text-zinc-900 border border-zinc-200 rounded-2xl shadow-xl max-w-md">
+          <DialogContent className="bg-white text-primary border border-border rounded-2xl shadow-xl max-w-md">
             <DialogHeader>
-              <DialogTitle className="text-lg font-black text-zinc-900">Initiate New Version</DialogTitle>
-              <DialogDescription className="text-zinc-500 text-xs">
+              <DialogTitle className="text-lg font-black text-primary">Initiate New Version</DialogTitle>
+              <DialogDescription className="text-muted-foreground text-xs">
                 Saves the current pricing and sections as a historical snapshot before creating a new working iteration.
               </DialogDescription>
             </DialogHeader>
             <div className="py-4 space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Describe version improvements</Label>
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Describe version improvements</Label>
                 <Input 
                   placeholder="e.g. Adjusted VFX margins and sound designs..." 
                   value={versionDescription}
                   onChange={(e) => setVersionDescription(e.target.value)}
-                  className="bg-zinc-50 border-zinc-255 rounded-xl h-11 text-zinc-950 focus-visible:ring-zinc-200"
+                  className="bg-muted border-zinc-255 rounded-xl h-11 text-primary focus-visible:ring-border"
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={() => setIsVersionDialogOpen(false)} variant="outline" className="border-zinc-200 rounded-xl">Cancel</Button>
-              <Button onClick={createNewVersion} className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl shadow-md">Create Iteration</Button>
+              <Button onClick={() => setIsVersionDialogOpen(false)} variant="outline" className="border-border rounded-xl">Cancel</Button>
+              <Button onClick={createNewVersion} className="bg-primary hover:bg-primary text-white rounded-xl shadow-md">Create Iteration</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -1907,22 +1907,22 @@ function ProposalsContent() {
   }) || [];
 
   return (
-    <div className="space-y-8 text-zinc-900 min-h-screen p-0 antialiased font-sans transition-all duration-300">
+    <div className="space-y-8 text-primary min-h-screen p-0 antialiased font-sans transition-all duration-300">
       
       {/* Cinematic Command Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-zinc-200 relative">
-        <div className="absolute -top-4 -left-4 w-72 h-32 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border relative">
+        <div className="absolute -top-4 -left-4 w-72 h-32 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
         <div>
-          <h1 className="text-3xl font-black text-zinc-950 tracking-tight leading-none">Proposals</h1>
-          <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider mt-2">Create and manage your client proposals easily.</p>
+          <h1 className="text-3xl font-black text-primary tracking-tight leading-none">Proposals</h1>
+          <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider mt-2">Create and manage your client proposals easily.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Search proposals..." 
-              className="pl-9 h-10 rounded-xl bg-white border-zinc-200 text-zinc-950 shadow-sm placeholder:text-zinc-400 focus-visible:ring-zinc-200"
+              className="pl-9 h-10 rounded-xl bg-white border-border text-primary shadow-sm placeholder:text-muted-foreground focus-visible:ring-border"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -1930,20 +1930,20 @@ function ProposalsContent() {
 
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-lg h-10 px-6 font-black text-xs uppercase tracking-wider shadow-red-600/20">
+              <Button className="gap-2 rounded-xl bg-destructive hover:bg-destructive text-white shadow-lg h-10 px-6 font-black text-xs uppercase tracking-wider shadow-red-600/20">
                 <Plus className="h-4 w-4" /> Create with AI
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[800px] rounded-[10px] p-0 overflow-hidden border border-zinc-200 shadow-2xl h-[90vh] flex flex-col bg-white">
-              <div className="text-zinc-900 flex flex-col flex-1 min-h-0 bg-white">
+            <DialogContent className="sm:max-w-[800px] rounded-[10px] p-0 overflow-hidden border border-border shadow-2xl h-[90vh] flex flex-col bg-white">
+              <div className="text-primary flex flex-col flex-1 min-h-0 bg-white">
                 <div className="p-8 border-b border-zinc-150 shrink-0">
                   <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 bg-red-600 rounded-[10px] flex items-center justify-center shadow-lg">
+                    <div className="h-12 w-12 bg-destructive rounded-[10px] flex items-center justify-center shadow-lg">
                       <BrainCircuit className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <DialogTitle className="text-2xl font-black text-zinc-950">AI Proposal Builder</DialogTitle>
-                      <DialogDescription className="text-zinc-500 text-xs font-bold uppercase tracking-wider mt-0.5">Generate custom client proposals instantly using AI.</DialogDescription>
+                      <DialogTitle className="text-2xl font-black text-primary">AI Proposal Builder</DialogTitle>
+                      <DialogDescription className="text-muted-foreground text-xs font-bold uppercase tracking-wider mt-0.5">Generate custom client proposals instantly using AI.</DialogDescription>
                     </div>
                   </div>
                 </div>
@@ -1951,25 +1951,25 @@ function ProposalsContent() {
                 <div className="flex-1 overflow-y-auto p-10 custom-scrollbar min-h-0">
                   {generationStep === 'input' ? (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 flex flex-col">
-                      <div className="space-y-3 p-5 bg-red-50 rounded-[10px] border border-red-100 shrink-0">
-                        <Label className="text-[10px] font-black uppercase text-red-600 tracking-widest flex items-center gap-2 mb-1">
+                      <div className="space-y-3 p-5 bg-destructive/10 rounded-[10px] border border-red-100 shrink-0">
+                        <Label className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-2 mb-1">
                           <Database className="h-3 w-3" /> Select Client or Lead
                         </Label>
                         
                         {/* Grouped and searchable unified dropdown */}
                         <div className="relative">
-                          <div className="flex items-center border border-zinc-200 bg-zinc-50 rounded-xl px-3 py-2">
-                            <Search className="h-4 w-4 text-zinc-400 mr-2" />
+                          <div className="flex items-center border border-border bg-muted rounded-xl px-3 py-2">
+                            <Search className="h-4 w-4 text-muted-foreground mr-2" />
                             <input 
                               type="text"
                               placeholder="Search clients, leads, opportunities..."
                               value={clientSearchQuery}
                               onChange={(e) => setClientSearchQuery(e.target.value)}
-                              className="bg-transparent border-none text-xs text-zinc-950 focus:outline-none focus:ring-0 flex-1 placeholder:text-zinc-400"
+                              className="bg-transparent border-none text-xs text-primary focus:outline-none focus:ring-0 flex-1 placeholder:text-muted-foreground"
                             />
                           </div>
 
-                          <div className="mt-2 bg-white border border-zinc-200 rounded-xl max-h-[160px] overflow-y-auto custom-scrollbar p-1 space-y-2">
+                          <div className="mt-2 bg-white border border-border rounded-xl max-h-[160px] overflow-y-auto custom-scrollbar p-1 space-y-2">
                             {/* Group: Clients */}
                             {groupedClients.clients.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).length > 0 && (
                               <div>
@@ -1988,9 +1988,9 @@ function ProposalsContent() {
                                       setClientSearchQuery(c.company_name);
                                       toast({ title: "Client Loaded", description: `Loaded client details for ${c.company_name}` });
                                     }}
-                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-50 flex justify-between items-center", aiInputs.leadId === c.id ? "bg-zinc-100" : "")}
+                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-zinc-800">{c.company_name}</span>
+                                    <span className="font-bold text-primary">{c.company_name}</span>
                                     <Badge className="bg-emerald-500/10 text-emerald-600 text-[7px] border-none">CLIENT</Badge>
                                   </div>
                                 ))}
@@ -2000,7 +2000,7 @@ function ProposalsContent() {
                             {/* Group: Opportunities */}
                             {groupedClients.opportunities.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).length > 0 && (
                               <div>
-                                <span className="text-[8px] font-black text-indigo-600 uppercase tracking-widest px-2 py-1 block">Active Opportunities</span>
+                                <span className="text-[8px] font-black text-accent uppercase tracking-widest px-2 py-1 block">Active Opportunities</span>
                                 {groupedClients.opportunities.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).map(c => (
                                   <div 
                                     key={c.id}
@@ -2015,10 +2015,10 @@ function ProposalsContent() {
                                       setClientSearchQuery(c.company_name);
                                       toast({ title: "Opportunity Loaded", description: `Loaded opportunity details for ${c.company_name}` });
                                     }}
-                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-50 flex justify-between items-center", aiInputs.leadId === c.id ? "bg-zinc-100" : "")}
+                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-zinc-800">{c.company_name}</span>
-                                    <Badge className="bg-indigo-500/10 text-indigo-600 text-[7px] border-none">{c.stage?.toUpperCase()}</Badge>
+                                    <span className="font-bold text-primary">{c.company_name}</span>
+                                    <Badge className="bg-accent/10 text-accent text-[7px] border-none">{c.stage?.toUpperCase()}</Badge>
                                   </div>
                                 ))}
                               </div>
@@ -2027,7 +2027,7 @@ function ProposalsContent() {
                             {/* Group: Leads */}
                             {groupedClients.leads.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).length > 0 && (
                               <div>
-                                <span className="text-[8px] font-black text-sky-600 uppercase tracking-widest px-2 py-1 block">Leads</span>
+                                <span className="text-[8px] font-black text-accent uppercase tracking-widest px-2 py-1 block">Leads</span>
                                 {groupedClients.leads.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).map(c => (
                                   <div 
                                     key={c.id}
@@ -2042,10 +2042,10 @@ function ProposalsContent() {
                                       setClientSearchQuery(c.company_name);
                                       toast({ title: "Lead Loaded", description: `Loaded lead details for ${c.company_name}` });
                                     }}
-                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-50 flex justify-between items-center", aiInputs.leadId === c.id ? "bg-zinc-100" : "")}
+                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-zinc-800">{c.company_name}</span>
-                                    <Badge className="bg-sky-500/10 text-sky-600 text-[7px] border-none">LEAD</Badge>
+                                    <span className="font-bold text-primary">{c.company_name}</span>
+                                    <Badge className="bg-accent/10 text-accent text-[7px] border-none">LEAD</Badge>
                                   </div>
                                 ))}
                               </div>
@@ -2054,7 +2054,7 @@ function ProposalsContent() {
                              {/* Group: Prospects */}
                             {groupedClients.prospects.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).length > 0 && (
                               <div>
-                                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider px-2 py-1 block">Prospects</span>
+                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2 py-1 block">Prospects</span>
                                 {groupedClients.prospects.filter(c => c.company_name.toLowerCase().includes(clientSearchQuery.toLowerCase())).map(c => (
                                   <div 
                                     key={c.id}
@@ -2069,10 +2069,10 @@ function ProposalsContent() {
                                       setClientSearchQuery(c.company_name);
                                       toast({ title: "Prospect Loaded", description: `Loaded prospect details for ${c.company_name}` });
                                     }}
-                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-zinc-50 flex justify-between items-center", aiInputs.leadId === c.id ? "bg-zinc-100" : "")}
+                                    className={cn("text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-muted flex justify-between items-center", aiInputs.leadId === c.id ? "bg-muted" : "")}
                                   >
-                                    <span className="font-bold text-zinc-800">{c.company_name}</span>
-                                    <Badge className="bg-zinc-100 text-zinc-500 text-[9px] border-none">PROSPECT</Badge>
+                                    <span className="font-bold text-primary">{c.company_name}</span>
+                                    <Badge className="bg-muted text-muted-foreground text-[9px] border-none">PROSPECT</Badge>
                                   </div>
                                 ))}
                               </div>
@@ -2083,57 +2083,57 @@ function ProposalsContent() {
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 shrink-0">
                         <div className="space-y-2">
-                          <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Document Type</Label>
+                          <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Document Type</Label>
                           <Select 
                             value={aiInputs.proposal_type} 
                             onValueChange={(val: any) => setAIInputs({...aiInputs, proposal_type: val})}
                           >
-                            <SelectTrigger className="bg-zinc-50 border-zinc-200 rounded-xl h-11 text-zinc-950">
+                            <SelectTrigger className="bg-muted border-border rounded-xl h-11 text-primary">
                               <SelectValue placeholder="Proposal vs Quote" />
                             </SelectTrigger>
-                            <SelectContent className="bg-white border-zinc-200 text-zinc-950 rounded-xl">
-                              <SelectItem value="proposal" className="focus:bg-zinc-50 rounded-lg cursor-pointer">Proposal (Detailed)</SelectItem>
-                              <SelectItem value="quote" className="focus:bg-zinc-50 rounded-lg cursor-pointer">Quick Quote</SelectItem>
+                            <SelectContent className="bg-white border-border text-primary rounded-xl">
+                              <SelectItem value="proposal" className="focus:bg-muted rounded-lg cursor-pointer">Proposal (Detailed)</SelectItem>
+                              <SelectItem value="quote" className="focus:bg-muted rounded-lg cursor-pointer">Quick Quote</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Service Type</Label>
-                          <Input placeholder="e.g. Brand Commercial Production" value={aiInputs.service_vertical} onChange={(e) => setAIInputs({...aiInputs, service_vertical: e.target.value})} className="bg-zinc-50 border-zinc-200 rounded-xl h-11 text-zinc-950" />
+                          <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Service Type</Label>
+                          <Input placeholder="e.g. Brand Commercial Production" value={aiInputs.service_vertical} onChange={(e) => setAIInputs({...aiInputs, service_vertical: e.target.value})} className="bg-muted border-border rounded-xl h-11 text-primary" />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Industry</Label>
-                          <Input placeholder="e.g. Luxury Real Estate" value={aiInputs.client_type} onChange={(e) => setAIInputs({...aiInputs, client_type: e.target.value})} className="bg-zinc-50 border-zinc-200 rounded-xl h-11 text-zinc-950" />
+                          <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Industry</Label>
+                          <Input placeholder="e.g. Luxury Real Estate" value={aiInputs.client_type} onChange={(e) => setAIInputs({...aiInputs, client_type: e.target.value})} className="bg-muted border-border rounded-xl h-11 text-primary" />
                         </div>
                       </div>
 
                       <div className="space-y-2 shrink-0">
-                        <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Proposal Scope & Description</Label>
-                        <Textarea placeholder="Outline the client goals, targeted parameters, and delivery constraints..." value={aiInputs.project_description} onChange={(e) => setAIInputs({...aiInputs, project_description: e.target.value})} className="bg-zinc-50 border-zinc-200 rounded-xl min-h-[100px] text-zinc-950" />
+                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Proposal Scope & Description</Label>
+                        <Textarea placeholder="Outline the client goals, targeted parameters, and delivery constraints..." value={aiInputs.project_description} onChange={(e) => setAIInputs({...aiInputs, project_description: e.target.value})} className="bg-muted border-border rounded-xl min-h-[100px] text-primary" />
                       </div>
                     </div>
                   ) : (
                     <div className="flex flex-col h-full min-h-[400px] gap-4 animate-in zoom-in-95">
                       {generatedDraft?.isPreview && (
-                        <div className="bg-amber-500/10 border border-amber-200 text-amber-800 p-4 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-between shadow-sm">
+                        <div className="bg-accent/10 border border-accent/20 text-accent p-4 rounded-xl text-xs font-semibold uppercase tracking-wider flex items-center justify-between shadow-sm">
                           <span className="flex items-center gap-2">
-                            <Sparkles className="h-4 w-4 text-amber-600 animate-pulse" />
+                            <Sparkles className="h-4 w-4 text-accent animate-pulse" />
                             Running in Preview Mode: Using high-fidelity local templates. Set GEMINI_API_KEY in .env to unlock real-time custom AI generation.
                           </span>
                         </div>
                       )}
                       <div className="flex flex-1 gap-8 min-h-0">
                         <aside className="w-64 space-y-4 shrink-0 overflow-y-auto pr-4 custom-scrollbar">
-                          <h3 className="text-xs font-bold uppercase text-red-500 tracking-wider mb-4">Proposal Sections</h3>
+                          <h3 className="text-xs font-bold uppercase text-destructive tracking-wider mb-4">Proposal Sections</h3>
                           {generatedDraft?.sections.map((sec, idx) => (
-                            <button key={idx} onClick={() => setActiveSectionIdx(idx)} className={cn("w-full text-left px-4 py-3 rounded-xl text-xs font-bold border border-transparent transition-all", activeSectionIdx === idx ? "bg-red-600 text-white shadow-lg" : "text-zinc-500 hover:bg-zinc-100")}>
+                            <button key={idx} onClick={() => setActiveSectionIdx(idx)} className={cn("w-full text-left px-4 py-3 rounded-xl text-xs font-bold border border-transparent transition-all", activeSectionIdx === idx ? "bg-destructive text-white shadow-lg" : "text-muted-foreground hover:bg-muted")}>
                               {idx + 1}. {sec.title}
                             </button>
                           ))}
                         </aside>
-                        <main className="flex-1 bg-zinc-50/50 rounded-[10px] border border-zinc-200 p-8 overflow-y-auto custom-scrollbar">
-                          <h2 className="text-2xl font-black text-zinc-900 mb-6">{generatedDraft?.sections[activeSectionIdx]?.title}</h2>
-                          <div className="text-sm leading-relaxed text-zinc-600 whitespace-pre-line font-medium leading-7">{generatedDraft?.sections[activeSectionIdx]?.content}</div>
+                        <main className="flex-1 bg-muted/50 rounded-[10px] border border-border p-8 overflow-y-auto custom-scrollbar">
+                          <h2 className="text-2xl font-black text-primary mb-6">{generatedDraft?.sections[activeSectionIdx]?.title}</h2>
+                          <div className="text-sm leading-relaxed text-muted-foreground/80 whitespace-pre-line font-medium leading-7">{generatedDraft?.sections[activeSectionIdx]?.content}</div>
                         </main>
                       </div>
                     </div>
@@ -2142,14 +2142,14 @@ function ProposalsContent() {
 
                 <div className="p-8 border-t border-zinc-150 shrink-0">
                   {generationStep === 'input' ? (
-                    <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-red-600 hover:bg-red-700 h-14 rounded-[10px] font-black uppercase text-xs tracking-widest gap-3 shadow-xl shadow-red-600/10">
+                    <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-destructive hover:bg-destructive h-14 rounded-[10px] font-black uppercase text-xs tracking-widest gap-3 shadow-xl shadow-red-600/10">
                       {isGenerating ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
                       Generate AI Proposal
                     </Button>
                   ) : (
                     <div className="flex gap-4">
-                      <Button onClick={() => setGenerationStep('input')} variant="outline" className="flex-1 border-zinc-200 text-zinc-800 hover:bg-zinc-100 rounded-[10px] h-14 font-black uppercase text-xs font-bold">Back</Button>
-                      <Button onClick={handleCreateProposal} disabled={isSubmitting} className="flex-[2] bg-red-600 hover:bg-red-700 h-14 rounded-[10px] font-black uppercase text-xs tracking-widest gap-3 shadow-xl">
+                      <Button onClick={() => setGenerationStep('input')} variant="outline" className="flex-1 border-border text-primary hover:bg-muted rounded-[10px] h-14 font-black uppercase text-xs font-bold">Back</Button>
+                      <Button onClick={handleCreateProposal} disabled={isSubmitting} className="flex-[2] bg-destructive hover:bg-destructive h-14 rounded-[10px] font-black uppercase text-xs tracking-widest gap-3 shadow-xl">
                         {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <FileCheck className="h-5 w-5" />}
                         Save Proposal
                       </Button>
@@ -2164,50 +2164,50 @@ function ProposalsContent() {
 
       {/* Analytics Overview Widget */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 shrink-0">
-        <Card className="border-none shadow-sm bg-white border border-zinc-200 rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between text-zinc-400 mb-2 text-[10px] font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Total Proposals</span>
-              <Target className="h-4 w-4 text-red-500" />
+              <Target className="h-4 w-4 text-destructive" />
             </div>
-            <div className="text-2xl font-black text-zinc-900">{proposals?.length || 0}</div>
-            <p className="text-[10px] text-zinc-400 mt-1 font-medium">Total bids created</p>
+            <div className="text-2xl font-black text-primary">{proposals?.length || 0}</div>
+            <p className="text-[10px] text-muted-foreground mt-1 font-medium">Total bids created</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border border-zinc-200 rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between text-zinc-400 mb-2 text-[10px] font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Total Value</span>
               <DollarSign className="h-4 w-4 text-emerald-500" />
             </div>
-            <div className="text-2xl font-black text-zinc-900">
+            <div className="text-2xl font-black text-primary">
               ₹{statsOverview.totalVal.toLocaleString()}
             </div>
-            <p className="text-[10px] text-zinc-400 mt-1 font-medium">Total estimated value</p>
+            <p className="text-[10px] text-muted-foreground mt-1 font-medium">Total estimated value</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border border-zinc-200 rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between text-zinc-400 mb-2 text-[10px] font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Pending Approvals</span>
-              <Clock className="h-4 w-4 text-amber-500" />
+              <Clock className="h-4 w-4 text-accent" />
             </div>
-            <div className="text-2xl font-black text-zinc-900">
+            <div className="text-2xl font-black text-primary">
               {statsOverview.pending}
             </div>
-            <p className="text-[10px] text-zinc-400 mt-1 font-medium">Awaiting final approvals</p>
+            <p className="text-[10px] text-muted-foreground mt-1 font-medium">Awaiting final approvals</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border border-zinc-200 rounded-[10px]">
+        <Card className="border-none shadow-sm bg-white border border-border rounded-[10px]">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between text-zinc-400 mb-2 text-[10px] font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between text-muted-foreground mb-2 text-[10px] font-bold uppercase tracking-wider">
               <span>Approved Proposals</span>
               <ShieldCheck className="h-4 w-4 text-emerald-500" />
             </div>
-            <div className="text-2xl font-black text-zinc-900">
+            <div className="text-2xl font-black text-primary">
               {statsOverview.signed}
             </div>
-            <p className="text-[10px] text-zinc-400 mt-1 font-medium">Approved and signed contracts</p>
+            <p className="text-[10px] text-muted-foreground mt-1 font-medium">Approved and signed contracts</p>
           </CardContent>
         </Card>
       </div>
@@ -2215,10 +2215,10 @@ function ProposalsContent() {
       {/* Main Proposals Vault Listing */}
       <div className="space-y-4">
         {filteredProposals.length === 0 ? (
-          <Card className="border-2 border-dashed border-zinc-200 p-24 text-center rounded-[10px] bg-white shadow-sm">
-            <BrainCircuit className="h-16 w-16 mx-auto mb-6 opacity-10 text-zinc-900" />
-            <p className="font-black uppercase tracking-widest text-xs text-zinc-400">No proposals found.</p>
-            <Button variant="link" className="mt-4 font-bold text-red-500 hover:text-red-400 animate-pulse" onClick={() => setIsAddOpen(true)}>Create with AI</Button>
+          <Card className="border-2 border-dashed border-border p-24 text-center rounded-[10px] bg-white shadow-sm">
+            <BrainCircuit className="h-16 w-16 mx-auto mb-6 opacity-10 text-primary" />
+            <p className="font-black uppercase tracking-widest text-xs text-muted-foreground">No proposals found.</p>
+            <Button variant="link" className="mt-4 font-bold text-destructive hover:text-destructive animate-pulse" onClick={() => setIsAddOpen(true)}>Create with AI</Button>
           </Card>
         ) : (
           filteredProposals.map((prop) => {
@@ -2229,58 +2229,58 @@ function ProposalsContent() {
             const total = taxableSubtotal + tax;
 
             return (
-              <Card key={prop.id} className="hover:shadow-lg hover:bg-white transition-all duration-300 border border-zinc-200 bg-white group rounded-2xl overflow-hidden">
+              <Card key={prop.id} className="hover:shadow-lg hover:bg-white transition-all duration-300 border border-border bg-white group rounded-2xl overflow-hidden">
                 <CardContent className="p-0 flex flex-col md:flex-row md:items-center">
                   <div className="p-8 flex-1">
                     <div className="flex items-center gap-4">
-                      <div className="h-14 w-14 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
+                      <div className="h-14 w-14 rounded-2xl bg-destructive/10 border border-red-100 flex items-center justify-center text-destructive group-hover:bg-destructive group-hover:text-white transition-all duration-500">
                         <FileText className="h-7 w-7" />
                       </div>
                       <div>
                         <div className="flex items-center gap-3">
-                          <h3 className="font-bold text-xl group-hover:text-red-600 transition-colors text-zinc-900">{prop.title}</h3>
+                          <h3 className="font-bold text-xl group-hover:text-destructive transition-colors text-primary">{prop.title}</h3>
                           <Badge className={cn("px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border shadow-sm",
                             prop.status === 'signed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                            prop.status === 'sent' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-red-50 text-red-700 border-red-200'
+                            prop.status === 'sent' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-destructive/10 text-destructive border-red-200'
                           )}>
                             {prop.status}
                           </Badge>
                         </div>
-                        <div className="text-xs text-zinc-500 font-bold mt-1.5 flex items-center gap-2">
+                        <div className="text-xs text-muted-foreground font-bold mt-1.5 flex items-center gap-2">
                           <span>{prop.proposal_number}</span> • 
                           <span>Client: {prop.client_name}</span> • 
                           <span>Total: ₹{total.toLocaleString()}</span>
-                          {prop.lead_id && <Badge className="bg-indigo-50 text-indigo-700 border border-indigo-100 text-[10px] font-bold uppercase px-2 shadow-sm">Linked to CRM</Badge>}
+                          {prop.lead_id && <Badge className="bg-accent/10 text-accent border border-accent/20 text-[10px] font-bold uppercase px-2 shadow-sm">Linked to CRM</Badge>}
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="p-8 md:w-80 bg-zinc-50 border-l border-zinc-150 flex flex-col gap-3">
-                    <Button className="w-full bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800 rounded-xl h-11 font-bold gap-2" onClick={() => handleEditProposal(prop)}>
-                      <ExternalLink className="h-4 w-4 text-red-500" /> Open Proposal
+                  <div className="p-8 md:w-80 bg-muted border-l border-zinc-150 flex flex-col gap-3">
+                    <Button className="w-full bg-primary border border-primary text-white hover:bg-primary rounded-xl h-11 font-bold gap-2" onClick={() => handleEditProposal(prop)}>
+                      <ExternalLink className="h-4 w-4 text-destructive" /> Open Proposal
                     </Button>
                     <div className="flex gap-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="flex-1 rounded-xl border-zinc-200 hover:bg-zinc-100 text-zinc-700 bg-white h-11 gap-2">
+                          <Button variant="outline" className="flex-1 rounded-xl border-border hover:bg-muted text-primary/80 bg-white h-11 gap-2">
                             <Share2 className="h-4 w-4" /> Share
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl w-64 p-2 bg-white border border-zinc-200 text-zinc-700 shadow-xl">
-                          <DropdownMenuLabel className="text-xs uppercase font-bold text-zinc-500 tracking-wider px-3 py-2">Share Channels</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => handleShareWhatsApp(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-zinc-50">
+                        <DropdownMenuContent align="end" className="rounded-xl w-64 p-2 bg-white border border-border text-primary/80 shadow-xl">
+                          <DropdownMenuLabel className="text-xs uppercase font-bold text-muted-foreground tracking-wider px-3 py-2">Share Channels</DropdownMenuLabel>
+                          <DropdownMenuItem onClick={() => handleShareWhatsApp(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-muted">
                             <MessageSquare className="h-4 w-4 text-emerald-500" /> Share via WhatsApp
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleShareEmail(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-zinc-50">
-                            <Mail className="h-4 w-4 text-red-500" /> Share via Email
+                          <DropdownMenuItem onClick={() => handleShareEmail(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-muted">
+                            <Mail className="h-4 w-4 text-destructive" /> Share via Email
                           </DropdownMenuItem>
-                          <DropdownMenuSeparator className="bg-zinc-100" />
-                          <DropdownMenuItem onClick={() => handleShareCopy(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-zinc-50">
-                            <Copy className="h-4 w-4 text-zinc-500" /> Copy Access Link
+                          <DropdownMenuSeparator className="bg-muted" />
+                          <DropdownMenuItem onClick={() => handleShareCopy(prop)} className="gap-2 py-3 cursor-pointer rounded-lg hover:bg-muted">
+                            <Copy className="h-4 w-4 text-muted-foreground" /> Copy Access Link
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                      <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl border-zinc-200 text-red-600 hover:bg-red-50 bg-white" onClick={() => setProposalToDelete(prop)}><Trash2 className="h-4 w-4" /></Button>
+                      <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl border-border text-destructive hover:bg-destructive/10 bg-white" onClick={() => setProposalToDelete(prop)}><Trash2 className="h-4 w-4" /></Button>
                     </div>
                   </div>
                 </CardContent>
@@ -2291,14 +2291,14 @@ function ProposalsContent() {
       </div>
 
       <AlertDialog open={!!proposalToDelete} onOpenChange={(open) => !open && setProposalToDelete(null)}>
-        <AlertDialogContent className="rounded-[10px] bg-white border border-zinc-200 text-zinc-800 shadow-xl">
+        <AlertDialogContent className="rounded-[10px] bg-white border border-border text-primary shadow-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-zinc-950">Delete Proposal Record?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-500 font-medium">Permanently remove "{proposalToDelete?.title}"? This will delete all history snapshots and cannot be undone.</AlertDialogDescription>
+            <AlertDialogTitle className="text-primary">Delete Proposal Record?</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground font-medium">Permanently remove "{proposalToDelete?.title}"? This will delete all history snapshots and cannot be undone.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-xl border-zinc-200 bg-transparent text-zinc-600 hover:bg-zinc-50">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} className="bg-red-600 hover:bg-red-700 rounded-xl text-white">Confirm Delete</AlertDialogAction>
+            <AlertDialogCancel className="rounded-xl border-border bg-transparent text-muted-foreground/80 hover:bg-muted">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive hover:bg-destructive rounded-xl text-white">Confirm Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -2309,7 +2309,7 @@ function ProposalsContent() {
 
 export default function ProposalsPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center p-20"><Loader2 className="animate-spin text-red-600" /></div>}>
+    <Suspense fallback={<div className="flex justify-center p-20"><Loader2 className="animate-spin text-destructive" /></div>}>
       <ProposalsContent />
     </Suspense>
   );

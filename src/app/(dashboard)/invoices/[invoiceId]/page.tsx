@@ -104,7 +104,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleCopyLink} className="gap-2 py-3 cursor-pointer rounded-lg">
-                <Copy className="h-4 w-4 text-slate-500" /> Copy Secure Link
+                <Copy className="h-4 w-4 text-muted-foreground" /> Copy Secure Link
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -129,31 +129,31 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
                 {company?.name?.substring(0, 2).toUpperCase() || 'DP'}
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tighter text-slate-800">{company?.name || 'DP Media OS'}</h1>
+                <h1 className="text-3xl font-bold tracking-tighter text-primary">{company?.name || 'DP Media OS'}</h1>
                 <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Media Production Hub</p>
               </div>
             </div>
             
             <div className="space-y-1 text-sm text-muted-foreground font-medium">
               <div className="flex gap-2">
-                <span className="w-24 font-bold text-slate-400">Project :</span>
-                <span className="text-slate-800 font-bold uppercase">{invoice.project_ref || invoice.project_name || 'GENERAL'}</span>
+                <span className="w-24 font-bold text-muted-foreground">Project :</span>
+                <span className="text-primary font-bold uppercase">{invoice.project_ref || invoice.project_name || 'GENERAL'}</span>
               </div>
               <div className="flex gap-2">
-                <span className="w-24 font-bold text-slate-400">Invoice No :</span>
-                <span className="text-slate-800 font-bold">{invoice.invoice_number}</span>
+                <span className="w-24 font-bold text-muted-foreground">Invoice No :</span>
+                <span className="text-primary font-bold">{invoice.invoice_number}</span>
               </div>
               <div className="flex gap-2">
-                <span className="w-24 font-bold text-slate-400">Invoice Date :</span>
-                <span className="text-slate-800 font-bold">{new Date(invoice.issue_date).toLocaleDateString('en-GB')}</span>
+                <span className="w-24 font-bold text-muted-foreground">Invoice Date :</span>
+                <span className="text-primary font-bold">{new Date(invoice.issue_date).toLocaleDateString('en-GB')}</span>
               </div>
               <div className="flex gap-2">
-                <span className="w-24 font-bold text-slate-400">Payable To :</span>
-                <span className="text-slate-800 font-bold">{company?.name}</span>
+                <span className="w-24 font-bold text-muted-foreground">Payable To :</span>
+                <span className="text-primary font-bold">{company?.name}</span>
               </div>
               <div className="flex gap-2">
-                <span className="w-24 font-bold text-slate-400">Due Date :</span>
-                <span className="text-slate-800 font-bold">{new Date(invoice.due_date).toLocaleDateString('en-GB')}</span>
+                <span className="w-24 font-bold text-muted-foreground">Due Date :</span>
+                <span className="text-primary font-bold">{new Date(invoice.due_date).toLocaleDateString('en-GB')}</span>
               </div>
             </div>
           </div>
@@ -162,20 +162,20 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
             <div>
               <h2 className="text-4xl font-black text-primary/20 uppercase tracking-tighter mb-1">Invoice</h2>
               <div className="text-xs space-y-1 font-bold">
-                <p className="text-rose-500">{company?.name} PVT LTD</p>
-                <p className="text-slate-400">CIN: {company?.cin || 'U60200KL2023PTC081308'}</p>
-                <p className="text-slate-400">GSTIN: {company?.gstin || '32AAQCM8450P1ZQ'}</p>
+                <p className="text-accent">{company?.name} PVT LTD</p>
+                <p className="text-muted-foreground">CIN: {company?.cin || 'U60200KL2023PTC081308'}</p>
+                <p className="text-muted-foreground">GSTIN: {company?.gstin || '32AAQCM8450P1ZQ'}</p>
               </div>
             </div>
 
             <div className="pt-8">
-              <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-2">Bill To</p>
+              <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-2">Bill To</p>
               <div className="max-w-[250px] ml-auto space-y-1">
-                <p className="font-bold text-slate-800 leading-tight">{client?.company_name || invoice.client_name}</p>
+                <p className="font-bold text-primary leading-tight">{client?.company_name || invoice.client_name}</p>
                 <p className="text-xs text-muted-foreground whitespace-pre-line leading-relaxed">
                   {client?.billing_address || 'Billing address pending update in CRM.'}
                 </p>
-                {client?.gstin && <p className="text-xs font-bold text-slate-800 mt-2">{client.gstin}</p>}
+                {client?.gstin && <p className="text-xs font-bold text-primary mt-2">{client.gstin}</p>}
               </div>
             </div>
           </div>
@@ -185,7 +185,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
         <div className="flex-1">
           <div className="rounded-[10px] overflow-hidden border">
             <table className="w-full text-sm">
-              <thead className="bg-rose-500 text-white font-bold uppercase text-[11px] tracking-widest">
+              <thead className="bg-accent text-white font-bold uppercase text-[11px] tracking-widest">
                 <tr>
                   <th className="p-4 text-center w-16">SL No</th>
                   <th className="p-4 text-left">Description</th>
@@ -196,12 +196,12 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
               </thead>
               <tbody className="divide-y">
                 {invoice.line_items?.map((item: any, idx: number) => (
-                  <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                    <td className="p-4 text-center font-bold text-slate-400">{idx + 1}</td>
-                    <td className="p-4 font-bold text-slate-800">{item.description}</td>
-                    <td className="p-4 text-right font-bold text-slate-600">{(item.unit_price || 0).toLocaleString()}</td>
-                    <td className="p-4 text-center font-bold text-slate-600">{item.quantity || 1}</td>
-                    <td className="p-4 text-right font-black text-slate-800">₹{(item.total || 0).toLocaleString()}</td>
+                  <tr key={idx} className="hover:bg-muted transition-colors">
+                    <td className="p-4 text-center font-bold text-muted-foreground">{idx + 1}</td>
+                    <td className="p-4 font-bold text-primary">{item.description}</td>
+                    <td className="p-4 text-right font-bold text-muted-foreground/80">{(item.unit_price || 0).toLocaleString()}</td>
+                    <td className="p-4 text-center font-bold text-muted-foreground/80">{item.quantity || 1}</td>
+                    <td className="p-4 text-right font-black text-primary">₹{(item.total || 0).toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -210,15 +210,15 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
 
           <div className="flex justify-end pt-8">
             <div className="w-full md:w-80 space-y-3">
-              <div className="flex justify-between items-center bg-slate-100 p-3 rounded-lg">
-                <span className="text-xs font-black uppercase text-slate-500">Total</span>
-                <span className="font-black text-slate-800">₹{(invoice.subtotal || 0).toLocaleString()}</span>
+              <div className="flex justify-between items-center bg-muted p-3 rounded-lg">
+                <span className="text-xs font-black uppercase text-muted-foreground">Total</span>
+                <span className="font-black text-primary">₹{(invoice.subtotal || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center px-3">
-                <span className="text-xs font-bold text-slate-400">GST @ 18%</span>
-                <span className="font-bold text-slate-600">₹{(invoice.gst_amount || 0).toLocaleString()}</span>
+                <span className="text-xs font-bold text-muted-foreground">GST @ 18%</span>
+                <span className="font-bold text-muted-foreground/80">₹{(invoice.gst_amount || 0).toLocaleString()}</span>
               </div>
-              <div className="flex justify-between items-center bg-rose-500 text-white p-4 rounded-xl shadow-lg shadow-rose-500/20 print:shadow-none">
+              <div className="flex justify-between items-center bg-accent text-white p-4 rounded-xl shadow-lg shadow-accent/20 print:shadow-none">
                 <span className="text-sm font-black uppercase tracking-tighter">Grand Total Including GST</span>
                 <span className="text-xl font-black">₹{(invoice.total || 0).toLocaleString()}</span>
               </div>
@@ -237,42 +237,42 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
         </div>
 
         {/* Footer Details */}
-        <div className="mt-12 pt-12 border-t border-slate-800">
+        <div className="mt-12 pt-12 border-t border-primary">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-4">
-              <h3 className="font-black text-sm uppercase text-slate-800">Account Details</h3>
+              <h3 className="font-black text-sm uppercase text-primary">Account Details</h3>
               <div className="space-y-2 text-xs">
-                <p className="font-black text-slate-800">{company?.bank_details?.bank_name || 'Axis Bank'}</p>
+                <p className="font-black text-primary">{company?.bank_details?.bank_name || 'Axis Bank'}</p>
                 <div className="grid grid-cols-2 max-w-[250px] gap-y-1 font-bold text-muted-foreground">
                   <span>Acc no</span>
-                  <span className="text-slate-800">: {company?.bank_details?.account_no || '922020014850667'}</span>
+                  <span className="text-primary">: {company?.bank_details?.account_no || '922020014850667'}</span>
                   <span>Phone</span>
-                  <span className="text-slate-800">: {company?.contact_phone || '9947109143'}</span>
+                  <span className="text-primary">: {company?.contact_phone || '9947109143'}</span>
                   <span>NAME</span>
-                  <span className="text-slate-800">: {company?.name} Private Limited.</span>
+                  <span className="text-primary">: {company?.name} Private Limited.</span>
                   <span>IFSC</span>
-                  <span className="text-slate-800">: {company?.bank_details?.ifsc || 'UTIB0003042'}</span>
+                  <span className="text-primary">: {company?.bank_details?.ifsc || 'UTIB0003042'}</span>
                   <span>Branch</span>
-                  <span className="text-slate-800">: {company?.bank_details?.branch || 'Sasthamangalam'}</span>
+                  <span className="text-primary">: {company?.bank_details?.branch || 'Sasthamangalam'}</span>
                   <span>PAN</span>
-                  <span className="text-slate-800">: {company?.bank_details?.pan || 'AAQCM8450P'}</span>
+                  <span className="text-primary">: {company?.bank_details?.pan || 'AAQCM8450P'}</span>
                   <span>GST</span>
-                  <span className="text-slate-800">: {company?.gstin || '32AAQCM8450P1ZQ'}</span>
+                  <span className="text-primary">: {company?.gstin || '32AAQCM8450P1ZQ'}</span>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col justify-end items-end text-right space-y-6">
               <div className="space-y-1">
-                <h4 className="font-black text-sm text-slate-800 uppercase">{company?.name} PRIVATE LIMITED</h4>
-                <p className="text-[10px] text-slate-400 font-bold max-w-[300px]">
+                <h4 className="font-black text-sm text-primary uppercase">{company?.name} PRIVATE LIMITED</h4>
+                <p className="text-[10px] text-muted-foreground font-bold max-w-[300px]">
                   {company?.address || 'Dotspace Business Center TC 24/3088 Ushasandya Building, Kowdiar - Devasom Board Road, Kowdiar, Trivandrum, Pin : 695003'}
                 </p>
               </div>
               
               <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Contact Us</p>
-                <div className="text-[10px] font-bold text-slate-800">
+                <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Contact Us</p>
+                <div className="text-[10px] font-bold text-primary">
                   <p>Email: {company?.contact_email || 'info@marzelz.com'}</p>
                   <p>Phone: {company?.contact_phone || '+91 871 400 5550'}</p>
                   <p className="text-primary">{company?.website || 'www.marzelz.com'}</p>

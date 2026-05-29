@@ -8,8 +8,8 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-black tracking-tight text-slate-800">Executive Overview</h2>
-        <p className="text-sm font-medium text-slate-500">Real-time enterprise analytics and health metrics.</p>
+        <h2 className="text-2xl font-black tracking-tight text-primary">Executive Overview</h2>
+        <p className="text-sm font-medium text-muted-foreground">Real-time enterprise analytics and health metrics.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -20,24 +20,24 @@ export function ExecutiveDashboard({ companyId }: { companyId: string }) {
             <p className="text-xs font-bold mt-4 opacity-90">+3% from last month</p>
         </Card>
 
-        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-slate-100">
+        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
             <div className="flex justify-between items-start mb-2">
-                <p className="text-xs font-black uppercase tracking-widest text-slate-400">Resource Utilization</p>
+                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resource Utilization</p>
                 <Users className="h-4 w-4 text-primary" />
             </div>
-            <h3 className="text-3xl font-black text-slate-800">87%</h3>
-            <div className="w-full bg-slate-100 h-2 rounded-full mt-4 overflow-hidden">
+            <h3 className="text-3xl font-black text-primary">87%</h3>
+            <div className="w-full bg-muted h-2 rounded-full mt-4 overflow-hidden">
                 <div className="bg-primary h-full w-[87%] rounded-full" />
             </div>
         </Card>
 
-        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-slate-100">
+        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
             <div className="flex justify-between items-start mb-2">
-                <p className="text-xs font-black uppercase tracking-widest text-slate-400">Production Efficiency</p>
-                <Clock className="h-4 w-4 text-blue-500" />
+                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Production Efficiency</p>
+                <Clock className="h-4 w-4 text-accent" />
             </div>
-            <h3 className="text-3xl font-black text-slate-800">92%</h3>
-            <p className="text-xs font-bold mt-4 text-slate-500">Tasks completed on time</p>
+            <h3 className="text-3xl font-black text-primary">92%</h3>
+            <p className="text-xs font-bold mt-4 text-muted-foreground">Tasks completed on time</p>
         </Card>
 
         <Card className="p-6 border-none shadow-xl rounded-3xl bg-gradient-to-br from-rose-500 to-rose-700 text-white relative overflow-hidden">

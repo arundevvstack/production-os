@@ -62,10 +62,10 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Ambient gradients */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-destructive/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white border border-slate-200 shadow-2xl rounded-3xl overflow-hidden">
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white border border-border shadow-2xl rounded-3xl overflow-hidden">
         
         {/* LEFT — Account Center Signup */}
         <div className="flex flex-col justify-center p-8 lg:p-12 relative bg-white">
@@ -77,10 +77,10 @@ export default function SignupPage() {
                 <Logo />
               </div>
 
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+              <h1 className="text-3xl font-black text-primary tracking-tight leading-tight">
                 Create your account
               </h1>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Join your team and start managing media production together.
               </p>
             </div>
@@ -88,7 +88,7 @@ export default function SignupPage() {
             {/* Signup Form */}
             <form onSubmit={handleSignup} className="space-y-5">
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-slate-700 ml-1" htmlFor="email">
+                <Label className="text-sm font-semibold text-primary/80 ml-1" htmlFor="email">
                   Email Address
                 </Label>
                 <Input
@@ -98,12 +98,12 @@ export default function SignupPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-400 focus:ring-red-500/20 focus:border-red-500 text-sm font-medium transition"
+                  className="h-12 rounded-xl border-border bg-muted focus:bg-white text-primary placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium transition"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label className="text-sm font-semibold text-slate-700 ml-1" htmlFor="password">
+                <Label className="text-sm font-semibold text-primary/80 ml-1" htmlFor="password">
                   Password
                 </Label>
                 <div className="relative">
@@ -114,13 +114,13 @@ export default function SignupPage() {
                     placeholder="At least 8 characters"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white text-slate-900 placeholder-slate-400 focus:ring-red-500/20 focus:border-red-500 text-sm font-medium w-full pr-12 transition"
+                    className="h-12 rounded-xl border-border bg-muted focus:bg-white text-primary placeholder-slate-400 focus:ring-red-500/20 focus:border-destructive text-sm font-medium w-full pr-12 transition"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-slate-800 rounded-xl"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-primary rounded-xl"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -131,7 +131,7 @@ export default function SignupPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-sm active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-lg shadow-red-500/20 transition duration-300"
+                className="w-full h-12 bg-destructive hover:bg-destructive text-white font-black rounded-xl text-sm active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-lg shadow-red-500/20 transition duration-300"
               >
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -148,10 +148,10 @@ export default function SignupPage() {
             </div>
 
             {/* Login link */}
-            <div className="text-center border-t border-slate-100 pt-5">
-              <p className="text-sm text-slate-500">
+            <div className="text-center border-t border-border pt-5">
+              <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <Link href="/login" className="font-bold text-red-600 hover:underline">
+                <Link href="/login" className="font-bold text-destructive hover:underline">
                   Sign in
                 </Link>
               </p>
@@ -161,7 +161,7 @@ export default function SignupPage() {
         </div>
 
         {/* RIGHT — Static Visual (To match new aesthetic) */}
-        <div className="hidden md:flex relative p-4 lg:p-6 bg-slate-950 items-center justify-center">
+        <div className="hidden md:flex relative p-4 lg:p-6 bg-primary items-center justify-center">
           <div className="absolute inset-0 bg-gradient-to-br from-red-600/5 to-indigo-600/5 mix-blend-overlay z-10 pointer-events-none" />
           
           <div className="absolute inset-0 z-0">

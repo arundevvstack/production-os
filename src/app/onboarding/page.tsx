@@ -179,13 +179,13 @@ export default function OnboardingPage() {
               </div>
               <div className="space-y-1">
                 <CardTitle className="text-2.5xl font-black tracking-tight text-white">Initialize Production Space</CardTitle>
-                <CardDescription className="text-slate-400 text-sm">Register the primary internal operations company record.</CardDescription>
+                <CardDescription className="text-muted-foreground text-sm">Register the primary internal operations company record.</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-8 lg:p-10">
               <form onSubmit={handleOnboarding} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="companyName" className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">Production Agency Name</Label>
+                  <Label htmlFor="companyName" className="text-[10px] font-black uppercase tracking-wider text-muted-foreground ml-1">Production Agency Name</Label>
                   <Input 
                     id="companyName" 
                     type="text" 
@@ -221,16 +221,16 @@ export default function OnboardingPage() {
                     <div className="flex items-center gap-3 text-xs font-medium">
                       <StepIcon className={cn(
                         "h-4.5 w-4.5 shrink-0",
-                        step.status === 'done' ? 'text-emerald-500' : (step.status === 'loading' ? 'text-primary animate-pulse' : 'text-slate-600')
+                        step.status === 'done' ? 'text-emerald-500' : (step.status === 'loading' ? 'text-primary animate-pulse' : 'text-muted-foreground/80')
                       )} />
                       <span className={cn(
-                        step.status === 'done' ? 'text-slate-300 font-bold' : (step.status === 'loading' ? 'text-white' : 'text-slate-500')
+                        step.status === 'done' ? 'text-slate-300 font-bold' : (step.status === 'loading' ? 'text-white' : 'text-muted-foreground')
                       )}>{step.label}</span>
                     </div>
                     <div>
                       {step.status === 'done' && <CheckCircle2 className="h-4.5 w-4.5 text-emerald-500" />}
                       {step.status === 'loading' && <Loader2 className="h-4.5 w-4.5 text-primary animate-spin" />}
-                      {step.status === 'idle' && <span className="h-2 w-2 rounded-full bg-slate-800 mr-1.5" />}
+                      {step.status === 'idle' && <span className="h-2 w-2 rounded-full bg-primary mr-1.5" />}
                     </div>
                   </div>
                 );
@@ -238,10 +238,10 @@ export default function OnboardingPage() {
             </div>
 
             <div className="space-y-2.5 pt-4">
-              <div className="h-1.5 bg-slate-900 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-primary rounded-full overflow-hidden">
                 <div className="bg-primary h-full rounded-full transition-all duration-1000" style={{ width: `${initProgress}%` }}></div>
               </div>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest text-center font-bold">Mapping intranet bounds. Do not close terminal window.</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest text-center font-bold">Mapping intranet bounds. Do not close terminal window.</p>
             </div>
           </div>
         )}
