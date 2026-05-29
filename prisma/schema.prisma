@@ -58,6 +58,14 @@ model Company {
   telemetry           OperationalTelemetry[]
   api_keys            ApiKey[]
   webhooks            WebhookEndpoint[]
+
+  // Market Intelligence Relations
+  market_opportunities MarketOpportunity[]
+  market_leads         MarketLead[]
+  competitors          Competitor[]
+  industry_trends      IndustryTrend[]
+  market_research_notes MarketResearchNote[]
+  market_alerts        MarketAlert[]
   plugin_installations CompanyPluginInstallation[]
   
   // Phase 8: Reliability & Economics
@@ -107,6 +115,7 @@ model User {
   role_id            String? // Stores role NAME string: SUPER_ADMIN, MANAGER, EMPLOYEE, etc.
   email              String   @unique
   fullName           String
+  avatar             String?  // Profile picture URL
   status             String   @default("pending")
   department         String   @default("Production")
   onboarding_status  String   @default("awaiting_approval")
@@ -135,6 +144,10 @@ model User {
   approval_histories       ApprovalHistory[]
   notification_preferences NotificationPreference?
   queued_notifications     NotificationQueue[]
+
+  // Market Intelligence Relations
+  owned_opportunities      MarketOpportunity[]
+  market_research_notes    MarketResearchNote[]
 
   @@index([company_id])
 }
@@ -1099,3 +1112,149 @@ model TenantMarginForecast {
   company               Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
 }
 
+// ==========================================
+// PHASE 9: MARKET INTELLIGENCE OS
+// ==========================================
+
+model MarketOpportunity {
+  id              String   @id @default(uuid())
+  company_id      String
+  industry        String
+  region          String?
+  gap_description String
+  severity        String   // "High Opportunity", "Medium Opportunity", "Critical"
+  ad_style        String?
+  ai_readiness    Int      @default(0)
+  impact_score    Int      @default(0)
+  status          String   @default("open") // open, reviewing, targeted, closed
+  owner_id        String?
+
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  owner           User?    @relation(fields: [owner_id], references: [id], onDelete: SetNull)
+  leads           MarketLead[]
+}
+
+model MarketLead {
+  id                String   @id @default(uuid())
+  company_id        String
+  opportunity_id    String?
+
+  company_name      String
+  industry          String
+  website           String?
+  instagram         String?
+  linkedin          String?
+  contact_email     String?
+  location          String?
+  
+  marketing_quality String?
+  brand_quality     String?
+  services_needed   String?
+  growth_potential  String?
+  estimated_budget  Float    @default(0)
+  
+  ai_readiness      Int      @default(0)
+  opportunity_score Int      @default(0)
+  score_label       String?  // "Premium Opportunity", "High", "Medium"
+
+  is_synced         Boolean  @default(false)
+  synced_prospect_id String? // Link to CRM Prospect if synced
+
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  company           Company            @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  opportunity       MarketOpportunity? @relation(fields: [opportunity_id], references: [id], onDelete: SetNull)
+  scores            LeadScore[]
+}
+
+model LeadScore {
+  id                    String   @id @default(uuid())
+  lead_id               String
+  revenue_potential     Int      @default(0)
+  ai_readiness          Int      @default(0)
+  marketing_maturity    Int      @default(0)
+  urgency               Int      @default(0)
+  competition_score     Int      @default(0)
+  conversion_probability Float   @default(0)
+  final_score           Int      @default(0)
+
+  calculated_at         DateTime @default(now())
+
+  lead                  MarketLead @relation(fields: [lead_id], references: [id], onDelete: Cascade)
+}
+
+model Competitor {
+  id                    String   @id @default(uuid())
+  company_id            String
+  brand_name            String
+  campaigns_count       Int      @default(0)
+  video_style           String?
+  ai_usage              String?
+  social_quality        String?
+  engagement_rate       String?
+  branding_style        String?
+  pricing               String?
+  service_offerings     String?
+  production_quality    String?
+  weaknesses            String[] @default([])
+
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+
+  company               Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  activities            CompetitorActivity[]
+}
+
+model CompetitorActivity {
+  id              String   @id @default(uuid())
+  competitor_id   String
+  activity_type   String   // "Campaign Launch", "Pricing Change", "New Service"
+  description     String
+  impact          String?  // "High", "Medium", "Low"
+  detected_at     DateTime @default(now())
+
+  competitor      Competitor @relation(fields: [competitor_id], references: [id], onDelete: Cascade)
+}
+
+model IndustryTrend {
+  id                    String   @id @default(uuid())
+  company_id            String
+  title                 String
+  source                String   // e.g., "Instagram Reels", "TikTok"
+  velocity_score        Int      @default(0)
+  viral_format          String?
+  upcoming_prediction   String?
+  
+  detected_at           DateTime @default(now())
+
+  company               Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}
+
+model MarketResearchNote {
+  id              String   @id @default(uuid())
+  company_id      String
+  user_id         String
+  content         String
+  
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model MarketAlert {
+  id              String   @id @default(uuid())
+  company_id      String
+  type            String   // "gap", "sync", "lead", "competitor"
+  message         String
+  is_dismissed    Boolean  @default(false)
+  
+  created_at      DateTime @default(now())
+
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+}

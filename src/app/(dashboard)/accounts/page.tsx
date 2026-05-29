@@ -493,10 +493,10 @@ export default function AccountsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 px-2">
             <Card className="bg-white text-foreground rounded-[10px] overflow-hidden group shadow-2xl relative border-border">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-              <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:scale-125 transition-transform duration-1000 rotate-12">
-                <Wallet className="h-32 w-32" />
+              <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-125 transition-transform duration-1000 rotate-12">
+                <Wallet className="h-24 w-24" />
               </div>
-              <CardContent className="p-8 space-y-8 relative z-10">
+              <CardContent className="p-6 space-y-6 relative z-10">
                 <div className="space-y-2">
                   <p className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground">Total Balance</p>
                   <div className="h-1 w-12 bg-primary rounded-full"></div>
@@ -514,7 +514,7 @@ export default function AccountsPage() {
             </Card>
 
             <Card className="premium-card rounded-[10px] overflow-hidden bg-white shadow-2xl border-none">
-              <CardContent className="p-8 flex flex-col justify-center h-full space-y-10">
+              <CardContent className="p-6 flex flex-col justify-center h-full space-y-6">
                 <div className="space-y-1">
                    <p className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground">Monthly Spending</p>
                    <div className="h-1 w-12 bg-secondary rounded-full"></div>
@@ -543,9 +543,9 @@ export default function AccountsPage() {
             </Card>
 
             <Card className="bg-white rounded-[10px] overflow-hidden text-foreground shadow-2xl border-border sm:col-span-2 md:col-span-1">
-              <CardContent className="p-8 flex flex-col justify-center h-full relative space-y-10">
-                <div className="absolute top-0 right-0 p-12 opacity-5 rotate-45">
-                  <Cpu className="h-32 w-32" />
+              <CardContent className="p-6 flex flex-col justify-center h-full relative space-y-6">
+                <div className="absolute top-0 right-0 p-8 opacity-5 rotate-45">
+                  <Cpu className="h-24 w-24" />
                 </div>
                 <div className="space-y-1">
                   <p className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground">Remaining Balance</p>
@@ -573,10 +573,10 @@ export default function AccountsPage() {
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{accounts?.length || 0} Accounts</span>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {accounts?.length === 0 ? (
-                  <div className="col-span-full py-32 text-center bg-muted/50 backdrop-blur-md rounded-[10px] border border-border shadow-2xl">
-                    <div className="h-20 w-20 rounded-[10px] bg-white/5 border border-border flex items-center justify-center mx-auto mb-6 animate-pulse">
+                  <div className="col-span-full py-16 text-center bg-muted/50 backdrop-blur-md rounded-[10px] border border-border shadow-2xl">
+                    <div className="h-16 w-16 rounded-[10px] bg-white/5 border border-border flex items-center justify-center mx-auto mb-4 animate-pulse">
                       <Building2 className="h-10 w-10 text-muted-foreground" />
                     </div>
                     <p className="text-base font-black uppercase tracking-widest text-muted-foreground">No active accounts found</p>
@@ -594,15 +594,15 @@ export default function AccountsPage() {
                 ) : (
                   accounts?.map((acc) => (
                     <Card key={acc.id} className="bg-white group border-border shadow-2xl rounded-[10px] transition-all duration-700 hover:scale-[1.02] hover:bg-muted">
-                      <CardContent className="p-6 space-y-6">
+                      <CardContent className="p-5 space-y-4">
                         <div className="flex justify-between items-start">
                           <div className={cn(
-                            "h-16 w-16 rounded-[10px] flex items-center justify-center shadow-2xl backdrop-blur-3xl transition-all group-hover:rotate-6 group-hover:scale-110 border border-border",
+                            "h-12 w-12 rounded-[10px] flex items-center justify-center shadow-2xl backdrop-blur-3xl transition-all group-hover:rotate-6 group-hover:scale-110 border border-border",
                             acc.type === 'Bank' ? 'bg-accent text-white' : 'bg-emerald-600 text-white'
                           )}>
-                            {acc.type === 'Bank' ? <Building2 className="h-8 w-8" /> : <Banknote className="h-8 w-8" />}
+                            {acc.type === 'Bank' ? <Building2 className="h-6 w-6" /> : <Banknote className="h-6 w-6" />}
                           </div>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             <Badge className="bg-white/10 backdrop-blur-md text-white border-border text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-sm">
                               {acc.type}
                             </Badge>
@@ -628,10 +628,10 @@ export default function AccountsPage() {
                             {acc.bank_name || 'Business Reserve'}
                           </p>
                         </div>
-                        <div className="pt-8 border-t border-border flex justify-between items-end">
-                          <div className="space-y-2">
+                        <div className="pt-4 border-t border-border flex justify-between items-end">
+                          <div className="space-y-1">
                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Available Balance</p>
-                            <p className="text-4xl font-black text-foreground tracking-tighter">₹{Number(acc.balance).toLocaleString()}</p>
+                            <p className="text-3xl font-black text-foreground tracking-tighter">₹{Number(acc.balance).toLocaleString()}</p>
                           </div>
                           <div className="h-12 w-12 rounded-[10px] bg-white/5 border border-border flex items-center justify-center text-muted-foreground opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
                             <ChevronRight className="h-6 w-6" />
@@ -652,20 +652,20 @@ export default function AccountsPage() {
                 Financial Pulse
               </h3>
               <Card className="bg-white rounded-[10px] border-border shadow-xl overflow-hidden">
-                <CardContent className="p-4">
+                <CardContent className="p-3">
                   {(!expenses || expenses.length === 0) ? (
-                    <div className="py-24 text-center text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/80 flex flex-col items-center justify-center">
-                      <div className="h-12 w-12 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-border">
-                        <History className="h-5 w-5 text-muted-foreground" />
+                    <div className="py-16 text-center text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/80 flex flex-col items-center justify-center">
+                      <div className="h-10 w-10 bg-white/5 rounded-full flex items-center justify-center mb-3 border border-border">
+                        <History className="h-4 w-4 text-muted-foreground" />
                       </div>
                       Zero operational movements.
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       {expenses?.slice(0, 8).map((ex) => (
-                        <div key={ex.id} className="p-6 flex items-center gap-6 hover:bg-muted rounded-[10px] transition-all duration-500 group cursor-pointer border border-transparent hover:border-border">
-                          <div className="h-14 w-14 rounded-[10px] bg-accent/10 text-accent flex items-center justify-center shrink-0 shadow-inner transition-all group-hover:scale-110 group-hover:rotate-6">
-                            <TrendingDown className="h-7 w-7" />
+                        <div key={ex.id} className="p-4 flex items-center gap-4 hover:bg-muted rounded-[10px] transition-all duration-500 group cursor-pointer border border-transparent hover:border-border">
+                          <div className="h-10 w-10 rounded-[10px] bg-accent/10 text-accent flex items-center justify-center shrink-0 shadow-inner transition-all group-hover:scale-110 group-hover:rotate-6">
+                            <TrendingDown className="h-5 w-5" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-base font-black text-foreground truncate tracking-tight group-hover:text-foreground transition-colors">{ex.description}</p>
