@@ -1,4 +1,3 @@
-'use server';
 /**
  * AI Telemetry — Observability layer for all AI Command Center operations.
  * Non-blocking: all logging is fire-and-forget via Promise.resolve().then()
