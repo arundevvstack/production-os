@@ -81,10 +81,10 @@ export default function InvoicesPage() {
     orderBy: { created_at: 'desc' }
   });
 
-  // 2. Fetch Clients from Supabase (filtered by company)
-  const { data: clients } = useSupabaseCollection('Client', {
+  // 2. Fetch Leads (Prospects) from Supabase (filtered by company)
+  const { data: leads } = useSupabaseCollection('Prospect', {
     where: companyId ? { company_id: companyId } : undefined,
-    orderBy: { name: 'asc' }
+    orderBy: { company_name: 'asc' }
   });
 
   // 3. Fetch Projects from Supabase (filtered by company)
@@ -133,6 +133,28 @@ export default function InvoicesPage() {
           const v = c === 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
+
+    // --- FOREIGN KEY FIX: Sync Prospect to Client Just-In-Time ---
+    // The Invoice table requires client_id to exist in the Client table.
+    // If the user selected a Prospect, we must ensure it exists in Client.
+    if (newInvoice.client_id) {
+      const { data: existingClient } = await supabase
+        .from('Client')
+        .select('id')
+        .eq('id', newInvoice.client_id)
+        .single();
+      
+      if (!existingClient) {
+        const lead = leads?.find(l => l.id === newInvoice.client_id);
+        if (lead) {
+          await supabase.from('Client').insert({
+            id: lead.id,
+            company_id: companyId,
+            name: lead.company_name || lead.name || 'Unknown Client'
+          });
+        }
+      }
+    }
 
     const { error } = await supabase.from('Invoice').insert({
       id: generatedId,
@@ -276,20 +298,20 @@ export default function InvoicesPage() {
                   <Select 
                     value={newInvoice.client_id} 
                     onValueChange={(val) => {
-                      const client = clients?.find(l => l.id === val);
-                      if (client) {
-                        setNewInvoice({ ...newInvoice, client_id: val, client_name: client.name || '' });
+                      const lead = leads?.find(l => l.id === val);
+                      if (lead) {
+                        setNewInvoice({ ...newInvoice, client_id: val, client_name: lead.company_name || lead.name || '' });
                       }}
                   >
                     <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select a client" />
                     </SelectTrigger>
                     <SelectContent>
-                      {clients?.length === 0 ? (
+                      {leads?.length === 0 ? (
                         <SelectItem value="none" disabled>No clients found</SelectItem>
                       ) : (
-                        clients?.map((client) => (
-                          <SelectItem key={client.id} value={client.id}>{client.name}</SelectItem>
+                        leads?.map((lead) => (
+                          <SelectItem key={lead.id} value={lead.id}>{lead.company_name || lead.name}</SelectItem>
                         ))
                       )}
                     </SelectContent>
@@ -304,9 +326,9 @@ export default function InvoicesPage() {
                       const proj = projects?.find(p => p.id === val);
                       // Try to auto-select client if known
                       if (proj && proj.client_name) {
-                        const client = clients?.find(l => l.name === proj?.client_name);
-                        if (client) {
-                          setNewInvoice({ ...newInvoice, project_id: val, project_name: proj.project_name || '', client_id: client.id, client_name: client.name || '' });
+                        const lead = leads?.find(l => l.company_name === proj?.client_name);
+                        if (lead) {
+                          setNewInvoice({ ...newInvoice, project_id: val, project_name: proj.project_name || '', client_id: lead.id, client_name: lead.company_name || lead.name || '' });
                           return;
                         }
                       }
@@ -537,7 +559,7 @@ export default function InvoicesPage() {
                           <div className="flex items-center gap-2">
                             <Building2 className="h-3 w-3 text-muted-foreground" />
                             <span className="font-bold text-sm leading-none">
-                              {clients?.find(l => l.id === inv.client_id)?.name || 'Unknown Client'}
+                              {leads?.find(l => l.id === inv.client_id)?.company_name || leads?.find(l => l.id === inv.client_id)?.name || 'Unknown Client'}
                             </span>
                           </div>
                           {inv.project_id && (

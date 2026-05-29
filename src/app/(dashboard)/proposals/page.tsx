@@ -942,9 +942,23 @@ function ProposalsContent() {
 
     // 4. Auto-Create Invoice
     const invId = `auto_inv_${Date.now()}`;
+    
+    // Sync Prospect to Client Just-In-Time to satisfy Foreign Key Constraint
+    if (leadId) {
+      const { data: existingClient } = await supabase.from('Client').select('id').eq('id', leadId).single();
+      if (!existingClient) {
+        await supabase.from('Client').insert({
+          id: leadId,
+          company_id: companyId,
+          name: editingProposal.parsedContent?.client || "Unknown Client"
+        });
+      }
+    }
+
     await supabase.from('Invoice').insert({
       id: invId,
       company_id: companyId,
+      client_id: leadId || null,
       project_id: prjId,
       invoice_number: invRef,
       subtotal: taxableSubtotal,
