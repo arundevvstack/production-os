@@ -330,7 +330,7 @@ function AccountCenterContent() {
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-        <TabsList className="bg-white/50 dark:bg-slate-900/50 border p-1 h-auto flex-wrap gap-1 rounded-[10px]">
+        <TabsList className="bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 border p-1 h-auto flex-wrap gap-1 rounded-[10px]">
           <TabsTrigger value="profile" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
             <UserIcon className="h-4 w-4" /> Profile
           </TabsTrigger>

@@ -240,7 +240,7 @@ export default function AICommandCenter() {
     <div className="-m-4 md:-m-8 lg:-m-12 min-h-screen bg-muted text-foreground font-sans antialiased pb-12 relative overflow-hidden">
       
       {/* Hero Header Banner (Clean border-border with no outer margins) */}
-      <header className="relative py-6 border-b border-border bg-white shadow-sm">
+      <header className="relative py-6 border-b border-border bg-white dark:bg-slate-900 shadow-sm">
         <div className="w-full mx-auto px-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <Badge className="bg-destructive/10 text-destructive border-none font-bold text-[9px] uppercase tracking-widest px-3 py-1">
@@ -259,7 +259,7 @@ export default function AICommandCenter() {
               disabled={isUpdatingMemory}
               onClick={handleClearMemory}
               variant="outline" 
-              className="rounded-xl h-10 border-border bg-white hover:bg-muted text-xs font-black gap-2 text-foreground/80 shadow-sm"
+              className="rounded-xl h-10 border-border bg-white dark:bg-slate-900 hover:bg-muted text-xs font-black gap-2 text-foreground/80 shadow-sm"
             >
               <RefreshCw className={`h-4 w-4 text-destructive ${isUpdatingMemory ? 'animate-spin' : ''}`} /> Re-index Memory
             </Button>
@@ -273,7 +273,7 @@ export default function AICommandCenter() {
         {/* Left Side: Business Summary & Data Registry */}
         <section className="xl:col-span-1 space-y-6">
           
-          <Card className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+          <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm overflow-hidden">
             <CardContent className="p-6 space-y-6">
               
               <h3 className="font-black text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-1.5 border-b border-border pb-4">
@@ -317,7 +317,7 @@ export default function AICommandCenter() {
           </Card>
 
           {/* System Database Registry */}
-          <Card className="bg-white border border-border rounded-2xl shadow-sm">
+          <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm">
             <CardContent className="p-5 space-y-4">
               <h3 className="font-black text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                 <Database className="h-4 w-4 text-destructive" /> System Database
@@ -361,7 +361,7 @@ export default function AICommandCenter() {
                 className={`rounded-xl h-8 px-4 text-[10px] font-bold tracking-wider uppercase border transition-all ${
                   activeSegment === seg.id 
                     ? "bg-destructive border-destructive text-white shadow-sm" 
-                    : "bg-white border-border hover:bg-muted text-muted-foreground/80"
+                    : "bg-white dark:bg-slate-900 border-border hover:bg-muted text-muted-foreground/80"
                 }`}
               >
                 {seg.label}
@@ -372,7 +372,7 @@ export default function AICommandCenter() {
           {/* Realtime Floating Insight Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredInsights.map(insight => (
-              <Card key={insight.id} className="bg-white border border-border rounded-xl shadow-sm hover:border-destructive/20 transition-all duration-300">
+              <Card key={insight.id} className="bg-white dark:bg-slate-900 border border-border rounded-xl shadow-sm hover:border-destructive/20 transition-all duration-300">
                 <CardContent className="p-4 flex gap-3 items-start">
                   
                   <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
@@ -398,14 +398,14 @@ export default function AICommandCenter() {
             ))}
 
             {filteredInsights.length === 0 && (
-              <div className="col-span-full py-10 text-center text-muted-foreground bg-white border border-dashed border-border rounded-xl text-xs font-semibold">
+              <div className="col-span-full py-10 text-center text-muted-foreground bg-white dark:bg-slate-900 border border-dashed border-border rounded-xl text-xs font-semibold">
                 No active insight warnings matched your segment criteria or security role clearance.
               </div>
             )}
           </div>
 
           {/* Interactive Global AI Assistant Chat Box */}
-          <Card className="bg-white border border-border rounded-2xl shadow-sm overflow-hidden">
+          <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm overflow-hidden">
             <CardContent className="p-6 space-y-4">
               <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
                 <Bot className="h-4.5 w-4.5 text-destructive animate-pulse" /> Global Operational Assistant
@@ -425,7 +425,7 @@ export default function AICommandCenter() {
                     <div className={`p-3 rounded-2xl leading-relaxed max-w-[80%] ${
                       chat.sender === 'user' 
                         ? 'bg-destructive text-white rounded-tr-none shadow-sm' 
-                        : 'bg-white text-foreground/80 border border-border rounded-tl-none shadow-sm'
+                        : 'bg-white dark:bg-slate-900 text-foreground/80 border border-border rounded-tl-none shadow-sm'
                     }`}>
                       {chat.text}
                     </div>
@@ -439,7 +439,7 @@ export default function AICommandCenter() {
                   placeholder="e.g. Find Malayalam anchors in Kochi..." 
                   value={assistantQuery}
                   onChange={(e) => setAssistantQuery(e.target.value)}
-                  className="bg-white border-border h-10 text-xs rounded-xl flex-grow focus:border-destructive text-foreground font-bold"
+                  className="bg-white dark:bg-slate-900 border-border h-10 text-xs rounded-xl flex-grow focus:border-destructive text-foreground font-bold"
                 />
                 <Button type="submit" disabled={isAiLoading} className="rounded-xl h-10 bg-destructive hover:bg-destructive text-white font-bold text-xs px-4 disabled:opacity-60">
                   {isAiLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
@@ -460,7 +460,7 @@ export default function AICommandCenter() {
           </Card>
 
           {/* AI Automation Approval Queue */}
-          <Card className="bg-white border border-border rounded-2xl shadow-sm">
+          <Card className="bg-white dark:bg-slate-900 border border-border rounded-2xl shadow-sm">
             <CardContent className="p-6 space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">

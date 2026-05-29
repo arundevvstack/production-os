@@ -59,7 +59,7 @@ export function CinematicHero({ onRunSimulation }: { onRunSimulation: () => void
               onClick={handleRun}
               disabled={isSimulating}
               size="lg"
-              className="h-14 px-8 text-lg rounded-full shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] bg-primary hover:bg-primary text-white dark:bg-muted dark:text-foreground dark:hover:bg-white transition-all duration-300 gap-3 group"
+              className="h-14 px-8 text-lg rounded-full shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] bg-primary hover:bg-primary text-white dark:bg-muted dark:text-foreground dark:hover:bg-white dark:bg-slate-900 transition-all duration-300 gap-3 group"
             >
               {isSimulating ? (
                 <>

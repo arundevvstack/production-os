@@ -187,7 +187,7 @@ export default function ReportsPage() {
           { label: "Talent Pool", val: talentCount.toString(), change: "Verified", icon: Users, color: "text-accent bg-accent/10" },
           { label: "Pipeline Value", val: `₹${pipelineValue.toLocaleString()}`, change: "Projected", icon: Target, color: "text-accent bg-accent/10" },
         ].map((stat, i) => (
-          <Card key={i} className="border-white/20 shadow-sm relative overflow-hidden bg-white rounded-xl">
+          <Card key={i} className="border-white/20 dark:border-slate-700/20 shadow-sm relative overflow-hidden bg-white dark:bg-slate-900 rounded-xl">
             <CardContent className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div className={`p-2.5 rounded-xl ${stat.color}`}>

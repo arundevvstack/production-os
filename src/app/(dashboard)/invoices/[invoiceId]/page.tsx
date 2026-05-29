@@ -119,7 +119,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
       </div>
 
       {/* Invoice Document Layout */}
-      <div className="bg-white shadow-xl rounded-[10px] p-12 md:p-16 border min-h-[1100px] flex flex-col print:shadow-none print:border-none print:rounded-none print:p-0">
+      <div className="bg-white dark:bg-slate-900 shadow-xl rounded-[10px] p-12 md:p-16 border min-h-[1100px] flex flex-col print:shadow-none print:border-none print:rounded-none print:p-0">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between gap-12 mb-16">
@@ -289,7 +289,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ invoic
           body { background: white !important; margin: 0 !important; padding: 0 !important; }
           main { padding: 0 !important; overflow: visible !important; }
           .max-w-5xl { max-width: 100% !important; margin: 0 !important; }
-          .bg-white { box-shadow: none !important; border: none !important; padding: 0 !important; }
+          .bg-white dark:bg-slate-900 { box-shadow: none !important; border: none !important; padding: 0 !important; }
           .shadow-xl, .shadow-lg { box-shadow: none !important; }
           * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }

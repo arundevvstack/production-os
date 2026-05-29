@@ -161,7 +161,7 @@ export default function ArchivesPage() {
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search vault..."
-            className="pl-10 h-11 rounded-[10px] bg-white shadow-sm border-none"
+            className="pl-10 h-11 rounded-[10px] bg-white dark:bg-slate-900 shadow-sm border-none"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -170,7 +170,7 @@ export default function ArchivesPage() {
 
       <Card className="border-none shadow-soft bg-accent/10 border border-accent/20 rounded-[10px]">
         <CardContent className="p-6 flex items-start gap-4">
-          <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-accent shadow-sm shrink-0">
+          <div className="h-10 w-10 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-accent shadow-sm shrink-0">
             <Info className="h-5 w-5" />
           </div>
           <div className="space-y-1">
@@ -184,7 +184,7 @@ export default function ArchivesPage() {
       </Card>
 
       <Tabs defaultValue="clients" className="w-full">
-        <TabsList className="bg-white/50 border p-1 rounded-[10px] mb-8 h-auto flex-wrap">
+        <TabsList className="bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 border p-1 rounded-[10px] mb-8 h-auto flex-wrap">
           <TabsTrigger value="clients" className="rounded-xl px-8 py-2.5 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white font-black text-xs uppercase tracking-widest">
             <Building2 className="h-4 w-4" /> Archived Clients ({clients.length})
           </TabsTrigger>
@@ -298,10 +298,10 @@ function ArchiveCard({ item, onRestore, onDelete }: { item: any, onRestore: (i: 
   const archivedDate = item.archived_at ? new Date(item.archived_at).toLocaleDateString() : "Unknown date";
 
   return (
-    <Card className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white hover:shadow-md transition-all">
+    <Card className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white dark:bg-slate-900 hover:shadow-md transition-all">
       <CardHeader className="bg-muted/50 pb-4 px-6 pt-6">
         <div className="flex justify-between items-start">
-          <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-muted-foreground shadow-sm">
+          <div className="h-10 w-10 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-muted-foreground shadow-sm">
             {item.archive_type === 'project' ? <Film className="h-5 w-5" /> :
              (item.archive_type === 'prospect' || item.archive_type === 'lead') ? <Users className="h-5 w-5" /> :
              <Building2 className="h-5 w-5" />}
@@ -317,7 +317,7 @@ function ArchiveCard({ item, onRestore, onDelete }: { item: any, onRestore: (i: 
           <History className="h-3 w-3" /> Moved to vault on {archivedDate}
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-6 bg-white border-t border-slate-50 flex items-center gap-2">
+      <CardContent className="p-6 bg-white dark:bg-slate-900 border-t border-slate-50 flex items-center gap-2">
         <Button
           variant="outline"
           className="flex-1 rounded-xl h-10 text-[10px] font-black uppercase tracking-widest gap-2"
@@ -340,7 +340,7 @@ function ArchiveCard({ item, onRestore, onDelete }: { item: any, onRestore: (i: 
 
 function EmptyState({ icon: Icon, label }: { icon: any, label: string }) {
   return (
-    <div className="col-span-full py-24 text-center bg-white rounded-[10px] border-2 border-dashed text-muted-foreground">
+    <div className="col-span-full py-24 text-center bg-white dark:bg-slate-900 rounded-[10px] border-2 border-dashed text-muted-foreground">
       <Icon className="h-12 w-12 mx-auto mb-4 opacity-10" />
       <p className="text-sm font-medium">{label}</p>
     </div>

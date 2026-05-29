@@ -142,7 +142,7 @@ export default function ServiceBuilderPage() {
                     "cursor-pointer transition-all duration-300 border-2 rounded-[10px] group relative overflow-hidden",
                     selectedVerticalId === vertical.id 
                       ? "border-primary shadow-lg ring-4 ring-primary/5" 
-                      : "border-transparent hover:border-border hover:shadow-md bg-white"
+                      : "border-transparent hover:border-border hover:shadow-md bg-white dark:bg-slate-900"
                   )}
                   onClick={() => setSelectedVerticalId(vertical.id)}
                 >
@@ -171,7 +171,7 @@ export default function ServiceBuilderPage() {
               <div className="flex items-center gap-3 px-2">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">02. Configure Services for {activeVertical.name}</h3>
               </div>
-              <Card className="border-none shadow-soft rounded-[10px] bg-white overflow-hidden">
+              <Card className="border-none shadow-soft rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
                 <CardContent className="p-8">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {activeVertical.services.map((service) => {
@@ -208,7 +208,7 @@ export default function ServiceBuilderPage() {
               </Card>
             </section>
           ) : (
-            <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed rounded-[10px] text-muted-foreground bg-white/50">
+            <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed rounded-[10px] text-muted-foreground bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50">
               <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mb-4">
                 <Info className="h-8 w-8 opacity-20" />
               </div>
@@ -220,7 +220,7 @@ export default function ServiceBuilderPage() {
         {/* Right Column: Brief Summary */}
         <aside className="lg:col-span-4 lg:sticky lg:top-8 space-y-6">
           <Card className="border-none shadow-xl rounded-[10px] bg-primary text-white overflow-hidden">
-            <CardHeader className="bg-white/5 p-8 border-b border-white/10">
+            <CardHeader className="bg-white/5 dark:bg-slate-900/5 p-8 border-b border-white/10 dark:border-slate-700/10">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-accent rounded-xl flex items-center justify-center shadow-lg shadow-accent/20">
                   <FileText className="h-5 w-5 text-white" />
@@ -270,13 +270,13 @@ export default function ServiceBuilderPage() {
                 </div>
               </ScrollArea>
 
-              <div className="p-8 border-t border-white/10 bg-white/5 backdrop-blur-md">
+              <div className="p-8 border-t border-white/10 dark:border-slate-700/10 bg-white/5 dark:bg-slate-900/5 backdrop-blur-md">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Deliverables Count</span>
                   <span className="text-xl font-black text-accent">{totalSelectedCount}</span>
                 </div>
                 <Button 
-                  className="w-full h-14 rounded-[10px] bg-white text-foreground hover:bg-muted font-black uppercase text-xs tracking-widest gap-3 shadow-xl"
+                  className="w-full h-14 rounded-[10px] bg-white dark:bg-slate-900 text-foreground hover:bg-muted font-black uppercase text-xs tracking-widest gap-3 shadow-xl"
                   onClick={handleLaunchProject}
                 >
                   Confirm Brief & Launch <ChevronRight className="h-4 w-4" />

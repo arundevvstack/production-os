@@ -362,7 +362,7 @@ export default function ProjectsPage() {
               onClick={() => setViewMode(mode.id as ViewMode)}
               className={cn(
                 "h-9 px-6 gap-2 rounded-xl transition-all duration-500", 
-                viewMode === mode.id ? "bg-white dark:bg-slate-900 shadow-md text-foreground font-black" : "text-muted-foreground font-bold hover:bg-white/50 dark:bg-slate-900/50"
+                viewMode === mode.id ? "bg-white dark:bg-slate-900 shadow-md text-foreground font-black" : "text-muted-foreground font-bold hover:bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50"
               )}
             >
               <mode.icon className="h-4 w-4" /> 
@@ -380,7 +380,7 @@ export default function ProjectsPage() {
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-10 px-5 gap-2 rounded-xl border-border bg-white/50 dark:bg-slate-900/50 font-black text-[10px] uppercase tracking-widest hover:bg-white dark:bg-slate-900 transition-all">
+              <Button variant="outline" className="h-10 px-5 gap-2 rounded-xl border-border bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 font-black text-[10px] uppercase tracking-widest hover:bg-white dark:bg-slate-900 transition-all">
                 <Filter className="h-4 w-4" /> Intelligence Filter
               </Button>
             </DropdownMenuTrigger>
@@ -404,7 +404,7 @@ export default function ProjectsPage() {
       {/* Main Content Area */}
       <div className="min-h-[500px] px-2 pb-12">
         {filteredProjects.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-32 bg-white/20 backdrop-blur-md rounded-[4rem] border-2 border-dashed border-white/60 dark:border-slate-700/60">
+          <div className="flex flex-col items-center justify-center py-32 bg-white/20 dark:bg-slate-900/20 backdrop-blur-md rounded-[4rem] border-2 border-dashed border-white/60 dark:border-slate-700/60">
             <div className="h-20 w-20 rounded-[10px] bg-muted flex items-center justify-center mb-6">
               <Archive className="h-8 w-8 text-slate-300" />
             </div>
@@ -466,23 +466,23 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
           </div>
           <div className="flex justify-between items-start relative z-10">
             <div className="flex items-center gap-2">
-              <Badge className="h-6 px-3 rounded-full bg-white/20 backdrop-blur-xl border-none text-[8px] font-black uppercase tracking-[0.05em] text-white">
+              <Badge className="h-6 px-3 rounded-full bg-white/20 dark:bg-slate-900/20 backdrop-blur-xl border-none text-[8px] font-black uppercase tracking-[0.05em] text-white">
                 {project.status?.replace('_', ' ')}
               </Badge>
               {isPilot && (
-                <Badge className="h-6 px-3 rounded-full bg-white/20 backdrop-blur-xl border-none text-[8px] font-black uppercase tracking-[0.05em] text-white shadow-sm">
+                <Badge className="h-6 px-3 rounded-full bg-white/20 dark:bg-slate-900/20 backdrop-blur-xl border-none text-[8px] font-black uppercase tracking-[0.05em] text-white shadow-sm">
                   Pilot
                 </Badge>
               )}
               {displayType && (
-                <Badge className="h-6 px-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-[8px] font-black uppercase tracking-[0.05em] text-white">
+                <Badge className="h-6 px-3 rounded-full bg-white/10 dark:bg-slate-900/10 backdrop-blur-xl border border-white/20 dark:border-slate-700/20 text-[8px] font-black uppercase tracking-[0.05em] text-white">
                   {displayType}
                 </Badge>
               )}
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-10 w-10 text-white/60 hover:text-white hover:bg-white/10 rounded-[10px] backdrop-blur-xl border border-white/20">
+                <Button variant="ghost" size="icon" className="h-10 w-10 text-white/60 hover:text-white hover:bg-white/10 dark:bg-slate-900/10 rounded-[10px] backdrop-blur-xl border border-white/20 dark:border-slate-700/20">
                   <MoreVertical className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -503,7 +503,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mt-2">{project.client_name}</p>
           </Link>
         </div>
-        <CardContent className="p-6 space-y-5 bg-white/60 backdrop-blur-3xl">
+        <CardContent className="p-6 space-y-5 bg-white/60 dark:bg-slate-900/60 backdrop-blur-3xl">
           <div className="space-y-3">
             <div className="flex justify-between items-end">
               <span className="text-[9px] font-black text-muted-foreground uppercase tracking-normal">Health Index</span>
@@ -548,7 +548,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
         </div>
 
         <div className="w-full md:w-[42%] ml-16 md:ml-0">
-          <Card className="premium-card rounded-[10px] group border border-border/50 shadow-premium hover:shadow-2xl transition-all duration-700 relative overflow-hidden bg-white/60 backdrop-blur-xl">
+          <Card className="premium-card rounded-[10px] group border border-border/50 shadow-premium hover:shadow-2xl transition-all duration-700 relative overflow-hidden bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">
             <div className={cn(
               "absolute top-0 bottom-0 w-1.5 transition-all duration-500 group-hover:w-2.5",
               isEven ? "right-0" : "left-0",
@@ -617,7 +617,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
   }
 
   return (
-    <Card className="premium-card group border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[15px] bg-white/50 dark:bg-slate-900/50 backdrop-blur-2xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-0.5 overflow-hidden relative">
+    <Card className="premium-card group border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[15px] bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 backdrop-blur-2xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-0.5 overflow-hidden relative">
       <div className={cn("absolute left-0 top-0 bottom-0 w-1.5 transition-all group-hover:w-2.5 z-10", getProgressColor(project.progress || 0, 'bg'))} />
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row md:items-stretch">
@@ -639,7 +639,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             </div>
           </Link>
 
-          <div className="flex-1 px-8 py-6 md:py-0 border-y md:border-y-0 md:border-x border-white/40 bg-white/20">
+          <div className="flex-1 px-8 py-6 md:py-0 border-y md:border-y-0 md:border-x border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 h-full items-center">
               <div className="space-y-3">
                 <div className="flex justify-between items-end">
@@ -654,7 +654,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                 </div>
               </div>
               
-              <div className="hidden sm:flex flex-col gap-2.5 pl-8 border-l border-white/40 h-full justify-center">
+              <div className="hidden sm:flex flex-col gap-2.5 pl-8 border-l border-white/40 dark:border-slate-700/40 h-full justify-center">
                 <span className="text-[9px] uppercase font-black text-muted-foreground tracking-widest">Status & Tags</span>
                 <div className="flex flex-wrap gap-2">
                   <Badge className="w-fit text-[10px] font-black uppercase bg-primary text-white border-none py-1.5 px-4 rounded-xl">
@@ -675,7 +675,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             </div>
           </div>
 
-          <div className="px-8 py-6 md:w-[30%] flex items-center justify-between gap-8 bg-white/30">
+          <div className="px-8 py-6 md:w-[30%] flex items-center justify-between gap-8 bg-white/30 dark:bg-slate-900/30">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 items-center">
               <div className="flex flex-col space-y-1.5">
                 <span className="text-[9px] uppercase font-black text-muted-foreground tracking-widest">Target Delivery</span>

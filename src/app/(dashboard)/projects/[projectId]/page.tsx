@@ -504,9 +504,9 @@ export default function ProjectWorkspacePage() {
   );
 }
   return (
-    <div className="space-y-0 -mt-4 -mx-4 md:-mt-8 md:-mx-8 lg:-mt-12 lg:-mx-12 bg-white min-h-[calc(100vh-2rem)]">
+    <div className="space-y-0 -mt-4 -mx-4 md:-mt-8 md:-mx-8 lg:-mt-12 lg:-mx-12 bg-white dark:bg-slate-900 min-h-[calc(100vh-2rem)]">
       {/* ── All-white Header ── */}
-      <div className="bg-white px-8 pt-8 pb-0">
+      <div className="bg-white dark:bg-slate-900 px-8 pt-8 pb-0">
         {/* Top row */}
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div className="flex items-start gap-5">
@@ -568,7 +568,7 @@ export default function ProjectWorkspacePage() {
                       }
                     }}
                   >
-                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-white border border-border text-muted-foreground/80 w-auto focus:ring-0 shadow-sm hover:bg-muted">
+                    <SelectTrigger className="h-7 px-3 text-[10px] font-black uppercase rounded-full bg-white dark:bg-slate-900 border border-border text-muted-foreground/80 w-auto focus:ring-0 shadow-sm hover:bg-muted">
                       <SelectValue placeholder="Pipeline" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl p-1.5 shadow-xl border-0">
@@ -578,7 +578,7 @@ export default function ProjectWorkspacePage() {
                     </SelectContent>
                   </Select>
                 ) : (
-                  <span className="rounded-full bg-white border border-border text-muted-foreground font-black text-[10px] uppercase h-7 px-3 flex items-center shadow-sm">{project.project_type || "Normal Production"}</span>
+                  <span className="rounded-full bg-white dark:bg-slate-900 border border-border text-muted-foreground font-black text-[10px] uppercase h-7 px-3 flex items-center shadow-sm">{project.project_type || "Normal Production"}</span>
                 )}
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -653,7 +653,7 @@ export default function ProjectWorkspacePage() {
       </div>
 
       {/* ── White Tab Content Area ── */}
-      <div className="bg-white min-h-screen">
+      <div className="bg-white dark:bg-slate-900 min-h-screen">
         <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
 
         {/* Tab Content: Dynamic Production Phases */}
@@ -674,7 +674,7 @@ export default function ProjectWorkspacePage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Link href={`/projects/${projectId}/approvals`}>
-                      <Button size="sm" variant="outline" className="rounded-xl font-bold bg-white text-foreground/80 border-border shadow-sm hover:bg-muted gap-2 h-9">
+                      <Button size="sm" variant="outline" className="rounded-xl font-bold bg-white dark:bg-slate-900 text-foreground/80 border-border shadow-sm hover:bg-muted gap-2 h-9">
                         <CheckCircle2 className="h-3.5 w-3.5" /> Review
                       </Button>
                     </Link>
@@ -895,7 +895,7 @@ export default function ProjectWorkspacePage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-5">
                         <div className="flex items-center gap-3">
                           <button className="h-9 w-9 bg-accent rounded-full flex items-center justify-center"><Play className="h-4 w-4 text-white fill-white" /></button>
-                          <div className="flex-1 bg-white/20 h-1 rounded-full"><div className="bg-accent h-full w-[40%] rounded-full" /></div>
+                          <div className="flex-1 bg-white/20 dark:bg-slate-900/20 h-1 rounded-full"><div className="bg-accent h-full w-[40%] rounded-full" /></div>
                           <span className="text-xs font-mono text-white/60">00:48 / 02:30</span>
                         </div>
                       </div>
@@ -942,7 +942,7 @@ export default function ProjectWorkspacePage() {
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                       {assets?.map((asset) => (
-                        <div key={asset.id} className="group relative bg-white border border-border hover:border-border rounded-2xl overflow-hidden transition-all hover:shadow-md">
+                        <div key={asset.id} className="group relative bg-white dark:bg-slate-900 border border-border hover:border-border rounded-2xl overflow-hidden transition-all hover:shadow-md">
                           {/* Thumbnail / type indicator */}
                           <div className={cn(
                             "h-28 flex items-center justify-center",
@@ -954,7 +954,7 @@ export default function ProjectWorkspacePage() {
                             {getFileIcon(asset.file_type)}
                             {asset.file_type === 'Video' && (
                               <button onClick={() => setSelectedAssetForReview(asset)} className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10">
-                                <div className="h-10 w-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                                <div className="h-10 w-10 bg-white/90 dark:bg-slate-900/90 rounded-full flex items-center justify-center shadow-lg">
                                   <Play className="h-4 w-4 text-accent fill-rose-500" />
                                 </div>
                               </button>
@@ -1068,7 +1068,7 @@ export default function ProjectWorkspacePage() {
             <div className="lg:col-span-2 space-y-6">
               
               {/* Cost ledger list */}
-              <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
+              <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
                 <CardHeader className="bg-muted/50 flex flex-row items-center justify-between border-b px-8 py-6">
                   <div>
                     <CardTitle className="text-lg">Expenses Cost Ledger</CardTitle>
@@ -1110,7 +1110,7 @@ export default function ProjectWorkspacePage() {
 
             {/* Financial indicators */}
             <div className="space-y-6">
-              <Card className="border-none shadow-sm rounded-[10px] bg-white p-8 space-y-6">
+              <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 p-8 space-y-6">
                 <div className="space-y-1">
                   <span className="text-[10px] font-black uppercase text-accent/60 tracking-[0.2em]">Project P&L Statement</span>
                   <h3 className="text-xl font-black">Profitability index</h3>

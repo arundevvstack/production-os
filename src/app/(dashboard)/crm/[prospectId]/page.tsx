@@ -225,7 +225,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
+          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="bg-muted/50 pb-6 border-b">
               <div className="flex items-center justify-between">
                 <div>
@@ -318,7 +318,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-sm rounded-[10px] bg-white overflow-hidden">
+          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="bg-accent/10/30">
               <CardTitle className="text-lg flex items-center gap-2">
                 <FileText className="h-5 w-5 text-foreground" /> Drafted Proposals
@@ -357,7 +357,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-sm rounded-[10px] bg-white">
+          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-foreground" /> Billing Context
@@ -377,7 +377,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                   <div className="space-y-2">
                     <Label htmlFor="gst_type" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">GST Type</Label>
                     <Select name="gst_type" defaultValue={prospect.gst_type || "Intra-state"}>
-                      <SelectTrigger className="rounded-xl bg-white shadow-sm h-10">
+                      <SelectTrigger className="rounded-xl bg-white dark:bg-slate-900 shadow-sm h-10">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl">
@@ -404,7 +404,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
         </div>
 
         <div className="space-y-8">
-          <Card className="border-none shadow-sm rounded-[10px] bg-white">
+          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
             <CardHeader>
               <CardTitle className="text-base uppercase tracking-widest text-muted-foreground font-bold">Commercials</CardTitle>
             </CardHeader>
@@ -432,7 +432,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-sm rounded-[10px] bg-white">
+          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
             <CardHeader>
               <CardTitle className="text-lg">Prospect Context</CardTitle>
             </CardHeader>

@@ -452,7 +452,7 @@ export default function InvoicesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-primary">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-primary">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Total Outstanding</p>
             <h4 className="text-2xl font-bold font-headline">₹{totalOutstanding.toLocaleString()}</h4>
@@ -461,14 +461,14 @@ export default function InvoicesPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-accent">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-accent">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Active Invoices</p>
             <h4 className="text-2xl font-bold font-headline">{invoices?.length || 0}</h4>
             <p className="mt-2 text-[10px] text-muted-foreground font-bold">In the billing queue</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-emerald-500">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-emerald-500">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Paid to Date</p>
             <h4 className="text-2xl font-bold font-headline">
@@ -479,7 +479,7 @@ export default function InvoicesPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-blue-500">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-blue-500">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Cloud Sync</p>
             <h4 className="text-2xl font-bold font-headline">Ready</h4>
@@ -491,7 +491,7 @@ export default function InvoicesPage() {
       </div>
 
       <Card className="border-none shadow-sm overflow-hidden">
-        <CardHeader className="flex flex-col md:flex-row md:items-center justify-between pb-6 gap-4 border-b bg-white">
+        <CardHeader className="flex flex-col md:flex-row md:items-center justify-between pb-6 gap-4 border-b bg-white dark:bg-slate-900">
           <div>
             <CardTitle className="text-xl font-headline">Recent Billing Activity</CardTitle>
             <CardDescription>Real-time line item synchronization across your production ledger.</CardDescription>
@@ -504,7 +504,7 @@ export default function InvoicesPage() {
             <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl"><Filter className="h-4 w-4" /></Button>
           </div>
         </CardHeader>
-        <CardContent className="p-0 bg-white">
+        <CardContent className="p-0 bg-white dark:bg-slate-900">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-muted/50 border-b">

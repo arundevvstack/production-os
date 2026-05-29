@@ -397,7 +397,7 @@ export default function TalentNetworkPage() {
       {/* ----------------------------------------------------
           COCKPIT horizontal pipeline & alerts (Phase 1 & 17)
           ---------------------------------------------------- */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/20 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/20 dark:border-slate-700/20 pb-6">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-2">
             <Users className="h-8 w-8 text-foreground" />
@@ -416,7 +416,7 @@ export default function TalentNetworkPage() {
                   <Plus className="h-5 w-5" /> Add Talent
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[450px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+              <DialogContent className="sm:max-w-[450px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2 text-foreground font-black">
                     <Sparkles className="h-5 w-5 text-foreground" />
@@ -435,7 +435,7 @@ export default function TalentNetworkPage() {
                       value={newTalentForm.fullName}
                       onChange={(e) => setNewTalentForm({ ...newTalentForm, fullName: e.target.value })}
                       required
-                      className="rounded-xl border-white/40 h-10 text-xs"
+                      className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -445,7 +445,7 @@ export default function TalentNetworkPage() {
                         onValueChange={(val) => setNewTalentForm({ ...newTalentForm, category: val })}
                         defaultValue={newTalentForm.category}
                       >
-                        <SelectTrigger className="rounded-xl border-white/40 h-10 text-xs">
+                        <SelectTrigger className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
@@ -463,7 +463,7 @@ export default function TalentNetworkPage() {
                         placeholder="120000"
                         value={newTalentForm.dayRate}
                         onChange={(e) => setNewTalentForm({ ...newTalentForm, dayRate: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                   </div>
@@ -474,7 +474,7 @@ export default function TalentNetworkPage() {
                       placeholder="e.g. Kochi, Kerala"
                       value={newTalentForm.location}
                       onChange={(e) => setNewTalentForm({ ...newTalentForm, location: e.target.value })}
-                      className="rounded-xl border-white/40 h-10 text-xs"
+                      className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -486,7 +486,7 @@ export default function TalentNetworkPage() {
                         placeholder="150000"
                         value={newTalentForm.followers}
                         onChange={(e) => setNewTalentForm({ ...newTalentForm, followers: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                     <div className="space-y-2">
@@ -498,7 +498,7 @@ export default function TalentNetworkPage() {
                         placeholder="0.08"
                         value={newTalentForm.engagementRate}
                         onChange={(e) => setNewTalentForm({ ...newTalentForm, engagementRate: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                   </div>
@@ -516,11 +516,11 @@ export default function TalentNetworkPage() {
           {isCasting && (
             <Dialog open={isCastingOpen} onOpenChange={setIsCastingOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 rounded-xl h-11 font-bold border-white/40 hover:bg-muted text-foreground/80">
+                <Button variant="outline" className="gap-2 rounded-xl h-11 font-bold border-white/40 dark:border-slate-700/40 hover:bg-muted text-foreground/80">
                   <Sparkles className="h-4 w-4 text-accent" /> Add Casting Call
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[480px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+              <DialogContent className="sm:max-w-[480px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2 text-foreground font-black">
                     <Award className="h-5 w-5 text-accent" />
@@ -539,7 +539,7 @@ export default function TalentNetworkPage() {
                       value={newCastingForm.projectName}
                       onChange={(e) => setNewCastingForm({ ...newCastingForm, projectName: e.target.value })}
                       required
-                      className="rounded-xl border-white/40 h-10 text-xs"
+                      className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -549,7 +549,7 @@ export default function TalentNetworkPage() {
                         onValueChange={(val) => setNewCastingForm({ ...newCastingForm, category: val })}
                         defaultValue={newCastingForm.category}
                       >
-                        <SelectTrigger className="rounded-xl border-white/40 h-10 text-xs">
+                        <SelectTrigger className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
@@ -567,7 +567,7 @@ export default function TalentNetworkPage() {
                         placeholder="180000"
                         value={newCastingForm.budget}
                         onChange={(e) => setNewCastingForm({ ...newCastingForm, budget: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                   </div>
@@ -578,7 +578,7 @@ export default function TalentNetworkPage() {
                         onValueChange={(val) => setNewCastingForm({ ...newCastingForm, gender: val })}
                         defaultValue={newCastingForm.gender}
                       >
-                        <SelectTrigger className="rounded-xl border-white/40 h-10 text-xs">
+                        <SelectTrigger className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
@@ -595,7 +595,7 @@ export default function TalentNetworkPage() {
                         placeholder="20-30"
                         value={newCastingForm.ageRange}
                         onChange={(e) => setNewCastingForm({ ...newCastingForm, ageRange: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                   </div>
@@ -607,7 +607,7 @@ export default function TalentNetworkPage() {
                         placeholder="2026-07-02 to 2026-07-04"
                         value={newCastingForm.shootDates}
                         onChange={(e) => setNewCastingForm({ ...newCastingForm, shootDates: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                     <div className="space-y-2">
@@ -617,7 +617,7 @@ export default function TalentNetworkPage() {
                         placeholder="Trendy, traditional"
                         value={newCastingForm.lookStyle}
                         onChange={(e) => setNewCastingForm({ ...newCastingForm, lookStyle: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                   </div>
@@ -638,7 +638,7 @@ export default function TalentNetworkPage() {
                   <Calendar className="h-4 w-4" /> Book Talent
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[450px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+              <DialogContent className="sm:max-w-[450px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2 text-foreground font-black">
                     <UserCheck className="h-5 w-5 text-foreground" />
@@ -655,7 +655,7 @@ export default function TalentNetworkPage() {
                       onValueChange={(val) => setNewBookingForm({ ...newBookingForm, talentId: val })}
                       defaultValue={newBookingForm.talentId}
                     >
-                      <SelectTrigger className="rounded-xl border-white/40 h-10 text-xs">
+                      <SelectTrigger className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs">
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
@@ -671,7 +671,7 @@ export default function TalentNetworkPage() {
                       onValueChange={(val) => setNewBookingForm({ ...newBookingForm, projectId: val })}
                       defaultValue={newBookingForm.projectId}
                     >
-                      <SelectTrigger className="rounded-xl border-white/40 h-10 text-xs">
+                      <SelectTrigger className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs">
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
@@ -688,7 +688,7 @@ export default function TalentNetworkPage() {
                         id="bk_dates"
                         value={newBookingForm.dates}
                         onChange={(e) => setNewBookingForm({ ...newBookingForm, dates: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                     <div className="space-y-2">
@@ -697,7 +697,7 @@ export default function TalentNetworkPage() {
                         id="bk_rate"
                         value={newBookingForm.dayRate}
                         onChange={(e) => setNewBookingForm({ ...newBookingForm, dayRate: e.target.value })}
-                        className="rounded-xl border-white/40 h-10 text-xs"
+                        className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                       />
                     </div>
                   </div>
@@ -717,7 +717,7 @@ export default function TalentNetworkPage() {
           TOP HUD STATS CENTER (Phase 3 Analytics)
           ---------------------------------------------------- */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
+        <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-2 space-y-0">
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Total Talent</span>
             <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{totalTalents} Active</h3>
@@ -727,7 +727,7 @@ export default function TalentNetworkPage() {
           </CardContent>
         </Card>
 
-        <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
+        <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-2 space-y-0">
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Available Now</span>
             <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{availableTalents} Talents</h3>
@@ -737,7 +737,7 @@ export default function TalentNetworkPage() {
           </CardContent>
         </Card>
 
-        <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
+        <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-2 space-y-0">
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Booked Roster</span>
             <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{bookedTalents} Booked</h3>
@@ -747,7 +747,7 @@ export default function TalentNetworkPage() {
           </CardContent>
         </Card>
 
-        <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
+        <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group">
           <CardContent className="p-2 space-y-0">
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Active Castings</span>
             <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">{castingCalls.length} Open</h3>
@@ -757,7 +757,7 @@ export default function TalentNetworkPage() {
           </CardContent>
         </Card>
 
-        <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group col-span-2 md:col-span-1">
+        <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px] relative overflow-hidden group col-span-2 md:col-span-1">
           <CardContent className="p-2 space-y-0">
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest leading-none">AI Match Rate</span>
             <h3 className="text-base font-black text-foreground tracking-tight leading-none pt-1">94%</h3>
@@ -775,7 +775,7 @@ export default function TalentNetworkPage() {
         
         {/* LEFT PANEL — Advanced Casting Filter Sidebar (Phases 3 & 4) */}
         <aside className="xl:col-span-1 space-y-4">
-          <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+          <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-4 space-y-4">
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Search Directory</Label>
@@ -785,7 +785,7 @@ export default function TalentNetworkPage() {
                     placeholder="Name, skills, or agency tags..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 rounded-xl h-10 border-white/40 text-xs bg-white/20"
+                    className="pl-9 rounded-xl h-10 border-white/40 dark:border-slate-700/40 text-xs bg-white/20 dark:bg-slate-900/20"
                   />
                 </div>
               </div>
@@ -798,8 +798,8 @@ export default function TalentNetworkPage() {
                       key={cat}
                       variant="outline"
                       onClick={() => setCategoryFilter(cat)}
-                      className={`cursor-pointer transition-all py-1 px-2.5 rounded-lg border-white/40 text-[10px] font-bold ${
-                        categoryFilter === cat ? "bg-primary text-white border-transparent" : "hover:bg-muted text-muted-foreground/80 bg-white/10"
+                      className={`cursor-pointer transition-all py-1 px-2.5 rounded-lg border-white/40 dark:border-slate-700/40 text-[10px] font-bold ${
+                        categoryFilter === cat ? "bg-primary text-white border-transparent" : "hover:bg-muted text-muted-foreground/80 bg-white/10 dark:bg-slate-900/10"
                       }`}
                     >
                       {cat}
@@ -811,7 +811,7 @@ export default function TalentNetworkPage() {
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Shoot Region</Label>
                 <Select value={locationFilter} onValueChange={setLocationFilter}>
-                  <SelectTrigger className="rounded-xl h-10 border-white/40 text-xs bg-white/20">
+                  <SelectTrigger className="rounded-xl h-10 border-white/40 dark:border-slate-700/40 text-xs bg-white/20 dark:bg-slate-900/20">
                     <SelectValue placeholder="Select Region" />
                   </SelectTrigger>
                   <SelectContent>
@@ -832,8 +832,8 @@ export default function TalentNetworkPage() {
                       type="button"
                       variant="outline"
                       onClick={() => setGenderFilter(gender)}
-                      className={`flex-1 rounded-xl h-9 text-[10px] font-bold border-white/40 ${
-                        genderFilter === gender ? "bg-primary text-white border-transparent hover:bg-primary" : "hover:bg-muted text-muted-foreground/80 bg-white/10"
+                      className={`flex-1 rounded-xl h-9 text-[10px] font-bold border-white/40 dark:border-slate-700/40 ${
+                        genderFilter === gender ? "bg-primary text-white border-transparent hover:bg-primary" : "hover:bg-muted text-muted-foreground/80 bg-white/10 dark:bg-slate-900/10"
                       }`}
                     >
                       {gender}
@@ -860,7 +860,7 @@ export default function TalentNetworkPage() {
           </Card>
 
           {/* Realtime alerts notification widget (Phase 17) */}
-          <Card className="border-l-4 border-l-primary glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+          <Card className="border-l-4 border-l-primary glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <h4 className="font-black text-xs text-foreground flex items-center gap-1.5">
@@ -869,10 +869,10 @@ export default function TalentNetworkPage() {
                 <div className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping" />
               </div>
               <div className="space-y-2 text-[10px] text-muted-foreground pt-1.5">
-                <p className="border-b border-white/10 pb-1.5">
+                <p className="border-b border-white/10 dark:border-slate-700/10 pb-1.5">
                   🛡️ <strong className="text-foreground/80">Contract Signed</strong>: Tovino Thomas cleared standard NDA release. (10m ago)
                 </p>
-                <p className="border-b border-white/10 pb-1.5">
+                <p className="border-b border-white/10 dark:border-slate-700/10 pb-1.5">
                   📣 <strong className="text-foreground/80">New Casting</strong>: Tech-Start Brand Film Dub published requirement. (1h ago)
                 </p>
                 <p className="pb-0">
@@ -886,7 +886,7 @@ export default function TalentNetworkPage() {
         {/* CENTER WORKSPACE — Tabbed Interface (Phases 3, 5, 6, 8, 9, 10, 11) */}
         <main className="xl:col-span-2 space-y-6">
           <Tabs defaultValue="roster" onValueChange={(val) => setActiveTab(val as any)} className="w-full">
-            <TabsList className="grid grid-cols-6 gap-1 rounded-xl bg-white/50 border border-white/20 p-1 mb-6 shadow-sm">
+            <TabsList className="grid grid-cols-6 gap-1 rounded-xl bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 border border-white/20 dark:border-slate-700/20 p-1 mb-6 shadow-sm">
               <TabsTrigger value="roster" className="rounded-lg text-[10px] font-bold">Roster</TabsTrigger>
               <TabsTrigger value="castings" className="rounded-lg text-[10px] font-bold">Castings</TabsTrigger>
               <TabsTrigger value="scheduling" className="rounded-lg text-[10px] font-bold">Schedule</TabsTrigger>
@@ -899,7 +899,7 @@ export default function TalentNetworkPage() {
             <TabsContent value="roster" className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {filteredTalents.length === 0 ? (
-                  <div className="col-span-full py-8 text-center text-muted-foreground bg-white/40 border-2 border-dashed border-white/40 rounded-[12px] shadow-sm">
+                  <div className="col-span-full py-8 text-center text-muted-foreground bg-white/40 dark:bg-slate-900/40 border-2 border-dashed border-white/40 dark:border-slate-700/40 rounded-[12px] shadow-sm">
                     <p className="font-bold text-sm">No roster profiles matched filters.</p>
                     <Button variant="link" className="mt-2 text-xs" onClick={() => setIsAddOpen(true)}>List First Talent Profile</Button>
                   </div>
@@ -908,7 +908,7 @@ export default function TalentNetworkPage() {
                     <Card
                       key={talent.id}
                       onClick={() => setSelectedTalentDetail(talent)}
-                      className={`overflow-hidden group border-none shadow-premium transition-all rounded-[12px] bg-white/40 backdrop-blur-3xl cursor-pointer ${
+                      className={`overflow-hidden group border-none shadow-premium transition-all rounded-[12px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl cursor-pointer ${
                         selectedTalentDetail?.id === talent.id ? "ring-2 ring-primary ring-offset-2" : "hover:shadow-md"
                       }`}
                     >
@@ -920,12 +920,12 @@ export default function TalentNetworkPage() {
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute top-3 right-3">
-                          <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
                             <Heart className="h-4 w-4" />
                           </Button>
                         </div>
                         <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
-                          <Badge className="bg-white/90 text-foreground border-none text-[10px] font-bold">{talent.category}</Badge>
+                          <Badge className="bg-white/90 dark:bg-slate-900/90 text-foreground border-none text-[10px] font-bold">{talent.category}</Badge>
                           <Badge className="bg-primary/80 text-white border-none text-[10px] font-bold">{talent.sub_category}</Badge>
                         </div>
                       </div>
@@ -962,14 +962,14 @@ export default function TalentNetworkPage() {
             {/* TAB 2: CASTING REQUIREMENT BOARD (Phase 6) */}
             <TabsContent value="castings" className="space-y-4">
               {castingCalls.map(c => (
-                <Card key={c.id} className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card key={c.id} className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-5 space-y-4">
                     <div className="flex items-start justify-between">
                       <div>
                         <Badge className="bg-primary/10 text-foreground border-none text-[9px] font-bold uppercase tracking-wider">{c.category} Required</Badge>
                         <h3 className="font-black text-base text-foreground mt-1.5 leading-tight">{c.project_name}</h3>
                       </div>
-                      <span className="font-black text-xs text-foreground bg-white/60 py-1.5 px-3 rounded-lg border border-white/40">
+                      <span className="font-black text-xs text-foreground bg-white/60 dark:bg-slate-900/60 py-1.5 px-3 rounded-lg border border-white/40 dark:border-slate-700/40">
                         Budget: ₹{c.budget.toLocaleString()}
                       </span>
                     </div>
@@ -999,7 +999,7 @@ export default function TalentNetworkPage() {
                             c.shortlisted_ids.map(sid => {
                               const t = talents.find(talent => talent.id === sid);
                               return (
-                                <Avatar key={sid} className="h-6 w-6 ring-2 ring-white shadow">
+                                <Avatar key={sid} className="h-6 w-6 ring-2 ring-white dark:ring-slate-900 shadow">
                                   <AvatarImage src={t?.portfolio_url} />
                                   <AvatarFallback className="text-[8px]">{t?.stage_name?.substring(0,2)}</AvatarFallback>
                                 </Avatar>
@@ -1016,7 +1016,7 @@ export default function TalentNetworkPage() {
                             setSelectedProjectForAI(c.id);
                             toast({ title: "AI Sync Triggered", description: "Analyzing compatibility metrics for this casting call." });
                           }}
-                          className="rounded-xl h-8 px-3 text-[10px] font-bold border-white/40 text-foreground/80 bg-white/20 hover:bg-muted"
+                          className="rounded-xl h-8 px-3 text-[10px] font-bold border-white/40 dark:border-slate-700/40 text-foreground/80 bg-white/20 dark:bg-slate-900/20 hover:bg-muted"
                         >
                           <Sparkles className="h-3 w-3 mr-1 text-accent" /> AI Roster Match
                         </Button>
@@ -1029,7 +1029,7 @@ export default function TalentNetworkPage() {
 
             {/* TAB 3: AVAILABILITY TIMELINE SCHEDULE (Phase 8) */}
             <TabsContent value="scheduling" className="space-y-4">
-              <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+              <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                 <CardContent className="p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -1041,7 +1041,7 @@ export default function TalentNetworkPage() {
 
                   <div className="space-y-3 pt-2">
                     {talents.slice(0, 4).map((t, idx) => (
-                      <div key={t.id} className="flex items-center gap-3 p-3 bg-white/30 rounded-xl border border-white/10">
+                      <div key={t.id} className="flex items-center gap-3 p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10">
                         <Avatar className="h-8 w-8 shrink-0">
                           <AvatarImage src={t.portfolio_url} />
                           <AvatarFallback>{t.stage_name.substring(0, 2)}</AvatarFallback>
@@ -1066,7 +1066,7 @@ export default function TalentNetworkPage() {
             {/* TAB 4: CONTRACTS & DIGITAL DOCUMENTS (Phase 10) */}
             <TabsContent value="contracts" className="space-y-4">
               {contracts.map(c => (
-                <Card key={c.id} className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card key={c.id} className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-start gap-3">
                       <div className="h-9 w-9 bg-primary/10 rounded-xl flex items-center justify-center text-foreground shrink-0 mt-1">
@@ -1115,7 +1115,7 @@ export default function TalentNetworkPage() {
             {/* TAB 5: FINANCE & LEDGER PAYROLL (Phase 11) */}
             <TabsContent value="finance" className="space-y-4">
               {payments.map(p => (
-                <Card key={p.id} className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card key={p.id} className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-start gap-3">
                       <div className="h-9 w-9 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500 shrink-0 mt-1">
@@ -1170,7 +1170,7 @@ export default function TalentNetworkPage() {
                 <Button 
                   onClick={() => window.open('/creators', '_blank')} 
                   variant="outline" 
-                  className="rounded-xl h-8 text-[10px] font-bold border-accent/20 text-accent bg-white hover:bg-accent/10/50 shrink-0"
+                  className="rounded-xl h-8 text-[10px] font-bold border-accent/20 text-accent bg-white dark:bg-slate-900 hover:bg-accent/10/50 shrink-0"
                 >
                   Open Public Portal
                 </Button>
@@ -1217,7 +1217,7 @@ export default function TalentNetworkPage() {
                 const isImported = talents.some(t => t.id === creator.id);
 
                 return (
-                  <Card key={creator.id} className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px] hover:border-accent/20 transition-all">
+                  <Card key={creator.id} className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px] hover:border-accent/20 transition-all">
                     <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="flex items-start gap-3">
                         <Avatar className="h-10 w-10 ring-2 ring-indigo-100 shadow">
@@ -1294,7 +1294,7 @@ export default function TalentNetworkPage() {
           </Tabs>
 
           {/* COLLABORATION & DISCUSSION CHAT (Phase 16) */}
-          <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+          <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-5 space-y-4">
               <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
                 <MessageSquare className="h-4 w-4 text-foreground" /> Casting Discussion
@@ -1305,7 +1305,7 @@ export default function TalentNetworkPage() {
                   placeholder="Write a comment..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  className="rounded-xl h-10 border-white/40 text-xs bg-white/20 flex-1"
+                  className="rounded-xl h-10 border-white/40 dark:border-slate-700/40 text-xs bg-white/20 dark:bg-slate-900/20 flex-1"
                 />
                 <Button type="submit" className="rounded-xl h-10 bg-primary text-white px-4 font-bold text-xs">
                   <Send className="h-4 w-4" />
@@ -1314,7 +1314,7 @@ export default function TalentNetworkPage() {
 
               <div className="space-y-3 pt-2 max-h-[220px] overflow-y-auto custom-scrollbar">
                 {comments.map(c => (
-                  <div key={c.id} className="p-3 bg-white/30 rounded-xl border border-white/10 text-[11px]">
+                  <div key={c.id} className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 text-[11px]">
                     <div className="flex items-center justify-between font-bold text-foreground/80">
                       <span>{c.user}</span>
                       <span className="text-[9px] text-muted-foreground font-medium">{c.timestamp}</span>
@@ -1331,7 +1331,7 @@ export default function TalentNetworkPage() {
             RIGHT PANEL — AI Assistant (Phase 3 & 7)
             ---------------------------------------------------- */}
         <section className="xl:col-span-1 space-y-6">
-          <Card className="glass-panel border-white/20 shadow-premium bg-gradient-to-br from-indigo-50/10 to-purple-50/10 backdrop-blur-3xl rounded-[12px] border-l-4 border-l-indigo-400">
+          <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-gradient-to-br from-indigo-50/10 to-purple-50/10 backdrop-blur-3xl rounded-[12px] border-l-4 border-l-indigo-400">
             <CardContent className="p-5 space-y-5">
               <div className="flex items-center justify-between">
                 <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
@@ -1343,7 +1343,7 @@ export default function TalentNetworkPage() {
               <div className="space-y-2">
                 <Label className="text-[9px] font-bold text-muted-foreground uppercase block">Choose Project</Label>
                 <Select value={selectedProjectForAI} onValueChange={setSelectedProjectForAI}>
-                  <SelectTrigger className="rounded-xl h-9 border-white/40 text-[11px] bg-white/20">
+                  <SelectTrigger className="rounded-xl h-9 border-white/40 dark:border-slate-700/40 text-[11px] bg-white/20 dark:bg-slate-900/20">
                     <SelectValue placeholder="Select Project" />
                   </SelectTrigger>
                   <SelectContent>
@@ -1356,7 +1356,7 @@ export default function TalentNetworkPage() {
 
               {activeAICasting && (
                 <div className="space-y-4 pt-1">
-                  <div className="bg-white/40 p-3.5 rounded-xl border border-white/20 space-y-2 text-[11px]">
+                  <div className="bg-white/40 dark:bg-slate-900/40 p-3.5 rounded-xl border border-white/20 dark:border-slate-700/20 space-y-2 text-[11px]">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-foreground/80">Category Matched</span>
                       <Badge className="bg-accent/10 text-accent border-none text-[9px] font-bold">{activeAICasting.category}</Badge>
@@ -1378,7 +1378,7 @@ export default function TalentNetworkPage() {
                       <p className="text-[10px] text-muted-foreground italic">No matches in directory</p>
                     ) : (
                       aiRecommendations.map(rec => (
-                        <div key={rec.talent.id} className="p-3 bg-white/30 rounded-xl border border-white/10 flex items-center justify-between gap-2">
+                        <div key={rec.talent.id} className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
                             <Avatar className="h-7 w-7">
                               <AvatarImage src={rec.talent.portfolio_url} />
@@ -1413,10 +1413,10 @@ export default function TalentNetworkPage() {
 
           {/* SELECTED TALENT DETAILS HUD PREVIEW CARD */}
           {selectedTalentDetail && (
-            <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+            <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
               <CardContent className="p-5 space-y-4">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-11 w-11 ring-2 ring-white shadow">
+                  <Avatar className="h-11 w-11 ring-2 ring-white dark:ring-slate-900 shadow">
                     <AvatarImage src={selectedTalentDetail.portfolio_url} />
                     <AvatarFallback>{selectedTalentDetail.stage_name.substring(0,2)}</AvatarFallback>
                   </Avatar>
@@ -1445,7 +1445,7 @@ export default function TalentNetworkPage() {
                   </div>
                 </div>
 
-                <div className="space-y-1.5 bg-white/30 p-3 rounded-xl border border-white/10 text-[10px]">
+                <div className="space-y-1.5 bg-white/30 dark:bg-slate-900/30 p-3 rounded-xl border border-white/10 dark:border-slate-700/10 text-[10px]">
                   <span className="font-bold text-muted-foreground block uppercase">Director's Note</span>
                   <p className="text-muted-foreground/80 leading-relaxed italic">"{selectedTalentDetail.notes}"</p>
                 </div>
@@ -1469,7 +1469,7 @@ export default function TalentNetworkPage() {
           ---------------------------------------------------- */}
       {selectedContractForSign && (
         <Dialog open={isSignatureOpen} onOpenChange={setIsSignatureOpen}>
-          <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+          <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
             <DialogHeader>
               <DialogTitle className="text-foreground font-black flex items-center gap-1.5">
                 <PenTool className="h-5 w-5 text-foreground" /> Sign Contract
@@ -1492,7 +1492,7 @@ export default function TalentNetworkPage() {
                   value={signerFullName}
                   onChange={(e) => setSignerFullName(e.target.value)}
                   required
-                  className="rounded-xl border-white/40 h-10 text-xs"
+                  className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
                 />
               </div>
               <DialogFooter className="pt-3">

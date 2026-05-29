@@ -147,7 +147,7 @@ export function LiveTimer() {
       
       {/* Expanded Interface */}
       {isExpanded && !activeEntry && (
-        <Card className="mb-4 w-80 p-4 border-none shadow-2xl rounded-2xl bg-white/90 backdrop-blur-xl border border-white">
+        <Card className="mb-4 w-80 p-4 border-none shadow-2xl rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-white dark:border-slate-800">
           <div className="flex items-center gap-2 mb-4 text-foreground">
             <Clock className="h-4 w-4 text-foreground" />
             <h4 className="font-black uppercase tracking-widest text-[10px]">Start Time Entry</h4>
@@ -158,7 +158,7 @@ export function LiveTimer() {
               <SelectTrigger className="w-full h-10 bg-muted border-none font-bold text-xs rounded-xl">
                 <SelectValue placeholder="Select an Objective (Optional)" />
               </SelectTrigger>
-              <SelectContent className="max-h-60 bg-white shadow-2xl rounded-xl z-[100] border border-border">
+              <SelectContent className="max-h-60 bg-white dark:bg-slate-900 shadow-2xl rounded-xl z-[100] border border-border">
                 <SelectItem value="none" className="text-xs font-black text-muted-foreground">General (No Objective)</SelectItem>
                 {objectives.map(obj => (
                   <SelectItem key={obj.id} value={obj.id} className="text-xs font-bold py-2">
@@ -196,10 +196,10 @@ export function LiveTimer() {
               <Activity className="h-4 w-4" />
               <span className="font-black font-mono text-lg tracking-widest">{formatTime(elapsedSeconds)}</span>
             </div>
-            <div className="h-6 w-[1px] bg-white/20 mx-1" />
+            <div className="h-6 w-[1px] bg-white/20 dark:bg-slate-900/20 mx-1" />
             <div 
               onClick={(e) => { e.stopPropagation(); stopTimer(); }}
-              className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/40 transition-colors cursor-pointer"
+              className="h-8 w-8 rounded-full bg-white/20 dark:bg-slate-900/20 flex items-center justify-center hover:bg-white/40 dark:bg-slate-900/40 transition-colors cursor-pointer"
             >
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Square className="h-3 w-3 fill-white" />}
             </div>

@@ -195,12 +195,12 @@ export default function RBACPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Side: Users Grid */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-white/40 backdrop-blur-2xl">
+          <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl">
             <CardHeader className="p-6 border-b border-border">
               <CardTitle className="text-lg font-black text-foreground">Workspace Directory</CardTitle>
               <CardDescription className="text-muted-foreground font-medium">Manage pending crew approvals and deactivations.</CardDescription>
             </CardHeader>
-            <CardContent className="p-0 bg-white">
+            <CardContent className="p-0 bg-white dark:bg-slate-900">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-muted/50 border-b">
@@ -216,7 +216,7 @@ export default function RBACPage() {
                       <tr key={member.id} className="hover:bg-muted/50 transition-colors group">
                         <td className="p-4">
                           <div className="flex items-center gap-3">
-                            <Avatar className="h-9 w-9 ring-2 ring-white shadow">
+                            <Avatar className="h-9 w-9 ring-2 ring-white dark:ring-slate-900 shadow">
                               <AvatarFallback className="bg-primary/5 text-foreground text-[10px] font-black">
                                 {(member.fullName || member.full_name)?.substring(0,2).toUpperCase() || 'U'}
                               </AvatarFallback>
@@ -332,9 +332,9 @@ export default function RBACPage() {
 
         {/* Right Side: Role Matrix */}
         <div className="space-y-6">
-          <Card className="border border-white/60 shadow-premium rounded-[10px] overflow-hidden bg-white/40 backdrop-blur-2xl relative">
+          <Card className="border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[10px] overflow-hidden bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl relative">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <CardHeader className="p-6 relative z-10 border-b border-white/40">
+            <CardHeader className="p-6 relative z-10 border-b border-white/40 dark:border-slate-700/40">
               <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2 text-foreground">
                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Lock className="h-4 w-4 text-primary" />
@@ -347,7 +347,7 @@ export default function RBACPage() {
             </CardHeader>
             <CardContent className="p-6 space-y-4 relative z-10">
               {ENTERPRISE_ROLES.map((role) => (
-                <div key={role.id} className="p-4 rounded-[10px] bg-white/60 border border-white/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 space-y-2 group relative overflow-hidden">
+                <div key={role.id} className="p-4 rounded-[10px] bg-white/60 dark:bg-slate-900/60 border border-white/60 dark:border-slate-700/60 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 space-y-2 group relative overflow-hidden">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
                   <div className="flex items-center justify-between pl-2">
                     <span className="text-xs font-black tracking-wider uppercase text-foreground">{role.name}</span>

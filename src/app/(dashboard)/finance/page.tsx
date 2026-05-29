@@ -89,7 +89,7 @@ export default function FinancePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-primary">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-primary">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Total Outstanding</p>
             <h4 className="text-2xl font-bold font-headline">₹{stats.outstanding.toLocaleString()}</h4>
@@ -98,21 +98,21 @@ export default function FinancePage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-accent">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-accent">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Pending Approval</p>
             <h4 className="text-2xl font-bold font-headline">{stats.pending}</h4>
             <p className="mt-2 text-[10px] text-muted-foreground font-bold">Invoices waiting payment</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-rose-500">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-rose-500">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Paid to Date</p>
             <h4 className="text-2xl font-bold font-headline">₹{stats.paid.toLocaleString()}</h4>
             <p className="mt-2 text-[10px] text-accent font-bold">Cleared funds</p>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-emerald-500">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-emerald-500">
           <CardContent className="p-6">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Sync Status</p>
             <h4 className="text-2xl font-bold font-headline">Healthy</h4>

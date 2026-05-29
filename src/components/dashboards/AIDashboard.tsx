@@ -21,7 +21,7 @@ export function AIDashboard({ companyId }: { companyId: string }) {
             </div>
         </Card>
 
-        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
+        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white dark:bg-slate-900 border border-border">
             <div className="flex justify-between items-start mb-2">
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Render Queue</p>
                 <Activity className="h-4 w-4 text-emerald-500" />
@@ -30,7 +30,7 @@ export function AIDashboard({ companyId }: { companyId: string }) {
             <p className="text-xs font-bold mt-4 text-muted-foreground">Processing in background...</p>
         </Card>
 
-        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
+        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white dark:bg-slate-900 border border-border">
             <div className="flex justify-between items-start mb-2">
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Generations (24h)</p>
                 <ImageIcon className="h-4 w-4 text-accent" />
@@ -39,7 +39,7 @@ export function AIDashboard({ companyId }: { companyId: string }) {
             <p className="text-xs font-bold mt-4 text-emerald-500">+12% vs yesterday</p>
         </Card>
 
-        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white border border-border">
+        <Card className="p-6 border-none shadow-xl rounded-3xl bg-white dark:bg-slate-900 border border-border">
             <div className="flex justify-between items-start mb-2">
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Failed / Retries</p>
                 <Zap className="h-4 w-4 text-accent" />

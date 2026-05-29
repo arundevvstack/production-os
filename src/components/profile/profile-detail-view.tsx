@@ -399,10 +399,10 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
       {/* ----------------------------------------------------
           PHASE 1: DYNAMIC HEADER CARD (Premium Glassmorphism)
           ---------------------------------------------------- */}
-      <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl overflow-hidden rounded-[16px] relative">
+      <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl overflow-hidden rounded-[16px] relative">
         <div className="absolute top-4 right-4 flex items-center gap-2">
           {/* Live presence indicator (Phase 14) */}
-          <div className="flex items-center gap-1.5 bg-primary/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+          <div className="flex items-center gap-1.5 bg-primary/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 dark:border-slate-700/20">
             <span className={`h-2 w-2 rounded-full animate-pulse ${
               presence === "online" ? "bg-emerald-500" : presence === "busy" ? "bg-accent" : "bg-slate-400"
             }`} />
@@ -421,7 +421,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
 
         <CardContent className="p-6 md:p-8">
           <div className="flex flex-col lg:flex-row gap-6 items-start">
-            <Avatar className="h-24 w-24 md:h-28 md:w-28 rounded-2xl ring-4 ring-white/50 shadow-xl shrink-0 object-cover bg-muted">
+            <Avatar className="h-24 w-24 md:h-28 md:w-28 rounded-2xl ring-4 ring-white dark:ring-slate-900/50 shadow-xl shrink-0 object-cover bg-muted">
               <AvatarImage src={profileData.avatarUrl} className="object-cover" />
               <AvatarFallback className="text-2xl font-black">{profileData.fullName?.substring(0, 2)}</AvatarFallback>
             </Avatar>
@@ -465,30 +465,30 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
           {/* ----------------------------------------------------
               QUICK ACTIONS PIPELINE (Phase 1)
               ---------------------------------------------------- */}
-          <div className="border-t border-white/20 mt-6 pt-6 flex flex-wrap gap-2">
+          <div className="border-t border-white/20 dark:border-slate-700/20 mt-6 pt-6 flex flex-wrap gap-2">
             <Button onClick={() => setIsMessageOpen(true)} className="rounded-xl h-10 px-4 text-xs font-bold bg-primary text-white hover:bg-primary/95 shadow-md shadow-primary/10">
               <MessageSquare className="h-4 w-4 mr-1.5" /> Message
             </Button>
             
             {(roleId === "SUPER_ADMIN" || roleId === "MANAGER") && (
               <>
-                <Button onClick={() => setIsAssignOpen(true)} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 bg-white/20 hover:bg-muted text-foreground/80">
+                <Button onClick={() => setIsAssignOpen(true)} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20 hover:bg-muted text-foreground/80">
                   <Briefcase className="h-4 w-4 mr-1.5 text-emerald-500" /> Assign Project
                 </Button>
-                <Button onClick={() => setIsMeetingOpen(true)} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 bg-white/20 hover:bg-muted text-foreground/80">
+                <Button onClick={() => setIsMeetingOpen(true)} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20 hover:bg-muted text-foreground/80">
                   <CalendarClock className="h-4 w-4 mr-1.5 text-accent" /> Schedule Meeting
                 </Button>
-                <Button onClick={() => setIsTaskOpen(true)} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 bg-white/20 hover:bg-muted text-foreground/80">
+                <Button onClick={() => setIsTaskOpen(true)} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20 hover:bg-muted text-foreground/80">
                   <CheckSquare className="h-4 w-4 mr-1.5 text-accent" /> Add Task
                 </Button>
               </>
             )}
 
-            <Button onClick={handleShare} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 bg-white/20 hover:bg-muted text-foreground/80">
+            <Button onClick={handleShare} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20 hover:bg-muted text-foreground/80">
               <Share2 className="h-4 w-4 mr-1.5" /> Share
             </Button>
             
-            <Button onClick={handleDownload} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 bg-white/20 hover:bg-muted text-foreground/80">
+            <Button onClick={handleDownload} variant="outline" className="rounded-xl h-10 px-4 text-xs font-bold border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20 hover:bg-muted text-foreground/80">
               <Download className="h-4 w-4 mr-1.5" /> Download
             </Button>
 
@@ -514,7 +514,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
           TAB SYSTEM NAVIGATION
           ---------------------------------------------------- */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="flex flex-wrap h-auto gap-1 rounded-xl bg-white/50 border border-white/20 p-1 mb-6 shadow-sm overflow-x-auto">
+        <TabsList className="flex flex-wrap h-auto gap-1 rounded-xl bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 border border-white/20 dark:border-slate-700/20 p-1 mb-6 shadow-sm overflow-x-auto">
           <TabsTrigger value="overview" className="rounded-lg text-[10px] md:text-xs font-bold py-2 px-4">Overview</TabsTrigger>
           <TabsTrigger value="projects" className="rounded-lg text-[10px] md:text-xs font-bold py-2 px-4">Projects</TabsTrigger>
           {profileType === "talent" && (
@@ -540,7 +540,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
               <div className="lg:col-span-2 space-y-6">
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-6 space-y-4">
                     <h3 className="font-black text-sm text-foreground">Relationship Summary</h3>
                     <p className="text-xs text-muted-foreground/80 leading-relaxed">
@@ -550,12 +550,12 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 </Card>
 
                 {/* Proposals History */}
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-5 space-y-4">
                     <h3 className="font-black text-sm text-foreground">Proposals Overview</h3>
                     <div className="space-y-3">
                       {profileData.activeProposals?.map((prop: any, index: number) => (
-                        <div key={index} className="flex justify-between p-3 bg-white/30 rounded-xl border border-white/10 text-xs items-center">
+                        <div key={index} className="flex justify-between p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 text-xs items-center">
                           <div>
                             <strong className="text-foreground font-bold block">{prop.title}</strong>
                             <span className="text-[10px] text-muted-foreground block mt-0.5">{prop.num}</span>
@@ -572,7 +572,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
               </div>
 
               <div className="space-y-6">
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-5 space-y-4">
                     <h4 className="font-black text-xs text-foreground uppercase tracking-wider">Account Metrics</h4>
                     <div className="space-y-2 text-xs">
@@ -595,7 +595,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             
             {/* Left overview widgets: work breakdown */}
             <div className="xl:col-span-2 space-y-6">
-              <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+              <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                 <CardContent className="p-6 space-y-4">
                   <h3 className="font-black text-sm text-foreground">Biographical Summary</h3>
                   <p className="text-xs text-muted-foreground/80 leading-relaxed">
@@ -604,7 +604,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                     }
                   </p>
 
-                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10 dark:border-slate-700/10">
                     <div>
                       <span className="text-[10px] text-muted-foreground block uppercase font-bold">Productivity Score</span>
                       <strong className="text-xl font-black text-foreground block mt-1">94.2%</strong>
@@ -626,12 +626,12 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
 
               {/* Tasks & Deadlines */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-5 space-y-4">
                     <h4 className="font-black text-xs text-foreground uppercase tracking-wider">Active Tasks</h4>
                     <div className="space-y-2">
                       {tasks.map(t => (
-                        <div key={t.id} className="flex items-center justify-between p-2.5 bg-white/30 rounded-xl border border-white/10 text-xs">
+                        <div key={t.id} className="flex items-center justify-between p-2.5 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 text-xs">
                           <span className={t.status === "Completed" ? "line-through text-muted-foreground font-bold" : "text-foreground/80 font-bold"}>
                             {t.title}
                           </span>
@@ -646,7 +646,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                   </CardContent>
                 </Card>
 
-                <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+                <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                   <CardContent className="p-5 space-y-4">
                     <h4 className="font-black text-xs text-foreground uppercase tracking-wider">Upcoming Deadlines</h4>
                     <div className="space-y-3">
@@ -667,12 +667,12 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
 
             {/* Right Overview sidebar widgets */}
             <div className="space-y-6">
-              <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+              <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                 <CardContent className="p-5 space-y-4">
                   <h4 className="font-black text-xs text-foreground uppercase tracking-wider">Assigned Departments</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {["Creative Studio", "Media Design", "Kochi Center"].map(d => (
-                      <Badge key={d} variant="secondary" className="bg-white/60 text-foreground/80 font-bold text-[10px] px-2 py-1 border border-white/20">
+                      <Badge key={d} variant="secondary" className="bg-white/60 dark:bg-slate-900/60 text-foreground/80 font-bold text-[10px] px-2 py-1 border border-white/20 dark:border-slate-700/20">
                         {d}
                       </Badge>
                     ))}
@@ -680,15 +680,15 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 </CardContent>
               </Card>
 
-              <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+              <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
                 <CardContent className="p-5 space-y-4">
                   <h4 className="font-black text-xs text-foreground uppercase tracking-wider">Attendance Summary</h4>
                   <div className="grid grid-cols-2 gap-3 text-center">
-                    <div className="p-3 bg-white/30 rounded-xl border border-white/10">
+                    <div className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10">
                       <span className="text-[9px] text-muted-foreground uppercase font-bold">This Month</span>
                       <strong className="text-lg font-black text-foreground block mt-1">98%</strong>
                     </div>
-                    <div className="p-3 bg-white/30 rounded-xl border border-white/10">
+                    <div className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10">
                       <span className="text-[9px] text-muted-foreground uppercase font-bold">Leave Taken</span>
                       <strong className="text-lg font-black text-foreground block mt-1">1.5 Days</strong>
                     </div>
@@ -705,14 +705,14 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             PHASE 5: PERFORMANCE & ACTIVITY TIMELINE TAB
             ---------------------------------------------------- */}
         <TabsContent value="activity" className="space-y-4">
-          <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+          <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-6 space-y-6">
               <h3 className="font-black text-sm text-foreground">Operational Log Feed</h3>
               
               <div className="relative border-l border-white/30 ml-3 pl-6 space-y-6 text-xs">
                 {activities.map((a) => (
                   <div key={a.id} className="relative">
-                    <span className="absolute -left-[30px] top-0 h-4.5 w-4.5 rounded-full bg-primary border-2 border-white flex items-center justify-center shadow">
+                    <span className="absolute -left-[30px] top-0 h-4.5 w-4.5 rounded-full bg-primary border-2 border-white dark:border-slate-800 flex items-center justify-center shadow">
                       <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full" />
                     </span>
                     <div className="flex justify-between font-bold text-foreground">
@@ -742,11 +742,11 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             )}
           </div>
 
-          <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+          <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-5 space-y-4">
               <div className="space-y-3 text-xs">
                 {availabilityBlocks.map((b) => (
-                  <div key={b.id} className="flex justify-between p-3 bg-white/30 rounded-xl border border-white/10 items-center">
+                  <div key={b.id} className="flex justify-between p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 items-center">
                     <div>
                       <strong className="text-foreground font-bold block">{b.date}</strong>
                       <span className="text-[10px] text-muted-foreground block mt-0.5">{b.reason}</span>
@@ -764,7 +764,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             ---------------------------------------------------- */}
         {canViewFinance && (
           <TabsContent value="finance" className="space-y-4">
-            <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+            <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
               <CardContent className="p-6 space-y-6">
                 <div>
                   <h3 className="font-black text-sm text-foreground">Financial Ledger Overview</h3>
@@ -772,22 +772,22 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                  <div className="p-4 bg-white/30 rounded-xl border border-white/10 text-xs">
+                  <div className="p-4 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 text-xs">
                     <span className="text-[10px] text-muted-foreground block font-bold">Salary / Day Rate</span>
                     <strong className="text-lg font-black text-foreground block mt-1">₹1,20,000 / month</strong>
                   </div>
-                  <div className="p-4 bg-white/30 rounded-xl border border-white/10 text-xs">
+                  <div className="p-4 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 text-xs">
                     <span className="text-[10px] text-muted-foreground block font-bold">Total Disbursed (2026)</span>
                     <strong className="text-lg font-black text-foreground block mt-1">₹4,80,000</strong>
                   </div>
-                  <div className="p-4 bg-white/30 rounded-xl border border-white/10 text-xs">
+                  <div className="p-4 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 text-xs">
                     <span className="text-[10px] text-muted-foreground block font-bold">Pending Milestone Pay</span>
                     <strong className="text-lg font-black text-foreground block mt-1">₹85,000</strong>
                   </div>
                 </div>
 
-                <div className="space-y-3 pt-4 border-t border-white/10 text-xs">
-                  <div className="flex justify-between items-center p-3 bg-white/30 rounded-xl border border-white/10">
+                <div className="space-y-3 pt-4 border-t border-white/10 dark:border-slate-700/10 text-xs">
+                  <div className="flex justify-between items-center p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10">
                     <div>
                       <strong className="text-foreground font-bold block">Reimbursement Voucher (Travel)</strong>
                       <span className="text-[9px] text-muted-foreground block mt-0.5">Reference ID: EXP-9921 | Date: 2026-05-02</span>
@@ -797,7 +797,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                       <Badge className="bg-emerald-500/10 text-emerald-500 border-none font-bold mt-1 text-[8px]">Cleared</Badge>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-white/30 rounded-xl border border-white/10">
+                  <div className="flex justify-between items-center p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10">
                     <div>
                       <strong className="text-foreground font-bold block">Production Milestone Payout</strong>
                       <span className="text-[9px] text-muted-foreground block mt-0.5">Reference ID: PAY-0081 | Date: 2026-04-10</span>
@@ -819,7 +819,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
         <TabsContent value="skills" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+            <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
               <CardContent className="p-6 space-y-4">
                 <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
                   <Award className="h-4.5 w-4.5 text-foreground" /> Skills & Progress
@@ -842,7 +842,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
               </CardContent>
             </Card>
 
-            <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+            <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
               <CardContent className="p-6 space-y-4">
                 <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
                   <BookOpen className="h-4.5 w-4.5 text-accent" /> Credentials & Tools
@@ -853,7 +853,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                     <span className="text-[10px] text-muted-foreground block font-bold uppercase">Software Knowledge</span>
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {["Premiere Pro", "DaVinci Resolve Studio", "Avid", "Adobe After Effects"].map(s => (
-                        <Badge key={s} variant="secondary" className="bg-white/50 text-foreground/80 font-bold">{s}</Badge>
+                        <Badge key={s} variant="secondary" className="bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 text-foreground/80 font-bold">{s}</Badge>
                       ))}
                     </div>
                   </div>
@@ -872,14 +872,14 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             PHASE 9: DOCUMENTS & MEDIA GALLERY
             ---------------------------------------------------- */}
         <TabsContent value="documents" className="space-y-6">
-          <Card className="glass-panel border-white/20 shadow-premium bg-white/40 backdrop-blur-3xl rounded-[12px]">
+          <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[12px]">
             <CardContent className="p-6 space-y-4">
               <h3 className="font-black text-sm text-foreground flex items-center gap-1.5">
                 <FileText className="h-4.5 w-4.5 text-foreground" /> Documents Vault
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
-                <div className="p-4 bg-white/30 rounded-xl border border-white/10 flex items-center justify-between">
+                <div className="p-4 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <FileText className="h-8 w-8 text-foreground shrink-0" />
                     <div>
@@ -892,7 +892,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                   </Button>
                 </div>
 
-                <div className="p-4 bg-white/30 rounded-xl border border-white/10 flex items-center justify-between">
+                <div className="p-4 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/10 dark:border-slate-700/10 flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <FileText className="h-8 w-8 text-accent shrink-0" />
                     <div>
@@ -913,7 +913,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             PHASE 10: AI COGNITIVE PROFILE INSIGHTS TAB
             ---------------------------------------------------- */}
         <TabsContent value="ai_insights" className="space-y-6">
-          <Card className="glass-panel border-white/20 shadow-premium bg-gradient-to-br from-indigo-50/15 to-purple-50/15 backdrop-blur-3xl rounded-[12px] border-l-4 border-l-indigo-400">
+          <Card className="glass-panel border-white/20 dark:border-slate-700/20 shadow-premium bg-gradient-to-br from-indigo-50/15 to-purple-50/15 backdrop-blur-3xl rounded-[12px] border-l-4 border-l-indigo-400">
             <CardContent className="p-6 space-y-6">
               <div>
                 <h3 className="font-black text-sm text-accent flex items-center gap-1.5">
@@ -924,24 +924,24 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 text-xs">
                 <div className="space-y-3.5">
-                  <div className="p-3 bg-white/30 rounded-xl border border-accent/20/20">
+                  <div className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-accent/20/20">
                     <span className="font-bold text-accent block">Performance & Productivity Trends</span>
                     <p className="text-muted-foreground/80 mt-1 leading-relaxed">Productivity has spiked by 12% following Davinci Colorist Guild credentialing. Average turnaround for media grading deadlines is currently 1.2 days ahead of schedule.</p>
                   </div>
                   
-                  <div className="p-3 bg-white/30 rounded-xl border border-accent/20/20">
+                  <div className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-accent/20/20">
                     <span className="font-bold text-accent block">Workload Balancer Suggestions</span>
                     <p className="text-muted-foreground/80 mt-1 leading-relaxed">Workload score (82%) indicates potential exhaustion if assigned to two consecutive large TVC projects. Suggest delegating minor reels editing tasks to a secondary freelancer.</p>
                   </div>
                 </div>
 
                 <div className="space-y-3.5">
-                  <div className="p-3 bg-white/30 rounded-xl border border-accent/20/20">
+                  <div className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-accent/20/20">
                     <span className="font-bold text-accent block">Project Alignment Match</span>
                     <p className="text-muted-foreground/80 mt-1 leading-relaxed">Highly suitable for premium digital lookbook designs. Match rate for upcoming Kalyan Silks Wedding shoot is 95% compatibility.</p>
                   </div>
 
-                  <div className="p-3 bg-white/30 rounded-xl border border-accent/20/20">
+                  <div className="p-3 bg-white/30 dark:bg-slate-900/30 rounded-xl border border-accent/20/20">
                     <span className="font-bold text-accent block">Conflict Warning Diagnostics</span>
                     <p className="text-muted-foreground/80 mt-1 leading-relaxed">No direct overlapping shoot conflicts found. Travel dates (June 5-7) successfully registered to scheduling calendar, preempting minor shoot clashes.</p>
                   </div>
@@ -957,7 +957,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
           ---------------------------------------------------- */}
       {/* Send Message Dialog */}
       <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
-        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
           <DialogHeader>
             <DialogTitle className="text-foreground font-black flex items-center gap-1.5">
               <MessageSquare className="h-5 w-5 text-foreground" /> Send Message
@@ -972,7 +972,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
               value={msgText}
               onChange={(e) => setMsgText(e.target.value)}
               required
-              className="rounded-xl border-white/40 h-24 text-xs"
+              className="rounded-xl border-white/40 dark:border-slate-700/40 h-24 text-xs"
             />
             <DialogFooter>
               <Button type="submit" className="w-full rounded-xl h-11 bg-primary text-white font-bold text-xs">
@@ -985,7 +985,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
 
       {/* Assign Project Dialog */}
       <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
-        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
           <DialogHeader>
             <DialogTitle className="text-foreground font-black flex items-center gap-1.5">
               <Briefcase className="h-5 w-5 text-foreground" /> Assign Project
@@ -1003,7 +1003,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 value={assignProjectName}
                 onChange={(e) => setAssignProjectName(e.target.value)}
                 required
-                className="rounded-xl border-white/40 h-10 text-xs"
+                className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
               />
             </div>
             <DialogFooter>
@@ -1017,7 +1017,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
 
       {/* Schedule Meeting Dialog */}
       <Dialog open={isMeetingOpen} onOpenChange={setIsMeetingOpen}>
-        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
           <DialogHeader>
             <DialogTitle className="text-foreground font-black flex items-center gap-1.5">
               <CalendarClock className="h-5 w-5 text-foreground" /> Schedule Meeting
@@ -1035,7 +1035,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 value={meetingSubject}
                 onChange={(e) => setMeetingSubject(e.target.value)}
                 required
-                className="rounded-xl border-white/40 h-10 text-xs"
+                className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
               />
             </div>
             <div className="space-y-2">
@@ -1045,7 +1045,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 type="date"
                 value={meetingDate}
                 onChange={(e) => setMeetingDate(e.target.value)}
-                className="rounded-xl border-white/40 h-10 text-xs"
+                className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
               />
             </div>
             <DialogFooter>
@@ -1059,7 +1059,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
 
       {/* Add Task Dialog */}
       <Dialog open={isTaskOpen} onOpenChange={setIsTaskOpen}>
-        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white border border-white/20 shadow-premium">
+        <DialogContent className="sm:max-w-[400px] rounded-[12px] bg-white dark:bg-slate-900 border border-white/20 dark:border-slate-700/20 shadow-premium">
           <DialogHeader>
             <DialogTitle className="text-foreground font-black flex items-center gap-1.5">
               <CheckSquare className="h-5 w-5 text-foreground" /> Add Task
@@ -1077,7 +1077,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 value={taskTitle}
                 onChange={(e) => setTaskTitle(e.target.value)}
                 required
-                className="rounded-xl border-white/40 h-10 text-xs"
+                className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
               />
             </div>
             <div className="space-y-2">
@@ -1087,7 +1087,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
                 type="date"
                 value={taskDeadline}
                 onChange={(e) => setTaskDeadline(e.target.value)}
-                className="rounded-xl border-white/40 h-10 text-xs"
+                className="rounded-xl border-white/40 dark:border-slate-700/40 h-10 text-xs"
               />
             </div>
             <DialogFooter>
@@ -1106,7 +1106,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             {selectedMediaUrl && (
               <img src={selectedMediaUrl} alt="Lookbook Expanded View" className="object-contain h-full w-full" />
             )}
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs bg-primary/80 backdrop-blur-sm p-3 rounded-xl border border-white/10">
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs bg-primary/80 backdrop-blur-sm p-3 rounded-xl border border-white/10 dark:border-slate-700/10">
               <span className="font-bold">{profileData.fullName} Lookbook Portfolio Item</span>
               <a href={selectedMediaUrl || ""} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 font-bold hover:underline">
                 <Maximize2 className="h-4 w-4" /> Open Original

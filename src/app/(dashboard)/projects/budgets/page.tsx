@@ -104,7 +104,7 @@ export default function BudgetsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-emerald-500">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-emerald-500">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-emerald-600 mb-2 font-bold uppercase text-[10px]">
               <IndianRupee className="h-3 w-3" /> Total Budget
@@ -112,7 +112,7 @@ export default function BudgetsPage() {
             <div className="text-2xl font-bold font-headline">₹{totalAllocated.toLocaleString()}</div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-blue-500">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-blue-500">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-accent mb-2 font-bold uppercase text-[10px]">
               <PieChart className="h-3 w-3" /> Spent to Date
@@ -120,7 +120,7 @@ export default function BudgetsPage() {
             <div className="text-2xl font-bold font-headline">₹{totalSpent.toLocaleString()}</div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white border-l-4 border-l-rose-500">
+        <Card className="border-none shadow-sm bg-white dark:bg-slate-900 border-l-4 border-l-rose-500">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-accent mb-2 font-bold uppercase text-[10px]">
               <Filter className="h-3 w-3" /> Remaining
@@ -131,7 +131,7 @@ export default function BudgetsPage() {
       </div>
 
       <Card className="border-none shadow-sm overflow-hidden rounded-[10px]">
-        <CardHeader className="bg-white border-b py-4">
+        <CardHeader className="bg-white dark:bg-slate-900 border-b py-4">
           <CardTitle className="text-lg font-headline">Budget Line Items</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
