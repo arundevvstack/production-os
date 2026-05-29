@@ -97,6 +97,7 @@ export default function ProjectsPage() {
   const [projectToArchive, setProjectToArchive] = useState<any>(null);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("None");
+  const [isClientDropdownOpen, setIsClientDropdownOpen] = useState(false);
 
   // Form State
   const [newProject, setNewProject] = useState({
@@ -485,33 +486,58 @@ export default function ProjectsPage() {
                       <div>
                         <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Client <span className="text-red-400">*</span></Label>
                         <div className="relative">
-                          <input
-                            list="client-list-wiz"
+                          <Input
                             type="text"
                             placeholder="Type to search clients, leads, or add a custom name..."
                             value={newProject.client_name}
+                            onFocus={() => setIsClientDropdownOpen(true)}
+                            onBlur={() => setTimeout(() => setIsClientDropdownOpen(false), 250)}
                             onChange={(e) => {
                               const typed = e.target.value;
                               setNewProject(prev => ({ ...prev, client_name: typed }));
-                              const lead = leads?.find(l => l.company_name === typed);
-                              if (lead) {
-                                setSelectedLeadId(lead.id);
-                                setNewProject(prev => ({
-                                  ...prev,
-                                  client_name: typed,
-                                  service_category: lead.service_vertical || prev.service_category,
-                                  service: lead.sub_vertical || prev.service,
-                                  budget: lead.deal_value ? lead.deal_value.toString() : prev.budget
-                                }));
-                              }
                             }}
-                            className="h-12 w-full rounded-xl border border-slate-200 bg-white shadow-sm font-bold px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40"
+                            className="h-12 w-full rounded-xl border border-slate-200 bg-white shadow-sm font-bold text-sm text-slate-800 focus-visible:ring-primary/20 focus-visible:border-primary/40"
                           />
-                          <datalist id="client-list-wiz">
-                            {combinedClientNames.map(name => (
-                              <option key={name} value={name} />
-                            ))}
-                          </datalist>
+                          {isClientDropdownOpen && (
+                            <div className="absolute top-full left-0 w-full mt-2 bg-white border border-slate-200 shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
+                              {combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).length === 0 ? (
+                                <div className="px-3 py-4 text-xs font-bold text-slate-400 text-center">
+                                  Press Enter to use custom name
+                                </div>
+                              ) : (
+                                combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).map(name => {
+                                  const isLead = leads?.some(l => l.company_name === name);
+                                  const isClient = clients?.some(c => c.name === name);
+                                  return (
+                                    <button
+                                      key={name}
+                                      type="button"
+                                      onClick={() => {
+                                        setNewProject(prev => ({ ...prev, client_name: name }));
+                                        const lead = leads?.find(l => l.company_name === name);
+                                        if (lead) {
+                                          setSelectedLeadId(lead.id);
+                                          setNewProject(prev => ({
+                                            ...prev,
+                                            client_name: name,
+                                            service_category: lead.service_vertical || prev.service_category,
+                                            service: lead.sub_vertical || prev.service,
+                                            budget: lead.deal_value ? lead.deal_value.toString() : prev.budget
+                                          }));
+                                        }
+                                        setIsClientDropdownOpen(false);
+                                      }}
+                                      className="w-full text-left px-3 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900 rounded-lg flex items-center justify-between group transition-colors"
+                                    >
+                                      <span className="truncate">{name}</span>
+                                      {isLead && <Badge variant="secondary" className="text-[9px] h-4">CRM Lead</Badge>}
+                                      {isClient && !isLead && <Badge variant="outline" className="text-[9px] h-4 border-emerald-200 bg-emerald-50 text-emerald-600">Client</Badge>}
+                                    </button>
+                                  );
+                                })
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-4">
