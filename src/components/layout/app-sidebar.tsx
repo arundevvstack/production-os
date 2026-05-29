@@ -39,12 +39,13 @@ interface NavItem {
   module: string;
   isCore?: boolean;
   exact?: boolean;
+  hideFrom?: string[];
 }
 
 const navGroups: { label: string; items: NavItem[] }[] = [
   { label: "Workspace", items: [
       { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true, exact: true },
-      { title: "AI Command", url: "/ai-command", icon: Bot, module: "dashboard", isCore: true },
+      { title: "AI Command", url: "/ai-command", icon: Bot, module: "dashboard", isCore: true, hideFrom: ['EMPLOYEE'] },
       { title: "Projects", url: "/projects", icon: Film, module: "projects", isCore: true },
       { title: "Analytics", url: "/reports", icon: PieChart, module: "reports" },
     ]},
@@ -160,7 +161,12 @@ export function AppSidebar() {
 
       <SidebarContent className="px-4 gap-0">
         {navGroups.map((group) => {
-          const visibleItems = group.items.filter(item => item.isCore || (isModuleEnabled(item.module) && hasPermission(item.module, 'view')));
+          const visibleItems = group.items.filter(item => {
+            if (item.hideFrom && profile?.role_id && item.hideFrom.includes(profile.role_id)) {
+              return false;
+            }
+            return item.isCore || (isModuleEnabled(item.module) && hasPermission(item.module, 'view'));
+          });
           if (visibleItems.length === 0) return null;
 
           return (
