@@ -138,11 +138,8 @@ export default function InvoicesPage() {
       id: generatedId,
       company_id: companyId,
       invoice_number: newInvoice.invoice_number,
-      client_name: newInvoice.client_name,
       client_id: newInvoice.client_id || null,
       project_id: (!newInvoice.project_id || newInvoice.project_id === 'none') ? null : newInvoice.project_id,
-      project_name: newInvoice.project_name || null,
-      project_ref: newInvoice.project_ref || null,
       subtotal: amount,
       gst_amount: cgst + sgst + igst,
       // Pending SQL Migration:
@@ -535,12 +532,16 @@ export default function InvoicesPage() {
                         <div className="flex flex-col gap-1">
                           <div className="flex items-center gap-2">
                             <Building2 className="h-3 w-3 text-muted-foreground" />
-                            <span className="font-bold text-sm leading-none">{inv.client_name}</span>
+                            <span className="font-bold text-sm leading-none">
+                              {leads?.find(l => l.id === inv.client_id)?.company_name || leads?.find(l => l.id === inv.client_id)?.name || 'Unknown Client'}
+                            </span>
                           </div>
-                          {inv.project_name && (
+                          {inv.project_id && (
                             <div className="flex items-center gap-2">
                               <Briefcase className="h-3 w-3 text-foreground/60" />
-                              <span className="text-[10px] text-muted-foreground font-bold">{inv.project_name}</span>
+                              <span className="text-[10px] text-muted-foreground font-bold">
+                                {projects?.find(p => p.id === inv.project_id)?.project_name || 'Project Name Missing'}
+                              </span>
                             </div>
                           )}
                         </div>

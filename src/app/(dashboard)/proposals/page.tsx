@@ -945,11 +945,8 @@ function ProposalsContent() {
     await supabase.from('Invoice').insert({
       id: invId,
       company_id: companyId,
-      client_name: editingProposal.parsedContent?.client || "Unknown Client",
       client_id: editingProposal.parsedContent?.lead_id || null,
       project_id: prjId,
-      project_name: `${editingProposal.title} - Campaign`,
-      project_ref: prjRef,
       invoice_number: invRef,
       subtotal: taxableSubtotal,
       gst_amount: tax,
