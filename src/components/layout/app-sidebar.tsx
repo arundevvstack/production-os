@@ -15,6 +15,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel
+} from "@/components/ui/dropdown-menu";
+import { Camera } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useTenant } from "@/hooks/use-tenant";
 import { supabase } from "@/supabase/client";
@@ -53,9 +62,7 @@ const navGroups: { label: string; items: NavItem[] }[] = [
       { title: "Invoice and Quote", url: "/invoices", icon: Receipt, module: "invoices" },
       { title: "Accounts", url: "/accounts", icon: Wallet, module: "accounts" },
     ]},
-  { label: "Storage", items: [
-      { title: "Archives", url: "/archives", icon: Archive, module: "archives", isCore: true },
-    ]},
+  
 ];
 
 export function AppSidebar() {
@@ -65,6 +72,51 @@ export function AppSidebar() {
   const { profile, company, isLoading, isModuleEnabled, hasPermission } = useTenant();
   // isMounted prevents SSR/hydration mismatch causing all links to appear active
   const [isMounted, setIsMounted] = React.useState(false);
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const uid = profile?.id;
+    if (!file || !uid) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({ variant: "destructive", title: "Invalid File", description: "Please upload an image file." });
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) { 
+      toast({ variant: "destructive", title: "File Too Large", description: "Image must be less than 2MB." });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${uid}-${Math.random()}.${fileExt}`;
+      const filePath = `${uid}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+      
+      await supabase.from('User').update({ avatar: publicUrl }).eq('id', uid);
+      toast({ title: "Avatar Updated", description: "Your profile picture has been updated. Please refresh if needed." });
+    } catch (error: any) {
+      toast({ variant: "destructive", title: "Upload Failed", description: error.message });
+    } finally {
+      setIsUploadingAvatar(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   React.useEffect(() => { setIsMounted(true); }, []);
 
   // Stable active check: use startsWith so sub-routes stay highlighted
@@ -137,71 +189,66 @@ export function AppSidebar() {
           );
         })}
 
-        <SidebarGroup className="py-2 border-t border-white/10 mt-1">
-            <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-normal text-muted-foreground mb-1">Systems</SidebarGroupLabel>
-            <SidebarMenu className="gap-0.5">
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname?.startsWith('/settings') && !pathname?.includes('/rbac')} tooltip="Global Settings" className={cn(
-                      "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                      (pathname?.startsWith('/settings') && !pathname?.includes('/rbac'))
-                        ? "bg-primary/10 text-black hover:bg-primary/15"
-                        : "hover:bg-secondary/50 text-black/80 hover:text-black"
-                  )}>
-                      <Link href="/settings" className="flex items-center gap-3 w-full">
-                          {(pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                          <Settings2 className={cn("size-4 transition-transform group-hover/btn:scale-110", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "text-black" : "text-black/60")} />
-                          <span className={cn("text-[13px] tracking-tight", (pathname?.startsWith('/settings') && !pathname?.includes('/rbac')) ? "font-black" : "font-medium")}>Preferences</span>
-                      </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                
-                {hasPermission('admin') && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname?.includes('/rbac')} tooltip="Access Control" className={cn(
-                      "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                      pathname?.includes('/rbac')
-                        ? "bg-primary/10 text-black hover:bg-primary/15"
-                        : "hover:bg-secondary/50 text-black/80 hover:text-black"
-                  )}>
-                      <Link href="/settings/rbac" className="flex items-center gap-3 w-full">
-                          {pathname?.includes('/rbac') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                          <ShieldCheck className={cn("size-4 transition-transform group-hover/btn:scale-110", pathname?.includes('/rbac') ? "text-black" : "text-black/60")} />
-                          <span className={cn("text-[13px] tracking-tight", pathname?.includes('/rbac') ? "font-black" : "font-medium")}>Access Control</span>
-                      </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                )}
-
-                <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleLogout} tooltip="Log Out" className="h-7 rounded-lg px-3 hover:bg-accent/10 hover:text-accent text-black/80 font-normal group transition-colors">
-                    <LogOut className="size-4 text-black/60 transition-transform group-hover:translate-x-1" />
-                    <span className="text-[13px]">Log Out</span>
-                </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </SidebarGroup>
+        
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <div className={cn(
-          "flex items-center gap-3 p-3 rounded-[10px] bg-white/40 backdrop-blur-3xl border border-white/60 hover:bg-white/60 transition-all cursor-pointer group shadow-premium",
-          state === "collapsed" ? "justify-center p-2" : ""
-        )}>
-          <Avatar className="h-10 w-10 ring-2 ring-white/80 shrink-0 shadow-lg group-hover:ring-primary/40 transition-all">
-            <AvatarImage src={profile?.avatar} />
-            <AvatarFallback className="bg-primary text-white text-[10px] font-black">
-              {profile?.fullName?.substring(0, 2).toUpperCase() || 'U'}
-            </AvatarFallback>
-          </Avatar>
-          {state !== "collapsed" && (
-            <div className="flex flex-col min-w-0">
-              <span className="text-[13px] font-black tracking-tight truncate text-black leading-none">{profile?.fullName}</span>
-              <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-wider">
-                <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]" /> {company?.name || 'Workspace'}
-              </span>
+        <input type="file" ref={fileInputRef} onChange={handleAvatarUpload} accept="image/*" className="hidden" />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className={cn(
+              "flex items-center gap-3 p-3 rounded-[10px] bg-white/40 backdrop-blur-3xl border border-white/60 hover:bg-white/60 transition-all cursor-pointer group shadow-premium relative overflow-hidden",
+              state === "collapsed" ? "justify-center p-2" : ""
+            )}>
+              {isUploadingAvatar && (
+                <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center backdrop-blur-sm">
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                </div>
+              )}
+              <Avatar className="h-10 w-10 ring-2 ring-white/80 shrink-0 shadow-lg group-hover:ring-primary/40 transition-all">
+                <AvatarImage src={profile?.avatar} />
+                <AvatarFallback className="bg-primary text-white text-[10px] font-black">
+                  {profile?.fullName?.substring(0, 2).toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              {state !== "collapsed" && (
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="text-[13px] font-black tracking-tight truncate text-black leading-none">{profile?.fullName}</span>
+                  <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-wider">
+                    <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]" /> {company?.name || 'Workspace'}
+                  </span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56 rounded-[12px] p-2 bg-white/90 backdrop-blur-3xl border-white/60 shadow-premium">
+            <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-wider text-muted-foreground">My Account</DropdownMenuLabel>
+            
+            <DropdownMenuItem className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary" onClick={() => fileInputRef.current?.click()}>
+              <Camera className="mr-2 h-4 w-4" />
+              Change Thumbnail
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
+              <Link href="/archives"><Archive className="mr-2 h-4 w-4" /> Archives</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
+              <Link href="/settings"><Settings2 className="mr-2 h-4 w-4" /> Preferences</Link>
+            </DropdownMenuItem>
+            
+            {hasPermission('admin') && (
+              <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
+                <Link href="/settings/rbac"><ShieldCheck className="mr-2 h-4 w-4" /> Access Control</Link>
+              </DropdownMenuItem>
+            )}
+            
+            <DropdownMenuSeparator className="bg-border/50 my-2" />
+            
+            <DropdownMenuItem className="cursor-pointer font-black text-[13px] text-destructive focus:bg-destructive/10 focus:text-destructive rounded-lg" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Log Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
     </Sidebar>
   );
