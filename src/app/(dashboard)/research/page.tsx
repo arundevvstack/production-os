@@ -97,7 +97,7 @@ export default function MarketIntelligenceOS() {
   const { profile, companyId, roleId, isSuperAdmin } = useTenant();
   
   // RBAC control (Phase 16)
-  const isAuthorized = roleId === 'SUPER_ADMIN' || roleId === 'MANAGER' || roleId === 'MARKETING_SALES' || isSuperAdmin;
+  const isAuthorized = roleId === 'SUPER_ADMIN' || roleId === 'ADMIN' || roleId === 'MANAGER' || roleId === 'MARKETING_SALES' || isSuperAdmin;
   
   const [activeTab, setActiveTab] = useState("overview");
   const [searchQuery, setSearchQuery] = useState("");
@@ -323,9 +323,8 @@ export default function MarketIntelligenceOS() {
             />
           </div>
           <Button 
-            onClick={() => {
-              toast({ title: "AI Scan Initiated", description: "Scanning target industry ad spaces and business directories..." });
-            }}
+            onClick={handleDiscoverGaps}
+            disabled={isScanning}
             className="gap-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white shadow-lg h-10 px-6 font-bold text-xs uppercase tracking-wider"
           >
             <Sparkles className="h-4 w-4 text-rose-400" /> Discover Gaps
