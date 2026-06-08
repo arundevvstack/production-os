@@ -2,12 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  const company = await prisma.company.findFirst();
-  if (!company) {
-    console.log('No company found!');
-    return;
-  }
-  const companyId = company.id;
+  const companyId = '4cacb0ff-dd13-4e18-becf-6db843ae178c';
 
   // Insert Market Opportunity
   await prisma.marketOpportunity.create({
