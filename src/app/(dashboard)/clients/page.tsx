@@ -658,7 +658,7 @@ export default function ClientsPage() {
 
       {/* TAB CONTENT: ACTIVE PARTNERS */}
       {activeTab === 'directory' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           {existingClients.length === 0 ? (
             <div className="col-span-full py-20 text-center bg-muted rounded-[10px] border border-dashed border-border text-slate-450">
               <Building2 className="h-12 w-12 mx-auto mb-4 opacity-30 text-muted-foreground" />
@@ -758,7 +758,7 @@ export default function ClientsPage() {
 
       {/* TAB CONTENT: PROSPECT OPPORTUNITIES */}
       {activeTab === 'pipeline' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           {prospectClients.length === 0 ? (
             <div className="col-span-full py-20 text-center bg-muted/50 rounded-[10px] border border-dashed border-border text-muted-foreground">
               <Users className="h-12 w-12 mx-auto mb-4 opacity-30" />
