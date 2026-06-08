@@ -26,7 +26,7 @@ export async function GET() {
     }
 
     // 3. RBAC Check
-    const allowedRoles = ['SUPER_ADMIN', 'MANAGER', 'MARKETING_SALES'];
+    const allowedRoles = ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'MARKETING_SALES'];
     if (!allowedRoles.includes(profile.role_id ?? '')) {
       return NextResponse.json(
         { error: 'Market Intelligence requires SUPER_ADMIN, MANAGER, or MARKETING_SALES role' },
