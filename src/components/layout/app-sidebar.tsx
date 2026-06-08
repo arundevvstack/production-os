@@ -47,10 +47,11 @@ const navGroups: { label: string; items: NavItem[] }[] = [
       { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true, exact: true },
       { title: "AI Command", url: "/ai-command", icon: Bot, module: "dashboard", isCore: true, hideFrom: ['EMPLOYEE'] },
       { title: "Projects", url: "/projects", icon: Film, module: "projects", isCore: true },
+      { title: "Team", url: "/team", icon: UserCircle, module: "team", isCore: true },
       { title: "Analytics", url: "/reports", icon: PieChart, module: "reports" },
     ]},
   { label: "Growth & CRM", items: [
-      { title: "Clients", url: "/clients", icon: Building2, module: "clients" },
+      { title: "Clients", url: "/clients", icon: Building2, module: "clients", isCore: true },
       { title: "Sales CRM", url: "/crm", icon: Briefcase, module: "crm" },
       { title: "Proposals", url: "/proposals", icon: FileText, module: "proposals" },
       { title: "Market Research", url: "/research", icon: Search, module: "research" },
@@ -58,8 +59,10 @@ const navGroups: { label: string; items: NavItem[] }[] = [
   { label: "Production", items: [
       { title: "Service Builder", url: "/service-builder", icon: Settings2, module: "services" },
       { title: "Talent Network", url: "/talents", icon: Users, module: "talents" },
+      { title: "Operations", url: "/ops", icon: ShieldCheck, module: "ops" },
     ]},
   { label: "Finance", items: [
+      { title: "Finance Dashboard", url: "/finance", icon: PieChart, module: "finance" },
       { title: "Invoice and Quote", url: "/invoices", icon: Receipt, module: "invoices" },
       { title: "Accounts", url: "/accounts", icon: Wallet, module: "accounts" },
     ]},
