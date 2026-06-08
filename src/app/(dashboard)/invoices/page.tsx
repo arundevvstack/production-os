@@ -301,7 +301,8 @@ export default function InvoicesPage() {
                       const lead = leads?.find(l => l.id === val);
                       if (lead) {
                         setNewInvoice({ ...newInvoice, client_id: val, client_name: lead.company_name || lead.name || '' });
-                      }}
+                      }
+                    }}
                   >
                     <SelectTrigger className="rounded-xl">
                       <SelectValue placeholder="Select a client" />
