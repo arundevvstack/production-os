@@ -220,6 +220,7 @@ model Prospect {
 
   meetings       Meeting[]
   communications CommunicationLog[]
+  comments       Comment[]
 
   @@index([company_id])
   @@index([converted_client_id])
@@ -528,16 +529,23 @@ model Comment {
   company_id   String
   project_id   String?
   objective_id String?
+  prospect_id  String?
   user_id      String
 
   content   String
   timestamp String? // For media annotations (e.g. "01:23")
+
+  is_edited    Boolean   @default(false)
+  updated_at   DateTime?
+  edit_history Json?     @default("[]")
+  reactions    Json?     @default("[]")
 
   created_at DateTime @default(now())
 
   company   Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
   project   Project?   @relation(fields: [project_id], references: [id], onDelete: Cascade)
   objective Objective? @relation(fields: [objective_id], references: [id], onDelete: Cascade)
+  prospect  Prospect?  @relation(fields: [prospect_id], references: [id], onDelete: Cascade)
   user      User       @relation(fields: [user_id], references: [id])
 }
 

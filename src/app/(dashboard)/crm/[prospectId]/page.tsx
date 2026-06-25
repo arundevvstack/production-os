@@ -41,6 +41,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { CONTENT_VERTICALS } from "../../clients/page";
+import { ProspectComments } from "./components/prospect-comments";
 
 export default function ProspectDetailPage({ params }: { params: Promise<{ prospectId: string }> }) {
   const { prospectId } = use(params);
@@ -139,6 +140,8 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
     
     toast({ title: "Client Data Saved", description: "Billing address and GST updated." });
   };
+
+
 
   const handleSaveDetails = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -317,6 +320,91 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
             </CardContent>
           </Card>
 
+          <ProspectComments prospectId={prospectId} companyId={companyId} />
+
+
+        </div>
+
+        <div className="space-y-8">
+          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
+            <CardHeader>
+              <CardTitle className="text-base uppercase tracking-widest text-muted-foreground font-bold">Commercials</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Est. Deal Value</p>
+                  <h4 className="text-3xl font-bold flex items-center gap-1">
+                    <IndianRupee className="h-5 w-5 text-foreground" />
+                    {(prospect.deal_value || 0).toLocaleString()}
+                  </h4>
+                </div>
+                <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 uppercase text-[9px] font-bold">Active Deal</Badge>
+              </div>
+              <div className="pt-4 border-t space-y-3">
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">Probability</span>
+                  <span className="font-bold">{prospect.stage === 'won' ? '100%' : prospect.stage === 'negotiation' ? '85%' : '45%'}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">Expected Close</span>
+                  <span className="font-bold">Mar 30, 2024</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
+            <CardHeader>
+              <CardTitle className="text-lg">Prospect Context</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-[10px] bg-accent/5 flex items-center justify-center text-accent">
+                    <Zap className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-base prospecting-none">{prospect.service_vertical || 'General Production'}</p>
+                    <p className="text-xs text-muted-foreground mt-1 uppercase font-bold tracking-tighter">Service Vertical</p>
+                  </div>
+                </div>
+                {prospect.sub_vertical && (
+                  <div className="flex items-center gap-4 pl-4 border-l-2 border-border">
+                    <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center text-foreground">
+                      <ListTree className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm prospecting-none">{prospect.sub_vertical}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1 uppercase font-bold tracking-tighter">Sub Category</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-3 pt-4 border-t">
+                <div className="flex items-center gap-3 text-xs">
+                  <Briefcase className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">Industry: {prospect.industry || 'Media Production'}</span>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">Prospect Source: Referral</span>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">Created: {prospect.created_at?.toDate ? prospect.created_at.toDate().toLocaleDateString() : 'Just now'}</span>
+                </div>
+              </div>
+              <Button 
+                variant="secondary" 
+                className="w-full rounded-xl h-10 text-xs font-bold uppercase tracking-wider"
+                onClick={() => setIsEditOpen(true)}
+              >
+                Update Context
+              </Button>
+            </CardContent>
+          </Card>
+
           <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="bg-accent/10/30">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -398,87 +486,6 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
                 </div>
                 <Button type="submit" className="rounded-xl font-bold px-8">Save Context</Button>
               </form>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="space-y-8">
-          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
-            <CardHeader>
-              <CardTitle className="text-base uppercase tracking-widest text-muted-foreground font-bold">Commercials</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Est. Deal Value</p>
-                  <h4 className="text-3xl font-bold flex items-center gap-1">
-                    <IndianRupee className="h-5 w-5 text-foreground" />
-                    {(prospect.deal_value || 0).toLocaleString()}
-                  </h4>
-                </div>
-                <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 uppercase text-[9px] font-bold">Active Deal</Badge>
-              </div>
-              <div className="pt-4 border-t space-y-3">
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Probability</span>
-                  <span className="font-bold">{prospect.stage === 'won' ? '100%' : prospect.stage === 'negotiation' ? '85%' : '45%'}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">Expected Close</span>
-                  <span className="font-bold">Mar 30, 2024</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
-            <CardHeader>
-              <CardTitle className="text-lg">Prospect Context</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-[10px] bg-accent/5 flex items-center justify-center text-accent">
-                    <Zap className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-base prospecting-none">{prospect.service_vertical || 'General Production'}</p>
-                    <p className="text-xs text-muted-foreground mt-1 uppercase font-bold tracking-tighter">Service Vertical</p>
-                  </div>
-                </div>
-                {prospect.sub_vertical && (
-                  <div className="flex items-center gap-4 pl-4 border-l-2 border-border">
-                    <div className="h-8 w-8 rounded-xl bg-primary/5 flex items-center justify-center text-foreground">
-                      <ListTree className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm prospecting-none">{prospect.sub_vertical}</p>
-                      <p className="text-[10px] text-muted-foreground mt-1 uppercase font-bold tracking-tighter">Sub Category</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="space-y-3 pt-4 border-t">
-                <div className="flex items-center gap-3 text-xs">
-                  <Briefcase className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">Industry: {prospect.industry || 'Media Production'}</span>
-                </div>
-                <div className="flex items-center gap-3 text-xs">
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">Prospect Source: Referral</span>
-                </div>
-                <div className="flex items-center gap-3 text-xs">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">Created: {prospect.created_at?.toDate ? prospect.created_at.toDate().toLocaleDateString() : 'Just now'}</span>
-                </div>
-              </div>
-              <Button 
-                variant="secondary" 
-                className="w-full rounded-xl h-10 text-xs font-bold uppercase tracking-wider"
-                onClick={() => setIsEditOpen(true)}
-              >
-                Update Context
-              </Button>
             </CardContent>
           </Card>
         </div>
