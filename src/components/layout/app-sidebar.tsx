@@ -155,7 +155,7 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar collapsible="icon" variant="sidebar" className="border-r border-white/20 dark:border-slate-700/20 glass-panel font-body">
+    <Sidebar collapsible="icon" variant="sidebar" className="border-r border-white/20 dark:border-slate-700/20 bg-white dark:bg-slate-900 font-body">
       <SidebarHeader className="p-6">
         <div className="flex items-center justify-start min-h-[40px]">
           <Logo variant={state === "collapsed" ? "icon" : "full"} />
@@ -181,7 +181,7 @@ export function AppSidebar() {
                       return (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={cn(
-                              "h-7 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
+                              "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
                               isActive 
                                 ? "bg-primary/10 text-black dark:text-white hover:bg-primary/15" 
                                 : "hover:bg-secondary/50 text-black dark:text-white/80 hover:text-black dark:text-white"

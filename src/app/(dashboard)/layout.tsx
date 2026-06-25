@@ -61,7 +61,7 @@ export default function DashboardLayout({
     <SidebarProvider>
         <ThemeSync />
         <AppSidebar />
-        <SidebarInset className="bg-transparent overflow-hidden flex flex-col h-screen">
+        <SidebarInset className="bg-transparent overflow-hidden flex flex-col h-[100dvh]">
             <header className="flex h-16 shrink-0 items-center gap-2 border-b border-white/20 dark:border-slate-700/20 glass-panel px-6 md:hidden relative z-40">
                 <SidebarTrigger className="h-9 w-9 rounded-xl hover:bg-primary/5 text-muted-foreground/80" />
                 <div className="flex items-center gap-2 ml-2">

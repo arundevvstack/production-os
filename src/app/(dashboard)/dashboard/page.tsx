@@ -103,9 +103,8 @@ export default function DashboardPage() {
     where: { company_id: companyId }
   });
 
-  const { data: proposals } = useSupabaseCollection('Proposal', {
-    where: { company_id: companyId }
-  });
+  // Table Proposal does not exist in schema yet
+  const proposals: any[] = [];
 
   const { data: companyUsers, refetch: reloadUsers } = useSupabaseCollection('User');
 
@@ -143,7 +142,7 @@ export default function DashboardPage() {
   const stats = useMemo(() => {
     const revenue = invoices?.reduce((sum, inv) => sum + (inv.total || 0), 0) || 0;
     const grossExpenses = expenses?.reduce((sum, exp) => sum + (exp.amount || 0), 0) || 0;
-    const activeProjects = allProjects?.filter(p => p.status === 'in_progress').length || 0;
+    const activeProjects = allProjects?.filter(p => p.status === 'in_progress' || p.status === 'active').length || 0;
     const pendingInvoices = invoices?.filter(inv => inv.payment_status === 'pending').length || 0;
     const crmPipeline = prospects?.reduce((sum, l) => !['won', 'lost'].includes(l.stage || '') ? sum + (l.deal_value || 0) : sum, 0) || 0;
     const pendingUsers = companyUsers?.filter(u => u.status === 'pending').length || 0;
@@ -184,7 +183,7 @@ export default function DashboardPage() {
 
   const activeProjectsList = useMemo(() => {
     if (!allProjects) return [];
-    return allProjects.filter(p => p.status === 'in_progress').slice(0, 4);
+    return allProjects.filter(p => p.status === 'in_progress' || p.status === 'active').slice(0, 4);
   }, [allProjects]);
 
   const userProjectMap = useMemo(() => {

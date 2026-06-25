@@ -380,9 +380,9 @@ function ProposalsContent() {
   const [generatedDraft, setGeneratedDraft] = useState<GenerateProposalContentOutput | null>(null);
 
   // Fetch Proposals from Supabase
-  const { data: proposals, isLoading: isProposalsLoading } = useSupabaseCollection('Proposal', {
-    orderBy: { created_at: 'desc' }
-  });
+  // Table Proposal does not exist in schema yet
+  const proposals: any[] = [];
+  const isProposalsLoading = false;
   const reloadProposals = () => {};
 
   // Fetch CRM Leads

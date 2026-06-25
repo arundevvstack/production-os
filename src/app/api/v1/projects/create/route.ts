@@ -137,6 +137,7 @@ export async function POST(req: Request) {
           data: {
             company_id,
             client_id: client_id ?? null,
+            client_name: client_name ?? null,
             project_name,
             project_type,
             project_category: project_category ?? null,
