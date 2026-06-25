@@ -91,10 +91,9 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
   };
 
   // 2. Fetch Proposals linked to this prospect from Supabase
-  const { data: proposals, isLoading: isProposalsLoading } = useSupabaseCollection('Proposal', {
-    where: { prospect_id: prospectId },
-    orderBy: { created_at: 'desc' }
-  });
+  // Table Proposal does not exist in schema yet
+  const proposals: any[] = [];
+  const isProposalsLoading = false;
 
   // Sync edit form with prospect data when opened
   useEffect(() => {

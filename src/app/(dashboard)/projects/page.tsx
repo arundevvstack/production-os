@@ -349,7 +349,7 @@ export default function ProjectsPage() {
 
       {/* Toolbar Section */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl p-2 rounded-[10px] border border-white/60 dark:border-slate-700/60 shadow-premium gap-4 mx-2">
-        <div className="flex items-center gap-1.5 p-1 bg-muted/50 rounded-[10px]">
+        <div className="flex items-center gap-1.5 p-1 bg-muted/50 rounded-[10px] overflow-x-auto w-full sm:w-auto">
           {[
             { id: 'grid', icon: LayoutGrid, label: 'Grid' },
             { id: 'list', icon: ListIcon, label: 'List' },
@@ -426,6 +426,7 @@ export default function ProjectsPage() {
                 index={idx}
                 onArchive={(p) => setProjectToArchive(p)}
                 companyUsers={companyUsers}
+                clients={clients}
               />
             ))}
           </div>
@@ -452,16 +453,28 @@ export default function ProjectsPage() {
   );
 }
 
-function ProjectCard({ project, view, index, onArchive, companyUsers }: { project: any, view: ViewMode, index: number, onArchive: (p: any) => void, companyUsers?: any[] | null }) {
+function ProjectCard({ project, view, index, onArchive, companyUsers, clients }: { project: any, view: ViewMode, index: number, onArchive: (p: any) => void, companyUsers?: any[] | null, clients?: any[] | null }) {
   const isEven = index % 2 === 0;
   const isPilot = project.project_name?.toLowerCase().includes('pilot') || project.project_category?.toLowerCase().includes('pilot') || project.project_type === 'Pilot Production';
   const displayType = project.project_type === 'Pilot Production' ? 'Normal Production' : project.project_type;
+  
+  const client = clients?.find(c => c.id === project.client_id || c.name === project.client_name);
+  const wallpaperUrl = client?.wallpaper_url;
 
   if (view === 'grid') {
     return (
-      <Card className="premium-card group border-none shadow-premium rounded-[10px] overflow-hidden transition-all duration-500 hover:-translate-y-2">
-        <div className={cn("p-6 flex flex-col gap-6 relative", project.color || 'card-red')}>
-          <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 group-hover:scale-125 transition-transform duration-1000">
+      <Card className="premium-card group border-none shadow-premium rounded-[10px] overflow-hidden transition-all duration-500 hover:-translate-y-2 relative">
+        <div 
+          className={cn(
+            "p-6 flex flex-col gap-6 relative overflow-hidden", 
+            !wallpaperUrl && (project.color || 'card-red'),
+            wallpaperUrl && "bg-cover bg-center"
+          )}
+          style={{ backgroundImage: wallpaperUrl ? `url(${wallpaperUrl})` : undefined }}
+        >
+          {wallpaperUrl && <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500 group-hover:bg-black/50" />}
+          
+          <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 group-hover:scale-125 transition-transform duration-1000 z-0">
             <Film className="h-20 w-20" />
           </div>
           <div className="flex justify-between items-start relative z-10">
@@ -500,7 +513,9 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
           </div>
           <Link href={`/projects/${project.id}`} className="relative z-10">
             <h3 className="text-white font-black text-2xl tracking-tighter leading-none group-hover:underline">{project.project_name}</h3>
-            <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest mt-2">{project.client_name}</p>
+            {(client?.name || project.client_name) && (
+              <p className="text-white/80 drop-shadow-sm text-[10px] font-bold uppercase tracking-widest mt-2">{client?.name || project.client_name}</p>
+            )}
           </Link>
         </div>
         <CardContent className="p-6 space-y-5 bg-white/60 dark:bg-slate-900/60 backdrop-blur-3xl">
@@ -557,9 +572,11 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             <CardContent className={cn("p-6 space-y-5", isEven ? "pr-8" : "pl-8")}>
               <div className="flex items-start justify-between">
                 <div className="space-y-1.5">
-                   <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-1.5">
-                     <Briefcase className="h-3 w-3" /> {project.client_name}
-                   </p>
+                   {(client?.name || project.client_name) && (
+                     <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-1.5">
+                       <Briefcase className="h-3 w-3" /> {client?.name || project.client_name}
+                     </p>
+                   )}
                    <Link href={`/projects/${project.id}`}>
                      <h4 className="font-black text-xl tracking-tight text-foreground group-hover:text-foreground transition-colors leading-tight line-clamp-2">{project.project_name}</h4>
                    </Link>
@@ -620,10 +637,10 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
     <Card className="premium-card group border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[15px] bg-white/5 dark:bg-slate-900/50 dark:bg-slate-900/50 backdrop-blur-2xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-0.5 overflow-hidden relative">
       <div className={cn("absolute left-0 top-0 bottom-0 w-1.5 transition-all group-hover:w-2.5 z-10", getProgressColor(project.progress || 0, 'bg'))} />
       <CardContent className="p-0">
-        <div className="flex flex-col md:flex-row md:items-stretch">
+        <div className="flex flex-col lg:flex-row lg:items-stretch">
           <Link 
             href={`/projects/${project.id}`} 
-            className="px-8 py-6 md:w-[35%] flex flex-col justify-center gap-3 relative group-hover:bg-white/40 dark:bg-slate-900/40 transition-colors"
+            className="px-4 md:px-8 py-4 lg:py-6 lg:w-[35%] flex flex-col justify-center gap-3 relative group-hover:bg-white/40 dark:bg-slate-900/40 transition-colors"
           >
             <div className="flex items-center gap-4">
               <h3 className="font-black text-xl tracking-tight text-foreground group-hover:text-foreground transition-colors truncate">
@@ -633,13 +650,15 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
                 <ArrowRight className="h-4 w-4" />
               </div>
             </div>
-            <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-normal">
-              <Briefcase className="h-3.5 w-3.5" />
-              {project.client_name || 'Internal / Unassigned'}
-            </div>
+            {project.client_name && (
+              <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-normal">
+                <Briefcase className="h-3.5 w-3.5" />
+                {project.client_name}
+              </div>
+            )}
           </Link>
 
-          <div className="flex-1 px-8 py-6 md:py-0 border-y md:border-y-0 md:border-x border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20">
+          <div className="flex-1 px-4 md:px-8 py-4 lg:py-0 border-y lg:border-y-0 lg:border-x border-white/40 dark:border-slate-700/40 bg-white/20 dark:bg-slate-900/20">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 h-full items-center">
               <div className="space-y-3">
                 <div className="flex justify-between items-end">
@@ -675,7 +694,7 @@ function ProjectCard({ project, view, index, onArchive, companyUsers }: { projec
             </div>
           </div>
 
-          <div className="px-8 py-6 md:w-[30%] flex items-center justify-between gap-8 bg-white/30 dark:bg-slate-900/30">
+          <div className="px-4 md:px-8 py-4 lg:py-6 lg:w-[30%] flex flex-col sm:flex-row sm:items-center justify-between gap-6 lg:gap-8 bg-white/30 dark:bg-slate-900/30">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 items-center">
               <div className="flex flex-col space-y-1.5">
                 <span className="text-[9px] uppercase font-black text-muted-foreground tracking-widest">Target Delivery</span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,9 +80,11 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
     return Array.from(names).sort();
   }, [leads, clients]);
 
+  const prevIsOpen = useRef(false);
+
   // Apply default values when dialog opens
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !prevIsOpen.current) {
       setWizardStep(1);
       setNewProject(prev => ({
         ...prev,
@@ -95,6 +97,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
       }));
       setSelectedLeadId(defaultValues?.lead_id || null);
     }
+    prevIsOpen.current = isOpen;
   }, [isOpen, defaultValues]);
 
   const handleCreateProject = async (e: React.FormEvent) => {
@@ -118,6 +121,9 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
     }
 
     // 2. Create Project via Enterprise API
+    const matchedClient = clients?.find(c => c.name === newProject.client_name);
+    const resolvedClientId = matchedClient ? matchedClient.id : undefined;
+    
     const randomColor = PROJECT_COLORS[Math.floor(Math.random() * PROJECT_COLORS.length)];
     try {
       const res = await fetch('/api/v1/projects/create', {
@@ -129,6 +135,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
           assignee_id: newProject.assignee_id === 'none' ? undefined : newProject.assignee_id,
           project_name: newProject.project_name,
           client_name: newProject.client_name,
+          client_id: resolvedClientId,
           budget: newProject.budget,
           deadline: newProject.deadline,
           project_type: newProject.project_type,
@@ -164,21 +171,18 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[620px] rounded-2xl border-0 bg-white dark:bg-slate-900 p-0 overflow-hidden shadow-2xl">
+      <DialogContent className="w-[95vw] sm:max-w-[620px] max-h-[90vh] overflow-y-auto rounded-2xl border-0 bg-white dark:bg-slate-900 p-0 shadow-2xl">
         {/* Wizard Header */}
-        <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <DialogHeader className="relative z-10">
-            <div className="flex items-center justify-between mb-4">
-              <DialogTitle className="text-lg font-black tracking-tight text-white flex items-center gap-3">
-                <div className="h-8 w-8 rounded-xl bg-white/10 dark:bg-slate-900/10 border border-white/20 dark:border-slate-700/20 flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-white" />
+        <div className="p-6 border-b border-border bg-slate-50/50 dark:bg-slate-900/50">
+          <DialogHeader>
+            <div className="flex items-center justify-between mb-6">
+              <DialogTitle className="text-xl font-black tracking-tight text-foreground flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                  <Sparkles className="h-5 w-5 text-primary" />
                 </div>
                 New Project
               </DialogTitle>
-              <span className="text-xs font-bold text-white/40 uppercase tracking-widest">Step {wizardStep} of 3</span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-muted px-2.5 py-1 rounded-md">Step {wizardStep} of 3</span>
             </div>
             {/* Step indicators */}
             <div className="flex gap-2 items-center">
@@ -190,19 +194,22 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                 <div key={s.n} className="flex items-center gap-2 flex-1">
                   <div className={cn(
                     "flex items-center gap-2 flex-1",
-                    wizardStep >= s.n ? "opacity-100" : "opacity-40"
+                    wizardStep >= s.n ? "opacity-100" : "opacity-60"
                   )}>
                     <div className={cn(
                       "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-300 shrink-0",
-                      wizardStep > s.n ? "bg-emerald-400 text-white" :
-                      wizardStep === s.n ? "bg-white dark:bg-slate-900 text-foreground" :
-                      "bg-white/10 dark:bg-slate-900/10 text-white"
+                      wizardStep > s.n ? "bg-emerald-500 text-white" :
+                      wizardStep === s.n ? "bg-primary text-primary-foreground shadow-md" :
+                      "bg-muted border border-border text-muted-foreground"
                     )}>
                       {wizardStep > s.n ? <CheckCircle2 className="h-3.5 w-3.5" /> : s.n}
                     </div>
-                    <span className={cn("text-[10px] font-black uppercase tracking-widest transition-colors", wizardStep === s.n ? "text-white" : "text-white/40")}>{s.label}</span>
+                    <span className={cn(
+                      "text-[10px] font-black uppercase tracking-widest transition-colors", 
+                      wizardStep === s.n ? "text-foreground" : "text-muted-foreground"
+                    )}>{s.label}</span>
                   </div>
-                  {i < 2 && <div className={cn("h-px flex-1 transition-all duration-300", wizardStep > s.n ? "bg-emerald-400/60" : "bg-white/10 dark:bg-slate-900/10")} />}
+                  {i < 2 && <div className={cn("h-px flex-1 transition-all duration-300", wizardStep > s.n ? "bg-emerald-500/40" : "bg-border")} />}
                 </div>
               ))}
             </div>
@@ -211,10 +218,11 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
 
         {/* Step 1: Pipeline & Category */}
         {wizardStep === 1 && (
-          <div className="p-7 space-y-5">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Choose Workflow Pipeline</p>
-              <div className="grid grid-cols-3 gap-3">
+          <div className="p-7 flex flex-col min-h-[420px]">
+            <div className="space-y-5">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Choose Workflow Pipeline</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
                   { value: "AI Production", icon: Sparkles, label: "AI Production", desc: "8 stages · AI-assisted", color: "text-foreground", bg: "bg-primary/5 border-primary/20", activeBg: "bg-primary/10 border-primary" },
                   { value: "Hybrid Production", icon: Layers, label: "Hybrid", desc: "6 stages · Mixed workflow", color: "text-accent", bg: "bg-accent/10 border-accent/20", activeBg: "bg-accent/10 border-accent" },
@@ -263,7 +271,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               );
             })()}
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Service Category</Label>
                 <Select value={newProject.service_category} onValueChange={(val) => setNewProject({ ...newProject, service_category: val, service: "" })}>
@@ -292,11 +300,13 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               </div>
             </div>
 
-            <div className="flex justify-end pt-1">
+            </div>
+
+            <div className="mt-auto pt-6 flex justify-end">
               <Button
                 type="button"
                 onClick={() => setWizardStep(2)}
-                className="h-11 px-8 gap-2 rounded-xl bg-primary hover:bg-primary text-white font-black shadow-lg"
+                className="h-11 px-8 gap-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-black shadow-lg"
               >
                 Next <ArrowRight className="h-4 w-4" />
               </Button>
@@ -306,10 +316,11 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
 
         {/* Step 2: Project Details */}
         {wizardStep === 2 && (
-          <div className="p-7 space-y-5">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">Project Information</p>
-              <div className="space-y-4">
+          <div className="p-7 flex flex-col min-h-[420px]">
+            <div className="space-y-5">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">Project Information</p>
+                <div className="space-y-4">
                 <div>
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Project Name <span className="text-destructive">*</span></Label>
                   <Input
@@ -377,7 +388,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                     )}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Budget (₹)</Label>
                     <Input
@@ -415,8 +426,10 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                   </Select>
                 </div>
               </div>
+              </div>
             </div>
-            <div className="flex items-center justify-between pt-1">
+            
+            <div className="mt-auto pt-6 flex items-center justify-between">
               <Button type="button" variant="ghost" onClick={() => setWizardStep(1)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-foreground">
                 ← Back
               </Button>
@@ -429,7 +442,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                   }
                   setWizardStep(3);
                 }}
-                className="h-11 px-8 gap-2 rounded-xl bg-primary hover:bg-primary text-white font-black shadow-lg"
+                className="h-11 px-8 gap-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-black shadow-lg"
               >
                 Review <ArrowRight className="h-4 w-4" />
               </Button>
@@ -439,12 +452,13 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
 
         {/* Step 3: Review & Launch */}
         {wizardStep === 3 && (
-          <form onSubmit={handleCreateProject} className="p-7 space-y-5">
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Review & Launch</p>
-            
-            {/* Summary card */}
-            <div className="rounded-xl border border-border bg-muted p-5 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleCreateProject} className="p-7 flex flex-col min-h-[420px]">
+            <div className="space-y-5">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Review & Launch</p>
+              
+              {/* Summary card */}
+              <div className="rounded-xl border border-border bg-muted/50 p-5 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Project Name</p>
                   <p className="text-sm font-black text-foreground mt-1">{newProject.project_name}</p>
@@ -504,9 +518,10 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
                   </div>
                 );
               })()}
+              </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="mt-auto pt-6 flex items-center justify-between">
               <Button type="button" variant="ghost" onClick={() => setWizardStep(2)} className="h-11 px-6 rounded-xl font-bold text-muted-foreground hover:text-foreground">
                 ← Back
               </Button>

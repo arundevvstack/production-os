@@ -115,62 +115,62 @@ export const clientService = {
         }
       }
 
-      // 3. Create Company Workspace (represented by a Project record)
-      const projectRefCode = `PROJ-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-      const project = await tx.project.create({
-        data: {
-          company_id: data.company_id,
-          client_id: client.id,
-          project_name: `${data.name} Workspace`,
-          project_ref: projectRefCode,
-          budget: 0,
-          status: 'active',
-          progress: 0,
-          color: 'card-red',
-        },
-      });
+      // 3. Create Company Workspace (Disabled for the time being)
+      // const projectRefCode = `PROJ-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      // const project = await tx.project.create({
+      //   data: {
+      //     company_id: data.company_id,
+      //     client_id: client.id,
+      //     project_name: `${data.name} Workspace`,
+      //     project_ref: projectRefCode,
+      //     budget: 0,
+      //     status: 'active',
+      //     progress: 0,
+      //     color: 'card-red',
+      //   },
+      // });
 
-      // 4. Generate default project template (run objectives setup)
-      const defaultAIObjectives = [
-        {
-          title: `[Onboarding] Kickoff Session & Brand Alignment`,
-          stage: 'Pre-Production',
-          status: 'Pending',
-          priority: 'High',
-          department: 'Creative',
-        },
-        {
-          title: `[Onboarding] Secure Document Collection & Contract Sign-off`,
-          stage: 'Pre-Production',
-          status: 'Pending',
-          priority: 'High',
-          department: 'Management',
-        },
-        {
-          title: `[Onboarding] Setup Client Portal Access & Workspace Folders`,
-          stage: 'Pre-Production',
-          status: 'Pending',
-          priority: 'Medium',
-          department: 'Operations',
-        },
-        {
-          title: `[Onboarding] First Campaign Roadmap & Brief Setup`,
-          stage: 'Pre-Production',
-          status: 'Pending',
-          priority: 'High',
-          department: 'Marketing',
-        }
-      ];
+      // 4. Generate default project template
+      // const defaultAIObjectives = [
+      //   {
+      //     title: `[Onboarding] Kickoff Session & Brand Alignment`,
+      //     stage: 'Pre-Production',
+      //     status: 'Pending',
+      //     priority: 'High',
+      //     department: 'Creative',
+      //   },
+      //   {
+      //     title: `[Onboarding] Secure Document Collection & Contract Sign-off`,
+      //     stage: 'Pre-Production',
+      //     status: 'Pending',
+      //     priority: 'High',
+      //     department: 'Management',
+      //   },
+      //   {
+      //     title: `[Onboarding] Setup Client Portal Access & Workspace Folders`,
+      //     stage: 'Pre-Production',
+      //     status: 'Pending',
+      //     priority: 'Medium',
+      //     department: 'Operations',
+      //   },
+      //   {
+      //     title: `[Onboarding] First Campaign Roadmap & Brief Setup`,
+      //     stage: 'Pre-Production',
+      //     status: 'Pending',
+      //     priority: 'High',
+      //     department: 'Marketing',
+      //   }
+      // ];
 
-      await tx.objective.createMany({
-        data: defaultAIObjectives.map(obj => ({
-          project_id: project.id,
-          title: obj.title,
-          status: obj.status,
-          priority: obj.priority,
-          department: obj.department,
-        }))
-      });
+      // await tx.objective.createMany({
+      //   data: defaultAIObjectives.map(obj => ({
+      //     project_id: project.id,
+      //     title: obj.title,
+      //     status: obj.status,
+      //     priority: obj.priority,
+      //     department: obj.department,
+      //   }))
+      // });
 
       // 5. Create default folders (represented by ActivityLog "Folders Generated")
       // 6. Create finance ledger (represented by default BankAccount and ActivityLog "Ledger Initialized")
@@ -190,7 +190,7 @@ export const clientService = {
       
       const logs = [
         { action: 'CLIENT_ONBOARDED', details: `Client "${data.name}" onboarded successfully.` },
-        { action: 'WORKSPACE_GENERATED', details: 'Client Workspace Generated' },
+        // { action: 'WORKSPACE_GENERATED', details: 'Client Workspace Generated' },
         { action: 'PORTAL_ACCESS_CREATED', details: portalUserId ? 'Portal Access Created' : 'Portal Access Setup Skipped (no email)' },
         { action: 'FINANCE_LEDGER_INITIALIZED', details: 'Finance Ledger Initialized' }
       ];
@@ -212,15 +212,15 @@ export const clientService = {
         data: {
           company_id: data.company_id,
           user_id: logUser,
-          title: 'Client Onboarded & Workspace Live',
-          message: `Onboarding completed for "${data.name}". Live workspace and finance ledger initialized.`,
+          title: 'Client Onboarded',
+          message: `Onboarding completed for "${data.name}". Finance ledger initialized.`,
           is_read: false,
         }
       });
 
       return {
         client,
-        project,
+        // project,
         portalUserId
       };
     }, {

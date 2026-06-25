@@ -155,9 +155,19 @@ export default function CRMPage() {
 
   const filteredLeads = useMemo(() => {
     if (!localLeads) return [];
-    // Exclude converted prospects, direct clients, and won/lost from active pipeline board columns
-    return localLeads.filter(l => 
-      !l.is_converted && !['won', 'lost', 'client'].includes(l.stage || '') && (
+    
+    // Normalize legacy stages to new ones
+    const normalizedLeads = localLeads.map(l => {
+      let stage = l.stage || 'new_lead';
+      if (stage === 'lead') stage = 'new_lead';
+      if (stage === 'contact') stage = 'contacted';
+      if (stage === 'proposal') stage = 'proposal_sent';
+      return { ...l, stage };
+    });
+
+    // Exclude converted prospects, direct clients, and won from active pipeline board columns
+    return normalizedLeads.filter(l => 
+      !l.is_converted && !['won', 'client'].includes(l.stage || '') && (
         (l.company_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (l.service_vertical || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (l.sub_vertical || '').toLowerCase().includes(searchQuery.toLowerCase())
@@ -831,9 +841,10 @@ export default function CRMPage() {
                     <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                       <div 
                         className={cn("h-full rounded-full transition-all duration-500", 
-                          stage.id === 'lead' ? 'bg-accent' :
-                          stage.id === 'contact' ? 'bg-accent' :
-                          stage.id === 'proposal' ? 'bg-accent' : 'bg-primary'
+                          stage.id === 'new_lead' ? 'bg-accent' :
+                          stage.id === 'contacted' ? 'bg-accent' :
+                          stage.id === 'proposal_draft' ? 'bg-accent' :
+                          stage.id === 'proposal_sent' ? 'bg-accent' : 'bg-primary'
                         )}
                         style={{ width: `${percentage}%` }}
                       />
@@ -856,11 +867,12 @@ export default function CRMPage() {
             <div className="space-y-4 pt-1">
               {/* Calculate weighted values */}
               {(() => {
-                // Probabilities: Lead=15%, Contact=35%, Proposal=65%, Negotiation=85%
+                // Probabilities: new_lead=15%, contacted=35%, proposal_draft=50%, proposal_sent=65%, negotiation=85%
                 const weightedSum = filteredLeads.reduce((sum, l) => {
-                  const prob = l.stage === 'lead' ? 0.15 :
-                               l.stage === 'contact' ? 0.35 :
-                               l.stage === 'proposal' ? 0.65 :
+                  const prob = l.stage === 'new_lead' ? 0.15 :
+                               l.stage === 'contacted' ? 0.35 :
+                               l.stage === 'proposal_draft' ? 0.50 :
+                               l.stage === 'proposal_sent' ? 0.65 :
                                l.stage === 'negotiation' ? 0.85 : 0;
                   return sum + (l.deal_value || 0) * prob;
                 }, 0);
@@ -975,7 +987,7 @@ export default function CRMPage() {
               <Building2 className="h-4 w-4 text-accent" />
             </div>
             <div className="text-2xl font-black font-headline text-foreground">
-              {filteredLeads.filter(l => ['proposal', 'negotiation'].includes(l.stage || '')).length}
+              {filteredLeads.filter(l => ['proposal_sent', 'negotiation'].includes(l.stage || '')).length}
             </div>
             <p className="text-[10px] text-muted-foreground mt-1 font-medium">Critical discussion phase</p>
           </CardContent>

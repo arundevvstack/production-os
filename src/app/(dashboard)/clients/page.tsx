@@ -43,7 +43,10 @@ import {
   ShieldAlert,
   ArrowRight,
   IndianRupee,
-  Layers
+  Layers,
+  LayoutGrid,
+  Grid,
+  List
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -85,6 +88,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { UnifiedClientSelector } from "@/components/unified-client-selector";
+import ProjectWorkspacePage from "@/app/(dashboard)/projects/[projectId]/page";
 
 export const INDUSTRIES = [
   'Agriculture & Forestry',
@@ -180,7 +184,10 @@ export default function ClientsPage() {
   
   // UI Tabs State
   const [activeTab, setActiveTab] = useState<'directory' | 'pipeline' | 'intelligence_hub'>('directory');
+  const [openWorkspaceId, setOpenWorkspaceId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<'grid-large' | 'grid-small' | 'list'>('grid-large');
+  const [sortBy, setSortBy] = useState<'name-asc' | 'name-desc' | 'recent' | 'oldest'>('name-asc');
   const [clientToArchive, setClientToArchive] = useState<any>(null);
   const [clientToPermanentDelete, setClientToPermanentDelete] = useState<any>(null);
   
@@ -231,10 +238,9 @@ export default function ClientsPage() {
     orderBy: { created_at: 'desc' }
   });
 
-  const { data: proposals, isLoading: isProposalsLoading } = useSupabaseCollection('Proposal', {
-    where: { company_id: companyId },
-    orderBy: { created_at: 'desc' }
-  });
+  // Table Proposal does not exist in Prisma schema yet
+  const proposals: any[] = [];
+  const isProposalsLoading = false;
 
   const { data: invoices } = useSupabaseCollection('Invoice', {
     where: { company_id: companyId }
@@ -247,7 +253,7 @@ export default function ClientsPage() {
   // 1. Existing Clients List (from Client table)
   const existingClients = useMemo(() => {
     if (!clients) return [];
-    return clients.filter(c => 
+    let filtered = clients.filter(c => 
       (c.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (c.industry || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (c.service_vertical || '').toLowerCase().includes(searchQuery.toLowerCase())
@@ -255,7 +261,20 @@ export default function ClientsPage() {
       ...c,
       company_name: c.name
     }));
-  }, [clients, searchQuery]);
+
+    switch (sortBy) {
+      case 'name-asc':
+        return filtered.sort((a, b) => (a.company_name || '').localeCompare(b.company_name || ''));
+      case 'name-desc':
+        return filtered.sort((a, b) => (b.company_name || '').localeCompare(a.company_name || ''));
+      case 'recent':
+        return filtered.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
+      case 'oldest':
+        return filtered.sort((a, b) => new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime());
+      default:
+        return filtered;
+    }
+  }, [clients, searchQuery, sortBy]);
 
   // 2. Active Prospects List (stage: other pipeline stages)
   const prospectClients = useMemo(() => {
@@ -296,10 +315,10 @@ export default function ClientsPage() {
     const activeOpps = companyLeads.filter(l => !['client', 'won', 'lost'].includes(l.stage || ''));
     
     // Projects
-    const relatedProjects = projects?.filter(p => p.client_name === selectedHubCompany) || [];
+    const relatedProjects = projects?.filter(p => p.client_id === masterProfile?.id) || [];
     
     // Proposals
-    const relatedProposals = proposals?.filter(p => p.client_name === selectedHubCompany) || [];
+    const relatedProposals = proposals?.filter(p => p.client_name === masterProfile?.company_name) || [];
     
     // Invoices
     const relatedInvoices = invoices?.filter(inv => inv.client_id === masterProfile?.id) || [];
@@ -458,7 +477,7 @@ export default function ClientsPage() {
       const { data: projectsToArchive } = await supabase
         .from('Project')
         .select('*')
-        .eq('client_name', client.company_name)
+        .eq('client_id', client.id)
         .eq('company_id', companyId);
       
       if (projectsToArchive && projectsToArchive.length > 0) {
@@ -634,31 +653,81 @@ export default function ClientsPage() {
       </div>
 
       {/* Directory Navigation Tabs */}
-      <div className="flex items-center gap-1 p-1.5 rounded-[10px] bg-secondary/50 border border-border/40 w-fit backdrop-blur-xl shadow-sm">
-        {[
-          { id: 'directory', label: 'Active Partners', icon: Building2 },
-          { id: 'pipeline', label: 'Prospect Pipelines', icon: Activity },
-          { id: 'intelligence_hub', label: 'Relationship Hub', icon: Sparkles },
-        ].map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id as any)}
-            className={cn(
-              "flex items-center gap-2 px-5 h-9 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200",
-              activeTab === id
-                ? 'bg-destructive text-white shadow-md shadow-red-500/20'
-                : 'text-muted-foreground hover:text-foreground hover:bg-secondary/80'
-            )}
-          >
-            <Icon className={cn("h-3.5 w-3.5", id === 'intelligence_hub' && activeTab === id && 'animate-pulse')} />
-            {label}
-          </button>
-        ))}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-1 p-1.5 rounded-[10px] bg-secondary/50 border border-border/40 w-full md:w-fit backdrop-blur-xl shadow-sm overflow-x-auto custom-scrollbar">
+          {[
+            { id: 'directory', label: 'Active Partners', icon: Building2 },
+            { id: 'pipeline', label: 'Prospect Pipelines', icon: Activity },
+            { id: 'intelligence_hub', label: 'Relationship Hub', icon: Sparkles },
+          ].map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id as any)}
+              className={cn(
+                "flex items-center gap-2 px-5 h-9 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-200 whitespace-nowrap",
+                activeTab === id
+                  ? 'bg-destructive text-white shadow-md shadow-red-500/20'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/80'
+              )}
+            >
+              <Icon className={cn("h-3.5 w-3.5", id === 'intelligence_hub' && activeTab === id && 'animate-pulse')} />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'directory' && (
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <Select value={sortBy} onValueChange={(val: any) => setSortBy(val)}>
+              <SelectTrigger className="h-10 w-full md:w-40 rounded-xl bg-white dark:bg-slate-900 border-border text-[11px] font-bold shadow-sm">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="name-asc" className="text-[11px] font-bold">A-Z</SelectItem>
+                <SelectItem value="name-desc" className="text-[11px] font-bold">Z-A</SelectItem>
+                <SelectItem value="recent" className="text-[11px] font-bold">Newest First</SelectItem>
+                <SelectItem value="oldest" className="text-[11px] font-bold">Oldest First</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center p-1.5 rounded-[10px] bg-secondary/50 border border-border/40 shadow-sm shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setViewMode('grid-large')}
+                className={cn("h-7 w-7 rounded-lg transition-all", viewMode === 'grid-large' ? 'bg-white dark:bg-slate-800 shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setViewMode('grid-small')}
+                className={cn("h-7 w-7 rounded-lg transition-all", viewMode === 'grid-small' ? 'bg-white dark:bg-slate-800 shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}
+              >
+                <Grid className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setViewMode('list')}
+                className={cn("h-7 w-7 rounded-lg transition-all", viewMode === 'list' ? 'bg-white dark:bg-slate-800 shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}
+              >
+                <List className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* TAB CONTENT: ACTIVE PARTNERS */}
       {activeTab === 'directory' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className={cn(
+          "animate-in fade-in slide-in-from-bottom-4 duration-300",
+          viewMode === 'grid-large' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" :
+          viewMode === 'grid-small' ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4" :
+          "flex flex-col gap-3"
+        )}>
           {existingClients.length === 0 ? (
             <div className="col-span-full py-20 text-center bg-muted rounded-[10px] border border-dashed border-border text-slate-450">
               <Building2 className="h-12 w-12 mx-auto mb-4 opacity-30 text-muted-foreground" />
@@ -669,82 +738,105 @@ export default function ClientsPage() {
             </div>
           ) : (
             existingClients.map((client) => {
-              const activeProj = projects?.filter(p => p.client_name === client.company_name && p.status === 'in_progress') || [];
-              const companyProposals = proposals?.filter(p => p.client_name === client.company_name) || [];              return (
-                <div key={client.id} className="group relative rounded-[10px] overflow-hidden border border-border bg-white dark:bg-slate-900 flex flex-col transition-all duration-300 hover:border-destructive/20 hover:shadow-xl hover:shadow-slate-200/50">
-                  {/* Top gradient accent */}
-                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  {/* BG glow on hover */}
-                  <div className="absolute -top-12 -right-12 w-40 h-40 bg-destructive/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              const activeProj = projects?.filter(p => p.client_id === client.id && p.status === 'in_progress') || [];
+              const companyProposals = proposals?.filter(p => p.client_name === client.company_name) || [];              
+              const isList = viewMode === 'list';
+              const isSmall = viewMode === 'grid-small';
 
-                  <div className="relative p-6 pb-5">
-                    <div className="flex justify-between items-start mb-5">
-                      <div className="h-12 w-12 rounded-[10px] bg-destructive/10 text-destructive border border-red-100 flex items-center justify-center shadow-sm shadow-red-500/5 group-hover:scale-105 transition-transform">
-                        <Building2 className="h-5 w-5" />
+              return (
+                <div key={client.id} className={cn(
+                  "group relative rounded-2xl overflow-hidden border bg-white dark:bg-slate-900 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-destructive/10 hover:border-destructive/30",
+                  isList ? "flex flex-col sm:flex-row sm:items-center p-4 gap-6" : "flex flex-col"
+                )}>
+                  {/* Premium Subtle Gradient BG */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent to-muted/30 pointer-events-none" />
+                  
+                  {/* Card Header Section */}
+                  <div className={cn("relative z-10", isList ? "flex-1 flex items-center gap-6" : "p-4 pb-3")}>
+                    <div className={cn("flex items-start", isList ? "flex-row items-center gap-4" : "justify-between mb-4")}>
+                      <div className={cn(
+                        "rounded-[14px] flex items-center justify-center shrink-0 border group-hover:scale-110 transition-transform duration-500",
+                        isList ? "h-14 w-14 bg-destructive/5 border-destructive/10 text-destructive" : "h-14 w-14 bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/10 text-destructive shadow-inner"
+                      )}>
+                        <Building2 className={isList ? "h-6 w-6" : "h-6 w-6"} />
                       </div>
-                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground bg-muted border border-border rounded-lg px-2 py-1">
-                        {client.industry || 'Media'}
-                      </span>
+                      {!isList && !isSmall && (
+                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground bg-secondary/80 border border-border/50 rounded-full px-3 py-1.5 shadow-sm">
+                          {client.industry || 'Media'}
+                        </span>
+                      )}
                     </div>
-                    <h3 className="font-black text-xl text-foreground group-hover:text-destructive transition-colors tracking-tight">
-                      {client.company_name}
-                    </h3>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      <Zap className="h-3 w-3 text-destructive" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-destructive/80">{client.service_vertical || 'Media Production'}</span>
-                    </div>
-                  </div>
-
-                  <div className="px-6 pb-5 space-y-2.5 flex-1">
-                    <div className="h-px bg-muted" />
-                    <div className="pt-2 space-y-3">
-                      <div className="flex items-center gap-3">
-                        <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
-                          <Mail className="h-3 w-3 text-muted-foreground" />
-                        </div>
-                        <span className="text-xs text-muted-foreground/80 truncate">{client.email || 'poc@company.com'}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
-                          <User className="h-3 w-3 text-muted-foreground" />
-                        </div>
-                        <span className="text-xs text-muted-foreground/80">PoC: <span className="font-bold text-foreground">{client.contact_person || 'Unassigned'}</span></span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border">
-                          <Briefcase className="h-3 w-3 text-muted-foreground" />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-black text-destructive bg-destructive/10 border border-red-100 rounded-lg px-2 py-0.5">{activeProj.length} Projects</span>
-                          <span className="text-[10px] font-bold text-muted-foreground">{companyProposals.length} Proposals</span>
-                        </div>
+                    
+                    <div>
+                      <h3 className={cn("font-black tracking-tight text-foreground group-hover:text-destructive transition-colors", isList ? "text-xl" : isSmall ? "text-lg mb-1 line-clamp-1" : "text-2xl mb-1")}>
+                        {client.company_name}
+                      </h3>
+                      <div className="flex items-center gap-1.5">
+                        <Zap className="h-3 w-3 text-destructive shrink-0" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-destructive/80 truncate">
+                          {client.service_vertical || 'Media Production'}
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="px-6 pb-6 pt-3 flex items-center justify-between border-t border-border">
+                  {/* Card Details Section */}
+                  <div className={cn("relative z-10 border-border/50", isList ? "flex-1 border-l pl-4" : "px-4 pb-4 pt-2 border-t flex-1")}>
+                    <div className={cn("grid gap-3", isList ? "grid-cols-2" : isSmall ? "grid-cols-1" : "grid-cols-1")}>
+                      {!isSmall && (
+                        <>
+                          <div className="flex items-center gap-3">
+                            <div className="h-8 w-8 rounded-full bg-secondary/80 flex items-center justify-center shrink-0 border border-border/50">
+                              <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                            </div>
+                            <span className="text-xs text-muted-foreground/90 font-medium truncate">{client.email || 'poc@company.com'}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="h-8 w-8 rounded-full bg-secondary/80 flex items-center justify-center shrink-0 border border-border/50">
+                              <User className="h-3.5 w-3.5 text-muted-foreground" />
+                            </div>
+                            <span className="text-xs text-muted-foreground/90 font-medium truncate">PoC: <span className="font-bold text-foreground">{client.contact_person || 'Unassigned'}</span></span>
+                          </div>
+                        </>
+                      )}
+                      
+                      <div className={cn("flex items-center gap-2", !isSmall && "mt-1")}>
+                        <Badge variant="outline" className="text-[9px] font-black text-destructive bg-destructive/5 border-destructive/20 rounded-md px-2 py-0.5">
+                          {activeProj.length} Projects
+                        </Badge>
+                        <Badge variant="outline" className="text-[9px] font-bold text-muted-foreground bg-secondary/50 border-border/50 rounded-md px-2 py-0.5">
+                          {companyProposals.length} Proposals
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Actions Section */}
+                  <div className={cn("relative z-10 flex items-center border-border/50 bg-secondary/20 gap-2", isList ? "border-l pl-4" : "border-t px-4 py-3")}>
                     <button
                       onClick={() => { setSelectedHubCompany(client.company_name); setActiveTab('intelligence_hub'); }}
-                      className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 hover:text-destructive bg-muted hover:bg-muted border border-border hover:border-red-200 rounded-xl h-9 px-4 transition-all"
+                      className="flex items-center justify-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-destructive bg-destructive/5 hover:bg-destructive hover:text-white border border-destructive/10 rounded-xl h-9 px-2 transition-all flex-1"
                     >
-                      <Sparkles className="h-3.5 w-3.5 text-destructive" /> Enter Hub
+                      <Sparkles className="h-3 w-3 shrink-0" /> {!isSmall && "Hub"}
                     </button>
+                    <Link
+                      href={`/clients/${client.id}`}
+                      className="flex items-center justify-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-foreground bg-white dark:bg-slate-800 hover:bg-muted border border-border/50 rounded-xl h-9 px-2 transition-all shadow-sm flex-1"
+                    >
+                      <ExternalLink className="h-3 w-3 shrink-0" /> {!isSmall && "Portfolio"}
+                    </Link>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-muted text-muted-foreground hover:text-muted-foreground/80">
+                        <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl hover:bg-muted text-muted-foreground border-border/50 shrink-0">
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="rounded-[10px] w-48 bg-white dark:bg-slate-900 border border-border text-foreground/80 shadow-lg">
-                        <DropdownMenuItem asChild className="rounded-xl hover:bg-muted cursor-pointer">
-                          <Link href={`/clients/${client.id}`} className="gap-2"><ExternalLink className="h-3.5 w-3.5 text-muted-foreground" /> Portfolio View</Link>
+                      <DropdownMenuContent align="end" className="rounded-2xl w-48 p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-border/50 text-foreground shadow-2xl">
+                        <DropdownMenuItem className="gap-3 text-muted-foreground rounded-xl hover:bg-secondary cursor-pointer py-2 font-medium text-xs" onClick={() => setClientToArchive(client)}>
+                          <Archive className="h-4 w-4" /> Archive Partner
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-muted-foreground/80 rounded-xl hover:bg-muted cursor-pointer" onClick={() => setClientToArchive(client)}>
-                          <Archive className="h-3.5 w-3.5" /> Archive Partner
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-muted" />
-                        <DropdownMenuItem className="gap-2 text-destructive rounded-xl hover:bg-destructive/10 cursor-pointer font-bold" onClick={() => setClientToPermanentDelete(client)}>
-                          <Trash2 className="h-3.5 w-3.5" /> Delete Client
+                        <DropdownMenuItem className="gap-3 text-destructive rounded-xl hover:bg-destructive/10 cursor-pointer font-bold py-2 text-xs" onClick={() => setClientToPermanentDelete(client)}>
+                          <Trash2 className="h-4 w-4" /> Delete Client
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -836,32 +928,43 @@ export default function ClientsPage() {
       {activeTab === 'intelligence_hub' && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           
-          {/* Quick Select Client Bar */}
-          <div className="relative overflow-hidden rounded-[10px] border border-border bg-white dark:bg-slate-900 shadow-sm p-6">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
-            <div className="absolute -top-16 -right-8 w-48 h-48 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
-            <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 relative">
-              <div>
-                <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-destructive" /> Matrix Relationship Cockpit
-                </h2>
-                <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Cross-Module Pipeline Graph Integrations</p>
-              </div>
-              <div className="flex gap-3">
-                <UnifiedClientSelector 
-                  companyId={companyId || ''} 
-                  value={selectedHubCompany}
-                  onSelect={(c) => setSelectedHubCompany(c.company_name)}
-                  placeholder="Select Client Organization..."
-                  className="bg-white dark:bg-slate-900 border border-border text-foreground rounded-[10px] h-11"
-                  showOnboardOption={false}
-                />
+          {openWorkspaceId ? (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+              <Button variant="ghost" onClick={() => setOpenWorkspaceId(null)} className="gap-2 text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4" /> Back to Intelligence Hub
+              </Button>
+              <div className="border border-border rounded-2xl overflow-hidden shadow-premium bg-white dark:bg-slate-900 relative">
+                <ProjectWorkspacePage providedProjectId={openWorkspaceId} onBack={() => setOpenWorkspaceId(null)} />
               </div>
             </div>
-          </div>
+          ) : (
+            <>
+              {/* Quick Select Client Bar */}
+              <div className="relative overflow-hidden rounded-[10px] border border-border bg-white dark:bg-slate-900 shadow-sm p-6">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
+                <div className="absolute -top-16 -right-8 w-48 h-48 bg-destructive/5 rounded-full blur-3xl pointer-events-none" />
+                <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 relative">
+                  <div>
+                    <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-destructive" /> Matrix Relationship Cockpit
+                    </h2>
+                    <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Cross-Module Pipeline Graph Integrations</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <UnifiedClientSelector 
+                      companyId={companyId || ''} 
+                      value={selectedHubCompany}
+                      onSelect={(c) => setSelectedHubCompany(c.company_name)}
+                      placeholder="Select Client Organization..."
+                      className="bg-white dark:bg-slate-900 border border-border text-foreground rounded-[10px] h-11"
+                      showOnboardOption={false}
+                    />
+                  </div>
+                </div>
+              </div>
 
-          {/* Master Hub Multi-Column Cockpit Workspace */}
-          {selectedHubGraph ? (
+              {/* Master Hub Multi-Column Cockpit Workspace */}
+              {selectedHubGraph ? (
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-stretch animate-in fade-in zoom-in-95 duration-300">
               
               {/* HUB LEFT: Master Organization Details & Sentiment Index */}
@@ -1067,24 +1170,27 @@ export default function ClientsPage() {
                         <div className="text-center py-20 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">No active project workspaces.</div>
                       ) : (
                         selectedHubGraph.relatedProjects.map((proj) => (
-                          <div key={proj.id} className="p-4 bg-muted hover:bg-muted/50 rounded-xl border border-border space-y-3.5 shadow-sm transition">
-                            <div className="flex justify-between items-center">
-                              <span className="text-xs font-bold text-foreground">{proj.project_name}</span>
-                              <Badge className="bg-white dark:bg-slate-900 border border-border text-muted-foreground text-[8px] font-bold uppercase">{proj.status}</Badge>
-                            </div>
-                            
-                            <div className="space-y-1">
-                              <div className="flex justify-between text-[9px] text-muted-foreground font-bold uppercase">
-                                <span>Progress</span>
-                                <span>{proj.progress}%</span>
+                          <div onClick={() => setOpenWorkspaceId(proj.id)} key={proj.id} className="block group cursor-pointer">
+                            <div className="p-4 bg-muted hover:bg-muted/80 rounded-xl border border-border space-y-3.5 shadow-sm transition-all group-hover:border-destructive/30">
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-foreground group-hover:text-destructive transition-colors">{proj.project_name}</span>
+                                <Badge className="bg-white dark:bg-slate-900 border border-border text-muted-foreground text-[8px] font-bold uppercase">{proj.status}</Badge>
                               </div>
-                              <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
-                                <div className="h-full bg-destructive rounded-full" style={{ width: `${proj.progress}%` }} />
+                              
+                              <div className="space-y-1">
+                                <div className="flex justify-between text-[9px] text-muted-foreground font-bold uppercase">
+                                  <span>Progress</span>
+                                  <span>{proj.progress}%</span>
+                                </div>
+                                <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
+                                  <div className="h-full bg-destructive rounded-full" style={{ width: `${proj.progress}%` }} />
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="flex justify-between items-center text-[9px] text-muted-foreground font-bold">
-                              <span>Budget: ₹{proj.budget?.toLocaleString()}</span>
+                              <div className="flex justify-between items-center text-[9px] text-muted-foreground font-bold">
+                                <span>Budget: ₹{proj.budget?.toLocaleString()}</span>
+                                <span className="text-destructive flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">Open <ArrowRight className="h-3 w-3" /></span>
+                              </div>
                             </div>
                           </div>
                         ))
@@ -1133,9 +1239,10 @@ export default function ClientsPage() {
               <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Search and Select an organization above to activate Matrix Hub</p>
             </Card>
           )}
-
-        </div>
+        </>
       )}
+    </div>
+  )}
 
       {/* QUICK ADD OPPORTUNITY MODAL (HUB ACCESSORY) */}
       <Dialog open={isQuickOppOpen} onOpenChange={setIsQuickOppOpen}>

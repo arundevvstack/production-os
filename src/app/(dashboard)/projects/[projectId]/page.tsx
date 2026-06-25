@@ -93,10 +93,10 @@ interface ReviewAnnotation {
   author: string;
 }
 
-export default function ProjectWorkspacePage() {
+export default function ProjectWorkspacePage({ providedProjectId, onBack }: { providedProjectId?: string, onBack?: () => void }) {
   const params = useParams();
   const router = useRouter();
-  const projectId = params.projectId as string;
+  const projectId = providedProjectId || (params?.projectId as string);
   const { companyId, isLoading: isTenantLoading, roleId, profile, isSuperAdmin } = useTenant();
   const [activeTab, setActiveTab] = useState("");
   
@@ -143,7 +143,7 @@ export default function ProjectWorkspacePage() {
   const [selectedFolderFilter, setSelectedFolderFilter] = useState<string>("all");
 
   // --- DATA FETCHING FROM SUPABASE ---
-  const { data: project, isLoading: isProjectLoading } = useSupabaseDoc('Project', projectId);
+  const { data: project, isLoading: isProjectLoading } = useSupabaseDoc('Project', projectId || '');
 
   const { data: projectStages, isLoading: isStagesLoading } = useSupabaseCollection('ProjectStage', {
     where: { project_id: projectId },
@@ -183,7 +183,7 @@ export default function ProjectWorkspacePage() {
   }, [roleId]);
 
   // --- DERIVED CALCULATIONS ---
-  const currentTab = activeTab || projectStages?.[0]?.name || "assets";
+  const currentTab = activeTab || "overview";
 
   const liveProgress = useMemo(() => {
     if (!objectives || objectives.length === 0) return project?.progress || 0;
@@ -468,6 +468,8 @@ export default function ProjectWorkspacePage() {
     return <div className="flex items-center justify-center h-[80vh]"><Loader2 className="h-8 w-8 animate-spin text-foreground" /></div>;
   }
 
+  if (!projectId) return null;
+
   if (!project) {
     return (
       <div className="text-center py-20">
@@ -511,7 +513,7 @@ export default function ProjectWorkspacePage() {
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div className="flex items-start gap-5">
             <button
-              onClick={() => router.push("/projects")}
+              onClick={() => onBack ? onBack() : router.push("/projects")}
               className="mt-1 h-9 w-9 rounded-xl bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-all shrink-0"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -627,6 +629,9 @@ export default function ProjectWorkspacePage() {
         <div className="mt-8">
           <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="bg-transparent p-0 h-auto flex flex-wrap gap-0 border-b border-border w-full justify-start rounded-none">
+              <TabsTrigger value="overview" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground transition-all">
+                <Target className="h-3.5 w-3.5" /> Overview
+              </TabsTrigger>
               {projectStages?.map(stage => (
                 <TabsTrigger
                   key={stage.id}
@@ -655,6 +660,100 @@ export default function ProjectWorkspacePage() {
       {/* ── White Tab Content Area ── */}
       <div className="bg-white dark:bg-slate-900 min-h-screen">
         <Tabs value={currentTab} onValueChange={setActiveTab} className="w-full">
+
+        {/* 🎬 OVERVIEW TAB */}
+        <TabsContent value="overview" className="p-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="max-w-4xl space-y-8">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black tracking-tight">Workspace Overview</h2>
+              <p className="text-muted-foreground font-medium text-sm">
+                This is your central command center for <strong>{project.project_name}</strong>. From here, you can manage assets, track financial costs, and monitor the timeline of your deliverables.
+              </p>
+            </div>
+
+            {(!projectStages || projectStages.length === 0) && (
+              <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6 space-y-4">
+                <div className="flex items-center gap-3 text-destructive">
+                  <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center">
+                    <Rocket className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-lg font-black tracking-tight">Setup Production Pipeline</h3>
+                </div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  This workspace doesn't have any production phases configured yet. To start adding tasks and tracking progress, you need to initialize a pipeline.
+                </p>
+                <div className="flex gap-3 pt-2">
+                  <Button 
+                    onClick={async () => {
+                      setIsSubmitting(true);
+                      try {
+                        const stages = [
+                          { name: 'Pre-Production', order: 1, status: 'active' },
+                          { name: 'Production', order: 2, status: 'pending' },
+                          { name: 'Post-Production', order: 3, status: 'pending' },
+                          { name: 'Release', order: 4, status: 'pending' }
+                        ];
+                        for (const s of stages) {
+                          await supabase.from('ProjectStage').insert({
+                            project_id: projectId,
+                            ...s
+                          });
+                        }
+                        toast({ title: 'Pipeline Created', description: 'Standard production pipeline initialized.' });
+                        window.location.reload();
+                      } catch (e: any) {
+                        toast({ variant: 'destructive', title: 'Error', description: e.message });
+                      } finally {
+                        setIsSubmitting(false);
+                      }
+                    }}
+                    disabled={isSubmitting}
+                    className="h-10 px-6 font-black text-xs uppercase rounded-xl"
+                  >
+                    {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate Standard Pipeline"}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="rounded-2xl border bg-card p-5 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <Package className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="font-black">Assets Hub</h4>
+                  <p className="text-xs text-muted-foreground mt-1">Central repository for scripts, raw footage, and final deliverables.</p>
+                </div>
+                <Button variant="outline" className="w-full text-xs font-bold rounded-lg h-8 mt-2" onClick={() => setActiveTab('assets')}>Open Assets</Button>
+              </div>
+
+              {hasFinanceAccess && (
+                <div className="rounded-2xl border bg-card p-5 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                    <Receipt className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-black">Financial Tracking</h4>
+                    <p className="text-xs text-muted-foreground mt-1">Log expenses, track budget vs actuals, and generate invoices.</p>
+                  </div>
+                  <Button variant="outline" className="w-full text-xs font-bold rounded-lg h-8 mt-2" onClick={() => setActiveTab('finances')}>Open Finances</Button>
+                </div>
+              )}
+
+              <div className="rounded-2xl border bg-card p-5 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="h-10 w-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
+                  <Calendar className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="font-black">Timeline & Gantt</h4>
+                  <p className="text-xs text-muted-foreground mt-1">Visualize project dependencies and track deadlines chronologically.</p>
+                </div>
+                <Button variant="outline" className="w-full text-xs font-bold rounded-lg h-8 mt-2" onClick={() => setActiveTab('timeline')}>Open Timeline</Button>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
 
         {/* Tab Content: Dynamic Production Phases */}
         {projectStages?.map((stage) => (

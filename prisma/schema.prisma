@@ -169,6 +169,8 @@ model Client {
   gstin            String?
   service_vertical String?
   sub_vertical     String?
+  logo_url         String?
+  wallpaper_url    String?
   created_at       DateTime @default(now())
 
   company   Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
@@ -257,6 +259,7 @@ model Project {
   id         String  @id @default(uuid())
   company_id String
   client_id  String?
+  client_name String?
 
   project_name     String
   project_ref      String?

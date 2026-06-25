@@ -46,6 +46,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { PIPELINE_STAGES } from "@/lib/constants";
+import { CreateProjectWizard } from "@/components/projects/create-project-wizard";
+import ProjectWorkspacePage from "@/app/(dashboard)/projects/[projectId]/page";
 
 export default function ClientPortfolioPage({ params }: { params: Promise<{ clientId: string }> }) {
   const { clientId } = use(params);
@@ -59,14 +61,49 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
     title: "",
     value: ""
   });
+  
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
+  const [openWorkspaceId, setOpenWorkspaceId] = useState<string | null>(null);
+
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [isUploadingWallpaper, setIsUploadingWallpaper] = useState(false);
+
+  const handleUpload = async (file: File, type: 'logo' | 'wallpaper') => {
+    if (!companyId || !client) return;
+    
+    const isLogo = type === 'logo';
+    isLogo ? setIsUploadingLogo(true) : setIsUploadingWallpaper(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', type);
+      
+      const res = await fetch(`/api/v1/clients/${clientId}/assets`, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      
+      toast({ title: 'Success', description: `${type === 'logo' ? 'Logo' : 'Wallpaper'} updated successfully` });
+      // Force reload to see changes
+      window.location.reload();
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Upload Failed', description: error.message });
+    } finally {
+      isLogo ? setIsUploadingLogo(false) : setIsUploadingWallpaper(false);
+    }
+  };
 
   // 1. Fetch Client Info from Supabase Client table
   const { data: rawClient, isLoading: isClientLoading } = useSupabaseDoc('Client', clientId);
   const client = useMemo(() => rawClient ? { ...rawClient, company_name: rawClient.name } : null, [rawClient]);
 
   // 2. Fetch Projects for this client from Supabase
-  const { data: projects, isLoading: isProjectsLoading } = useSupabaseCollection('Project', {
-    where: { client_name: client?.company_name },
+  const { data: projects, isLoading: isProjectsLoading, refetch: reloadProjects } = useSupabaseCollection('Project', {
+    where: { company_id: companyId, client_id: clientId },
     orderBy: { created_at: 'desc' }
   });
 
@@ -82,7 +119,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
   });
 
   // 5. Fetch all leads for this company from Supabase
-  const { data: allRelatedLeads } = useSupabaseCollection('Prospect', {
+  const { data: allRelatedLeads, refetch: reloadLeads } = useSupabaseCollection('Prospect', {
     where: { company_name: client?.company_name }
   });
 
@@ -99,7 +136,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
   const activeProjectsStats = useMemo(() => {
     if (!projects) return { count: 0, totalValue: 0 };
-    const active = projects.filter(p => p.status === 'in_progress');
+    const active = projects.filter(p => p.status === 'in_progress' || p.status === 'active');
     const totalValue = active.reduce((sum, p) => sum + (p.budget || 0), 0);
     return { count: active.length, totalValue };
   }, [projects]);
@@ -151,14 +188,18 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
     setIsSubmitting(true);
     try {
-      await supabase.from('Prospect').insert({
+      const { error } = await supabase.from('Prospect').insert({
+        id: crypto.randomUUID(),
         company_id: companyId,
         company_name: client.company_name,
         industry: client.industry,
-        service_vertical: client.service_vertical,
+        service_vertical: newLead.title,
         deal_value: parseFloat(newLead.value) || 0,
-        stage: 'lead',
+        stage: 'new_lead',
+        updated_at: new Date().toISOString(),
       });
+
+      if (error) throw error;
 
       toast({ 
         title: "Sales Lead Created", 
@@ -167,8 +208,9 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
 
       setNewLead({ title: "", value: "" });
       setIsCreateLeadOpen(false);
-    } catch (error) {
-      toast({ variant: "destructive", title: "Error", description: "Could not create sales lead." });
+      reloadLeads();
+    } catch (error: any) {
+      toast({ variant: "destructive", title: "Error", description: error?.message || "Could not create sales lead." });
     } finally {
       setIsSubmitting(false);
     }
@@ -192,371 +234,303 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="rounded-xl bg-white dark:bg-slate-900 shadow-sm border" onClick={() => router.push("/clients")}>
+    <div className="h-[calc(100vh-5rem)] flex flex-col overflow-hidden -m-4 md:-m-8 bg-slate-50 dark:bg-slate-950">
+      {/* OUTLOOK HEADER / RIBBON */}
+      <div 
+        className="flex-none border-b border-border px-6 py-4 flex items-center justify-between z-10 shadow-sm shrink-0 relative overflow-hidden group"
+        style={{ backgroundColor: client.wallpaper_url ? 'transparent' : undefined }}
+      >
+        {/* WALLPAPER LAYER */}
+        <div 
+          className={cn(
+            "absolute inset-0 z-0 bg-white dark:bg-slate-900 transition-all",
+            client.wallpaper_url && "bg-cover bg-center"
+          )}
+          style={{ backgroundImage: client.wallpaper_url ? `url(${client.wallpaper_url})` : undefined }}
+        >
+          {client.wallpaper_url && <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm" />}
+        </div>
+
+        {/* Edit Wallpaper Button (Visible on Hover) */}
+        <div className="absolute top-2 right-1/2 translate-x-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Label className="cursor-pointer bg-black/50 hover:bg-black/70 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-md transition-colors">
+            {isUploadingWallpaper ? "Uploading..." : "Change Wallpaper"}
+            <input 
+              type="file" 
+              className="hidden" 
+              accept="image/*" 
+              onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'wallpaper')}
+              disabled={isUploadingWallpaper}
+            />
+          </Label>
+        </div>
+
+        <div className="flex items-center gap-4 relative z-10">
+          <Button variant="ghost" size="icon" className="rounded-xl bg-muted/50 hover:bg-muted" onClick={() => router.push("/clients")}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
+
+          {/* LOGO UPLOAD AREA */}
+          <div className="relative group/logo">
+            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden border border-border shrink-0 shadow-sm">
+              {client.logo_url ? (
+                <img src={client.logo_url} alt="Logo" className="h-full w-full object-cover" />
+              ) : (
+                <Building2 className="h-5 w-5 text-primary" />
+              )}
+            </div>
+            <Label className="absolute inset-0 bg-black/50 text-white flex flex-col items-center justify-center opacity-0 group-hover/logo:opacity-100 cursor-pointer transition-opacity rounded-xl backdrop-blur-sm">
+              {isUploadingLogo ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              <span className="text-[8px] font-bold uppercase mt-0.5">Edit</span>
+              <input 
+                type="file" 
+                className="hidden" 
+                accept="image/*" 
+                onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'logo')}
+                disabled={isUploadingLogo}
+              />
+            </Label>
+          </div>
+
           <div>
-            <h1 className="text-3xl font-bold text-foreground">{client.company_name}</h1>
-            <div className="flex items-center gap-3 mt-1">
-              <Badge className="bg-primary/10 text-foreground border-none text-[10px] font-bold uppercase tracking-widest">{client.industry}</Badge>
-              <span className="text-muted-foreground text-xs font-medium flex items-center gap-1">
+            <h1 className="text-xl font-black text-foreground leading-none tracking-tight">{client.company_name}</h1>
+            <div className="flex items-center gap-3 mt-1.5">
+              <Badge className="bg-primary/10 text-foreground border-none text-[9px] font-black uppercase tracking-widest">{client.industry}</Badge>
+              <span className="text-muted-foreground text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
                 <MapPin className="h-3 w-3" /> {client.location || 'Registry Focus'}
               </span>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Button onClick={() => setIsCreateLeadOpen(true)} className="rounded-xl shadow-lg shadow-primary/20 font-bold text-xs h-10 gap-2">
-            <Plus className="h-4 w-4" /> Create Lead
+        <div className="flex items-center gap-3 relative z-10">
+          <Button onClick={() => setIsCreateProjectOpen(true)} variant="outline" className="rounded-xl font-bold text-xs h-9 gap-2 border-primary/20 text-foreground hover:bg-primary/5 bg-white/50 backdrop-blur-md">
+            <Briefcase className="h-3.5 w-3.5" /> Create Workspace
+          </Button>
+          <Button onClick={() => setIsCreateLeadOpen(true)} className="rounded-xl shadow-lg shadow-primary/20 font-bold text-xs h-9 gap-2">
+            <Plus className="h-3.5 w-3.5" /> Add Lead
           </Button>
         </div>
       </div>
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 border-l-4 border-l-primary">
-          <CardContent className="pt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Active Work</p>
-            <h4 className="text-2xl font-black text-foreground">{activeProjectsStats.count} Projects</h4>
-            <p className="text-[9px] text-foreground font-bold mt-1">₹{activeProjectsStats.totalValue.toLocaleString()} Aggregate Value</p>
-          </CardContent>
-        </Card>
+      {/* PANES CONTAINER */}
+      <div className="flex-1 flex overflow-hidden">
         
-        <Card className="border-none shadow-sm rounded-[10px] bg-accent/10 border-l-4 border-l-indigo-500">
-          <CardContent className="pt-6">
-            <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-1">Sales Pipeline</p>
-            <h4 className="text-2xl font-black text-accent">{pipelineStats.count} Opportunities</h4>
-            <p className="text-[9px] text-accent font-bold mt-1">₹{pipelineStats.totalValue.toLocaleString()} Projected Value</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-none shadow-sm rounded-[10px] bg-accent/10 border-l-4 border-l-rose-500">
-          <CardContent className="pt-6">
-            <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-1">Pending Invoices</p>
-            <h4 className="text-2xl font-black text-accent">{invoiceStats.pendingCount} Unpaid</h4>
-            <p className="text-[9px] text-accent font-bold mt-1">₹{invoiceStats.pendingValue.toLocaleString()} Outstanding</p>
-          </CardContent>
-        </Card>
-
-        <Card className={cn(
-          "border-none shadow-sm rounded-[10px] text-white border-l-4 transition-colors",
-          totals.profit >= 0 ? "bg-emerald-600 border-l-emerald-400" : "bg-accent border-l-rose-400"
-        )}>
-          <CardContent className="pt-6">
-            <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Net Performance</p>
-            <h4 className="text-2xl font-black">₹{totals.profit.toLocaleString()}</h4>
-            <p className="text-[9px] text-white/40 font-bold mt-1">Life-to-date Margin</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Sidebar Context */}
-        <aside className="lg:col-span-4 space-y-6">
-          <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white dark:bg-slate-900">
-            <CardHeader className="bg-muted/50 border-b pb-6 px-8">
-              <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Classification Details</CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-6">
-              <div className="space-y-5">
-                <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
-                    <User className="h-5 w-5" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Primary Liaison</p>
-                    <p className="font-bold text-sm text-foreground">{client.contact_person || 'Liaison Unassigned'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
-                    <Mail className="h-5 w-5" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Communication</p>
-                    <p className="font-bold text-sm text-foreground truncate max-w-[200px]">{client.email || 'No email provided'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
-                    <CreditCard className="h-5 w-5" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">GSTIN Registry</p>
-                    <p className="font-mono font-bold text-xs uppercase text-foreground/80">{client.gstin || 'PENDING RECORD'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 pt-2">
-                  <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-foreground shrink-0 shadow-sm border border-primary/5">
-                    <MapPin className="h-5 w-5" />
-                  </div>
-                  <div className="space-y-0.5">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Billing Logic Context</p>
-                    <p className="text-xs font-medium text-muted-foreground/80 leading-relaxed italic">{client.billing_address || 'Address context pending update.'}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-black uppercase text-muted-foreground tracking-widest">Vertical Focus</span>
-                  <Badge variant="secondary" className="rounded-lg text-[9px] font-black bg-primary/5 text-foreground border-none">
-                    {client.service_vertical || 'General Media'}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-none shadow-soft rounded-[10px] bg-primary text-white p-10 space-y-6 relative overflow-hidden">
-            <Sparkles className="absolute top-0 right-0 p-8 opacity-10 h-24 w-24" />
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-accent rounded-xl flex items-center justify-center text-white shadow-lg">
-                <Zap className="h-5 w-5" />
-              </div>
-              <h4 className="font-bold text-lg">AI Architect</h4>
+        {/* LEFT PANE: INBOX / LIST */}
+        <div className="w-80 lg:w-96 flex-none bg-white dark:bg-slate-900 border-r border-border flex flex-col shadow-sm relative z-0">
+          <Tabs defaultValue="history" className="w-full flex flex-col h-full">
+            <div className="px-4 pt-4 pb-3 bg-white dark:bg-slate-900 border-b border-border shrink-0">
+              <TabsList className="bg-muted p-1 h-10 w-full grid grid-cols-3 rounded-[10px]">
+                <TabsTrigger value="history" className="text-[9px] font-black uppercase tracking-widest rounded-md">Workspaces</TabsTrigger>
+                <TabsTrigger value="pipeline" className="text-[9px] font-black uppercase tracking-widest rounded-md">Pipeline</TabsTrigger>
+                <TabsTrigger value="finance" className="text-[9px] font-black uppercase tracking-widest rounded-md">Ledger</TabsTrigger>
+              </TabsList>
             </div>
-            <p className="text-xs text-white/60 leading-relaxed">
-              Generate a high-premium production strategy tailored for {client.company_name}.
-            </p>
-            <Link href={`/proposals?source=crm&leadId=${clientId}&companyName=${encodeURIComponent(client.company_name)}&vertical=${encodeURIComponent(client.service_vertical || '')}&industry=${encodeURIComponent(client.industry || '')}`} className="block pt-2">
-              <Button className="w-full bg-white dark:bg-slate-900 text-foreground hover:bg-muted font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
-                Initialize Architect
-              </Button>
-            </Link>
-          </Card>
-        </aside>
-
-        {/* Main Content */}
-        <main className="lg:col-span-8 space-y-8">
-          <Tabs defaultValue="history" className="w-full">
-            <TabsList className="bg-transparent h-auto p-0 gap-8 border-b border-border w-full justify-start rounded-none mb-8">
-              <TabsTrigger value="history" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-xs font-black uppercase tracking-widest px-0 pb-3 transition-all">Production History</TabsTrigger>
-              <TabsTrigger value="pipeline" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-xs font-black uppercase tracking-widest px-0 pb-3 transition-all">Sales Pipeline</TabsTrigger>
-              <TabsTrigger value="finance" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-xs font-black uppercase tracking-widest px-0 pb-3 transition-all">Financial Ledger</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="history" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {isProjectsLoading ? (
-                <div className="py-24 flex justify-center"><Loader2 className="h-10 w-10 animate-spin text-foreground opacity-20" /></div>
-              ) : projectAnalytics.length === 0 ? (
-                <div className="py-32 text-center bg-white dark:bg-slate-900 rounded-[10px] border-2 border-dashed border-border px-8">
-                  <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
-                    <Briefcase className="h-8 w-8" />
+            
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
+              {/* PROJECTS LIST */}
+              <TabsContent value="history" className="m-0 space-y-2 h-full">
+                {isProjectsLoading ? (
+                  <div className="py-10 flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground opacity-50" /></div>
+                ) : projectAnalytics.length === 0 ? (
+                  <div className="py-10 text-center px-4">
+                    <Briefcase className="h-8 w-8 text-muted-foreground opacity-20 mx-auto mb-3" />
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">No Workspaces</p>
                   </div>
-                  <p className="text-sm font-black uppercase tracking-widest text-muted-foreground">Zero Productions Found</p>
-                  <p className="text-xs text-muted-foreground mt-2">Initialize your first workspace to begin tracking.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {projectAnalytics.map((proj) => (
-                    <Card key={proj.id} className="border-none shadow-sm hover:shadow-md transition-all rounded-[10px] overflow-hidden group bg-white dark:bg-slate-900 border border-slate-50 flex flex-col">
-                      <CardHeader className="bg-muted/50 pb-6 pt-8 px-8 border-b border-white/50">
-                        <div className="flex justify-between items-start mb-4">
-                          <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-foreground bg-white dark:bg-slate-900 px-3">
-                            {proj.status?.replace('_', ' ')}
-                          </Badge>
-                          <span className="text-[10px] font-black text-foreground bg-primary/5 px-2 py-0.5 rounded-full">{proj.progress}%</span>
-                        </div>
-                        <Link href={`/projects/${proj.id}`}>
-                          <CardTitle className="text-xl font-bold group-hover:text-foreground transition-colors cursor-pointer leading-tight">{proj.project_name}</CardTitle>
-                        </Link>
-                      </CardHeader>
-                      <CardContent className="p-8 space-y-8 flex-1 flex flex-col justify-between">
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                            <span className="flex items-center gap-2"><TrendingUp className="h-3.5 w-3.5" /> Project Pulse</span>
-                            <span className={cn(
-                              "px-2 py-0.5 rounded-full",
-                              proj.profit >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-accent/10 text-accent"
-                            )}>
-                              {proj.margin.toFixed(1)}% Margin
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white dark:border-slate-800">
-                              <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Billed</p>
-                              <p className="text-sm font-bold text-foreground">₹{proj.billed.toLocaleString()}</p>
-                            </div>
-                            <div className="bg-muted/80 p-4 rounded-[10px] border border-white dark:border-slate-800">
-                              <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Burn</p>
-                              <p className="text-sm font-bold text-accent">₹{proj.burn.toLocaleString()}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="pt-6 border-t flex justify-between items-center">
-                          <div className="flex -space-x-2">
-                            {[1, 2, 3].map(i => (
-                              <div key={i} className="h-7 w-7 rounded-full border-2 border-white dark:border-slate-800 bg-muted flex items-center justify-center overflow-hidden shadow-sm">
-                                <Building2 className="h-3.5 w-3.5 opacity-20" />
-                              </div>
-                            ))}
-                          </div>
-                          <Link href={`/projects/${proj.id}`}>
-                            <Button variant="ghost" size="sm" className="h-9 rounded-[10px] text-[10px] font-black uppercase tracking-widest gap-2 bg-muted hover:bg-primary hover:text-white transition-all px-5">
-                              Open Workspace <ChevronRight className="h-3.5 w-3.5" />
-                            </Button>
-                          </Link>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
+                ) : (
+                  projectAnalytics.map((proj) => (
+                    <div 
+                      key={proj.id} 
+                      onClick={() => setOpenWorkspaceId(proj.id)}
+                      className={cn(
+                        "p-4 rounded-xl border cursor-pointer transition-all text-left",
+                        openWorkspaceId === proj.id 
+                          ? "bg-primary/5 border-primary shadow-sm" 
+                          : "bg-white dark:bg-slate-900 border-transparent hover:border-border hover:bg-muted/50"
+                      )}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{proj.status?.replace('_', ' ')}</span>
+                        <span className="text-[9px] font-black bg-muted px-2 py-0.5 rounded-full">{proj.progress}%</span>
+                      </div>
+                      <h4 className="text-sm font-bold text-foreground leading-tight mb-2">{proj.project_name}</h4>
+                      <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground">
+                        <span>Margin: {proj.margin.toFixed(0)}%</span>
+                        <span className={proj.profit >= 0 ? "text-emerald-500" : "text-rose-500"}>₹{proj.profit.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </TabsContent>
 
-            <TabsContent value="pipeline" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {pipelineStats.items.length === 0 ? (
-                <div className="py-32 text-center bg-white dark:bg-slate-900 rounded-[10px] border-2 border-dashed border-border px-8">
-                  <div className="h-16 w-16 bg-muted rounded-[10px] flex items-center justify-center mx-auto mb-4 text-slate-300">
-                    <Target className="h-8 w-8" />
+              {/* PIPELINE LIST */}
+              <TabsContent value="pipeline" className="m-0 space-y-2 h-full">
+                {pipelineStats.items.length === 0 ? (
+                  <div className="py-10 text-center px-4">
+                    <Target className="h-8 w-8 text-muted-foreground opacity-20 mx-auto mb-3" />
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Empty Pipeline</p>
                   </div>
-                  <p className="text-sm font-black uppercase tracking-widest text-muted-foreground">Pipeline Empty</p>
-                  <p className="text-xs text-muted-foreground mt-2">Create a new lead to start tracking opportunities for this client.</p>
-                  <Button onClick={() => setIsCreateLeadOpen(true)} variant="outline" className="mt-6 rounded-xl font-black text-[10px] uppercase tracking-widest px-8">
-                    Create Lead
-                  </Button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {pipelineStats.items.map((lead) => {
+                ) : (
+                  pipelineStats.items.map((lead) => {
                     const stage = PIPELINE_STAGES.find(s => s.id === lead.stage);
                     return (
-                      <Card key={lead.id} className="border-none shadow-sm rounded-[10px] overflow-hidden group bg-white dark:bg-slate-900 border border-slate-50 flex flex-col">
-                        <CardHeader className="bg-accent/10/30 pb-6 pt-8 px-8">
-                          <div className="flex justify-between items-start mb-4">
-                            <Badge className={cn("text-[9px] font-black uppercase tracking-widest border-none px-3", stage?.color || 'bg-muted text-muted-foreground/80')}>
-                              {stage?.name || 'Prospect'}
-                            </Badge>
-                            <span className="text-[10px] font-black text-accent bg-accent/10 px-2 py-0.5 rounded-full">CRM Opportunity</span>
-                          </div>
-                          <Link href={`/crm/${lead.id}`}>
-                            <CardTitle className="text-xl font-bold group-hover:text-foreground transition-colors cursor-pointer leading-tight">
-                              {lead.service_vertical || 'General Opportunity'}
-                            </CardTitle>
-                          </Link>
-                        </CardHeader>
-                        <CardContent className="p-8 space-y-6 flex-1 flex flex-col justify-between">
-                          <div className="space-y-4">
-                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              <span className="flex items-center gap-2"><Clock className="h-3.5 w-3.5" /> Pipeline Status</span>
-                              <span>Est. Value</span>
-                            </div>
-                            <div className="bg-muted/80 p-5 rounded-[10px] border border-white dark:border-slate-800 flex justify-between items-center">
-                              <div>
-                                <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Current Focus</p>
-                                <p className="text-sm font-bold text-foreground">{lead.industry || 'Media'}</p>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-[9px] font-black uppercase text-muted-foreground tracking-wider mb-1">Deal Projection</p>
-                                <p className="text-lg font-black text-accent">₹{lead.deal_value?.toLocaleString()}</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="pt-6 border-t flex justify-end">
-                            <Link href={`/crm/${lead.id}`}>
-                              <Button variant="ghost" size="sm" className="h-9 rounded-[10px] text-[10px] font-black uppercase tracking-widest gap-2 bg-muted hover:bg-primary hover:text-white transition-all px-5">
-                                Manage Pipeline <ArrowRight className="h-3.5 w-3.5" />
-                              </Button>
-                            </Link>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="finance" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="space-y-6">
-                {invoiceStats.pendingCount > 0 && (
-                  <Alert className="bg-accent/10 border-accent/20 rounded-[10px] p-6">
-                    <AlertCircle className="h-5 w-5 text-accent" />
-                    <div className="ml-4">
-                      <h4 className="text-sm font-black text-accent uppercase tracking-widest">Attention Required</h4>
-                      <p className="text-xs text-accent mt-1">
-                        There are <strong>{invoiceStats.pendingCount}</strong> outstanding invoices totaling <strong>₹{invoiceStats.pendingValue.toLocaleString()}</strong> for this client.
-                      </p>
-                    </div>
-                  </Alert>
+                      <Link href={`/crm/${lead.id}`} key={lead.id} className="block p-4 rounded-xl border border-transparent hover:border-border bg-white dark:bg-slate-900 hover:bg-muted/50 transition-all">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className={cn("text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full", stage?.color || 'bg-muted')}>{stage?.name || 'Prospect'}</span>
+                        </div>
+                        <h4 className="text-sm font-bold text-foreground leading-tight mb-2">{lead.service_vertical || 'General Opportunity'}</h4>
+                        <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground">
+                          <span>Est. Value</span>
+                          <span className="text-accent">₹{lead.deal_value?.toLocaleString()}</span>
+                        </div>
+                      </Link>
+                    )
+                  })
                 )}
+              </TabsContent>
 
-                <Card className="border-none shadow-sm rounded-[10px] overflow-hidden bg-white dark:bg-slate-900">
-                  <CardContent className="p-0">
-                    <div className="overflow-x-auto custom-scrollbar">
-                      <table className="w-full text-sm">
-                        <thead className="bg-muted/50 border-b">
-                          <tr>
-                            <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Invoice #</th>
-                            <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Context Date</th>
-                            <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Total Amount</th>
-                            <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Status</th>
-                            <th className="px-10 py-5 text-right"></th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y">
-                          {isInvoicesLoading ? (
-                            <tr><td colSpan={5} className="text-center py-16"><Loader2 className="h-8 w-8 animate-spin mx-auto text-foreground opacity-20" /></td></tr>
-                          ) : invoices?.length === 0 ? (
-                            <tr><td colSpan={5} className="px-10 py-24 text-center text-muted-foreground italic text-xs font-bold uppercase tracking-widest opacity-40">No Billing Records Generated.</td></tr>
-                          ) : (
-                            invoices?.map((inv) => (
-                              <tr key={inv.id} className="hover:bg-muted/50 transition-colors group">
-                                <td className="px-10 py-6 font-mono font-bold text-foreground">{inv.invoice_number}</td>
-                                <td className="px-10 py-6 text-muted-foreground font-bold text-xs uppercase tracking-tighter">{inv.issue_date}</td>
-                                <td className="px-10 py-6 font-black text-foreground text-xs">₹{inv.total?.toLocaleString()}</td>
-                                <td className="px-10 py-6">
-                                  <Badge variant={inv.payment_status === 'paid' ? 'default' : 'secondary'} className={cn("text-[9px] font-black uppercase px-3 py-1 border-none", inv.payment_status !== 'paid' && "bg-accent/10 text-accent")}>
-                                    {inv.payment_status}
-                                  </Badge>
-                                </td>
-                                <td className="px-10 py-6 text-right">
-                                  <Link href={`/invoices/${inv.id}`}>
-                                    <Button variant="ghost" size="icon" className="h-9 w-9 text-foreground opacity-0 group-hover:opacity-100 transition-opacity bg-primary/5 hover:bg-primary hover:text-white rounded-xl">
-                                      <ExternalLink className="h-4 w-4" />
-                                    </Button>
-                                  </Link>
-                                </td>
-                              </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
+              {/* FINANCE LIST */}
+              <TabsContent value="finance" className="m-0 space-y-2 h-full">
+                {isInvoicesLoading ? (
+                  <div className="py-10 flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground opacity-50" /></div>
+                ) : !invoices || invoices.length === 0 ? (
+                  <div className="py-10 text-center px-4">
+                    <Receipt className="h-8 w-8 text-muted-foreground opacity-20 mx-auto mb-3" />
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">No Invoices</p>
+                  </div>
+                ) : (
+                  invoices.map((inv) => (
+                    <Link href={`/invoices/${inv.id}`} key={inv.id} className="block p-4 rounded-xl border border-transparent hover:border-border bg-white dark:bg-slate-900 hover:bg-muted/50 transition-all">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[10px] font-mono font-bold text-muted-foreground">{inv.invoice_number}</span>
+                        <span className={cn("text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full", inv.payment_status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700')}>
+                          {inv.payment_status}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between mt-3">
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{inv.issue_date}</span>
+                        <span className="text-sm font-black text-foreground">₹{inv.total?.toLocaleString()}</span>
+                      </div>
+                    </Link>
+                  ))
+                )}
+              </TabsContent>
+            </div>
+          </Tabs>
+        </div>
+
+        {/* RIGHT PANE: READING PANE */}
+        <div className="flex-1 flex flex-col bg-slate-50/50 dark:bg-slate-950/50 relative overflow-y-auto custom-scrollbar">
+          {openWorkspaceId ? (
+            <div className="p-6 min-h-full flex flex-col animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="flex-1 border border-border rounded-2xl overflow-hidden shadow-premium bg-white dark:bg-slate-900 relative min-h-[600px]">
+                <ProjectWorkspacePage providedProjectId={openWorkspaceId} onBack={() => setOpenWorkspaceId(null)} />
+              </div>
+            </div>
+          ) : (
+            <div className="p-8 max-w-5xl mx-auto w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              
+              {/* OVERVIEW STATS */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900 border-l-4 border-l-primary">
+                  <CardContent className="pt-6">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Active Work</p>
+                    <h4 className="text-2xl font-black text-foreground">{activeProjectsStats.count}</h4>
+                    <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{activeProjectsStats.totalValue.toLocaleString()} Value</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900 border-l-4 border-l-indigo-500">
+                  <CardContent className="pt-6">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Pipeline</p>
+                    <h4 className="text-2xl font-black text-foreground">{pipelineStats.count}</h4>
+                    <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{pipelineStats.totalValue.toLocaleString()} Value</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900 border-l-4 border-l-rose-500">
+                  <CardContent className="pt-6">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Unpaid</p>
+                    <h4 className="text-2xl font-black text-foreground">{invoiceStats.pendingCount}</h4>
+                    <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{invoiceStats.pendingValue.toLocaleString()}</p>
+                  </CardContent>
+                </Card>
+                <Card className={cn("border-none shadow-sm rounded-2xl text-white border-l-4", totals.profit >= 0 ? "bg-emerald-600 border-l-emerald-400" : "bg-accent border-l-rose-400")}>
+                  <CardContent className="pt-6">
+                    <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Net Margin</p>
+                    <h4 className="text-2xl font-black">₹{totals.profit.toLocaleString()}</h4>
+                    <p className="text-[9px] text-white/40 font-bold mt-1">Life-to-date</p>
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
-          </Tabs>
-        </main>
+
+              {/* CLIENT DETAILS */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900">
+                  <CardHeader className="bg-muted/50 border-b pb-4 px-6">
+                    <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Classification Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0"><User className="h-4 w-4" /></div>
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Primary Liaison</p>
+                          <p className="font-bold text-sm">{client.contact_person || 'Unassigned'}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0"><Mail className="h-4 w-4" /></div>
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Communication</p>
+                          <p className="font-bold text-sm truncate">{client.email || 'No email'}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 bg-primary/5 rounded-xl flex items-center justify-center text-primary shrink-0"><CreditCard className="h-4 w-4" /></div>
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">GSTIN Registry</p>
+                          <p className="font-mono font-bold text-xs uppercase">{client.gstin || 'PENDING'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-none shadow-premium rounded-2xl bg-primary text-white p-8 relative overflow-hidden flex flex-col justify-center">
+                  <Sparkles className="absolute top-0 right-0 p-8 opacity-10 h-32 w-32" />
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="h-10 w-10 bg-accent rounded-xl flex items-center justify-center text-white shadow-lg">
+                      <Zap className="h-5 w-5" />
+                    </div>
+                    <h4 className="font-bold text-lg">Proposal Generator</h4>
+                  </div>
+                  <p className="text-xs text-white/80 leading-relaxed mb-6">
+                    Generate a high-premium production strategy tailored for {client.company_name}.
+                  </p>
+                  <Link href={`/proposals?source=crm&leadId=${clientId}&companyName=${encodeURIComponent(client.company_name)}&vertical=${encodeURIComponent(client.service_vertical || '')}&industry=${encodeURIComponent(client.industry || '')}`}>
+                    <Button className="w-full bg-white dark:bg-slate-900 text-foreground hover:bg-muted font-black uppercase text-[10px] tracking-widest rounded-xl h-11 shadow-xl shadow-black/20">
+                      Create Proposal
+                    </Button>
+                  </Link>
+                </Card>
+              </div>
+
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Create Lead Dialog */}
+      {/* MODALS */}
       <Dialog open={isCreateLeadOpen} onOpenChange={setIsCreateLeadOpen}>
-        <DialogContent className="sm:max-w-[425px] rounded-[10px]">
+        <DialogContent className="sm:max-w-[425px] rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-2xl font-bold">
-              <Sparkles className="h-6 w-6 text-accent" />
-              Create Sales Lead
+            <DialogTitle className="flex items-center gap-2 text-xl font-bold">
+              <Sparkles className="h-5 w-5 text-accent" /> Create Sales Lead
             </DialogTitle>
-            <DialogDescription>
-              Initialize a new sales opportunity for {client.company_name}.
-            </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleCreateLead} className="space-y-5 py-4">
+          <form onSubmit={handleCreateLead} className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="leadTitle">Opportunity Title</Label>
+              <Label>Opportunity Title</Label>
               <Input 
-                id="leadTitle" 
-                placeholder="e.g. Summer Campaign 2024" 
+                placeholder="e.g. Summer Campaign" 
                 value={newLead.title}
                 onChange={(e) => setNewLead({...newLead, title: e.target.value})}
                 required
@@ -564,28 +538,32 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="dealValue">Projected Value (₹)</Label>
+              <Label>Projected Value (₹)</Label>
               <div className="relative">
                 <IndianRupee className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
                 <Input 
-                  id="dealValue" 
                   type="number"
-                  placeholder="50000" 
                   value={newLead.value}
                   onChange={(e) => setNewLead({...newLead, value: e.target.value})}
                   className="rounded-xl h-11 pl-9"
                 />
               </div>
             </div>
-            <DialogFooter className="pt-4">
-              <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-12 font-bold shadow-lg shadow-primary/20">
-                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                Initialize Opportunity
+            <DialogFooter>
+              <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl h-11 font-bold">
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : "Initialize Opportunity"}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
+
+      <CreateProjectWizard 
+        isOpen={isCreateProjectOpen} 
+        onOpenChange={setIsCreateProjectOpen} 
+        defaultValues={{ client_name: client.company_name }}
+        onSuccess={() => reloadProjects()}
+      />
     </div>
   );
 }
