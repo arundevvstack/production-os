@@ -260,7 +260,7 @@ export default function DashboardPage() {
         </div>
 
         {/* 6 KPI Tiles */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
           {[
             { label: 'Gross Revenue', value: `₹${stats.revenue.toLocaleString()}`, icon: IndianRupee, color: 'text-emerald-600', bg: 'bg-emerald-50', sub: `${profitMargin}% margin` },
             { label: 'Net Profit', value: `₹${netProfit.toLocaleString()}`, icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50', sub: netProfit >= 0 ? 'Positive cashflow' : 'Deficit' },
@@ -377,7 +377,7 @@ export default function DashboardPage() {
               <CardDescription className="text-muted-foreground font-medium text-xs mt-1">Active lead value and conversion funnel.</CardDescription>
             </CardHeader>
             <CardContent className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
                 <div className="p-3 rounded-[10px] bg-violet-50 border border-violet-100">
                   <p className="text-[9px] font-black text-violet-500 uppercase tracking-wider">Pipeline Value</p>
                   <p className="text-lg font-black text-violet-700 mt-0.5">₹{stats.crmPipeline.toLocaleString()}</p>
@@ -577,7 +577,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Manager KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Briefcase className="h-6 w-6" /></div>
@@ -701,7 +701,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Employee KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <Card className="border-none shadow-premium rounded-[10px] bg-white dark:bg-slate-900">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-4 bg-accent/10 text-accent rounded-[10px]"><Clock className="h-6 w-6" /></div>
