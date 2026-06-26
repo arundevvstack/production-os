@@ -177,9 +177,13 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
     return roleId !== 'ACCOUNTS';
   }, [roleId]);
 
-  // RBAC Gated access filter: employee team blocked from financial data
+  // RBAC Gated access filter: employees and managers can log expenses, but can't see overall budget/profitability
   const hasFinanceAccess = useMemo(() => {
-    return roleId !== 'EMPLOYEE';
+    return true; // We allow access to the finances tab for expenses
+  }, []);
+
+  const hasFinancialInsightsAccess = useMemo(() => {
+    return roleId !== 'EMPLOYEE' && roleId !== 'MANAGER';
   }, [roleId]);
 
   // --- DERIVED CALCULATIONS ---
@@ -728,7 +732,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
                 <Button variant="outline" className="w-full text-xs font-bold rounded-lg h-8 mt-2" onClick={() => setActiveTab('assets')}>Open Assets</Button>
               </div>
 
-              {hasFinanceAccess && (
+              {hasFinanceAccess && hasFinancialInsightsAccess && (
                 <div className="rounded-2xl border bg-card p-5 space-y-4 shadow-sm hover:shadow-md transition-shadow">
                   <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
                     <Receipt className="h-5 w-5" />
@@ -1164,7 +1168,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
         {hasFinanceAccess && (
         <TabsContent value="finances" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-2">
-            <div className="lg:col-span-2 space-y-6">
+            <div className={cn("space-y-6", hasFinancialInsightsAccess ? "lg:col-span-2" : "lg:col-span-3")}>
               
               {/* Cost ledger list */}
               <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
@@ -1208,6 +1212,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
             </div>
 
             {/* Financial indicators */}
+            {hasFinancialInsightsAccess && (
             <div className="space-y-6">
               <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 p-8 space-y-6">
                 <div className="space-y-1">
@@ -1236,6 +1241,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
                 </div>
               </Card>
             </div>
+            )}
           </div>
         </TabsContent>
         )}

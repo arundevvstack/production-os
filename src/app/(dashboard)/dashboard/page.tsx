@@ -632,7 +632,7 @@ export default function DashboardPage() {
                     <div key={p.id} className="p-6 flex items-center justify-between hover:bg-muted transition-colors">
                       <div className="space-y-1">
                         <h4 className="font-black text-base text-foreground">{p.project_name}</h4>
-                        <span className="text-[9px] font-black uppercase tracking-wider bg-muted text-muted-foreground px-2 py-0.5 rounded">Budget: ₹{p.budget?.toLocaleString() || 0}</span>
+                        <span className="text-[9px] font-black uppercase tracking-wider bg-muted text-muted-foreground px-2 py-0.5 rounded">Active Unit</span>
                       </div>
                       <div className="flex items-center gap-6">
                         <div className="text-right">
