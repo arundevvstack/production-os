@@ -388,11 +388,22 @@ export default function RBACPage() {
                           </div>
                         </td>
                         <td className="p-4">
-                          <div className="flex flex-col gap-1.5 items-start">
-                            <Badge variant="secondary" className="text-[9px] font-black uppercase tracking-wider bg-muted text-muted-foreground/80 px-2 py-0.5 rounded-lg">
-                              {ENTERPRISE_ROLES.find(r => r.id === member.role_id)?.name || member.role_id}
-                            </Badge>
-                            <span className="text-[10px] text-muted-foreground font-black uppercase tracking-wider pl-1.5 border-l-2 border-primary/20">
+                          <div 
+                            className="flex flex-col gap-1.5 items-start cursor-pointer group/role p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors"
+                            onClick={() => {
+                              setEditingMember(member);
+                              setSelectedRole(member.role_id || "EMPLOYEE");
+                              setSelectedDepartment(member.department || "Production");
+                              setIsChangeRoleOpen(true);
+                            }}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Badge variant="secondary" className="text-[9px] font-black uppercase tracking-wider bg-slate-200/50 dark:bg-slate-800 text-muted-foreground/80 px-2 py-0.5 rounded-lg group-hover/role:bg-primary group-hover/role:text-white transition-colors">
+                                {ENTERPRISE_ROLES.find(r => r.id === member.role_id)?.name || member.role_id}
+                              </Badge>
+                              <UserCog className="h-3.5 w-3.5 opacity-0 group-hover/role:opacity-100 text-primary transition-opacity" />
+                            </div>
+                            <span className="text-[10px] text-muted-foreground font-black uppercase tracking-wider pl-1.5 border-l-2 border-primary/20 group-hover/role:text-foreground transition-colors">
                               {member.department || 'Production'}
                             </span>
                           </div>
