@@ -51,7 +51,7 @@ import ProjectWorkspacePage from "@/app/(dashboard)/projects/[projectId]/page";
 
 export default function ClientPortfolioPage({ params }: { params: Promise<{ clientId: string }> }) {
   const { clientId } = use(params);
-  const { companyId, isLoading: isTenantLoading } = useTenant();
+  const { companyId, isLoading: isTenantLoading, roleId } = useTenant();
   const router = useRouter();
 
   const [isCreateLeadOpen, setIsCreateLeadOpen] = useState(false);
