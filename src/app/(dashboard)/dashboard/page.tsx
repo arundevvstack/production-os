@@ -206,7 +206,8 @@ export default function DashboardPage() {
   // --- RENDER DASHBOARD BASED ON ROLE ---
 
   // 1. SUPER_ADMIN / OWNER Command Center
-  if (roleId === 'SUPER_ADMIN' || isSuperAdmin) {
+  // Ensure we don't accidentally override explicit role testing for other departments
+  if ((roleId === 'SUPER_ADMIN' || isSuperAdmin) && !['MANAGER', 'EMPLOYEE', 'ACCOUNTS', 'MARKETING_SALES'].includes(roleId || '')) {
     const netProfit = stats.revenue - stats.grossExpenses;
     const profitMargin = stats.revenue > 0 ? ((netProfit / stats.revenue) * 100).toFixed(1) : '0.0';
     const overdueProjects = allProjects?.filter(p => {
