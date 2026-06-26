@@ -59,6 +59,7 @@ const ENTERPRISE_ROLES = [
 
 const MODULES_LIST = [
   { id: "dashboard", name: "Dashboard" },
+  { id: "ai_command", name: "AI Command" },
   { id: "projects", name: "Projects" },
   { id: "team", name: "Team Management" },
   { id: "reports", name: "Analytics" },
