@@ -170,6 +170,16 @@ export const conversionService = {
         },
       });
 
+      // Link RequirementChart if it exists
+      await tx.requirementChart.updateMany({
+        where: { prospect_id: prospectId },
+        data: {
+          project_id: project.id,
+          client_id: client.id,
+          status: 'approved'
+        }
+      });
+
       // 8. Log audit activity logs
       const logs = [
         { action: 'PROSPECT_CONVERTED', details: 'Prospect Converted to Client' },

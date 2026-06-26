@@ -291,8 +291,9 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Choose Workflow Pipeline</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {[
+                  { value: "AI Video Production Workflow", icon: Sparkles, label: "Full AI Pipeline", desc: "17 stages · Full native workflow", color: "text-emerald-500", bg: "bg-emerald-50 border-emerald-200", activeBg: "bg-emerald-100 border-emerald-500" },
                   { value: "AI Production", icon: Sparkles, label: "AI Production", desc: "8 stages · AI-assisted", color: "text-foreground", bg: "bg-primary/5 border-primary/20", activeBg: "bg-primary/10 border-primary" },
                   { value: "Hybrid Production", icon: Layers, label: "Hybrid", desc: "6 stages · Mixed workflow", color: "text-accent", bg: "bg-accent/10 border-accent/20", activeBg: "bg-accent/10 border-accent" },
                   { value: "Normal Production", icon: Film, label: "Standard", desc: "5 stages · Traditional", color: "text-muted-foreground", bg: "bg-muted border-border", activeBg: "bg-muted border-slate-400" },

@@ -21,6 +21,7 @@ import {
   Target,
   CheckCircle2,
   ListTree,
+  FileText,
   X,
   Lock,
   BarChart3,
@@ -98,6 +99,11 @@ export default function CRMPage() {
   // Pilot Video State
   const [leadToPromoteToPilot, setLeadToPromoteToPilot] = useState<any>(null);
   const [pilotProjectAssignee, setPilotProjectAssignee] = useState<string>("");
+  // Requirement Analysis State
+  const [leadToPromoteToRequirement, setLeadToPromoteToRequirement] = useState<any>(null);
+  const [leadBlockedByRequirement, setLeadBlockedByRequirement] = useState<any>(null);
+  // Proposal State
+  const [leadToPromoteToProposal, setLeadToPromoteToProposal] = useState<any>(null);
   const router = useRouter();
 
   const [newLead, setNewLead] = useState({
@@ -401,10 +407,41 @@ export default function CRMPage() {
       return;
     }
 
-    if (targetStageId === 'pilot_video') {
-      setLeadToPromoteToPilot(lead);
+    const currentStageIndex = PIPELINE_STAGES.findIndex(s => s.id === lead.stage);
+    const targetStageIndex = PIPELINE_STAGES.findIndex(s => s.id === targetStageId);
+    const isMovingForward = targetStageIndex > currentStageIndex;
+
+    if (targetStageId === 'requirement_analysis' && isMovingForward && lead.requirement_status !== 'completed') {
+      setLeadToPromoteToRequirement(lead);
       setDraggedLeadId(null);
       return; // Stop here, wait for dialog
+    }
+
+    if (targetStageId === 'proposal_draft' && isMovingForward) {
+      const hasProposal = lead.proposal_details?.status || lead.proposal_status === 'created';
+      if (!hasProposal) {
+        setLeadToPromoteToProposal(lead);
+        setDraggedLeadId(null);
+        return; // Stop here, wait for dialog
+      }
+    }
+
+    const downstreamStages = ['proposal_draft', 'proposal_sent', 'pilot_video', 'negotiation', 'awaiting_approval'];
+    if (downstreamStages.includes(targetStageId) && isMovingForward) {
+      if (lead.requirement_status !== 'completed') {
+        setLeadBlockedByRequirement(lead);
+        setDraggedLeadId(null);
+        return; // Block
+      }
+    }
+
+    if (targetStageId === 'pilot_video' && isMovingForward) {
+      const hasPilot = lead.pilot_details?.status || lead.pilot_details?.project_id;
+      if (!hasPilot) {
+        setLeadToPromoteToPilot(lead);
+        setDraggedLeadId(null);
+        return; // Stop here, wait for dialog
+      }
     }
 
     // Optimistic Update
@@ -428,45 +465,27 @@ export default function CRMPage() {
     setIsSubmitting(true);
     
     try {
-      // Create Project
-      const { data: newProject, error: projectError } = await supabase.from('Project').insert({
-        company_id: companyId,
-        project_name: `Pilot Video Creation - ${leadToPromoteToPilot.company_name}`,
-        client_name: leadToPromoteToPilot.company_name,
-        status: 'pre-prod',
-        created_by: profile?.id || 'system'
-      }).select().single();
-
-      if (projectError) throw projectError;
-
-      // Assign Objective if assignee selected
-      if (pilotProjectAssignee && pilotProjectAssignee !== "Unassigned") {
-        await supabase.from('Objective').insert({
-          company_id: companyId,
-          project_id: newProject.id,
-          title: "Pilot Video Setup",
-          assignedTo: pilotProjectAssignee,
-          status: 'todo',
-          priority: 'High'
-        });
-      }
-
-      // Update lead stage
-      const { error: updateError } = await supabase.from('Prospect')
-        .update({ stage: 'pilot_video' })
-        .eq('id', leadToPromoteToPilot.id);
-        
-      if (updateError) throw updateError;
+      const response = await fetch(`/api/v1/crm/prospect/${leadToPromoteToPilot.id}/pilot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company_id: companyId, created_by: profile?.id })
+      });
       
-      setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToPilot.id ? { ...l, stage: 'pilot_video' } : l));
-      toast({ title: "Project Created", description: `Pilot Video project created successfully.` });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to create pilot project');
+
+      toast({ title: "Pilot Production Created", description: `Project ${data.project.project_name} successfully linked.` });
+      
+      setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToPilot.id ? { 
+        ...l, 
+        stage: 'pilot_video',
+        pilot_details: { status: 'in_production', project_id: data.project.id } 
+      } : l));
       
       setLeadToPromoteToPilot(null);
-      setPilotProjectAssignee("");
       
-      // Navigate to the new project
-      if (newProject?.id) {
-        router.push(`/projects/${newProject.id}`);
+      if (data.project?.id) {
+        router.push(`/projects/${data.project.id}`);
       }
       
     } catch (err: any) {
@@ -1092,6 +1111,60 @@ export default function CRMPage() {
                                   {lead.sub_vertical}
                                 </span>
                               )}
+                              {lead.stage === 'pilot_video' && lead.pilot_details && (
+                                <div className="mt-2 p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20 flex flex-col gap-1.5">
+                                  <div className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 uppercase tracking-wider">
+                                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    Pilot {lead.pilot_details.status === 'completed' ? 'Completed' : 'In Production'}
+                                  </div>
+                                  {lead.pilot_details.status === 'completed' && lead.pilot_details.project_id && (
+                                    <Link href={`/projects/${lead.pilot_details.project_id}`}>
+                                      <Button variant="outline" size="sm" className="w-full h-7 text-[10px] font-bold mt-1">
+                                        View Pilot Project
+                                      </Button>
+                                    </Link>
+                                  )}
+                                </div>
+                              )}
+                              
+                              {/* Requirement Status Indicator */}
+                              {stage.id === 'requirement_analysis' && (
+                                <div className="mt-2 p-2 rounded-lg border flex flex-col gap-1.5" style={{
+                                  backgroundColor: lead.requirement_status === 'completed' ? 'rgba(16, 185, 129, 0.1)' : lead.requirement_status === 'in_progress' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(148, 163, 184, 0.1)',
+                                  borderColor: lead.requirement_status === 'completed' ? 'rgba(16, 185, 129, 0.2)' : lead.requirement_status === 'in_progress' ? 'rgba(234, 179, 8, 0.2)' : 'rgba(148, 163, 184, 0.2)'
+                                }}>
+                                  <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider" style={{
+                                    color: lead.requirement_status === 'completed' ? '#059669' : lead.requirement_status === 'in_progress' ? '#ca8a04' : '#64748b'
+                                  }}>
+                                    <span className={cn("h-2 w-2 rounded-full", lead.requirement_status === 'completed' ? 'bg-emerald-500' : lead.requirement_status === 'in_progress' ? 'bg-yellow-500 animate-pulse' : 'bg-slate-400')}></span>
+                                    {lead.requirement_status === 'completed' ? 'Req. Completed' : lead.requirement_status === 'in_progress' ? 'Req. In Progress' : 'Req. Not Started'}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Proposal Status Indicator / Button */}
+                              {stage.id === 'proposal_draft' && (
+                                <div className="mt-2">
+                                  {(lead.proposal_details?.status || lead.proposal_status === 'created') ? (
+                                    <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20 flex flex-col gap-1.5">
+                                      <div className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 uppercase tracking-wider">
+                                        <CheckCircle2 className="h-3 w-3" />
+                                        Proposal Created
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <Button 
+                                      className="w-full h-8 text-[10px] font-bold bg-accent hover:bg-accent/90 text-white"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        router.push(`/proposals/generate?prospectId=${lead.id}`);
+                                      }}
+                                    >
+                                      Generate Proposal
+                                    </Button>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
 
@@ -1170,25 +1243,117 @@ export default function CRMPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <CreateProjectWizard 
-          isOpen={!!leadToPromoteToPilot}
-          onOpenChange={(open: boolean) => {
-            if (!open) setLeadToPromoteToPilot(null);
-          }}
-          defaultValues={leadToPromoteToPilot ? {
-            client_name: leadToPromoteToPilot.company_name,
-            project_name: `Pilot Video Creation - ${leadToPromoteToPilot.company_name}`,
-            service_category: 'Pilot Production', 
-            lead_id: leadToPromoteToPilot.id
-          } : undefined}
-          onSuccess={(projectId?: string) => {
-            setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToPilot?.id ? { ...l, stage: 'pilot_video' } : l));
-            setLeadToPromoteToPilot(null);
-            if (projectId) {
-              router.push(`/projects/${projectId}`);
-            }
-          }}
-        />
+      <AlertDialog open={!!leadToPromoteToPilot} onOpenChange={(open) => !open && setLeadToPromoteToPilot(null)}>
+        <AlertDialogContent className="rounded-3xl p-8 max-w-md border-0 bg-white dark:bg-slate-900">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 bg-accent/10 rounded-[10px] flex items-center justify-center text-accent mb-4">
+              <Sparkles className="h-6 w-6" />
+            </div>
+            <AlertDialogTitle className="text-2xl font-bold">Create Pilot Production</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground font-medium">
+              This client has requested a Pilot Video before the proposal is finalized.
+              <br /><br />
+              Would you like to create a Pilot Production Project using the latest Requirement Chart?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel className="rounded-xl h-11 font-bold">Cancel</AlertDialogCancel>
+            <Button disabled={isSubmitting} onClick={handlePilotProjectSubmit} className="bg-accent hover:bg-accent rounded-xl h-11 font-bold px-8 text-white">
+              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              Create Pilot Production
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!leadToPromoteToRequirement} onOpenChange={(open) => !open && setLeadToPromoteToRequirement(null)}>
+        <AlertDialogContent className="rounded-3xl p-8 max-w-md border-0 bg-white dark:bg-slate-900">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 bg-primary/10 rounded-[10px] flex items-center justify-center text-primary mb-4">
+              <FileText className="h-6 w-6" />
+            </div>
+            <AlertDialogTitle className="text-2xl font-bold">Requirement Analysis Required</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground font-medium">
+              This opportunity has entered the Requirement Analysis stage.
+              <br /><br />
+              Would you like to create the Requirement Chart now?
+              <br /><br />
+              The Requirement Chart is required before generating a Proposal, creating a Pilot Video, or converting this opportunity into a Project.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel className="rounded-xl h-11 font-bold" onClick={() => {
+              // Only move the stage locally and in DB, but don't redirect
+              if (leadToPromoteToRequirement && companyId) {
+                setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToRequirement.id ? { ...l, stage: 'requirement_analysis' } : l));
+                supabase.from('Prospect').update({ stage: 'requirement_analysis' }).eq('id', leadToPromoteToRequirement.id).then();
+              }
+            }}>Later</AlertDialogCancel>
+            <Button onClick={() => {
+              if (leadToPromoteToRequirement && companyId) {
+                setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToRequirement.id ? { ...l, stage: 'requirement_analysis' } : l));
+                supabase.from('Prospect').update({ stage: 'requirement_analysis' }).eq('id', leadToPromoteToRequirement.id).then();
+                router.push(`/crm/${leadToPromoteToRequirement.id}?tab=requirement`);
+                setLeadToPromoteToRequirement(null);
+              }
+            }} className="bg-primary hover:bg-primary/90 rounded-xl h-11 font-bold px-8 text-white">
+              Create Requirement Chart
+            </Button>
+          </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog open={!!leadToPromoteToProposal} onOpenChange={(open) => !open && setLeadToPromoteToProposal(null)}>
+          <AlertDialogContent className="rounded-3xl p-8 max-w-md border-0 bg-white dark:bg-slate-900">
+            <AlertDialogHeader>
+              <div className="h-12 w-12 bg-accent/10 rounded-[10px] flex items-center justify-center text-accent mb-4">
+                <FileText className="h-6 w-6" />
+              </div>
+              <AlertDialogTitle className="text-2xl font-bold">Generate Proposal?</AlertDialogTitle>
+              <AlertDialogDescription className="text-muted-foreground font-medium">
+                This opportunity has entered the Proposal Draft stage.
+                <br /><br />
+                Would you like to generate the Proposal now using the Requirement Chart details?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="pt-6">
+              <AlertDialogCancel className="rounded-xl h-11 font-bold" onClick={() => {
+                if (leadToPromoteToProposal && companyId) {
+                  setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToProposal.id ? { ...l, stage: 'proposal_draft' } : l));
+                  supabase.from('Prospect').update({ stage: 'proposal_draft' }).eq('id', leadToPromoteToProposal.id).then();
+                  setLeadToPromoteToProposal(null);
+                }
+              }}>Move Only</AlertDialogCancel>
+              <Button onClick={() => {
+                if (leadToPromoteToProposal && companyId) {
+                  setLocalLeads(prev => prev.map(l => l.id === leadToPromoteToProposal.id ? { ...l, stage: 'proposal_draft' } : l));
+                  supabase.from('Prospect').update({ stage: 'proposal_draft' }).eq('id', leadToPromoteToProposal.id).then();
+                  router.push(`/proposals/generate?prospectId=${leadToPromoteToProposal.id}`);
+                  setLeadToPromoteToProposal(null);
+                }
+              }} className="bg-accent hover:bg-accent/90 rounded-xl h-11 font-bold px-8 text-white">
+                Generate Proposal
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+      <AlertDialog open={!!leadBlockedByRequirement} onOpenChange={(open) => !open && setLeadBlockedByRequirement(null)}>
+        <AlertDialogContent className="rounded-3xl p-8 max-w-md border-0 bg-white dark:bg-slate-900">
+          <AlertDialogHeader>
+            <div className="h-12 w-12 bg-accent/10 rounded-[10px] flex items-center justify-center text-accent mb-4">
+              <Lock className="h-6 w-6" />
+            </div>
+            <AlertDialogTitle className="text-2xl font-bold">Requirement Analysis Incomplete</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground font-medium">
+              Please complete the Requirement Chart before continuing to Proposal Generation, Pilot Video, or Project Creation.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-6">
+            <AlertDialogCancel className="rounded-xl h-11 font-bold w-full bg-accent text-white hover:bg-accent/90 hover:text-white">Understood</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -4,15 +4,15 @@ import { getCompanyId } from "@/lib/auth";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
   try {
+    const { projectId } = await context.params;
     const companyId = await getCompanyId();
     if (!companyId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const projectId = params.projectId;
     const body = await req.json();
     const amount = body.amount; // Total invoice amount
     const description = body.description || "Project Milestone Billing";

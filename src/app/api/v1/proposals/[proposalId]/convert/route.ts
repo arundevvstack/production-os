@@ -4,16 +4,14 @@ import { getCompanyId } from "@/lib/auth";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { proposalId: string } }
+  context: { params: Promise<{ proposalId: string }> }
 ) {
   try {
+    const { proposalId } = await context.params;
     const companyId = await getCompanyId();
     if (!companyId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    // Await params specifically for Next.js 15+ if needed, but standard is fine
-    const proposalId = params.proposalId;
 
     const proposal = await prisma.proposal.findUnique({
       where: { id: proposalId, company_id: companyId },
@@ -47,9 +45,10 @@ export async function POST(
         stages: {
           create: [
             { name: "PRE_PRODUCTION", order: 1, status: "pending" },
-            { name: "PRODUCTION", order: 2, status: "pending" },
-            { name: "POST_PRODUCTION", order: 3, status: "pending" },
-            { name: "RELEASE", order: 4, status: "pending" },
+            { name: "PILOT_VIDEO", order: 2, status: "pending" },
+            { name: "PRODUCTION", order: 3, status: "pending" },
+            { name: "POST_PRODUCTION", order: 4, status: "pending" },
+            { name: "RELEASE", order: 5, status: "pending" },
           ]
         },
         milestones: {
