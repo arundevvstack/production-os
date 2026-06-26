@@ -73,7 +73,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { state } = useSidebar();
-  const { profile, company, isLoading, isModuleEnabled, hasPermission } = useTenant();
+  const { profile, company, isLoading, isModuleEnabled, hasPermission, isSuperAdmin } = useTenant();
   // isMounted prevents SSR/hydration mismatch causing all links to appear active
   const [isMounted, setIsMounted] = React.useState(false);
 
@@ -249,9 +249,11 @@ export function AppSidebar() {
               <Link href="/settings"><Settings2 className="mr-2 h-4 w-4" /> Preferences</Link>
             </DropdownMenuItem>
             
-            <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
-              <Link href="/settings/rbac"><ShieldCheck className="mr-2 h-4 w-4" /> Access Control</Link>
-            </DropdownMenuItem>
+            {isSuperAdmin && (
+              <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
+                <Link href="/settings/rbac"><ShieldCheck className="mr-2 h-4 w-4" /> Access Control</Link>
+              </DropdownMenuItem>
+            )}
             
             <DropdownMenuSeparator className="bg-border/50 my-2" />
             

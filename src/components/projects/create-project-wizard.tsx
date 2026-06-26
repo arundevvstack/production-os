@@ -220,6 +220,75 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
         {wizardStep === 1 && (
           <div className="p-7 flex flex-col min-h-[420px]">
             <div className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Project Name <span className="text-destructive">*</span></Label>
+                  <Input
+                    placeholder="e.g. Diwali Campaign 2025"
+                    value={newProject.project_name}
+                    onChange={(e) => setNewProject({ ...newProject, project_name: e.target.value })}
+                    className="h-12 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-foreground focus:ring-primary/10"
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Client <span className="text-destructive">*</span></Label>
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="Type to search clients, leads..."
+                      value={newProject.client_name}
+                      onFocus={() => setIsClientDropdownOpen(true)}
+                      onBlur={() => setTimeout(() => setIsClientDropdownOpen(false), 250)}
+                      onChange={(e) => {
+                        const typed = e.target.value;
+                        setNewProject(prev => ({ ...prev, client_name: typed }));
+                      }}
+                      className="h-12 w-full rounded-xl border border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-sm text-foreground focus-visible:ring-primary/20 focus-visible:border-primary/40"
+                    />
+                    {isClientDropdownOpen && (
+                      <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-slate-900 border border-border shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
+                        {combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).length === 0 ? (
+                          <div className="px-3 py-4 text-xs font-bold text-muted-foreground text-center">
+                            Press Enter to use custom name
+                          </div>
+                        ) : (
+                          combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).map(name => {
+                            const isLead = leads?.some(l => l.company_name === name);
+                            const isClient = clients?.some(c => c.name === name);
+                            return (
+                              <button
+                                key={name}
+                                type="button"
+                                onClick={() => {
+                                  setNewProject(prev => ({ ...prev, client_name: name }));
+                                  const lead = leads?.find(l => l.company_name === name);
+                                  if (lead) {
+                                    setSelectedLeadId(lead.id);
+                                    setNewProject(prev => ({
+                                      ...prev,
+                                      client_name: name,
+                                      service_category: lead.service_vertical || prev.service_category,
+                                      service: lead.sub_vertical || prev.service,
+                                      budget: lead.deal_value ? lead.deal_value.toString() : prev.budget
+                                    }));
+                                  }
+                                  setIsClientDropdownOpen(false);
+                                }}
+                                className="w-full text-left px-3 py-2 text-sm font-bold text-foreground/80 hover:bg-muted hover:text-foreground rounded-lg flex items-center justify-between group transition-colors"
+                              >
+                                <span className="truncate">{name}</span>
+                                {isLead && <Badge variant="secondary" className="text-[9px] h-4">CRM Lead</Badge>}
+                                {isClient && !isLead && <Badge variant="outline" className="text-[9px] h-4 border-emerald-200 bg-emerald-50 text-emerald-600">Client</Badge>}
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Choose Workflow Pipeline</p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -321,73 +390,6 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">Project Information</p>
                 <div className="space-y-4">
-                <div>
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Project Name <span className="text-destructive">*</span></Label>
-                  <Input
-                    placeholder="e.g. Diwali Campaign 2025"
-                    value={newProject.project_name}
-                    onChange={(e) => setNewProject({ ...newProject, project_name: e.target.value })}
-                    className="h-12 rounded-xl border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-foreground focus:ring-primary/10"
-                    autoFocus
-                  />
-                </div>
-                <div>
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Client <span className="text-destructive">*</span></Label>
-                  <div className="relative">
-                    <Input
-                      type="text"
-                      placeholder="Type to search clients, leads, or add a custom name..."
-                      value={newProject.client_name}
-                      onFocus={() => setIsClientDropdownOpen(true)}
-                      onBlur={() => setTimeout(() => setIsClientDropdownOpen(false), 250)}
-                      onChange={(e) => {
-                        const typed = e.target.value;
-                        setNewProject(prev => ({ ...prev, client_name: typed }));
-                      }}
-                      className="h-12 w-full rounded-xl border border-border bg-white dark:bg-slate-900 shadow-sm font-bold text-sm text-foreground focus-visible:ring-primary/20 focus-visible:border-primary/40"
-                    />
-                    {isClientDropdownOpen && (
-                      <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-slate-900 border border-border shadow-xl rounded-xl max-h-60 overflow-y-auto z-[200] p-1.5 animate-in fade-in zoom-in-95">
-                        {combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).length === 0 ? (
-                          <div className="px-3 py-4 text-xs font-bold text-muted-foreground text-center">
-                            Press Enter to use custom name
-                          </div>
-                        ) : (
-                          combinedClientNames.filter(n => n.toLowerCase().includes(newProject.client_name.toLowerCase())).map(name => {
-                            const isLead = leads?.some(l => l.company_name === name);
-                            const isClient = clients?.some(c => c.name === name);
-                            return (
-                              <button
-                                key={name}
-                                type="button"
-                                onClick={() => {
-                                  setNewProject(prev => ({ ...prev, client_name: name }));
-                                  const lead = leads?.find(l => l.company_name === name);
-                                  if (lead) {
-                                    setSelectedLeadId(lead.id);
-                                    setNewProject(prev => ({
-                                      ...prev,
-                                      client_name: name,
-                                      service_category: lead.service_vertical || prev.service_category,
-                                      service: lead.sub_vertical || prev.service,
-                                      budget: lead.deal_value ? lead.deal_value.toString() : prev.budget
-                                    }));
-                                  }
-                                  setIsClientDropdownOpen(false);
-                                }}
-                                className="w-full text-left px-3 py-2 text-sm font-bold text-foreground/80 hover:bg-muted hover:text-foreground rounded-lg flex items-center justify-between group transition-colors"
-                              >
-                                <span className="truncate">{name}</span>
-                                {isLead && <Badge variant="secondary" className="text-[9px] h-4">CRM Lead</Badge>}
-                                {isClient && !isLead && <Badge variant="outline" className="text-[9px] h-4 border-emerald-200 bg-emerald-50 text-emerald-600">Client</Badge>}
-                              </button>
-                            );
-                          })
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Budget (₹)</Label>

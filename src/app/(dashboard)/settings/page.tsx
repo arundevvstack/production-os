@@ -64,7 +64,7 @@ function AccountCenterContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user, isLoading: isAuthLoading } = useSupabase();
-  const { profile: tenantProfile, settings, company, companyId, isLoading: isTenantLoading } = useTenant();
+  const { profile: tenantProfile, settings, company, companyId, isSuperAdmin, isLoading: isTenantLoading } = useTenant();
   
   const initialTab = searchParams.get("tab") || "profile";
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -384,7 +384,7 @@ function AccountCenterContent() {
           <TabsTrigger value="theme" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
             <Palette className="h-4 w-4" /> Theme
           </TabsTrigger>
-          {tenantProfile?.role_id !== 'EMPLOYEE' && (
+          {isSuperAdmin && (
             <>
               <TabsTrigger value="company" className="rounded-xl px-4 py-2 gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
                 <Building2 className="h-4 w-4" /> Company
