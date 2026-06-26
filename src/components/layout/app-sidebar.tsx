@@ -42,7 +42,7 @@ interface NavItem {
   hideFrom?: string[];
 }
 
-const navGroups: { label: string; items: NavItem[] }[] = [
+export const navGroups: { label: string; items: NavItem[] }[] = [
   { label: "Workspace", items: [
       { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true, exact: true },
       { title: "AI Command", url: "/ai-command", icon: Bot, module: "dashboard", isCore: true, hideFrom: ['EMPLOYEE'] },

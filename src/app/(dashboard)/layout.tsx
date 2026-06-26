@@ -6,7 +6,8 @@ import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Loader2 } from "lucide-react";
 import { useTenant } from "@/hooks/use-tenant";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { navGroups } from "@/components/layout/app-sidebar";
 import { ThemeSync } from "@/components/layout/theme-sync";
 
 export default function DashboardLayout({
@@ -14,8 +15,9 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, companyId, isSuperAdmin, profile, isLoading } = useTenant();
+  const { user, companyId, isSuperAdmin, profile, isLoading, hasPermission, isModuleEnabled } = useTenant();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (isLoading) return;
@@ -47,7 +49,29 @@ export default function DashboardLayout({
     // Company exists — no onboarding needed for Define Perspective
     // If companyId is still null after profile loads, it means the profile
     // is still pending approval — handled above.
-  }, [user, companyId, isSuperAdmin, profile, isLoading, router]);
+
+    // Module-level Route Guard
+    if (pathname && profile) {
+      for (const group of navGroups) {
+        for (const item of group.items) {
+          const isMatch = item.exact ? pathname === item.url : pathname.startsWith(item.url);
+          if (isMatch) {
+            // Check if the current user has permission to view this module
+            const isVisible = hasPermission(item.module, 'view') && (item.isCore || isModuleEnabled(item.module));
+            if (!isVisible) {
+              // Block access and redirect to a safe page
+              if (pathname !== "/dashboard") {
+                router.push("/dashboard");
+              } else {
+                router.push("/access-blocked");
+              }
+              return;
+            }
+          }
+        }
+      }
+    }
+  }, [user, companyId, isSuperAdmin, profile, isLoading, router, pathname, hasPermission, isModuleEnabled]);
 
   if (isLoading || !user || (profile?.status === 'suspended') || (profile?.status === 'pending' && !isSuperAdmin) || profile?.role_id === 'TALENT' || profile?.role_id === 'CLIENT') {
     return (
