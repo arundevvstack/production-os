@@ -173,13 +173,18 @@ function AccountCenterContent() {
   const modulesList = [
     { id: "dashboard", name: "Dashboard", desc: "Workspace overview and task summary", icon: LayoutGrid, isCore: true },
     { id: "projects", name: "Project Management", desc: "Production workflows, budgets, and schedules", icon: Film, isCore: true },
-    { id: "talents", name: "Talent Network", desc: "Global actor and influencer booking database", icon: Users },
+    { id: "team", name: "Team Management", desc: "Manage employees, roles and permissions", icon: Users },
+    { id: "reports", name: "Analytics", desc: "Revenue trends and performance reports", icon: PieChart },
+    { id: "clients", name: "Client Database", desc: "Manage external clients and partners", icon: Building2 },
     { id: "crm", name: "Sales CRM", desc: "Client relationship and pipeline tracking", icon: Briefcase },
     { id: "proposals", name: "Proposal Wizard", desc: "AI-assisted production proposal generation", icon: FileText },
+    { id: "research", name: "Market Intelligence", desc: "Competitor and market research tools", icon: Search },
+    { id: "services", name: "Service Builder", desc: "Configure and manage offered services", icon: Puzzle },
+    { id: "talents", name: "Talent Network", desc: "Global actor and influencer booking database", icon: UserIcon },
+    { id: "ops", name: "Operations", desc: "Internal operations and logistics", icon: Check },
+    { id: "finance", name: "Finance Dashboard", desc: "Financial overview and revenue tracking", icon: PieChart },
     { id: "invoices", name: "Invoice and Quote", desc: "Automated billing and quotation system", icon: Receipt },
     { id: "accounts", name: "Accounts", desc: "Manage bank accounts and company liquidity", icon: Wallet },
-    { id: "research", name: "Market Intelligence", icon: Search },
-    { id: "reports", name: "Analytics", desc: "Revenue trends and performance reports", icon: PieChart },
   ];
 
   const handleTabChange = (value: string) => {

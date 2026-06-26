@@ -76,6 +76,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { generateProposalContent, type GenerateProposalContentOutput } from "@/ai/flows/generate-proposal-content";
+import { suggestProposalScope } from "@/ai/flows/suggest-scope";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -343,6 +344,7 @@ function ProposalsContent() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSuggestingScope, setIsSuggestingScope] = useState(false);
   const [generationStep, setGenerationStep] = useState<'input' | 'preview'>('input');
   
   // Builder Widescreen HUD States
@@ -480,6 +482,45 @@ function ProposalsContent() {
       toast({ variant: "destructive", title: "AI Generation Failed", description: "Could not initialize LLM model stream." });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleSuggestScope = async (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (!aiInputs.service_vertical || !aiInputs.client_type) {
+      toast({ variant: "destructive", title: "Missing Information", description: "Please enter Service Type and Industry first." });
+      return;
+    }
+    
+    setIsSuggestingScope(true);
+    try {
+      const res = await suggestProposalScope({
+        service_vertical: aiInputs.service_vertical,
+        client_type: aiInputs.client_type,
+        proposal_type: aiInputs.proposal_type
+      });
+      setAIInputs(prev => ({ ...prev, project_description: res.suggestion }));
+      toast({ title: "Scope Generated", description: "AI has successfully auto-filled the proposal scope." });
+    } catch (err) {
+      toast({ variant: "destructive", title: "Generation Failed", description: "Could not generate scope suggestion." });
+    } finally {
+      setIsSuggestingScope(false);
+    }
+  };
+
+  const handleConvertToProject = async (prop: any) => {
+    try {
+      const res = await fetch(`/api/v1/proposals/${prop.id}/convert`, {
+        method: "POST"
+      });
+      if (!res.ok) throw new Error("Failed to convert proposal to project");
+      const data = await res.json();
+      toast({ title: "Success", description: "Project created successfully." });
+      if (data.project?.id) {
+        router.push(`/projects/${data.project.id}`);
+      }
+    } catch (error: any) {
+      toast({ variant: "destructive", title: "Error", description: error.message });
     }
   };
 
@@ -2118,7 +2159,19 @@ function ProposalsContent() {
                       </div>
 
                       <div className="space-y-2 shrink-0">
-                        <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Proposal Scope & Description</Label>
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Proposal Scope & Description</Label>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={handleSuggestScope} 
+                            disabled={isSuggestingScope}
+                            className="h-6 px-2 text-[10px] font-bold uppercase tracking-wider text-accent hover:text-accent hover:bg-accent/10 rounded-lg gap-1"
+                          >
+                            {isSuggestingScope ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                            Auto Suggest
+                          </Button>
+                        </div>
                         <Textarea placeholder="Outline the client goals, targeted parameters, and delivery constraints..." value={aiInputs.project_description} onChange={(e) => setAIInputs({...aiInputs, project_description: e.target.value})} className="bg-muted border-border rounded-xl min-h-[100px] text-foreground" />
                       </div>
                     </div>
@@ -2292,6 +2345,11 @@ function ProposalsContent() {
                       </DropdownMenu>
                       <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl border-border text-destructive hover:bg-destructive/10 bg-white dark:bg-slate-900" onClick={() => setProposalToDelete(prop)}><Trash2 className="h-4 w-4" /></Button>
                     </div>
+                    {prop.status === 'signed' && (
+                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl h-11 font-bold gap-2 mt-2" onClick={() => handleConvertToProject(prop)}>
+                        <Layers className="h-4 w-4" /> Convert to Project
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>

@@ -329,6 +329,17 @@ export default function AccountsPage() {
             .update({ balance: newBalance })
             .eq('id', newExpense.account_id);
           if (balanceErr) console.error("Balance update failed:", balanceErr.message);
+
+          // Log cash flow
+          await supabase.from('CashFlowActivity').insert({
+            company_id: companyId,
+            bank_account_id: newExpense.account_id,
+            type: "OUT",
+            amount: amountVal,
+            description: newExpense.description || "Expense Paid",
+            category: newExpense.category,
+            date: newExpense.date || new Date().toISOString()
+          });
         }
       }
 
@@ -460,12 +471,12 @@ export default function AccountsPage() {
         </div>
         <div className="flex flex-col sm:flex-row gap-6 items-end">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-            <TabsList className="bg-transparent h-10 gap-6 w-full justify-start p-0">
+            <TabsList className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-md p-1 rounded-full border border-white/20 dark:border-slate-800 h-auto w-full justify-start shadow-sm">
               {['overview', 'expenses', 'gst'].map(tab => (
                 <TabsTrigger 
                   key={tab} 
                   value={tab} 
-                  className="rounded-full px-5 py-2 h-auto text-[10px] uppercase font-bold tracking-widest data-[state=active]:bg-[#db3131] data-[state=active]:text-white data-[state=active]:shadow-md transition-all text-muted-foreground hover:text-foreground border border-transparent"
+                  className="rounded-full px-6 py-2.5 h-auto text-[10px] uppercase font-bold tracking-widest data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#db3131] data-[state=active]:to-[#ff4545] data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-muted-foreground hover:text-foreground border border-transparent"
                 >
                   {tab}
                 </TabsTrigger>
@@ -492,28 +503,28 @@ export default function AccountsPage() {
         <TabsContent value="overview" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-2">
             
-            <Card className="bg-white dark:bg-slate-900 text-foreground rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-800 relative group">
-              <div className="absolute top-8 right-6 opacity-5 group-hover:scale-110 transition-transform duration-500">
+            <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-foreground rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/40 dark:border-slate-800 relative group hover:-translate-y-1 transition-transform duration-300">
+              <div className="absolute top-8 right-6 opacity-5 group-hover:scale-110 group-hover:opacity-10 transition-all duration-500">
                 <Wallet className="h-20 w-20" />
               </div>
               <CardContent className="p-7 space-y-6 relative z-10 h-full flex flex-col justify-between">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-4">Total Balance</p>
-                  <h2 className="text-5xl font-black tracking-tight text-foreground">₹{totalLiquidity.toLocaleString()}</h2>
+                  <h2 className="text-5xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/60">₹{totalLiquidity.toLocaleString()}</h2>
                   <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5 mt-3">
-                    <TrendingUp className="h-3 w-3" /> Live Updates Active
+                    <span className="relative flex h-2 w-2 mr-1"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span> Live Updates Active
                   </p>
                 </div>
                 <div className="pt-6">
-                  <div className="inline-flex items-center px-4 py-1.5 bg-white dark:bg-slate-800 rounded-md text-[8px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 text-foreground shadow-sm">
+                  <div className="inline-flex items-center px-4 py-1.5 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-md text-[8px] font-black uppercase tracking-widest border border-slate-200/50 dark:border-slate-700/50 text-foreground shadow-sm">
                     Secure System
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white dark:bg-slate-900 text-foreground rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-800">
-              <CardContent className="p-7 flex flex-col h-full justify-between">
+            <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-foreground rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/40 dark:border-slate-800 relative group hover:-translate-y-1 transition-transform duration-300">
+              <CardContent className="p-7 flex flex-col h-full justify-between relative z-10">
                 <div>
                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-6">Monthly Spending</p>
                    <div className="space-y-3">
@@ -521,16 +532,16 @@ export default function AccountsPage() {
                        <span className="text-xs font-bold text-foreground">Total Expenses</span>
                        <span className="text-2xl font-black text-foreground">₹{totalExpensesMonth.toLocaleString()}</span>
                      </div>
-                     <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                     <div className="h-3 w-full bg-slate-100/50 dark:bg-slate-800/50 rounded-full overflow-hidden p-[2px]">
                        <div 
-                         className="h-full bg-slate-200 dark:bg-slate-700 rounded-full transition-all duration-1000" 
+                         className="h-full bg-gradient-to-r from-orange-400 to-red-500 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(239,68,68,0.5)]" 
                          style={{ width: `${Math.min((totalExpensesMonth / (totalLiquidity || 1)) * 100, 100)}%` }} 
                        ></div>
                      </div>
                    </div>
                 </div>
                 <div className="pt-8">
-                  <div className="inline-flex items-center px-4 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-md">
+                  <div className="inline-flex items-center px-4 py-1.5 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-slate-200/50 dark:border-slate-700/50 rounded-md">
                     <p className="text-[8px] text-muted-foreground font-black uppercase tracking-widest leading-none">
                       Budget Usage: {((totalExpensesMonth / (totalLiquidity || 1)) * 100).toFixed(1)}%
                     </p>
@@ -539,16 +550,16 @@ export default function AccountsPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white dark:bg-slate-900 text-foreground rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-800 relative group">
+            <Card className="bg-gradient-to-br from-[#db3131] to-[#a31a1a] text-white rounded-2xl overflow-hidden shadow-[0_8px_30px_rgba(219,49,49,0.3)] border-none relative group hover:-translate-y-1 transition-transform duration-300">
               <CardContent className="p-7 flex flex-col h-full justify-between relative z-10">
-                <div className="absolute top-1/2 right-6 -translate-y-1/2 opacity-5 group-hover:rotate-12 transition-transform duration-500">
-                  <Cpu className="h-20 w-20" />
+                <div className="absolute top-1/2 right-6 -translate-y-1/2 opacity-10 group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
+                  <Cpu className="h-24 w-24" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-4">Remaining Balance</p>
-                  <h3 className="text-4xl font-black tracking-tight text-foreground">₹{(totalLiquidity - totalExpensesMonth).toLocaleString()}</h3>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70 mb-4">Remaining Balance</p>
+                  <h3 className="text-4xl font-black tracking-tight text-white drop-shadow-sm">₹{(totalLiquidity - totalExpensesMonth).toLocaleString()}</h3>
                 </div>
-                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed max-w-[150px] pt-8">
+                <p className="text-[8px] font-bold text-white/60 uppercase tracking-widest leading-relaxed max-w-[150px] pt-8">
                   Available funds for the current billing cycle.
                 </p>
               </CardContent>
@@ -571,35 +582,35 @@ export default function AccountsPage() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {accounts?.length === 0 ? (
-                  <div className="col-span-full py-16 text-center bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                    <Building2 className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">No active accounts found</p>
-                    <div className="flex justify-center gap-4 mt-6">
-                      <Button className="h-9 px-5 rounded-md bg-white border border-slate-200 text-foreground hover:bg-slate-50 text-[10px] font-bold uppercase tracking-widest shadow-sm" onClick={() => setIsAddOpen(true)}>
+                  <div className="col-span-full py-16 text-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-800 shadow-sm relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50" />
+                    <Building2 className="h-10 w-10 text-muted-foreground/30 mx-auto mb-4 group-hover:scale-110 transition-transform duration-500" />
+                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">No active accounts found</p>
+                    <div className="flex justify-center gap-4 mt-6 relative z-10">
+                      <Button className="h-10 px-6 rounded-md bg-white border border-slate-200 text-foreground hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-xl transition-all" onClick={() => setIsAddOpen(true)}>
                         <Plus className="h-3.5 w-3.5 mr-1.5" /> Add Account
                       </Button>
-                      <Button variant="ghost" className="h-9 px-5 rounded-md text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:bg-slate-50" onClick={handleSeedDemoAccounts} disabled={isSeeding}>
+                      <Button variant="ghost" className="h-10 px-6 rounded-md text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-slate-50" onClick={handleSeedDemoAccounts} disabled={isSeeding}>
                         {isSeeding ? "Syncing..." : "Seed Default"}
                       </Button>
                     </div>
                   </div>
                 ) : (
                   accounts?.map((acc) => (
-                    <Card key={acc.id} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-xl transition-all duration-300 hover:-translate-y-1">
+                    <Card key={acc.id} className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
                       <CardContent className="p-6">
                         <div className="flex justify-between items-start mb-6">
-                          <div className="h-10 w-10 rounded-xl bg-[#2b2b2b] text-white flex items-center justify-center shadow-md">
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-slate-800 to-black text-white flex items-center justify-center shadow-lg border border-slate-700/50">
                             {acc.type === 'Bank' ? <Building2 className="h-5 w-5" /> : <Banknote className="h-5 w-5" />}
                           </div>
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-5 rounded-full border-2 border-slate-200 flex items-center p-0.5 opacity-50"></div>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:bg-slate-50">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:bg-slate-100 dark:hover:bg-slate-800">
                                   <MoreVertical className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-48">
+                              <DropdownMenuContent align="end" className="w-48 rounded-xl border border-white/20 dark:border-slate-700 backdrop-blur-xl bg-white/90 dark:bg-slate-900/90">
                                 <DropdownMenuItem className="text-red-600 font-bold cursor-pointer" onClick={() => setAccountToDelete(acc)}>
                                   <Trash2 className="h-4 w-4 mr-2" /> Delete Account
                                 </DropdownMenuItem>
@@ -608,13 +619,13 @@ export default function AccountsPage() {
                           </div>
                         </div>
                         <div className="space-y-1 mb-6">
-                          <h4 className="font-bold text-xl tracking-tight text-foreground">{acc.name}</h4>
+                          <h4 className="font-black text-xl tracking-tight text-foreground">{acc.name}</h4>
                           <p className="text-[8px] text-muted-foreground font-black uppercase tracking-[0.2em] flex items-center gap-1.5">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
                             {acc.bank_name || 'BUSINESS RESERVE'}
                           </p>
                         </div>
-                        <div className="border-t border-slate-100 dark:border-slate-800 pt-4">
+                        <div className="border-t border-slate-200/50 dark:border-slate-800/50 pt-4">
                           <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mb-1">Available Balance</p>
                           <p className="text-2xl font-black text-foreground tracking-tight">₹{Number(acc.balance).toLocaleString()}</p>
                         </div>
@@ -632,25 +643,29 @@ export default function AccountsPage() {
                 </div>
                 Financial Pulse
               </h3>
-              <Card className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden h-[300px]">
+              <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden h-[300px]">
                 <CardContent className="p-6 h-full flex flex-col justify-center">
                   {(!expenses || expenses.length === 0) ? (
-                    <div className="text-center flex flex-col items-center justify-center">
-                      <div className="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center mb-4">
-                        <History className="h-4 w-4 text-slate-300 dark:text-slate-600" />
+                    <div className="text-center flex flex-col items-center justify-center relative group">
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full blur-2xl" />
+                      <div className="h-12 w-12 rounded-full border border-slate-200/50 dark:border-slate-800/50 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm flex items-center justify-center mb-4 relative z-10 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                        <History className="h-5 w-5 text-muted-foreground/50" />
                       </div>
-                      <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Zero operational movements.</p>
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground relative z-10">Zero operational movements.</p>
                     </div>
                   ) : (
-                    <div className="space-y-2 h-full overflow-y-auto custom-scrollbar">
+                    <div className="space-y-2 h-full overflow-y-auto custom-scrollbar pr-2">
                       {expenses?.slice(0, 8).map((ex) => (
-                        <div key={ex.id} className="p-3 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all cursor-pointer">
+                        <div key={ex.id} className="p-3 flex items-center gap-3 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md rounded-xl transition-all cursor-pointer border border-transparent hover:border-slate-200/50 dark:hover:border-slate-700/50">
+                          <div className="h-8 w-8 rounded-full bg-red-50 dark:bg-red-950/30 flex items-center justify-center shrink-0">
+                            <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+                          </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold text-foreground truncate">{ex.description}</p>
                             <p className="text-[8px] text-muted-foreground font-black uppercase tracking-[0.1em] mt-0.5">{ex.category}</p>
                           </div>
                           <div className="text-right shrink-0">
-                            <p className="text-sm font-bold text-red-500">-₹{ex.amount?.toLocaleString()}</p>
+                            <p className="text-sm font-black text-red-500">-₹{ex.amount?.toLocaleString()}</p>
                           </div>
                         </div>
                       ))}
@@ -665,8 +680,8 @@ export default function AccountsPage() {
         <TabsContent value="expenses" className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-12 duration-1000">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 px-2">
             <div className="lg:col-span-2 space-y-8">
-              <Card className="bg-white dark:bg-slate-900 rounded-[10px] overflow-hidden border-border shadow-xl">
-                <CardHeader className="bg-white/5 dark:bg-slate-900/5 border-b border-border px-10 py-10">
+              <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[10px] overflow-hidden border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+                <CardHeader className="bg-white/40 dark:bg-slate-900/40 border-b border-white/40 dark:border-slate-800 px-10 py-10">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                     <div>
                       <CardTitle className="text-3xl font-black tracking-tighter text-foreground">Expense History</CardTitle>
@@ -676,10 +691,10 @@ export default function AccountsPage() {
                       <div className="relative group">
                         <Filter className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
                         <Select value={projectFilter} onValueChange={setProjectFilter}>
-                          <SelectTrigger className="pl-12 w-[220px] rounded-[10px] h-12 text-[10px] font-black uppercase tracking-widest bg-white/5 dark:bg-slate-900/5 border-border text-white focus:ring-primary/20 shadow-xl backdrop-blur-xl">
+                          <SelectTrigger className="pl-12 w-[220px] rounded-[10px] h-12 text-[10px] font-black uppercase tracking-widest bg-white/50 dark:bg-slate-900/50 border border-white/40 dark:border-slate-800 text-foreground focus:ring-primary/20 shadow-sm backdrop-blur-xl">
                             <SelectValue placeholder="Filter by Unit" />
                           </SelectTrigger>
-                          <SelectContent className="rounded-[10px] bg-white dark:bg-slate-900 border-border text-white">
+                          <SelectContent className="rounded-[10px] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-white/40 dark:border-slate-800 text-foreground">
                             <SelectItem value="all" className="text-xs font-bold rounded-xl m-1">All Expenses</SelectItem>
                             <SelectItem value="overhead" className="text-xs font-bold rounded-xl m-1">General Overhead</SelectItem>
                             {projects?.map(p => (
@@ -688,7 +703,7 @@ export default function AccountsPage() {
                           </SelectContent>
                         </Select>
                       </div>
-                      <Button variant="outline" className="h-12 px-6 rounded-[10px] border-border bg-white/5 dark:bg-slate-900/5 text-white hover:bg-white/10 dark:bg-slate-900/10 font-black text-[10px] uppercase tracking-widest shadow-xl gap-3 transition-all active:scale-95">
+                      <Button variant="outline" className="h-12 px-6 rounded-[10px] border border-white/40 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-foreground hover:bg-white dark:hover:bg-slate-800 font-black text-[10px] uppercase tracking-widest shadow-sm gap-3 transition-all active:scale-95">
                         <Download className="h-4 w-4 text-foreground" /> Download Report
                       </Button>
                     </div>
@@ -698,48 +713,60 @@ export default function AccountsPage() {
                   <div className="overflow-x-auto custom-scrollbar">
                     <table className="w-full text-sm min-w-[850px]">
                       <thead>
-                        <tr className="bg-muted/50">
-                          <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Timestamp</th>
-                          <th className="px-8 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Classification</th>
-                          <th className="px-8 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Description</th>
-                          <th className="px-8 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Attribution</th>
-                          <th className="px-8 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Amount</th>
-                          <th className="px-8 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Status</th>
-                          <th className="px-10 py-5 text-right"></th>
+                        <tr className="bg-slate-50/50 dark:bg-slate-800/20 border-b border-white/40 dark:border-slate-800">
+                          <th className="px-10 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Timestamp</th>
+                          <th className="px-8 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Classification</th>
+                          <th className="px-8 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Description</th>
+                          <th className="px-8 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Attribution</th>
+                          <th className="px-8 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Amount</th>
+                          <th className="px-8 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Status</th>
+                          <th className="px-10 py-6 text-right"></th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-white/5">
+                      <tbody className="divide-y divide-white/40 dark:divide-slate-800">
                         {filteredExpenses?.length === 0 ? (
                           <tr>
-                            <td colSpan={7} className="px-10 py-32 text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 italic">No operational movements detected.</td>
+                            <td colSpan={7} className="px-10 py-32 text-center relative">
+                              <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-50 pointer-events-none blur-3xl"></div>
+                              <div className="flex flex-col items-center justify-center relative z-10">
+                                <div className="h-16 w-16 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-white/40 dark:border-slate-700 backdrop-blur-md flex items-center justify-center mb-6 shadow-sm">
+                                  <Receipt className="h-8 w-8 text-muted-foreground/50" />
+                                </div>
+                                <h4 className="text-xl font-black tracking-tight text-foreground mb-2">No expenses logged</h4>
+                                <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Zero operational movements detected.</p>
+                                <Button className="mt-8 h-10 px-6 rounded-md bg-white border border-slate-200 text-foreground hover:bg-slate-50 text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-xl transition-all" onClick={() => setIsLogExpenseOpen(true)}>
+                                  <Plus className="h-3.5 w-3.5 mr-1.5" /> Log First Expense
+                                </Button>
+                              </div>
+                            </td>
                           </tr>
                         ) : (
                           filteredExpenses?.map((ex) => {
                             const linkedProject = projects?.find(p => p.id === ex.project_id);
                             return (
-                              <tr key={ex.id} className="hover:bg-muted transition-all group">
-                                <td className="px-10 py-8 text-muted-foreground font-black text-[10px] uppercase tracking-widest whitespace-nowrap">{format(new Date(ex.date), 'MMM dd, yyyy')}</td>
+                              <tr key={ex.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all group">
+                                <td className="px-10 py-8 text-muted-foreground font-bold text-[11px] uppercase tracking-widest whitespace-nowrap">{format(new Date(ex.date), 'MMM dd, yyyy')}</td>
                                 <td className="px-8 py-8">
                                   <div className="flex flex-col gap-2">
                                     <Badge className="bg-primary text-white border-none text-[9px] font-black uppercase tracking-widest px-3 py-1 w-fit rounded-lg shadow-lg shadow-primary/20">{ex.category}</Badge>
                                     <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] ml-1">{ex.sub_category}</span>
                                   </div>
                                 </td>
-                                <td className="px-8 py-8 font-black text-white text-base tracking-tighter">{ex.description}</td>
+                                <td className="px-8 py-8 font-black text-foreground text-base tracking-tighter">{ex.description}</td>
                                 <td className="px-8 py-8">
                                   {linkedProject ? (
-                                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-border bg-white/5 dark:bg-slate-900/5 text-white py-1.5 px-4 rounded-full truncate max-w-[150px]">
+                                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border border-white/40 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 text-foreground py-1.5 px-4 rounded-full truncate max-w-[150px] shadow-sm">
                                       {linkedProject.project_name}
                                     </Badge>
                                   ) : (
                                     <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.3em]">General Ops</span>
                                   )}
                                 </td>
-                                <td className="px-8 py-8 font-black text-accent text-xl tracking-tighter whitespace-nowrap">₹{ex.amount?.toLocaleString()}</td>
+                                <td className="px-8 py-8 font-black text-red-500 text-xl tracking-tighter whitespace-nowrap">-₹{ex.amount?.toLocaleString()}</td>
                                 <td className="px-8 py-8">
                                   <div className={cn(
-                                    "flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest w-fit border shadow-xl backdrop-blur-md",
-                                    ex.status === 'Paid' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-accent/10 text-accent border-accent/20"
+                                    "flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest w-fit border shadow-sm backdrop-blur-md",
+                                    ex.status === 'Paid' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-accent/10 text-accent border-accent/20"
                                   )}>
                                     <div className={cn("h-2 w-2 rounded-full", ex.status === 'Paid' ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" : "bg-accent shadow-[0_0_8px_rgba(251,191,36,0.5)]")}></div>
                                     {ex.status}
@@ -749,10 +776,10 @@ export default function AccountsPage() {
                                   <Button 
                                     variant="ghost" 
                                     size="icon" 
-                                    className="h-12 w-12 rounded-[10px] text-accent hover:bg-accent/10 opacity-0 group-hover:opacity-100 transition-all active:scale-90"
+                                    className="h-10 w-10 rounded-[8px] text-accent hover:bg-accent/10 opacity-0 group-hover:opacity-100 transition-all active:scale-90"
                                     onClick={() => setExpenseToDelete(ex)}
                                   >
-                                    <Trash2 className="h-5 w-5" />
+                                    <Trash2 className="h-4 w-4" />
                                   </Button>
                                 </td>
                               </tr>
@@ -767,24 +794,28 @@ export default function AccountsPage() {
             </div>
 
             <div className="space-y-8">
-              <Card className="bg-white dark:bg-slate-900 rounded-[10px] border-border shadow-xl">
-                <CardHeader className="p-10">
-                  <CardTitle className="text-3xl font-black tracking-tighter text-foreground flex items-center gap-4">
-                    <PieChart className="h-8 w-8 text-foreground" /> Spending by Category
+              <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[10px] border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+                <CardHeader className="p-10 relative z-10">
+                  <CardTitle className="text-2xl font-black tracking-tighter text-foreground flex items-center gap-4">
+                    <div className="h-10 w-10 rounded-xl bg-white/50 dark:bg-slate-800/50 flex items-center justify-center border border-white/40 dark:border-slate-700 shadow-sm backdrop-blur-md">
+                      <PieChart className="h-5 w-5 text-foreground" />
+                    </div>
+                    Spending by Category
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-10 pt-0 space-y-8">
+                <CardContent className="p-10 pt-0 space-y-8 relative z-10">
                   {Object.keys(PRODUCTION_CATEGORIES_MAP).slice(0, 6).map(cat => {
                     const catTotal = expenses?.filter(e => e.category === cat).reduce((sum, e) => sum + (e.amount || 0), 0) || 0;
                     const perc = totalExpensesMonth > 0 ? (catTotal / totalExpensesMonth) * 100 : 0;
                     return (
-                      <div key={cat} className="space-y-3.5">
+                      <div key={cat} className="space-y-3.5 group">
                         <div className="flex justify-between items-end">
-                          <span className="text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground">{cat}</span>
+                          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground group-hover:text-foreground transition-colors">{cat}</span>
                           <span className="text-sm font-black text-foreground tracking-tighter">₹{catTotal.toLocaleString()}</span>
                         </div>
-                        <div className="h-2 w-full bg-white/5 dark:bg-slate-900/5 rounded-full overflow-hidden p-0.5">
-                          <div className="h-full bg-primary rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${perc}%` }}></div>
+                        <div className="h-2 w-full bg-slate-100/50 dark:bg-slate-800/50 rounded-full overflow-hidden p-[1px]">
+                          <div className="h-full bg-gradient-to-r from-red-500 to-orange-400 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(239,68,68,0.5)] opacity-80 group-hover:opacity-100" style={{ width: `${perc}%` }}></div>
                         </div>
                       </div>
                     );
@@ -792,21 +823,21 @@ export default function AccountsPage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white dark:bg-slate-900 rounded-[10px] text-foreground overflow-hidden shadow-xl relative border-border">
-                <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12">
+              <Card className="bg-gradient-to-br from-[#db3131] to-[#a31a1a] rounded-[10px] text-white overflow-hidden shadow-[0_8px_30px_rgba(219,49,49,0.3)] relative border-none">
+                <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12 group-hover:scale-110 transition-transform duration-700">
                    <BrainCircuit className="h-40 w-40" />
                 </div>
                 <CardContent className="p-12 space-y-10 relative z-10">
-                  <div className="h-16 w-16 rounded-[10px] bg-primary flex items-center justify-center shadow-2xl shadow-primary/20">
-                    <Zap className="h-8 w-8 text-white fill-current" />
+                  <div className="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg border border-white/20">
+                    <Zap className="h-8 w-8 text-white fill-current drop-shadow-sm" />
                   </div>
                   <div className="space-y-4">
-                    <h4 className="text-4xl font-black tracking-tighter leading-none">AI Business <br/>Advice</h4>
-                    <p className="text-sm font-medium text-muted-foreground leading-relaxed max-w-[200px]">
+                    <h4 className="text-4xl font-black tracking-tighter leading-none drop-shadow-sm">AI Business <br/>Advice</h4>
+                    <p className="text-sm font-medium text-white/80 leading-relaxed max-w-[200px]">
                       Smart analysis of your spending and tax records.
                     </p>
                   </div>
-                  <Button className="w-full rounded-[10px] h-14 bg-white dark:bg-slate-900 text-foreground hover:bg-muted font-black text-xs uppercase tracking-[0.2em] gap-3 shadow-2xl active:scale-95 transition-all" onClick={handleConsultAI} disabled={isConsultingAI}>
+                  <Button className="w-full rounded-[10px] h-14 bg-white/20 hover:bg-white/30 text-white border border-white/20 font-black text-xs uppercase tracking-[0.2em] gap-3 shadow-xl backdrop-blur-md active:scale-95 transition-all" onClick={handleConsultAI} disabled={isConsultingAI}>
                     {isConsultingAI ? <Loader2 className="h-5 w-5 animate-spin" /> : "Get AI Advice"}
                   </Button>
                 </CardContent>
@@ -832,7 +863,7 @@ export default function AccountsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="bg-white dark:bg-slate-900 rounded-[10px] border-border shadow-2xl relative overflow-hidden">
+                <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[10px] border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-slate-400/20" />
                   <CardContent className="p-10">
                     <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-3">ITC Projection</p>
@@ -842,9 +873,9 @@ export default function AccountsPage() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="bg-white dark:bg-slate-900 rounded-[10px] border-border shadow-2xl relative overflow-hidden group">
+                <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[10px] border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden group">
                   <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:rotate-45 transition-transform duration-1000">
-                    <Zap className="h-20 w-20 fill-current" />
+                    <Zap className="h-20 w-20 text-foreground" />
                   </div>
                   <CardContent className="p-10">
                     <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-3">Net GST Due</p>
@@ -856,8 +887,8 @@ export default function AccountsPage() {
                 </Card>
               </div>
 
-              <Card className="premium-card rounded-[10px] overflow-hidden bg-white/60 dark:bg-slate-900/60 backdrop-blur-3xl border-none shadow-premium">
-                <CardHeader className="bg-white/40 dark:bg-slate-900/40 border-b border-white dark:border-slate-800 px-10 py-10">
+              <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[10px] overflow-hidden border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+                <CardHeader className="bg-white/40 dark:bg-slate-900/40 border-b border-white/40 dark:border-slate-800 px-10 py-10">
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle className="text-2xl font-black tracking-tight text-foreground">Compliance Intelligence</CardTitle>
@@ -875,36 +906,36 @@ export default function AccountsPage() {
                   <div className="overflow-x-auto custom-scrollbar">
                     <table className="w-full text-sm min-w-[700px]">
                       <thead>
-                        <tr className="bg-muted/50">
-                          <th className="px-10 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Fiscal Period</th>
-                          <th className="px-8 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Aggregated Output</th>
-                          <th className="px-8 py-5 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Compliance Logic</th>
-                          <th className="px-10 py-5 text-right"></th>
+                        <tr className="bg-slate-50/50 dark:bg-slate-800/20 border-b border-white/40 dark:border-slate-800">
+                          <th className="px-10 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Fiscal Period</th>
+                          <th className="px-8 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Aggregated Output</th>
+                          <th className="px-8 py-6 text-left font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Compliance Logic</th>
+                          <th className="px-10 py-6 text-right"></th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-white/5">
+                      <tbody className="divide-y divide-white/40 dark:divide-slate-800">
                         {gstStats.periods.length === 0 ? (
                           <tr>
                             <td colSpan={4} className="px-10 py-32 text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 italic">No fiscal movements generated.</td>
                           </tr>
                         ) : (
                           gstStats.periods.map((m, idx) => (
-                            <tr key={idx} className="hover:bg-muted transition-all group">
-                              <td className="px-10 py-8 font-black text-white text-lg tracking-tighter">{m.period}</td>
+                            <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all group">
+                              <td className="px-10 py-8 font-black text-foreground text-lg tracking-tighter">{m.period}</td>
                               <td className="px-8 py-8">
                                 <span className="font-black text-xl text-foreground tracking-tighter">₹{m.output.toLocaleString()}</span>
                               </td>
                               <td className="px-8 py-8">
                                 <Badge className={cn(
-                                  "text-[10px] uppercase font-black tracking-widest px-5 py-2 rounded-full border-none shadow-lg backdrop-blur-md",
-                                  m.status === 'Filed' ? 'bg-white/10 dark:bg-slate-900/10 text-white' : 'bg-primary/20 text-foreground'
+                                  "text-[10px] uppercase font-black tracking-widest px-5 py-2 rounded-full border border-white/40 dark:border-slate-700 shadow-sm backdrop-blur-md",
+                                  m.status === 'Filed' ? 'bg-white/50 dark:bg-slate-800/50 text-foreground' : 'bg-primary/10 text-primary border-primary/20'
                                 )}>
                                   {m.status}
                                 </Badge>
                               </td>
                               <td className="px-10 py-8 text-right">
-                                <Button className="h-12 px-8 rounded-[10px] bg-white/5 dark:bg-slate-900/5 hover:bg-white dark:bg-slate-900 text-foreground hover:text-foreground border border-border font-black text-[10px] uppercase tracking-widest gap-3 shadow-xl transition-all active:scale-95">
-                                  <Zap className="h-4 w-4 fill-current" /> File Return
+                                <Button className="h-10 px-8 rounded-md bg-white border border-slate-200 text-foreground hover:bg-slate-50 font-black text-[10px] uppercase tracking-widest gap-3 shadow-sm transition-all active:scale-95">
+                                  <Zap className="h-4 w-4 text-foreground" /> File Return
                                 </Button>
                               </td>
                             </tr>
@@ -918,38 +949,38 @@ export default function AccountsPage() {
             </div>
 
             <div className="space-y-8">
-              <Card className="premium-card rounded-[10px] bg-accent text-white border-none shadow-2xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:rotate-12 transition-transform duration-1000">
-                   <Globe className="h-32 w-32" />
+              <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[10px] border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:rotate-12 transition-transform duration-1000">
+                   <Globe className="h-32 w-32 text-foreground" />
                 </div>
                 <CardContent className="p-10 space-y-8 relative z-10">
-                  <div className="h-14 w-14 rounded-[10px] bg-white/10 dark:bg-slate-900/10 flex items-center justify-center backdrop-blur-xl border border-white/20 dark:border-slate-700/20">
-                    <Globe className="h-7 w-7 text-white" />
+                  <div className="h-14 w-14 rounded-xl bg-white/50 dark:bg-slate-800/50 flex items-center justify-center backdrop-blur-md border border-white/40 dark:border-slate-700 shadow-sm">
+                    <Globe className="h-7 w-7 text-primary" />
                   </div>
                   <div className="space-y-3">
-                    <h4 className="text-2xl font-black tracking-tight leading-tight">Bulk Filing <br/>Ready</h4>
-                    <p className="text-sm font-medium text-foreground/50 leading-relaxed">
+                    <h4 className="text-2xl font-black tracking-tight leading-tight text-foreground">Bulk Filing <br/>Ready</h4>
+                    <p className="text-sm font-medium text-muted-foreground leading-relaxed">
                       You have <strong>{gstStats.periods.filter(m => m.status === 'Pending').length}</strong> pending filings ready for submission.
                     </p>
                   </div>
-                  <Button className="w-full h-14 rounded-[10px] bg-white dark:bg-slate-900 text-accent hover:bg-accent/10 font-black text-xs uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all">
+                  <Button className="w-full h-12 rounded-md bg-white border border-slate-200 text-foreground hover:bg-slate-50 font-black text-[10px] uppercase tracking-widest shadow-sm active:scale-95 transition-all">
                     Submit All Pending
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="premium-card rounded-[10px] bg-primary text-white p-10 space-y-8 border-none shadow-2xl">
-                <div className="h-16 w-16 rounded-[10px] bg-white/5 dark:bg-slate-900/5 flex items-center justify-center border border-border">
-                  <Cpu className="h-8 w-8 text-foreground" />
+              <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[10px] border border-white/40 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.06)] p-10 space-y-8 relative overflow-hidden group">
+                <div className="h-16 w-16 rounded-xl bg-white/50 dark:bg-slate-800/50 flex items-center justify-center border border-white/40 dark:border-slate-700 shadow-sm">
+                  <Cpu className="h-8 w-8 text-primary" />
                 </div>
                 <div className="space-y-3">
-                  <h4 className="text-2xl font-black tracking-tight">Compliance <br/>Checker</h4>
+                  <h4 className="text-2xl font-black tracking-tight text-foreground">Compliance <br/>Checker</h4>
                   <p className="text-sm font-medium text-muted-foreground">Checks your bank records against tax filings for accuracy.</p>
                 </div>
                 <div className="space-y-3">
                    {['GSTR-1 Verification', 'GSTR-3B Audit'].map(item => (
-                     <Button key={item} variant="outline" className="w-full h-12 bg-white/5 dark:bg-slate-900/5 border-border text-white hover:bg-white/10 dark:bg-slate-900/10 rounded-[10px] text-[10px] font-black uppercase tracking-widest text-left justify-start px-6 gap-3 group transition-all">
-                       <ShieldCheck className="h-4 w-4 text-foreground opacity-50 group-hover:opacity-100" />
+                     <Button key={item} variant="outline" className="w-full h-12 bg-white/50 dark:bg-slate-900/50 border border-white/40 dark:border-slate-800 text-foreground hover:bg-white dark:hover:bg-slate-800 rounded-md text-[10px] font-black uppercase tracking-widest text-left justify-start px-6 gap-3 group transition-all shadow-sm">
+                       <ShieldCheck className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                        {item}
                      </Button>
                    ))}

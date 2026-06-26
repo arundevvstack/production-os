@@ -47,7 +47,7 @@ const navGroups: { label: string; items: NavItem[] }[] = [
       { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true, exact: true },
       { title: "AI Command", url: "/ai-command", icon: Bot, module: "dashboard", isCore: true, hideFrom: ['EMPLOYEE'] },
       { title: "Projects", url: "/projects", icon: Film, module: "projects", isCore: true },
-      { title: "Team", url: "/team", icon: UserCircle, module: "team", isCore: true },
+      { title: "Team", url: "/team", icon: UserCircle, module: "team" },
       { title: "Analytics", url: "/reports", icon: PieChart, module: "reports" },
     ]},
   { label: "Growth & CRM", items: [
@@ -59,7 +59,7 @@ const navGroups: { label: string; items: NavItem[] }[] = [
   { label: "Production", items: [
       { title: "Service Builder", url: "/service-builder", icon: Settings2, module: "services" },
       { title: "Talent Network", url: "/talents", icon: Users, module: "talents" },
-      { title: "Operations", url: "/ops", icon: ShieldCheck, module: "ops" },
+      { title: "Operations", url: "/ops/command-center", icon: ShieldCheck, module: "ops" },
     ]},
   { label: "Finance", items: [
       { title: "Finance Dashboard", url: "/finance", icon: PieChart, module: "finance" },
@@ -168,7 +168,8 @@ export function AppSidebar() {
             if (item.hideFrom && profile?.role_id && item.hideFrom.includes(profile.role_id)) {
               return false;
             }
-            return item.isCore || (isModuleEnabled(item.module) && hasPermission(item.module, 'view'));
+            // Core items bypass company-level module disabling, but ALL items must pass RBAC role permissions
+            return hasPermission(item.module, 'view') && (item.isCore || isModuleEnabled(item.module));
           });
           if (visibleItems.length === 0) return null;
 
@@ -248,11 +249,9 @@ export function AppSidebar() {
               <Link href="/settings"><Settings2 className="mr-2 h-4 w-4" /> Preferences</Link>
             </DropdownMenuItem>
             
-            {hasPermission('admin') && (
-              <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
-                <Link href="/settings/rbac"><ShieldCheck className="mr-2 h-4 w-4" /> Access Control</Link>
-              </DropdownMenuItem>
-            )}
+            <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
+              <Link href="/settings/rbac"><ShieldCheck className="mr-2 h-4 w-4" /> Access Control</Link>
+            </DropdownMenuItem>
             
             <DropdownMenuSeparator className="bg-border/50 my-2" />
             
