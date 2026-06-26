@@ -1,62 +1,75 @@
-require('dotenv').config();
-const { Client } = require('pg');
+const fs = require('fs');
+let content = fs.readFileSync('prisma/schema.prisma', 'utf8');
 
-const client = new Client({ connectionString: process.env.DATABASE_URL });
-
-async function main() {
-  await client.connect();
-
-  // Add gen_random_uuid() default to tables whose id has no default
-  const tables = ['Prospect', 'Project', 'Objective', 'Proposal', 'Invoice', 
-    'Expense', 'Asset', 'Deliverable', 'Archive', 'ActivityLog', 'Approval',
-    'Booking', 'Comment', 'CommunicationLog', 'GSTFiling', 'Meeting', 
-    'Milestone', 'Notification', 'ObjectiveDependency', 'ProductionLog',
-    'ProjectStage', 'Resource', 'TimeEntry', 'UserTeam'];
-
-  for (const tbl of tables) {
-    try {
-      const res = await client.query(`
-        SELECT column_default FROM information_schema.columns 
-        WHERE table_schema='public' AND table_name=$1 AND column_name='id';
-      `, [tbl]);
-      
-      if (res.rows.length > 0 && !res.rows[0].column_default) {
-        await client.query(`ALTER TABLE public."${tbl}" ALTER COLUMN id SET DEFAULT gen_random_uuid()::text;`);
-        console.log(`✓ Set uuid default on ${tbl}.id`);
-      } else {
-        console.log(`- ${tbl}.id already has default: ${res.rows[0]?.column_default}`);
-      }
-    } catch (e) {
-      console.log(`✗ Error on ${tbl}: ${e.message}`);
-    }
-  }
-
-  // Also add missing fields to Project table if needed
-  const projectCols = await client.query(`
-    SELECT column_name FROM information_schema.columns 
-    WHERE table_schema='public' AND table_name='Project';
-  `);
-  const projectColNames = projectCols.rows.map(r => r.column_name);
-  
-  const missingProjectCols = {
-    'client_name': 'TEXT',
-    'service_category': 'TEXT',
-    'service_type': 'TEXT',
-    'description': 'TEXT',
-    'start_date': 'TIMESTAMP',
-    'crew_members': 'JSONB',
-    'notes': 'TEXT',
-  };
-
-  for (const [col, type] of Object.entries(missingProjectCols)) {
-    if (!projectColNames.includes(col)) {
-      await client.query(`ALTER TABLE public."Project" ADD COLUMN IF NOT EXISTS "${col}" ${type};`);
-      console.log(`✓ Added Project.${col}`);
-    }
-  }
-
-  await client.end();
-  console.log('\nAll done!');
+// Phase 5 Company
+if (!content.includes('production_provider_credentials')) {
+  content = content.replace('  margin_forecast     TenantMarginForecast?\n}', '  margin_forecast     TenantMarginForecast?\n  production_provider_credentials ProductionProviderCredential[]\n}');
 }
 
-main().catch(e => { console.error(e); client.end(); });
+// Phase 5 Provider
+if (!content.includes('credentials     ProductionProviderCredential[]')) {
+  content = content.replace('  jobs            ProductionAIJob[]\n}', '  jobs            ProductionAIJob[]\n  credentials     ProductionProviderCredential[]\n}');
+}
+
+const phase5Models = `model ProductionProviderCredential {
+  id              String   @id @default(uuid())
+  company_id      String
+  provider_id     String
+  api_key_encrypted String
+  status          String   @default("Offline")
+  last_tested_at  DateTime?
+  last_used_at    DateTime?
+  default_models  Json?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  provider        ProductionAIProvider @relation(fields: [provider_id], references: [id], onDelete: Cascade)
+  
+  @@unique([company_id, provider_id])
+}`;
+
+if (!content.includes('model ProductionProviderCredential')) {
+  content += '\n' + phase5Models + '\n';
+}
+
+
+// Phase 7 User
+if (!content.includes('assistant_threads    ProductionAssistantThread[]')) {
+  content = content.replace('  client_portal_settings ClientPortalSetting[]\n}', '  client_portal_settings ClientPortalSetting[]\n  assistant_threads    ProductionAssistantThread[]\n}');
+}
+
+// Phase 7 Project
+if (!content.includes('assistant_threads ProductionAssistantThread[]')) {
+  content = content.replace('  assets          ProductionAsset[]\n}', '  assets          ProductionAsset[]\n  assistant_threads ProductionAssistantThread[]\n}');
+}
+
+const phase7Models = `model ProductionAssistantThread {
+  id              String   @id @default(uuid())
+  project_id      String
+  user_id         String
+  title           String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  project         Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  messages        ProductionAssistantMessage[]
+}
+
+model ProductionAssistantMessage {
+  id              String   @id @default(uuid())
+  thread_id       String
+  role            String   // "user" or "assistant"
+  content         String
+  created_at      DateTime @default(now())
+
+  thread          ProductionAssistantThread @relation(fields: [thread_id], references: [id], onDelete: Cascade)
+}`;
+
+if (!content.includes('model ProductionAssistantThread')) {
+  content += '\n' + phase7Models + '\n';
+}
+
+fs.writeFileSync('prisma/schema.prisma', content);
+console.log('Restored and updated schema!');

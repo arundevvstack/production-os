@@ -40,8 +40,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CONTENT_VERTICALS } from "../../clients/page";
 import { ProspectComments } from "./components/prospect-comments";
+import { RequirementChartForm } from "./components/RequirementChartForm";
 
 export default function ProspectDetailPage({ params }: { params: Promise<{ prospectId: string }> }) {
   const { prospectId } = use(params);
@@ -225,8 +227,15 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="bg-white dark:bg-slate-900 border shadow-sm p-1 rounded-xl h-12 w-full max-w-sm grid grid-cols-2">
+          <TabsTrigger value="overview" className="rounded-lg h-9">Overview</TabsTrigger>
+          <TabsTrigger value="requirement" className="rounded-lg h-9">Requirement Analysis</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="mt-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
           <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="bg-muted/50 pb-6 border-b">
               <div className="flex items-center justify-between">
@@ -405,6 +414,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
             </CardContent>
           </Card>
 
+          {(proposals && proposals.length > 0) || currentStageIndex >= PIPELINE_STAGES.findIndex(s => s.id === 'proposal_draft') ? (
           <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900 overflow-hidden">
             <CardHeader className="bg-accent/10/30">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -443,6 +453,7 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
               )}
             </CardContent>
           </Card>
+          ) : null}
 
           <Card className="border-none shadow-sm rounded-[10px] bg-white dark:bg-slate-900">
             <CardHeader>
@@ -490,6 +501,17 @@ export default function ProspectDetailPage({ params }: { params: Promise<{ prosp
           </Card>
         </div>
       </div>
+      </TabsContent>
+
+      <TabsContent value="requirement" className="mt-8">
+        <RequirementChartForm 
+          prospectId={prospectId} 
+          companyName={prospect.company_name} 
+          serviceVertical={prospect.service_vertical || ""}
+          industry={prospect.industry || ""}
+        />
+      </TabsContent>
+      </Tabs>
 
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="sm:max-w-[450px] rounded-[10px]">

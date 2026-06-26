@@ -521,15 +521,348 @@ export const NormalProductionTemplate: EnterpriseProjectTemplate = {
 };
 
 // ============================================================
+// 4. MASSIVE AI VIDEO PRODUCTION WORKFLOW (17 STAGES)
+// ============================================================
+export const AIVideoProductionWorkflow: EnterpriseProjectTemplate = {
+  project_type: 'AI Video Production Workflow',
+  default_days: 30,
+  stages: [
+    {
+      name: 'Pre-Production',
+      order: 1,
+      weight: 0.15,
+      objectives: [
+        {
+          title: 'Approved Script',
+          description: 'Lock approved script and generate project folders.',
+          department: 'Creative Director',
+          priority: 'High',
+          estimated_hours: 4,
+          offset_ratio: 0.0,
+          checklist: [
+            { task: 'Lock approved script', done: false },
+            { task: 'Generate project folders', done: false }
+          ],
+          depends_on: [],
+          is_client_visible: true,
+          is_ai_task: false,
+        },
+        {
+          title: 'Storyboard',
+          description: 'Generate storyboard cards from approved script.',
+          department: 'Creative Director',
+          priority: 'Medium',
+          estimated_hours: 8,
+          offset_ratio: 0.2,
+          checklist: [
+            { task: 'Generate storyboard cards from approved script', done: false }
+          ],
+          depends_on: ['Approved Script'],
+          is_client_visible: true,
+          is_ai_task: false,
+        },
+        {
+          title: 'Shot List',
+          description: 'Auto-create scene cards and generate shot numbers.',
+          department: 'Project Manager',
+          priority: 'High',
+          estimated_hours: 4,
+          offset_ratio: 0.5,
+          checklist: [
+            { task: 'Auto-create scene cards', done: false },
+            { task: 'Generate shot numbers', done: false }
+          ],
+          depends_on: ['Storyboard'],
+          is_client_visible: false,
+          is_ai_task: false,
+        }
+      ]
+    },
+    {
+      name: 'AI Generation',
+      order: 2,
+      weight: 0.35,
+      objectives: [
+        {
+          title: 'Prompt Generation',
+          description: 'Create prompts for all asset types.',
+          department: 'Prompt Engineer',
+          priority: 'High',
+          estimated_hours: 12,
+          offset_ratio: 0.0,
+          checklist: [
+            { task: 'Image', done: false },
+            { task: 'Video', done: false },
+            { task: 'Character', done: false },
+            { task: 'Environment', done: false },
+            { task: 'Camera', done: false },
+            { task: 'Lighting', done: false },
+            { task: 'Voice', done: false },
+            { task: 'Music', done: false },
+            { task: 'Sound Effects', done: false }
+          ],
+          depends_on: ['Shot List'],
+          is_client_visible: false,
+          is_ai_task: true,
+        },
+        {
+          title: 'Asset Generation',
+          description: 'Track generation status for all AI assets.',
+          department: 'AI Artist',
+          priority: 'High',
+          estimated_hours: 24,
+          offset_ratio: 0.2,
+          checklist: [
+            { task: 'Images', done: false },
+            { task: 'Videos', done: false },
+            { task: 'Characters', done: false },
+            { task: 'Backgrounds', done: false },
+            { task: 'Voice', done: false },
+            { task: 'Music', done: false },
+            { task: 'Sound Effects', done: false }
+          ],
+          depends_on: ['Prompt Generation'],
+          is_client_visible: false,
+          is_ai_task: true,
+        },
+        {
+          title: 'Asset Review',
+          description: 'Review assets (Approved, Needs Regeneration, Rejected).',
+          department: 'Creative Director',
+          priority: 'High',
+          estimated_hours: 4,
+          offset_ratio: 0.5,
+          checklist: [
+            { task: 'Approve Assets', done: false }
+          ],
+          depends_on: ['Asset Generation'],
+          is_client_visible: false,
+          is_ai_task: false,
+        },
+        {
+          title: 'Scene Assembly',
+          description: 'Attach approved assets and build scene timeline.',
+          department: 'Video Editor',
+          priority: 'High',
+          estimated_hours: 8,
+          offset_ratio: 0.7,
+          checklist: [
+            { task: 'Attach approved assets', done: false },
+            { task: 'Build scene timeline', done: false },
+            { task: 'Scene completion indicator', done: false }
+          ],
+          depends_on: ['Asset Review'],
+          is_client_visible: false,
+          is_ai_task: false,
+        }
+      ]
+    },
+    {
+      name: 'Post-Production',
+      order: 3,
+      weight: 0.25,
+      objectives: [
+        {
+          title: 'Video Editing',
+          description: 'Progress through rough, fine, and master edits.',
+          department: 'Video Editor',
+          priority: 'High',
+          estimated_hours: 16,
+          offset_ratio: 0.0,
+          checklist: [
+            { task: 'Rough Cut', done: false },
+            { task: 'Fine Cut', done: false },
+            { task: 'Master Edit', done: false }
+          ],
+          depends_on: ['Scene Assembly'],
+          is_client_visible: false,
+          is_ai_task: false,
+        },
+        {
+          title: 'Motion Graphics',
+          description: 'Add titles, graphics, and transitions.',
+          department: 'Motion Designer',
+          priority: 'Medium',
+          estimated_hours: 12,
+          offset_ratio: 0.3,
+          checklist: [
+            { task: 'Titles', done: false },
+            { task: 'Lower Thirds', done: false },
+            { task: 'Logo Animation', done: false },
+            { task: 'Transitions', done: false },
+            { task: 'Captions', done: false }
+          ],
+          depends_on: ['Video Editing'],
+          is_client_visible: false,
+          is_ai_task: false,
+        },
+        {
+          title: 'Color & Audio',
+          description: 'Finalize grade and audio mix.',
+          department: 'Video Editor',
+          priority: 'High',
+          estimated_hours: 8,
+          offset_ratio: 0.6,
+          checklist: [
+            { task: 'Color Grade', done: false },
+            { task: 'Audio Mix', done: false },
+            { task: 'Loudness', done: false },
+            { task: 'Music', done: false },
+            { task: 'SFX', done: false },
+            { task: 'Voice Sync', done: false }
+          ],
+          depends_on: ['Motion Graphics'],
+          is_client_visible: false,
+          is_ai_task: false,
+        }
+      ]
+    },
+    {
+      name: 'Review & Delivery',
+      order: 4,
+      weight: 0.20,
+      objectives: [
+        {
+          title: 'Internal QA',
+          description: 'Project cannot continue until QA passes.',
+          department: 'QA',
+          priority: 'High',
+          estimated_hours: 4,
+          offset_ratio: 0.0,
+          checklist: [
+            { task: 'Visual Quality', done: false },
+            { task: 'Prompt Accuracy', done: false },
+            { task: 'Scene Continuity', done: false },
+            { task: 'Grammar', done: false },
+            { task: 'Subtitle Check', done: false },
+            { task: 'Audio Sync', done: false },
+            { task: 'Export Settings', done: false }
+          ],
+          depends_on: ['Color & Audio'],
+          is_client_visible: false,
+          is_ai_task: false,
+        },
+        {
+          title: 'Client Review',
+          description: 'Generate review version and get approval.',
+          department: 'Client (Review Only)',
+          priority: 'High',
+          estimated_hours: 24,
+          offset_ratio: 0.2,
+          checklist: [
+            { task: 'Generate review version', done: false },
+            { task: 'Get Approval', done: false }
+          ],
+          depends_on: ['Internal QA'],
+          is_client_visible: true,
+          is_ai_task: false,
+        },
+        {
+          title: 'Client Revisions',
+          description: 'Implement feedback and maintain version history.',
+          department: 'Video Editor',
+          priority: 'Medium',
+          estimated_hours: 8,
+          offset_ratio: 0.4,
+          checklist: [
+            { task: 'Implement feedback', done: false }
+          ],
+          depends_on: ['Client Review'],
+          is_client_visible: true,
+          is_ai_task: false,
+        },
+        {
+          title: 'Final Export',
+          description: 'Generate all export presets.',
+          department: 'Video Editor',
+          priority: 'High',
+          estimated_hours: 4,
+          offset_ratio: 0.6,
+          checklist: [
+            { task: '4K', done: false },
+            { task: '1080P', done: false },
+            { task: 'Instagram Reel', done: false },
+            { task: 'YouTube', done: false },
+            { task: 'Shorts', done: false },
+            { task: 'Square', done: false },
+            { task: 'Vertical', done: false }
+          ],
+          depends_on: ['Client Review'],
+          is_client_visible: false,
+          is_ai_task: false,
+        },
+        {
+          title: 'Delivery',
+          description: 'Store links and delivery notes.',
+          department: 'Project Manager',
+          priority: 'High',
+          estimated_hours: 2,
+          offset_ratio: 0.8,
+          checklist: [
+            { task: 'Drive Link', done: false },
+            { task: 'Download Link', done: false },
+            { task: 'Client Delivery Date', done: false },
+            { task: 'Delivery Notes', done: false }
+          ],
+          depends_on: ['Final Export'],
+          is_client_visible: true,
+          is_ai_task: false,
+        }
+      ]
+    },
+    {
+      name: 'Wrap Up',
+      order: 5,
+      weight: 0.05,
+      objectives: [
+        {
+          title: 'Completed',
+          description: 'Mark project complete, lock editing, update dashboard, notify CRM.',
+          department: 'Project Manager',
+          priority: 'Medium',
+          estimated_hours: 1,
+          offset_ratio: 0.0,
+          checklist: [
+            { task: 'Mark project complete', done: false },
+            { task: 'Lock editing', done: false },
+            { task: 'Update project dashboard', done: false },
+            { task: 'Notify CRM', done: false }
+          ],
+          depends_on: ['Delivery'],
+          is_client_visible: false,
+          is_ai_task: false,
+        },
+        {
+          title: 'Archived',
+          description: 'Move project into archive while preserving all assets.',
+          department: 'Admin',
+          priority: 'Low',
+          estimated_hours: 1,
+          offset_ratio: 0.5,
+          checklist: [
+            { task: 'Move project into archive', done: false }
+          ],
+          depends_on: ['Completed'],
+          is_client_visible: false,
+          is_ai_task: false,
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================
 // MASTER TEMPLATE REGISTRY
 // ============================================================
 export const ENTERPRISE_TEMPLATES: Record<string, EnterpriseProjectTemplate> = {
+  'AI Video Production Workflow': AIVideoProductionWorkflow,
   'AI Production': AIProductionTemplate,
   'Hybrid Production': HybridProductionTemplate,
   'Normal Production': NormalProductionTemplate,
 };
 
 export const DEFAULT_TIMELINE_DAYS: Record<string, number> = {
+  'AI Video Production Workflow': 30,
   'AI Production': 21,
   'Hybrid Production': 28,
   'Normal Production': 30,

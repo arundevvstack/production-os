@@ -9,10 +9,10 @@ const prisma = new PrismaClient();
  */
 export async function GET(
   req: Request,
-  { params }: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const { projectId } = params;
+    const { projectId } = await context.params;
 
     if (!projectId) {
       return NextResponse.json({ error: 'Missing projectId' }, { status: 400 });
@@ -127,10 +127,10 @@ export async function GET(
  */
 export async function POST(
   req: Request,
-  { params }: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const { projectId } = params;
+    const { projectId } = await context.params;
     const body = await req.json();
     const {
       title,

@@ -93,6 +93,44 @@ interface ReviewAnnotation {
   author: string;
 }
 
+const renderRequirementValue = (value: any): React.ReactNode => {
+  if (value === null || value === undefined || value === '') return null;
+  if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
+    return (
+      <a href={value} target="_blank" rel="noreferrer" className="text-primary hover:underline flex items-center gap-1">
+        <ExternalLink className="h-3 w-3" /> Link
+      </a>
+    );
+  }
+  if (Array.isArray(value)) {
+    return (
+      <div className="flex flex-wrap gap-1.5 mt-1">
+        {value.map((v, i) => <Badge key={i} variant="secondary" className="font-bold text-xs">{v}</Badge>)}
+      </div>
+    );
+  }
+  if (typeof value === 'object') {
+    return (
+      <div className="space-y-3 mt-2 pl-3 border-l-2 border-border/50">
+        {Object.entries(value).map(([k, v]) => {
+          if (v === null || v === '' || (Array.isArray(v) && v.length === 0)) return null;
+          return (
+            <div key={k} className="space-y-1">
+              <span className="text-[10px] font-black text-muted-foreground/80 uppercase tracking-wider block">
+                {k.replace(/_/g, ' ')}
+              </span>
+              <div className="text-sm font-medium text-foreground">
+                {renderRequirementValue(v)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  return <span className="whitespace-pre-wrap">{String(value)}</span>;
+};
+
 export default function ProjectWorkspacePage({ providedProjectId, onBack }: { providedProjectId?: string, onBack?: () => void }) {
   const params = useParams();
   const router = useRouter();
@@ -114,7 +152,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
   const [newAssetLink, setNewAssetLink] = useState("");
   
   // Form States
-  const [newObjective, setNewObjective] = useState({ title: "", assignedTo: "" });
+  const [newObjective, setNewObjective] = useState({ title: "", assignee_id: "" });
   const [newAsset, setNewAsset] = useState({ name: "", url: "", file_type: "Video", folder: "pre-prod" });
   const [newExpense, setNewExpense] = useState({
     category: "Talent & Crew",
@@ -169,6 +207,13 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
     where: { project_id: projectId },
     orderBy: { date: 'desc' }
   });
+
+  const { data: requirements } = useSupabaseCollection('RequirementChart', {
+    where: { project_id: projectId }
+  });
+  const requirement = requirements?.[0];
+
+  const { data: prospect } = useSupabaseDoc('Prospect', requirement?.prospect_id || '');
 
   const { data: companyUsers } = useSupabaseCollection('User');
 
@@ -320,6 +365,27 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
     }
   };
 
+  const handleCompletePilot = async () => {
+    if (!projectId) return;
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`/api/v1/projects/${projectId}/pilot/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: profile?.id, force: false })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to complete pilot project');
+
+      toast({ title: "Pilot Completed", description: "CRM and Project have been updated successfully." });
+      window.location.reload();
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: 'Error', description: err.message });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleAddObjective = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyId || !projectId || !newObjective.title) return;
@@ -331,7 +397,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
         project_id: projectId,
         title: newObjective.title,
         stage_id: projectStages?.find(s => s.name === currentTab)?.id || null,
-        assignedTo: newObjective.assignedTo || "Producer",
+        assignee_id: newObjective.assignee_id === "Unassigned" ? null : (newObjective.assignee_id || null),
         status: 'todo',
         priority: 'Medium',
       });
@@ -340,7 +406,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
 
       toast({ title: "Objective Added", description: `Objective "${newObjective.title}" has been registered.` });
       setIsAddObjectiveOpen(false);
-      setNewObjective({ title: "", assignedTo: "" });
+      setNewObjective({ title: "", assignee_id: "" });
       refetchObjectives();
     } catch (error: any) {
       toast({ variant: "destructive", title: "Error", description: error.message });
@@ -396,6 +462,7 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
 
     try {
       const { error } = await supabase.from('Expense').insert({
+        id: crypto.randomUUID(),
         company_id: companyId,
         project_id: projectId,
         category: newExpense.category,
@@ -636,6 +703,9 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
               <TabsTrigger value="overview" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground transition-all">
                 <Target className="h-3.5 w-3.5" /> Overview
               </TabsTrigger>
+              <TabsTrigger value="requirement" className="rounded-none px-5 py-3 gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-wider bg-transparent border-0 border-b-2 border-transparent -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground transition-all">
+                <FileText className="h-3.5 w-3.5" /> Requirement
+              </TabsTrigger>
               {projectStages?.map(stage => (
                 <TabsTrigger
                   key={stage.id}
@@ -756,6 +826,116 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
                 <Button variant="outline" className="w-full text-xs font-bold rounded-lg h-8 mt-2" onClick={() => setActiveTab('timeline')}>Open Timeline</Button>
               </div>
             </div>
+
+            {project.project_category === 'Pilot Video' && prospect && prospect.stage === 'pilot_video' && prospect.pilot_details?.status !== 'completed' && (
+              <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6 space-y-4 mt-6">
+                <div className="flex items-center gap-3 text-emerald-600">
+                  <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-lg font-black tracking-tight">Pilot Video Workflow</h3>
+                </div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  This project is linked to the CRM Opportunity for <strong>{prospect.company_name}</strong>. 
+                  When production is complete, mark the Pilot as completed here to automatically update the CRM stage and notify the sales team.
+                </p>
+                <div className="flex gap-3 pt-2">
+                  <Button 
+                    onClick={handleCompletePilot}
+                    disabled={isSubmitting}
+                    className="h-10 px-6 font-black text-xs uppercase bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl"
+                  >
+                    {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
+                    Mark Pilot Production Complete
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        {/* 📋 REQUIREMENT TAB */}
+        <TabsContent value="requirement" className="p-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="max-w-4xl space-y-8">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black tracking-tight">Requirement Reference</h2>
+              <p className="text-muted-foreground font-medium text-sm">
+                Approved Requirement Chart from the initial Proposal. 
+              </p>
+            </div>
+            
+            {requirement ? (
+              <div className="space-y-8">
+                {/* Primitive Values Section */}
+                {Object.entries(requirement).filter(([k, v]) => {
+                  if (v === null || v === '' || (Array.isArray(v) && v.length === 0) || (typeof v === 'object' && !Array.isArray(v))) return false;
+                  const ignoreKeys = ['id', 'project_id', 'prospect_id', 'company_id', 'created_at', 'updated_at', 'status'];
+                  return !ignoreKeys.includes(k);
+                }).length > 0 && (
+                  <div className="rounded-2xl border bg-card p-8 shadow-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                      {Object.entries(requirement)
+                        .filter(([k, v]) => {
+                          if (v === null || v === '' || (Array.isArray(v) && v.length === 0) || (typeof v === 'object' && !Array.isArray(v))) return false;
+                          const ignoreKeys = ['id', 'project_id', 'prospect_id', 'company_id', 'created_at', 'updated_at', 'status'];
+                          return !ignoreKeys.includes(k);
+                        })
+                        .sort(([a], [b]) => a.localeCompare(b))
+                        .map(([key, value]) => (
+                          <div key={key} className={cn("space-y-1.5", (typeof value === 'string' && value.length > 150) ? "md:col-span-2" : "")}>
+                            <h4 className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/80">
+                              {key.replace(/_/g, ' ')}
+                            </h4>
+                            <div className="text-sm font-medium text-foreground leading-relaxed">
+                              {renderRequirementValue(value)}
+                            </div>
+                          </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Nested Objects as Cards */}
+                <div className="grid grid-cols-1 gap-6">
+                  {Object.entries(requirement)
+                    .filter(([k, v]) => v !== null && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length > 0)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([key, value]) => (
+                      <div key={key} className="rounded-2xl border bg-card/50 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <div className="bg-muted/30 px-8 py-4 border-b border-border flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <Target className="h-4 w-4" />
+                          </div>
+                          <h3 className="text-sm font-black text-foreground uppercase tracking-widest">
+                            {key.replace(/_/g, ' ')}
+                          </h3>
+                        </div>
+                        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                          {Object.entries(value as object).map(([k, v]) => {
+                            if (v === null || v === '' || (Array.isArray(v) && v.length === 0)) return null;
+                            return (
+                              <div key={k} className={cn("space-y-1.5", (typeof v === 'string' && v.length > 150) ? "md:col-span-2" : "")}>
+                                <span className="text-[10px] font-black text-muted-foreground/80 uppercase tracking-wider block">
+                                  {k.replace(/_/g, ' ')}
+                                </span>
+                                <div className="text-sm font-medium text-foreground leading-relaxed">
+                                  {renderRequirementValue(v)}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl border bg-card p-12 text-center shadow-sm">
+                <FileText className="h-12 w-12 text-muted-foreground/20 mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-foreground">No Requirements Available</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto mt-2">There is no requirement chart linked to this project workspace.</p>
+              </div>
+            )}
           </div>
         </TabsContent>
 
@@ -1270,13 +1450,13 @@ export default function ProjectWorkspacePage({ providedProjectId, onBack }: { pr
             </div>
             <div className="space-y-2">
               <Label>Assigned Role / Crew Member</Label>
-              <Select value={newObjective.assignedTo} onValueChange={(val) => setNewObjective({...newObjective, assignedTo: val})}>
+              <Select value={newObjective.assignee_id} onValueChange={(val) => setNewObjective({...newObjective, assignee_id: val})}>
                 <SelectTrigger className="rounded-xl">
                   <SelectValue placeholder="Select Assignee" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
                   {companyUsers?.map(user => (
-                    <SelectItem key={user.id} value={user.fullName || user.email?.split('@')[0] || "Unknown"} className="rounded-lg m-1">
+                    <SelectItem key={user.id} value={user.id} className="rounded-lg m-1">
                       {user.fullName || user.email?.split('@')[0]} <span className="text-muted-foreground text-[10px] ml-1 uppercase font-bold">({(user.role_id || "Crew").replace('_', ' ')})</span>
                     </SelectItem>
                   ))}

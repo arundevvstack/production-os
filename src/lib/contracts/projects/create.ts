@@ -9,7 +9,7 @@ export const CreateProjectRequestSchema = z.object({
   project_name: z.string().min(3).max(100),
   description: z.string().optional(),
   client_id: z.string().uuid().optional(),
-  project_type: z.enum(['AI Production', 'Hybrid Production', 'Normal Production']),
+  project_type: z.enum(['AI Video Production Workflow', 'AI Production', 'Hybrid Production', 'Normal Production']),
   start_date: z.string().datetime().optional(),
   end_date: z.string().datetime().optional(),
   budget: z.number().positive().optional(),
