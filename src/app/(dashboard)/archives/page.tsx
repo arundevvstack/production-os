@@ -36,11 +36,10 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function ArchivesPage() {
-  const { companyId, isLoading: isTenantLoading } = useTenant();
+  const { profile, companyId, isSuperAdmin, isLoading: isTenantLoading } = useTenant();
   const [searchQuery, setSearchQuery] = useState("");
   const [itemToDelete, setItemToDelete] = useState<any>(null);
   const [itemToRestore, setItemToRestore] = useState<any>(null);
-  const [localArchives, setLocalArchives] = useState<any[] | null>(null);
 
   // Fetch Archives from Supabase
   const { data: archives, isLoading: isArchivesLoading, refetch } = useSupabaseCollection('Archive', {
@@ -48,12 +47,9 @@ export default function ArchivesPage() {
     orderBy: { archived_at: 'desc' }
   });
 
-  // Sync server data to local state (only when server data changes)
-  const effectiveArchives = localArchives ?? archives ?? [];
-
   // Normalize: each archive row has a 'data' JSON field with the actual record fields
   const normalizedArchives = useMemo(() => {
-    return effectiveArchives.map((item: any) => {
+    return (archives || []).map((item: any) => {
       const nested = item.data ?? {};
       return {
         ...nested,
@@ -67,13 +63,27 @@ export default function ArchivesPage() {
         project_name: nested.project_name || nested.name || null,
       };
     });
-  }, [effectiveArchives]);
+  }, [archives]);
 
   const filteredArchives = useMemo(() => {
-    return normalizedArchives.filter(item =>
-      (item.company_name || item.project_name || "").toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [normalizedArchives, searchQuery]);
+    return normalizedArchives.filter((item: any) => {
+      // 1. Text Search Filter
+      const matchesSearch = (item.company_name || item.project_name || "").toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // 2. User Permission Filter (Super Admins see all, others see only their own assigned items)
+      if (isSuperAdmin) return matchesSearch;
+      
+      const userId = profile?.id;
+      const isOwner = 
+        item.assignee_id === userId || 
+        item.manager_id === userId || 
+        item.user_id === userId || 
+        item.created_by === userId ||
+        (item.ProjectMember && Array.isArray(item.ProjectMember) && item.ProjectMember.some((m: any) => m.user_id === userId));
+        
+      return matchesSearch && isOwner;
+    });
+  }, [normalizedArchives, searchQuery, isSuperAdmin, profile]);
 
   const clients = useMemo(() => filteredArchives.filter(i => i.archive_type === 'client'), [filteredArchives]);
   const prospects = useMemo(() => filteredArchives.filter(i => i.archive_type === 'prospect' || i.archive_type === 'lead'), [filteredArchives]);
@@ -82,25 +92,19 @@ export default function ArchivesPage() {
   const handlePermanentDelete = useCallback(async () => {
     if (!companyId || !itemToDelete) return;
 
-    // Optimistic UI: remove instantly
-    setLocalArchives(prev => (prev ?? archives ?? []).filter((a: any) => a.id !== itemToDelete.id));
-
     const { error } = await supabase.from('Archive').delete().eq('id', itemToDelete.id);
 
     if (error) {
       toast({ variant: "destructive", title: "Deletion Failed", description: error.message });
-      // Rollback
-      setLocalArchives(null);
-      refetch();
     } else {
       toast({
-        variant: "destructive",
         title: "Permanent Purge Complete",
         description: "Data has been scrubbed from the workspace vault."
       });
+      refetch();
     }
     setItemToDelete(null);
-  }, [companyId, itemToDelete, archives, refetch]);
+  }, [companyId, itemToDelete, refetch]);
 
   const handleRestore = useCallback(async () => {
     if (!companyId || !itemToRestore) return;
@@ -110,23 +114,23 @@ export default function ArchivesPage() {
     if (item.archive_type === 'client') targetTable = 'Client';
     else if (item.archive_type === 'prospect' || item.archive_type === 'lead') targetTable = 'Prospect';
 
-    // Optimistic UI: remove from archive list
-    setLocalArchives(prev => (prev ?? archives ?? []).filter((a: any) => a.id !== item.id));
-
     // The original data was saved in item.data — re-insert it into the proper table
     const originalData = item.data ?? {};
+    
     // Remove archive-specific and meta fields before restoring
     const { archive_type: _at, archived_at: _aa, ...restorable } = originalData;
 
+    // Remove relations (nested objects and arrays) before upserting
+    const sanitizedRestorable = Object.fromEntries(
+      Object.entries(restorable).filter(([_, v]) => typeof v !== 'object' || v === null)
+    );
+
     const { error: restoreError } = await supabase.from(targetTable).upsert({
-      ...restorable,
+      ...sanitizedRestorable,
     });
 
     if (restoreError) {
       toast({ variant: "destructive", title: "Restoration Failed", description: restoreError.message });
-      // Rollback
-      setLocalArchives(null);
-      refetch();
       setItemToRestore(null);
       return;
     }
@@ -135,10 +139,11 @@ export default function ArchivesPage() {
 
     toast({
       title: "Record Restored",
-      description: `"${item.company_name || item.project_name}" is back in the active workspace.`
+      description: `"${item.company_name || item.project_name || "Item"}" is back in the active workspace.`
     });
+    refetch();
     setItemToRestore(null);
-  }, [companyId, itemToRestore, archives, refetch]);
+  }, [companyId, itemToRestore, refetch]);
 
   if (isTenantLoading || isArchivesLoading) {
     return (

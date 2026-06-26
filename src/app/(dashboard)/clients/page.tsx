@@ -180,7 +180,11 @@ export const CONTENT_VERTICALS = [
 ];
 
 export default function ClientsPage() {
-  const { profile, isLoading: isTenantLoading, companyId } = useTenant();
+  const { profile, isLoading: isTenantLoading, companyId, roleId } = useTenant();
+  
+  const hasFinancialInsightsAccess = useMemo(() => {
+    return roleId !== 'EMPLOYEE' && roleId !== 'MANAGER';
+  }, [roleId]);
   
   // UI Tabs State
   const [activeTab, setActiveTab] = useState<'directory' | 'pipeline' | 'intelligence_hub'>('directory');
@@ -621,11 +625,13 @@ export default function ClientsPage() {
       </div>
 
       {/* Unified Stats Ribbon */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className={cn("grid gap-4", hasFinancialInsightsAccess ? "grid-cols-2 md:grid-cols-4" : "grid-cols-2")}>
         {[
           { label: 'Active Partners', value: hubStats.activePartnersCount, sub: 'Onboarded client directories', icon: Building2, color: 'red' },
-          { label: 'Opportunities', value: hubStats.activeLeadsCount, sub: 'Pipeline prospects tracked', icon: Users, color: 'indigo' },
-          { label: 'Active Forecast', value: `₹${hubStats.totalPipelineVal.toLocaleString()}`, sub: 'Estimated project contracts', icon: TrendingUp, color: 'emerald' },
+          ...(hasFinancialInsightsAccess ? [
+            { label: 'Opportunities', value: hubStats.activeLeadsCount, sub: 'Pipeline prospects tracked', icon: Users, color: 'indigo' },
+            { label: 'Active Forecast', value: `₹${hubStats.totalPipelineVal.toLocaleString()}`, sub: 'Estimated project contracts', icon: TrendingUp, color: 'emerald' },
+          ] : []),
           { label: 'Workspaces Live', value: hubStats.activeProjCount, sub: 'Active production workspaces', icon: Briefcase, color: 'red' },
         ].map(({ label, value, sub, icon: Icon, color }) => (
           <div key={label} className={cn(
@@ -657,7 +663,7 @@ export default function ClientsPage() {
         <div className="flex items-center gap-1 p-1.5 rounded-[10px] bg-secondary/50 border border-border/40 w-full md:w-fit backdrop-blur-xl shadow-sm overflow-x-auto custom-scrollbar">
           {[
             { id: 'directory', label: 'Active Partners', icon: Building2 },
-            { id: 'pipeline', label: 'Prospect Pipelines', icon: Activity },
+            ...(hasFinancialInsightsAccess ? [{ id: 'pipeline', label: 'Prospect Pipelines', icon: Activity }] : []),
             { id: 'intelligence_hub', label: 'Relationship Hub', icon: Sparkles },
           ].map(({ id, label, icon: Icon }) => (
             <button
