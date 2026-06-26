@@ -54,9 +54,13 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
   const { companyId, isLoading: isTenantLoading } = useTenant();
   const router = useRouter();
 
-  // Create Lead State
   const [isCreateLeadOpen, setIsCreateLeadOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const hasFinancialInsightsAccess = useMemo(() => {
+    return roleId !== 'EMPLOYEE' && roleId !== 'MANAGER';
+  }, [roleId]);
+
   const [newLead, setNewLead] = useState({
     title: "",
     value: ""
@@ -306,9 +310,11 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
           <Button onClick={() => setIsCreateProjectOpen(true)} variant="outline" className="rounded-xl font-bold text-xs h-9 gap-2 border-primary/20 text-foreground hover:bg-primary/5 bg-white/50 backdrop-blur-md">
             <Briefcase className="h-3.5 w-3.5" /> Create Workspace
           </Button>
+          {hasFinancialInsightsAccess && (
           <Button onClick={() => setIsCreateLeadOpen(true)} className="rounded-xl shadow-lg shadow-primary/20 font-bold text-xs h-9 gap-2">
             <Plus className="h-3.5 w-3.5" /> Add Lead
           </Button>
+          )}
         </div>
       </div>
 
@@ -321,8 +327,8 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
             <div className="px-4 pt-4 pb-3 bg-white dark:bg-slate-900 border-b border-border shrink-0">
               <TabsList className="bg-muted p-1 h-10 w-full grid grid-cols-3 rounded-[10px]">
                 <TabsTrigger value="history" className="text-[9px] font-black uppercase tracking-widest rounded-md">Workspaces</TabsTrigger>
-                <TabsTrigger value="pipeline" className="text-[9px] font-black uppercase tracking-widest rounded-md">Pipeline</TabsTrigger>
-                <TabsTrigger value="finance" className="text-[9px] font-black uppercase tracking-widest rounded-md">Ledger</TabsTrigger>
+                {hasFinancialInsightsAccess && <TabsTrigger value="pipeline" className="text-[9px] font-black uppercase tracking-widest rounded-md">Pipeline</TabsTrigger>}
+                {hasFinancialInsightsAccess && <TabsTrigger value="finance" className="text-[9px] font-black uppercase tracking-widest rounded-md">Ledger</TabsTrigger>}
               </TabsList>
             </div>
             
@@ -353,10 +359,12 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                         <span className="text-[9px] font-black bg-muted px-2 py-0.5 rounded-full">{proj.progress}%</span>
                       </div>
                       <h4 className="text-sm font-bold text-foreground leading-tight mb-2">{proj.project_name}</h4>
+                      {hasFinancialInsightsAccess && (
                       <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground">
                         <span>Margin: {proj.margin.toFixed(0)}%</span>
                         <span className={proj.profit >= 0 ? "text-emerald-500" : "text-rose-500"}>₹{proj.profit.toLocaleString()}</span>
                       </div>
+                      )}
                     </div>
                   ))
                 )}
@@ -435,30 +443,34 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                   <CardContent className="pt-6">
                     <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Active Work</p>
                     <h4 className="text-2xl font-black text-foreground">{activeProjectsStats.count}</h4>
-                    <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{activeProjectsStats.totalValue.toLocaleString()} Value</p>
+                    {hasFinancialInsightsAccess && <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{activeProjectsStats.totalValue.toLocaleString()} Value</p>}
                   </CardContent>
                 </Card>
-                <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900 border-l-4 border-l-indigo-500">
-                  <CardContent className="pt-6">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Pipeline</p>
-                    <h4 className="text-2xl font-black text-foreground">{pipelineStats.count}</h4>
-                    <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{pipelineStats.totalValue.toLocaleString()} Value</p>
-                  </CardContent>
-                </Card>
-                <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900 border-l-4 border-l-rose-500">
-                  <CardContent className="pt-6">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Unpaid</p>
-                    <h4 className="text-2xl font-black text-foreground">{invoiceStats.pendingCount}</h4>
-                    <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{invoiceStats.pendingValue.toLocaleString()}</p>
-                  </CardContent>
-                </Card>
-                <Card className={cn("border-none shadow-sm rounded-2xl text-white border-l-4", totals.profit >= 0 ? "bg-emerald-600 border-l-emerald-400" : "bg-accent border-l-rose-400")}>
-                  <CardContent className="pt-6">
-                    <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Net Margin</p>
-                    <h4 className="text-2xl font-black">₹{totals.profit.toLocaleString()}</h4>
-                    <p className="text-[9px] text-white/40 font-bold mt-1">Life-to-date</p>
-                  </CardContent>
-                </Card>
+                {hasFinancialInsightsAccess && (
+                  <>
+                  <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900 border-l-4 border-l-indigo-500">
+                    <CardContent className="pt-6">
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Pipeline</p>
+                      <h4 className="text-2xl font-black text-foreground">{pipelineStats.count}</h4>
+                      <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{pipelineStats.totalValue.toLocaleString()} Value</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-none shadow-sm rounded-2xl bg-white dark:bg-slate-900 border-l-4 border-l-rose-500">
+                    <CardContent className="pt-6">
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Unpaid</p>
+                      <h4 className="text-2xl font-black text-foreground">{invoiceStats.pendingCount}</h4>
+                      <p className="text-[9px] text-muted-foreground font-bold mt-1">₹{invoiceStats.pendingValue.toLocaleString()}</p>
+                    </CardContent>
+                  </Card>
+                  <Card className={cn("border-none shadow-sm rounded-2xl text-white border-l-4", totals.profit >= 0 ? "bg-emerald-600 border-l-emerald-400" : "bg-accent border-l-rose-400")}>
+                    <CardContent className="pt-6">
+                      <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Net Margin</p>
+                      <h4 className="text-2xl font-black">₹{totals.profit.toLocaleString()}</h4>
+                      <p className="text-[9px] text-white/40 font-bold mt-1">Life-to-date</p>
+                    </CardContent>
+                  </Card>
+                  </>
+                )}
               </div>
 
               {/* CLIENT DETAILS */}
@@ -494,6 +506,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                   </CardContent>
                 </Card>
 
+                {hasFinancialInsightsAccess && (
                 <Card className="border-none shadow-premium rounded-2xl bg-primary text-white p-8 relative overflow-hidden flex flex-col justify-center">
                   <Sparkles className="absolute top-0 right-0 p-8 opacity-10 h-32 w-32" />
                   <div className="flex items-center gap-3 mb-4">
@@ -511,6 +524,7 @@ export default function ClientPortfolioPage({ params }: { params: Promise<{ clie
                     </Button>
                   </Link>
                 </Card>
+                )}
               </div>
 
             </div>
