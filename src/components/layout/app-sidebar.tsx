@@ -45,7 +45,7 @@ interface NavItem {
 export const navGroups: { label: string; items: NavItem[] }[] = [
   { label: "Workspace", items: [
       { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true, exact: true },
-      { title: "AI Command", url: "/ai-command", icon: Bot, module: "ai_command", hideFrom: ['EMPLOYEE'] },
+      { title: "AI Command", url: "/ai-command", icon: Bot, module: "ai_command", isCore: true, hideFrom: ['EMPLOYEE'] },
       { title: "Projects", url: "/projects", icon: Film, module: "projects", isCore: true },
       { title: "Team", url: "/team", icon: UserCircle, module: "team" },
       { title: "Analytics", url: "/reports", icon: PieChart, module: "reports" },
