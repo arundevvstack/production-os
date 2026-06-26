@@ -78,6 +78,22 @@ export function useTenant() {
   const hasPermission = useCallback((module: string, action: 'view' | 'create' | 'edit' | 'delete' | 'approve' = 'view') => {
     if (isSuperAdmin) return true;
 
+    if (!roleId) return false;
+
+    // Check dynamic permissions first
+    if (settings?.role_permissions) {
+      const customPermissions = settings.role_permissions as Record<string, string[]>;
+      if (customPermissions[roleId]) {
+        // If the role has a custom configuration, enforce it strictly.
+        if (!customPermissions[roleId].includes(module)) return false;
+        
+        // Retain hardcoded logic for destructive actions to prevent employees from deleting data even if module is enabled
+        if (roleId === 'EMPLOYEE' && (action === 'delete' || action === 'approve')) return false;
+        return true;
+      }
+    }
+
+    // Fallback to strict Enterprise RBAC Permission Matrix
     switch (roleId) {
       case 'SUPER_ADMIN':
         return true;
@@ -110,7 +126,7 @@ export function useTenant() {
         // By default, pending or undefined users have no access
         return false;
     }
-  }, [isSuperAdmin, roleId]);
+  }, [isSuperAdmin, roleId, settings?.role_permissions]);
 
   const isModuleEnabled = useCallback((moduleName: string) => {
     // First, enforce company-level module enablement (this overrides even super admin)

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -19,7 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTenant } from "@/hooks/use-tenant";
-import { useSupabaseCollection } from "@/supabase/hooks/use-collection";
+import { useSupabaseCollection, broadcastTableUpdate } from "@/supabase/hooks/use-collection";
 import { supabase } from "@/supabase/client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
@@ -46,6 +47,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
+import { Switch } from "@/components/ui/switch";
 
 const ENTERPRISE_ROLES = [
   { id: 'SUPER_ADMIN', name: 'Super Administrator', description: 'Full platform configuration, audit logs, billing, and global settings.' },
@@ -55,8 +57,25 @@ const ENTERPRISE_ROLES = [
   { id: 'MARKETING_SALES', name: 'Marketing & Sales', description: 'Access leads, CRM pipelines, client portfolios, and proposals.' }
 ];
 
+const MODULES_LIST = [
+  { id: "dashboard", name: "Dashboard" },
+  { id: "projects", name: "Projects" },
+  { id: "team", name: "Team Management" },
+  { id: "reports", name: "Analytics" },
+  { id: "clients", name: "Clients" },
+  { id: "crm", name: "Sales CRM" },
+  { id: "proposals", name: "Proposals" },
+  { id: "research", name: "Market Intelligence" },
+  { id: "services", name: "Service Builder" },
+  { id: "talents", name: "Talents" },
+  { id: "ops", name: "Operations" },
+  { id: "finance", name: "Finance" },
+  { id: "invoices", name: "Invoices & Quotes" },
+  { id: "accounts", name: "Accounts" },
+];
+
 export default function RBACPage() {
-  const { companyId, isLoading: isTenantLoading, profile } = useTenant();
+  const { companyId, isLoading: isTenantLoading, profile, settings } = useTenant();
   const [editingMember, setEditingMember] = useState<any>(null);
   const [isChangeRoleOpen, setIsChangeRoleOpen] = useState(false);
   const [mutatingId, setMutatingId] = useState<string | null>(null);
@@ -64,6 +83,70 @@ export default function RBACPage() {
   const [selectedDepartment, setSelectedDepartment] = useState("Production");
 
   const { data: members, isLoading: isUsersLoading, refetch: reloadMembers } = useSupabaseCollection('User');
+
+  const [localRolePerms, setLocalRolePerms] = useState<Record<string, string[]>>({});
+
+  useEffect(() => {
+    if (settings?.role_permissions) {
+      setLocalRolePerms(JSON.parse(JSON.stringify(settings.role_permissions)));
+    } else {
+      setLocalRolePerms({
+        'SUPER_ADMIN': MODULES_LIST.map(m => m.id),
+        'MANAGER': MODULES_LIST.map(m => m.id),
+        'EMPLOYEE': ['dashboard', 'projects', 'tasks', 'talents'],
+        'ACCOUNTS': ['dashboard', 'finance', 'invoices', 'expenses', 'gst_filings', 'payroll', 'projects'],
+        'MARKETING_SALES': ['dashboard', 'crm', 'proposals', 'talents', 'invoices']
+      });
+    }
+  }, [settings?.role_permissions]);
+
+  const handleToggleRolePermission = async (roleId: string, moduleId: string, isEnabled: boolean) => {
+    if (!companyId) return;
+
+    // Optimistic update
+    setLocalRolePerms(prev => {
+      const current = { ...prev };
+      if (!current[roleId]) current[roleId] = [];
+      
+      if (isEnabled) {
+        if (!current[roleId].includes(moduleId)) {
+          current[roleId] = [...current[roleId], moduleId];
+        }
+      } else {
+        current[roleId] = current[roleId].filter(id => id !== moduleId);
+      }
+      return current;
+    });
+    
+    // Compute the actual payload to send to Supabase
+    let currentPermissions: Record<string, string[]> = JSON.parse(JSON.stringify(localRolePerms));
+    if (!currentPermissions[roleId]) currentPermissions[roleId] = [];
+    if (isEnabled) {
+      if (!currentPermissions[roleId].includes(moduleId)) {
+        currentPermissions[roleId].push(moduleId);
+      }
+    } else {
+      currentPermissions[roleId] = currentPermissions[roleId].filter(id => id !== moduleId);
+    }
+
+    const { error } = await supabase.from('CompanySettings').upsert({
+      id: settings?.id || crypto.randomUUID(),
+      company_id: companyId,
+      role_permissions: currentPermissions,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'company_id' });
+
+    if (error) {
+      toast({ variant: "destructive", title: "Permission Update Failed", description: error.message });
+      // Fallback: reload state from settings on error
+      if (settings?.role_permissions) {
+        setLocalRolePerms(JSON.parse(JSON.stringify(settings.role_permissions)));
+      }
+    } else {
+      toast({ title: "Role Permissions Updated", description: "The module access matrix has been saved." });
+      broadcastTableUpdate('CompanySettings');
+    }
+  };
 
   const handleUpdateMemberCredentials = async (memberId: string, newRoleId: string, newDept: string) => {
     if (!memberId) return;
@@ -195,6 +278,83 @@ export default function RBACPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Side: Users Grid */}
         <div className="lg:col-span-2 space-y-6">
+          <Card className="border border-white/60 dark:border-slate-700/60 shadow-premium rounded-[10px] overflow-hidden bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl">
+            <CardHeader className="p-6 border-b border-white/40 dark:border-slate-700/40">
+              <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2 text-foreground">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                Module Visibility Configuration
+              </CardTitle>
+              <CardDescription className="text-muted-foreground font-medium mt-2">
+                Configure which modules each specific Department Role is allowed to access.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30 border-b">
+                    <tr>
+                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground w-1/3">Department Role</th>
+                      <th className="p-4 text-left font-black text-[10px] uppercase tracking-widest text-muted-foreground">Allowed Modules</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {ENTERPRISE_ROLES.map((role) => {
+                      const currentRolePerms = localRolePerms[role.id] || [];
+
+                      return (
+                        <tr key={role.id} className="hover:bg-muted/20 transition-colors">
+                          <td className="p-5 align-top relative">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 group-hover:bg-primary/60 transition-colors" />
+                            <span className="font-black text-xs uppercase tracking-widest text-foreground block pl-2">{role.name}</span>
+                            <Badge className="mt-2 bg-white/60 dark:bg-slate-800 text-muted-foreground text-[8px] font-black tracking-widest uppercase border border-border/50">
+                              {role.id.replace('_', ' ')}
+                            </Badge>
+                            <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed max-w-[200px] pl-2">{role.description}</p>
+                          </td>
+                          <td className="p-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                              {MODULES_LIST.map((mod) => {
+                                const isEnabled = currentRolePerms.includes(mod.id);
+                                return (
+                                  <div 
+                                    key={mod.id} 
+                                    className={cn(
+                                      "flex items-center justify-between px-3 py-1.5 h-[44px] rounded-xl border transition-all duration-300 group/mod",
+                                      isEnabled 
+                                        ? "bg-primary/5 border-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.05)] hover:bg-primary/10" 
+                                        : "bg-white/40 dark:bg-slate-900/40 border-white/40 dark:border-slate-700/40 hover:bg-white/80 dark:hover:bg-slate-800"
+                                    )}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div className={cn(
+                                        "w-2 h-2 rounded-full transition-all duration-300 shadow-sm shrink-0",
+                                        isEnabled ? "bg-primary shadow-primary/50 group-hover/mod:scale-125" : "bg-muted-foreground/30"
+                                      )} />
+                                      <span className={cn(
+                                        "text-[10px] leading-tight uppercase tracking-widest transition-colors duration-300", 
+                                        isEnabled ? "font-black text-foreground" : "font-semibold text-muted-foreground"
+                                      )}>
+                                        {mod.name}
+                                      </span>
+                                    </div>
+                                    <Switch 
+                                      checked={isEnabled} 
+                                      onCheckedChange={(checked) => handleToggleRolePermission(role.id, mod.id, checked)}
+                                      className="scale-[0.75] ml-2 shrink-0"
+                                    />
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
           <Card className="border-none shadow-premium rounded-[10px] overflow-hidden bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl">
             <CardHeader className="p-6 border-b border-border">
               <CardTitle className="text-lg font-black text-foreground">Workspace Directory</CardTitle>

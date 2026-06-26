@@ -23,7 +23,8 @@ import {
   Mail,
   MessageSquare,
   Copy,
-  MoreVertical
+  MoreVertical,
+  Banknote
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -59,6 +60,8 @@ export default function InvoicesPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<any>(null);
+  const [invoiceToPay, setInvoiceToPay] = useState<any>(null);
+  const [paymentAccount, setPaymentAccount] = useState<string>("");
 
   // Invoice State
   const [newInvoice, setNewInvoice] = useState({
@@ -92,6 +95,40 @@ export default function InvoicesPage() {
     where: companyId ? { company_id: companyId } : undefined,
     orderBy: { project_name: 'asc' }
   });
+
+  // 4. Fetch Bank Accounts from Supabase
+  const { data: accounts } = useSupabaseCollection('BankAccount', {
+    where: companyId ? { company_id: companyId } : undefined
+  });
+
+  const handleMarkAsPaid = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!invoiceToPay || !paymentAccount) {
+      toast({ variant: "destructive", title: "Error", description: "Please select a bank account." });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/v1/finance/invoices/${invoiceToPay.id}/pay`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bank_account_id: paymentAccount })
+      });
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error || "Failed to process payment");
+      
+      toast({ title: "Payment Recorded", description: `Invoice ${invoiceToPay.invoice_number} marked as paid.` });
+      refetchInvoices();
+      setInvoiceToPay(null);
+      setPaymentAccount("");
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Payment Failed", description: err.message });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleCreateInvoice = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -600,6 +637,14 @@ export default function InvoicesPage() {
                               <DropdownMenuItem onClick={() => handleCopyLink(inv)} className="gap-2 py-2 cursor-pointer">
                                 <Copy className="h-4 w-4 text-muted-foreground" /> Copy Access Link
                               </DropdownMenuItem>
+                              {inv.payment_status?.toLowerCase() !== 'paid' && (
+                                <>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => setInvoiceToPay(inv)} className="gap-2 py-2 cursor-pointer text-emerald-600 font-bold">
+                                    <Banknote className="h-4 w-4" /> Mark as Paid
+                                  </DropdownMenuItem>
+                                </>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
 
@@ -644,6 +689,51 @@ export default function InvoicesPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* MARK AS PAID DIALOG */}
+      <Dialog open={!!invoiceToPay} onOpenChange={(open) => !open && setInvoiceToPay(null)}>
+        <DialogContent className="sm:max-w-[425px] rounded-[10px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Banknote className="h-5 w-5 text-emerald-500" />
+              Record Payment
+            </DialogTitle>
+            <DialogDescription>
+              Select the bank account to receive the funds for invoice {invoiceToPay?.invoice_number}.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleMarkAsPaid} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Bank Account / Cash</Label>
+              <Select value={paymentAccount} onValueChange={setPaymentAccount}>
+                <SelectTrigger className="rounded-xl">
+                  <SelectValue placeholder="Select an account" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  {accounts?.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-muted-foreground">No accounts found. Please set up your vault.</div>
+                  ) : (
+                    accounts?.map((acc) => (
+                      <SelectItem key={acc.id} value={acc.id} className="m-1 rounded-lg">
+                        {acc.name} (Balance: ₹{Number(acc.balance).toLocaleString()})
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-100 mt-2 text-xs font-medium text-emerald-700">
+              This will update the invoice status to Paid and increase the selected account's balance by <strong>₹{(invoiceToPay?.total || 0).toLocaleString()}</strong>.
+            </div>
+            <DialogFooter className="pt-4">
+              <Button type="submit" disabled={isSubmitting || !paymentAccount} className="w-full rounded-xl h-11 font-bold bg-emerald-600 hover:bg-emerald-700 text-white">
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                Confirm Payment
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
