@@ -88,6 +88,18 @@ export default function GenerationStudioPage() {
     }
   };
 
+  const handleBatchGenerate = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/v1/projects/${projectId}/jobs/batch`, { method: "POST" });
+      if (res.ok) {
+        // success toast could go here
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="p-6 space-y-6 h-full flex flex-col bg-slate-50 dark:bg-slate-950">
       <div className="flex justify-between items-center">
@@ -97,7 +109,7 @@ export default function GenerationStudioPage() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline"><Activity className="mr-2 h-4 w-4" /> Cost Monitor</Button>
-          <Button variant="default">Batch Generate</Button>
+          <Button variant="default" onClick={handleBatchGenerate} disabled={isLoading}>Batch Generate</Button>
         </div>
       </div>
 

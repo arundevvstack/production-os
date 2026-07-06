@@ -57,8 +57,6 @@ export function ScriptContainer({ projectId, scripts }: ScriptContainerProps) {
   const handleCreateNew = async () => {
     const newScript = await createScriptVersion(projectId, "<p>New Script</p>");
     setActiveScriptId(newScript.id);
-    triggerAnalysis(newScript.id);
-    triggerAnalysis(newScript.id);
   };
 
   const handleUpload = async (file: File) => {

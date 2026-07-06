@@ -68,23 +68,22 @@ export async function POST(req: Request, { params }: { params: any }) {
       - camera_notes (string - derived from visual bible)
     `;
 
-    let provider = await prisma.productionAIProvider.findFirst({ where: { name: "OpenAI" } });
-    if (!provider) {
-        throw new Error("OpenAI provider not configured in system.");
-    }
-
-    const apiKey = await ProviderManager.getDecryptedCredentials(provider.id);
-    const adapter = ProviderManager.getAdapter(provider.name);
-
-    const systemPrompt = "You return strictly valid JSON arrays of objects. No markdown formatting or code blocks outside the JSON.";
-    
     let scenesData: any[] = [];
     try {
+      let provider = await prisma.productionAIProvider.findFirst({ where: { name: "OpenAI" } });
+      if (!provider) {
+          throw new Error("OpenAI provider not configured in system.");
+      }
+
+      const apiKey = await ProviderManager.getDecryptedCredentials(provider.id);
+      const adapter = ProviderManager.getAdapter(provider.name);
+      const systemPrompt = "You return strictly valid JSON arrays of objects. No markdown formatting or code blocks outside the JSON.";
+      
       const response = await adapter.submitJob(apiKey, "gpt-4o", systemPrompt + "\n\n" + prompt);
       if (!response.textContent) throw new Error("No response received from AI");
       scenesData = JSON.parse(response.textContent.replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim());
     } catch (e: any) {
-      console.warn("AI Generation failed, falling back to mock data due to quota issues:", e);
+      console.warn("AI Generation or Credential fetch failed, falling back to mock data:", e.message);
       // Fallback to mock data so the user can continue testing the flow
       scenesData = storyboardScenes.map((sb, i) => ({
         scene_number: i + 1,

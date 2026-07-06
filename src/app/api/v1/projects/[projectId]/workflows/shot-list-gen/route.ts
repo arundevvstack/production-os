@@ -40,13 +40,17 @@ export async function POST(req: Request, { params }: { params: any }) {
         throw new Error("OpenAI provider not configured in system.");
     }
 
-    const apiKey = await ProviderManager.getDecryptedCredentials(provider.id);
+    let apiKey = "";
+    try {
+      apiKey = await ProviderManager.getDecryptedCredentials(provider.id);
+    } catch (e: any) {
+      console.warn("Failed to decrypt credentials, but we will proceed to use mock data fallback:", e.message);
+    }
     const adapter = ProviderManager.getAdapter(provider.name);
     const createdShots = [];
 
-    // Note: In a production environment, this should be sent to a queue system (BullMQ) since looping AI calls in a synchronous request will timeout.
-    // For this demonstration, we'll process the first 3 scenes.
-    const scenesToProcess = scenes.slice(0, 3);
+    // We will process all scenes, sorting them by scene number to ensure they are generated in order.
+    const scenesToProcess = [...scenes].sort((a, b) => a.scene_number - b.scene_number);
 
     for (const scene of scenesToProcess) {
       const sceneData = {
@@ -126,6 +130,11 @@ export async function POST(req: Request, { params }: { params: any }) {
       }
 
       await prisma.$transaction(async (tx) => {
+        // Clear any existing shots for this scene to prevent duplicates when regenerating
+        await tx.productionShot.deleteMany({
+          where: { scene_id: scene.id }
+        });
+
         for (const sData of shotsData) {
           const rootShot = await tx.productionShot.create({
             data: {

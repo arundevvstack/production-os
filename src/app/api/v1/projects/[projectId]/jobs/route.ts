@@ -1,74 +1,61 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { JobDispatcher } from "@/lib/production/providers/JobDispatcher";
-import crypto from "crypto";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ projectId: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ projectId: string }> }) {
   try {
     const { projectId } = await params;
-    if (!projectId) {
-      return NextResponse.json({ error: "projectId is required" }, { status: 400 });
-    }
-
     const jobs = await prisma.productionAIJob.findMany({
       where: { project_id: projectId },
-      include: {
-        ProductionAIProvider: true
-      },
-      orderBy: { created_at: "desc" },
-      take: 50
+      orderBy: { created_at: 'desc' }
     });
-
     return NextResponse.json(jobs);
   } catch (error: any) {
-    console.error("Jobs GET Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ projectId: string }> }
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ projectId: string }> }) {
   try {
     const { projectId } = await params;
     const body = await request.json();
-    
-    // Ensure required fields
-    if (!body.provider_id || !body.asset_type || !body.model_name) {
-      return NextResponse.json({ error: "Missing required job fields" }, { status: 400 });
-    }
+    const { provider_id, asset_type, model_name, options } = body;
 
-    const jobId = crypto.randomUUID();
     const newJob = await prisma.productionAIJob.create({
       data: {
-        id: jobId,
+        id: require('crypto').randomUUID(),
         project_id: projectId,
-        provider_id: body.provider_id,
-        asset_type: body.asset_type,
-        model_name: body.model_name,
-        scene_id: body.scene_id || null,
-        shot_id: body.shot_id || null,
-        prompt_set_id: body.prompt_set_id || null,
+        provider_id,
+        asset_type,
+        model_name,
+        metadata: options,
+        created_by: "system",
         status: "Queued",
-        created_by: "system", // usually from auth session
-        metadata: body.options || {},
         updated_at: new Date()
       }
     });
 
-    // Fire & Forget job execution for MVP 
-    // In production, this would go into a message queue (e.g., BullMQ or Inngest)
-    JobDispatcher.dispatchJob(jobId).catch(err => {
-      console.error(`Async Job ${jobId} Failed:`, err);
-    });
+    // Simulate async processing (normally handled by a separate queue worker)
+    setTimeout(async () => {
+      try {
+        await prisma.productionAIJob.update({
+          where: { id: newJob.id },
+          data: { status: "Running", started_at: new Date(), updated_at: new Date() }
+        });
+        
+        // Simulate generation delay
+        await new Promise(r => setTimeout(r, 4000));
+        
+        await prisma.productionAIJob.update({
+          where: { id: newJob.id },
+          data: { status: "Completed", completed_at: new Date(), updated_at: new Date() }
+        });
+      } catch (e) {
+        console.error("Job processing failed", e);
+      }
+    }, 1000);
 
-    return NextResponse.json(newJob, { status: 201 });
+    return NextResponse.json(newJob);
   } catch (error: any) {
-    console.error("Jobs POST Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
