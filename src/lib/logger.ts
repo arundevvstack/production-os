@@ -32,19 +32,23 @@ export const Logger = {
 function log(level: LogLevel, payload: LogPayload) {
   const timestamp = new Date().toISOString();
   
-  const logEntry = {
+  const logEntry: Record<string, any> = {
     level,
     timestamp,
     message: payload.message,
-    ...(payload.context && { context: payload.context }),
-    ...(payload.error && { 
-      error: payload.error instanceof Error ? {
-        message: payload.error.message,
-        stack: payload.error.stack,
-        name: payload.error.name
-      } : payload.error
-    })
   };
+
+  if (payload.context) {
+    logEntry.context = payload.context;
+  }
+
+  if (payload.error) {
+    logEntry.error = payload.error instanceof Error ? {
+      message: payload.error.message,
+      stack: payload.error.stack,
+      name: payload.error.name
+    } : payload.error;
+  }
 
   // Structured JSON logging for production observability
   if (process.env.NODE_ENV === 'production') {

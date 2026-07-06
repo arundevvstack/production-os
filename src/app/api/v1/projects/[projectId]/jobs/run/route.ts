@@ -1,62 +1,69 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { JobDispatcher } from "@/lib/production/providers/JobDispatcher";
+import crypto from "crypto";
 
 export async function POST(
-  req: Request,
-  { params }: { params: { projectId: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const body = await req.json();
-    const { prompt_set_id, provider_id, model_name, asset_type, scene_id, shot_id } = body;
-    const companyId = "c-1"; // Hardcoded for this prototype
+    const { projectId } = await params;
+    const body = await request.json();
 
-    if (!prompt_set_id || !provider_id || !model_name) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const {
+      sceneId, shotId, promptSetId, providerId, modelName, assetType, prompt,
+      // alternate snake_case field names from CreateJobDialog
+      prompt_set_id, provider_id, model_name, asset_type, scene_id, shot_id,
+    } = body;
+
+    // Normalize field names (handle both camelCase and snake_case)
+    const resolvedShotId = shotId || shot_id || null;
+    const resolvedSceneId = sceneId || scene_id || null;
+    const resolvedPromptSetId = promptSetId || prompt_set_id || null;
+    const resolvedModelName = modelName || model_name || "openai/gpt-4o";
+    const resolvedAssetType = assetType || asset_type || "Image";
+
+    if (!projectId) {
+      return NextResponse.json({ error: "projectId is required" }, { status: 400 });
     }
 
-    // 1. Create the queued job
+    // provider_id is required — look up first available provider if not provided
+    let resolvedProviderId = providerId || provider_id;
+    if (!resolvedProviderId) {
+      const defaultProvider = await prisma.productionAIProvider.findFirst({
+        where: { is_enabled: true }
+      });
+      if (!defaultProvider) {
+        return NextResponse.json({ error: "No active AI provider configured. Please add one in Settings." }, { status: 400 });
+      }
+      resolvedProviderId = defaultProvider.id;
+    }
+
+    // created_by — look up from project or use placeholder
+    const project = await prisma.project.findUnique({ where: { id: projectId }, select: { id: true } });
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
     const job = await prisma.productionAIJob.create({
       data: {
-        project_id: params.projectId,
-        scene_id: scene_id || null,
-        shot_id: shot_id || null,
-        prompt_set_id,
-        provider_id,
-        model_name,
-        asset_type: asset_type || "Text",
+        id: crypto.randomUUID(),
+        project_id: projectId,
+        shot_id: resolvedShotId,
+        scene_id: resolvedSceneId,
+        prompt_set_id: resolvedPromptSetId,
+        provider_id: resolvedProviderId,
+        model_name: resolvedModelName,
+        asset_type: resolvedAssetType,
         status: "Queued",
+        created_by: "system",
+        updated_at: new Date(),
       }
     });
 
-    // 2. Dispatch Job Synchronously (For Prototype)
-    // In production, we would drop this to a BullMQ queue and return { jobId } instantly.
-    await JobDispatcher.dispatchJob(job.id, companyId);
-
-    // 3. Find the newly created asset version to return the assetId
-    const finalAssetVersion = await prisma.productionAssetVersion.findFirst({
-      where: { job_id: job.id },
-      orderBy: { created_at: 'desc' }
-    });
-    
-    // Actually wait, JobDispatcher.ts doesn't explicitly save `job_id` on the `ProductionAssetVersion`.
-    // Let me check JobDispatcher.ts to see if it sets `job_id`.
-    // If not, we might need to find by `project_id` and `provider_id` sorted by date, or we can just fetch the latest asset.
-    // Let's modify JobDispatcher to pass the job_id. We'll find by `asset_id` where `shot_id` and `scene_id` match.
-    // Wait, let me just find the latest asset for this project.
-    const latestAsset = await prisma.productionAsset.findFirst({
-      where: { project_id: params.projectId },
-      orderBy: { created_at: 'desc' }
-    });
-
-    return NextResponse.json({ 
-      success: true, 
-      jobId: job.id, 
-      assetId: latestAsset?.id 
-    });
-
+    return NextResponse.json({ success: true, jobId: job.id, status: job.status });
   } catch (error: any) {
-    console.error("Run Job Error:", error);
+    console.error("Job Run Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

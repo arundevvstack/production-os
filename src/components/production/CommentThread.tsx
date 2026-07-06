@@ -41,7 +41,7 @@ export function CommentThread({ comments, onAddComment }: CommentThreadProps) {
             <div className="bg-white border rounded-xl p-3 shadow-sm text-sm">
               <div className="flex items-center justify-between gap-4 mb-1">
                 <span className="font-semibold">{c.authorName}</span>
-                <span className="text-[10px] text-slate-400">{new Date(c.created_at).toLocaleString()}</span>
+                <span className="text-[10px] text-slate-400" suppressHydrationWarning>{new Date(c.created_at).toLocaleString()}</span>
               </div>
               <p className="text-slate-700 whitespace-pre-wrap">{c.content}</p>
             </div>

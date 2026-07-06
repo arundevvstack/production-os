@@ -15,7 +15,8 @@ export function GenerationConsole({ projectId, shotId }: { projectId: string, sh
       // We will create a small endpoint if needed, but for now we'll do an interval refresh of the page or just a basic UI mockup if the API is missing.
       // Actually, we can fetch all jobs for the project and filter client side.
       const res = await fetch(`/api/v1/projects/${projectId}/jobs`);
-      if (res.ok) {
+      const contentType = res.headers.get("content-type") ?? "";
+      if (res.ok && contentType.includes("application/json")) {
         const data = await res.json();
         const shotJobs = data.filter((j: any) => j.shot_id === shotId);
         setJobs(shotJobs);
@@ -64,7 +65,7 @@ export function GenerationConsole({ projectId, shotId }: { projectId: string, sh
               }`}>
                 {job.status.toUpperCase()} 
                 <span className="text-slate-400 ml-2">
-                  (Provider: {job.provider?.name || job.provider_id}) - Model: {job.model_name}
+                  (Provider: {job.ProductionAIProvider?.name || job.provider_id}) - Model: {job.model_name}
                 </span>
                 {job.error_message && (
                   <span className="block text-red-400 mt-1">Error: {job.error_message}</span>

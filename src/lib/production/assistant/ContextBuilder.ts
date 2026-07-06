@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { GraphEngine } from "./GraphEngine";
+import { GraphEngine } from "../intelligence/GraphEngine";
 
 export interface AssistantContextParams {
   projectId: string;
@@ -14,13 +14,12 @@ export class ContextBuilder {
     const project = await prisma.project.findUnique({
       where: { id: params.projectId },
       include: {
-        objectives: true,
         creative_memories: true,
-        storyboard: {
+        ProductionStoryboard: {
           include: {
-            scenes: {
+            ProductionScene: {
               include: {
-                shots: true
+                ProductionShot: true
               }
             }
           }
@@ -33,12 +32,8 @@ export class ContextBuilder {
     let prompt = `You are the Production OS AI Assistant. You help producers create better productions. You do not replace existing workflows, you enhance them.\n\n`;
     
     prompt += `=== PROJECT CONTEXT ===\n`;
-    prompt += `Project Name: ${project.name}\n`;
-    prompt += `Description: ${project.description || 'N/A'}\n`;
+    prompt += `Project Name: ${project.project_name}\n`;
     prompt += `Status: ${project.status}\n`;
-    if (project.objectives && project.objectives.length > 0) {
-      prompt += `Objectives: ${project.objectives.map((o: any) => o.title).join(', ')}\n`;
-    }
 
     prompt += `\n=== CREATIVE INTELLIGENCE (GRAPH) ===\n`;
     prompt += `Total AI Jobs: ${stats.jobCount}\n`;
@@ -56,12 +51,12 @@ export class ContextBuilder {
       });
     }
 
-    if (project.storyboard) {
+    if (project.ProductionStoryboard) {
       prompt += `\n=== STORYBOARD ===\n`;
-      prompt += `Total Scenes: ${project.storyboard.scenes.length}\n`;
+      prompt += `Total Scenes: ${project.ProductionStoryboard.ProductionScene.length}\n`;
       
       if (params.sceneId) {
-        const currentScene = project.storyboard.scenes.find((s: any) => s.id === params.sceneId);
+        const currentScene = project.ProductionStoryboard.ProductionScene.find((s: any) => s.id === params.sceneId);
         if (currentScene) {
           prompt += `\n=== CURRENT SCENE ===\n`;
           prompt += `Scene Number: ${currentScene.scene_number}\n`;
@@ -69,10 +64,10 @@ export class ContextBuilder {
           prompt += `Description: ${currentScene.description || 'None'}\n`;
           prompt += `Mood: ${currentScene.mood || 'None'}\n`;
           prompt += `Status: ${currentScene.status}\n`;
-          prompt += `Total Shots: ${currentScene.shots.length}\n`;
+          prompt += `Total Shots: ${currentScene.ProductionShot.length}\n`;
           
           if (params.shotId) {
-            const currentShot = currentScene.shots.find((s: any) => s.id === params.shotId);
+            const currentShot = currentScene.ProductionShot.find((s: any) => s.id === params.shotId);
             if (currentShot) {
               prompt += `\n=== CURRENT SHOT ===\n`;
               prompt += `Shot Number: ${currentShot.shot_number}\n`;

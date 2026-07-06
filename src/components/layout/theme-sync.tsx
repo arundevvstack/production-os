@@ -2,13 +2,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { useTenant } from "@/hooks/use-tenant";
+
+
+import { useSupabase } from '@/supabase/provider';
+import { useSupabaseDoc } from '@/supabase/hooks/use-doc';
 
 /**
  * Dynamically injects CSS variables for theming, ensuring a fallback to default styles.
  */
 export function ThemeSync() {
-  const { settings, profile, isLoading } = useTenant();
+  const { user, isLoading: isAuthLoading } = useSupabase();
+  const { data: profile, isLoading: isProfileLoading } = useSupabaseDoc('User', user?.id || null);
+  const isLoading = isAuthLoading || isProfileLoading;
+  const settings = null;
 
   useEffect(() => {
     // Do not run the effect until the tenant data has finished loading.
@@ -18,7 +24,7 @@ export function ThemeSync() {
 
     const root = document.documentElement;
     // Prefer user's specific theme, fallback to workspace theme
-    const theme = (profile?.theme_preference as any) || (settings?.theme as any);
+    const theme = ((profile as any)?.theme_preference as any) || ((settings as any)?.theme as any);
 
     // Handle the primary color
     if (theme?.primary) {
@@ -54,7 +60,7 @@ export function ThemeSync() {
       root.classList.remove('dark');
     }
 
-  }, [settings?.theme, profile?.theme_preference, isLoading]);
+  }, [(settings as any)?.theme, (profile as any)?.theme_preference, isLoading]);
 
   return null;
 }

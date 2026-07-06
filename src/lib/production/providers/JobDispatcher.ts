@@ -1,87 +1,138 @@
 import prisma from "@/lib/prisma";
 import { ProviderManager } from "./ProviderManager";
+import { NormalizedProviderResponse, GenerationOptions } from "./ProviderAdapterInterface";
+import { ReviewEngine } from "../engines/ReviewEngine";
 
 export class JobDispatcher {
   
-  /**
-   * Executes a ProductionAIJob end-to-end.
-   * Uses the provider manager to find the correct adapter, fetches the credentials,
-   * submits the job, and converts the normalized response into a ProductionAsset.
-   */
-  static async dispatchJob(jobId: string, companyId: string): Promise<void> {
+  static async dispatchJob(jobId: string): Promise<void> {
     const job = await prisma.productionAIJob.findUnique({
       where: { id: jobId },
-      include: {
-        provider: true
-      }
+      include: { ProductionAIProvider: true }
     });
 
     if (!job) throw new Error("Job not found");
     if (job.status !== "Queued") throw new Error(`Job is already ${job.status}`);
 
-    // Mark as running
     await prisma.productionAIJob.update({
       where: { id: jobId },
-      data: { status: "Running" }
+      data: { status: "Running", started_at: new Date(), updated_at: new Date() }
     });
 
     try {
-      // 1. Get Decrypted Credentials
-      const apiKey = await ProviderManager.getDecryptedCredentials(companyId, job.provider_id);
+      const apiKey = await ProviderManager.getDecryptedCredentials(job.provider_id);
+      const adapter = ProviderManager.getAdapter(job.ProductionAIProvider.name);
 
-      // 2. Load Adapter
-      const adapter = ProviderManager.getAdapter(job.provider.name);
-
-      // 3. Assemble Prompt from associated Prompt Set (Mocked here since job doesn't explicitly store raw prompt text, 
-      // but in reality we would fetch the prompt_set_id or pass the prompt directly into the job).
-      // For the MVP prototype, we'll fetch the associated prompt set.
       let promptText = "Generate content";
       if (job.prompt_set_id) {
-        const pSet = await prisma.productionPromptSet.findUnique({ where: { id: job.prompt_set_id } });
-        if (pSet) {
-          promptText = pSet.image_prompt || pSet.video_prompt || "Generate content";
+        const pSet = await prisma.productionPrompt.findUnique({ 
+          where: { id: job.prompt_set_id },
+          include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } }
+        });
+        if (pSet && pSet.Versions.length > 0) {
+          const v = pSet.Versions[0];
+          promptText = v.image_prompt || v.video_prompt || v.animation_prompt || promptText;
         }
       }
 
-      // 4. Submit Job
-      const normalizedResponse = await adapter.submitJob(apiKey, job.model_name, promptText);
+      // Merge prompt with any explicit options from job metadata
+      const jobOptions = (job.metadata as GenerationOptions) || {};
+      
+      let normalizedResponse: NormalizedProviderResponse;
 
-      // 5. Store as Asset
-      // We create a master ProductionAsset and its first Version (V1)
-      const asset = await prisma.productionAsset.create({
-        data: {
-          project_id: job.project_id,
-          type: job.asset_type,
-          status: "Pending Review",
-          scene_id: job.scene_id,
-          shot_id: job.shot_id,
+      // Switch generation based on Asset Type
+      const aType = job.asset_type.toLowerCase();
+      if (aType.includes("image")) {
+        normalizedResponse = await adapter.generateImage(apiKey, job.model_name, promptText, jobOptions);
+      } else if (aType.includes("video")) {
+        normalizedResponse = await adapter.generateVideo(apiKey, job.model_name, promptText, jobOptions);
+      } else if (aType.includes("audio") || aType.includes("music") || aType.includes("sfx")) {
+        normalizedResponse = await adapter.generateAudio(apiKey, job.model_name, promptText, jobOptions);
+      } else if (aType.includes("voice") || aType.includes("tts")) {
+        normalizedResponse = await adapter.generateVoice(apiKey, job.model_name, promptText, promptText, jobOptions);
+      } else if (aType.includes("storyboard")) {
+        normalizedResponse = await adapter.generateStoryboard(apiKey, job.model_name, promptText, jobOptions);
+      } else {
+        // Fallback to chat/text completion
+        if (adapter.submitJob) {
+          normalizedResponse = await adapter.submitJob(apiKey, job.model_name, promptText, jobOptions);
+        } else {
+          throw new Error(`Asset type ${job.asset_type} is not explicitly supported by this adapter routing, and no fallback text submitJob exists.`);
         }
-      });
+      }
 
-      await prisma.productionAssetVersion.create({
+      // If the response is asynchronous (e.g. Runway returns metadata but no assetUrl immediately),
+      // we might mark the job as "Running" instead of Completed, but for the MVP, we assume completed
+      // if checkStatus isn't explicitly hooked up in a cron.
+      const isAsync = !normalizedResponse.assetUrl && !normalizedResponse.textContent && normalizedResponse.metadata;
+      
+      const parentAssetId = job.metadata ? (job.metadata as any).parent_asset_id : null;
+      let assetId = parentAssetId;
+
+      if (!assetId) {
+        const asset = await prisma.productionAsset.create({
+          data: {
+            id: require('crypto').randomUUID(),
+            project_id: job.project_id,
+            type: job.asset_type,
+            status: "Pending Review",
+            scene_id: job.scene_id,
+            shot_id: job.shot_id,
+            updated_at: new Date()
+          }
+        });
+        assetId = asset.id;
+      } else {
+        // Find existing asset to get next version number
+        await prisma.productionAsset.update({
+          where: { id: assetId },
+          data: { status: "Pending Review", updated_at: new Date() }
+        });
+      }
+
+      // Calculate next version number
+      const existingVersions = await prisma.productionAssetVersion.count({
+        where: { asset_id: assetId }
+      });
+      const nextVersionNumber = existingVersions + 1;
+
+      const assetVersion = await prisma.productionAssetVersion.create({
         data: {
-          asset_id: asset.id,
+          id: require('crypto').randomUUID(),
+          asset_id: assetId,
           job_id: jobId,
-          version_number: 1,
+          version_number: nextVersionNumber,
           file_url: normalizedResponse.assetUrl || null,
-          metadata: normalizedResponse.metadata as any,
+          metadata: {
+            ...normalizedResponse.metadata,
+            textContent: normalizedResponse.textContent
+          },
           provider_id: job.provider_id,
           model_name: job.model_name,
+          updated_at: new Date()
         }
       });
 
-      // 6. Mark Job Completed
       await prisma.productionAIJob.update({
         where: { id: jobId },
-        data: { status: "Completed" }
+        data: { 
+          status: isAsync ? "Running" : "Completed", 
+          completed_at: isAsync ? null : new Date(),
+          external_job_id: normalizedResponse.metadata?.raw_response?.id || null, // e.g. task id
+          metadata: normalizedResponse.metadata as any
+        }
       });
+
+      // Run AI Review if the generation was synchronous
+      if (!isAsync) {
+        await ReviewEngine.evaluateAssetVersion(assetVersion.id);
+      }
 
     } catch (e: any) {
       console.error("Job Dispatch Error:", e);
-      // Mark Job Failed
       await prisma.productionAIJob.update({
         where: { id: jobId },
-        data: { status: "Failed" } // In a real system, we'd log the error message to the job
+        data: { status: "Failed", error_message: e.message || "Unknown error", completed_at: new Date() }
       });
       throw e;
     }

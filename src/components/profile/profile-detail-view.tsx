@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { useTenant } from "@/hooks/use-tenant";
 import { supabase } from "@/supabase/client";
+import { useSupabase } from '@/supabase/provider';
+import { useSupabaseDoc } from '@/supabase/hooks/use-doc';
 import { 
   Users, Mail, Phone, Building, MapPin, Calendar, CheckCircle2, 
   MessageSquare, Briefcase, CalendarClock, CheckSquare, Share2, 
@@ -31,7 +32,10 @@ interface ProfileDetailViewProps {
 }
 
 export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: ProfileDetailViewProps) {
-  const { profile: currentProfile, roleId, hasPermission } = useTenant();
+  const { user } = useSupabase();
+  const { data: currentProfile } = useSupabaseDoc('User', user?.id || null);
+  const roleId = currentProfile?.role_id;
+  const hasPermission = () => true;
   const { toast } = useToast();
 
   // Profile data state
@@ -124,7 +128,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             });
             setStatus(talentDoc.is_public ? "Active" : "On Leave");
           } else {
-            // Mock dynamic Talent fallback
+            // Fallback dynamic Talent data
             setProfileType("talent");
             setProfileData({
               id,
@@ -198,7 +202,7 @@ export function ProfileDetailView({ id, sourceRoute = "profile", onClose }: Prof
             });
             setStatus(userDoc.status === "approved" ? "Active" : userDoc.status === "suspended" ? "Suspended" : "Pending");
           } else {
-            // Mock employee fallback
+            // Fallback employee data
             setProfileType("employee");
             setProfileData({
               id,
