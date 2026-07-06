@@ -22,7 +22,7 @@ export function ProductionAssistant({ projectId }: { projectId: string }) {
   }, [messages, isTyping]);
 
   const extractContextFromPath = () => {
-    // Example: /production/projects/[id]/scenes/[sceneId]/shots/[shotId]
+    // Example: /projects/[id]/scenes/[sceneId]/shots/[shotId]
     const parts = pathname.split('/');
     const sceneIdx = parts.indexOf('scenes');
     const shotIdx = parts.indexOf('shots');

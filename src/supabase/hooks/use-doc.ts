@@ -34,8 +34,15 @@ export function useSupabaseDoc<T = any>(table: string, id: string | null) {
           .maybeSingle();
 
         if (fetchError) {
-          console.error(`Supabase doc fetch error [${table}:${id}]:`, fetchError);
-          if (active) setError(fetchError);
+          // PGRST116 means 0 rows returned, which is safe to ignore for maybeSingle()
+          // Empty object {} can also occur on 406 Not Acceptable when a row doesn't exist yet.
+          const isIgnorable = fetchError.code === 'PGRST116' || Object.keys(fetchError).length === 0;
+          
+          if (!isIgnorable) {
+            if (active) setError(fetchError);
+          } else {
+            if (active) setData(doc);
+          }
         } else {
           if (active) setData(doc);
         }

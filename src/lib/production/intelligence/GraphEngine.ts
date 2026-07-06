@@ -40,11 +40,11 @@ export class GraphEngine {
     // Search Scenes
     const storyboard = await prisma.productionStoryboard.findUnique({
       where: { project_id: projectId },
-      include: { scenes: true }
+      include: { ProductionScene: true }
     });
     
     if (storyboard) {
-      storyboard.scenes.forEach(scene => {
+      storyboard.ProductionScene.forEach((scene: any) => {
         if (
           scene.title.toLowerCase().includes(searchQuery) ||
           scene.description?.toLowerCase().includes(searchQuery)
@@ -65,11 +65,11 @@ export class GraphEngine {
     if (entityType === "Memory") {
       const mem = await prisma.productionCreativeMemory.findUnique({
         where: { id: entityId },
-        include: { shots: { include: { scene: true } } }
+        include: { shots: { include: { ProductionScene: true } } }
       });
       if (!mem) return null;
 
-      const edges: GraphEdge[] = mem.shots.map(shot => ({
+      const edges: GraphEdge[] = mem.shots.map((shot: any) => ({
         targetId: shot.id,
         targetType: "Shot",
         targetLabel: `Shot ${shot.shot_number}`,
@@ -77,9 +77,9 @@ export class GraphEngine {
       }));
 
       // Also link the scenes indirectly
-      const uniqueScenes = Array.from(new Set(mem.shots.map(s => s.scene_id)));
-      uniqueScenes.forEach(sceneId => {
-        const scene = mem.shots.find(s => s.scene_id === sceneId)?.scene;
+      const uniqueScenes = Array.from(new Set(mem.shots.map((s: any) => s.scene_id)));
+      uniqueScenes.forEach((sceneId: any) => {
+        const scene = mem.shots.find((s: any) => s.scene_id === sceneId)?.ProductionScene;
         if (scene) {
           edges.push({
             targetId: scene.id,
@@ -102,12 +102,12 @@ export class GraphEngine {
     if (entityType === "Shot") {
       const shot = await prisma.productionShot.findUnique({
         where: { id: entityId },
-        include: { creative_memories: true, generated_assets: true }
+        include: { creative_memories: true, ProductionAsset: true }
       });
       if (!shot) return null;
 
       const edges: GraphEdge[] = [];
-      shot.creative_memories.forEach(mem => {
+      shot.creative_memories.forEach((mem: any) => {
         edges.push({
           targetId: mem.id,
           targetType: mem.type, // 'Character', etc.
@@ -116,7 +116,7 @@ export class GraphEngine {
         });
       });
       
-      shot.generated_assets.forEach(asset => {
+      shot.ProductionAsset.forEach((asset: any) => {
         edges.push({
           targetId: asset.id,
           targetType: "Asset",
@@ -145,7 +145,7 @@ export class GraphEngine {
       orderBy: { created_at: 'desc' },
       take: 100,
       include: {
-        user: { select: { name: true, email: true } }
+        user: { select: { fullName: true, email: true } }
       }
     });
   }
@@ -157,12 +157,13 @@ export class GraphEngine {
     const memoryCount = await prisma.productionCreativeMemory.count({ where: { project_id: projectId } });
     const jobCount = await prisma.productionAIJob.count({ where: { project_id: projectId } });
     const assetCount = await prisma.productionAsset.count({ where: { project_id: projectId } });
-    const approvedAssets = await prisma.productionAssetVersion.count({ where: { asset: { project_id: projectId }, status: "Approved" } });
+    const approvedAssets = await prisma.productionAssetVersion.count({ where: { ProductionAsset: { project_id: projectId }, status: "Approved" } });
 
     return {
       memoryCount,
       jobCount,
       assetCount,
+      approvedAssets,
       approvalRate: assetCount > 0 ? (approvedAssets / assetCount) * 100 : 0
     };
   }

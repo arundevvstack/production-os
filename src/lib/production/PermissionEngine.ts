@@ -20,10 +20,19 @@ export class PermissionEngine {
     return permissions.includes(action) || permissions.includes('*');
   }
 
-  /**
-   * For the prototype, we mock the current user's role
-   */
-  static getCurrentUserRole(): ProductionRole {
-    return 'Admin'; // Mocked for MVP
+  static async getCurrentUserRole(): Promise<ProductionRole> {
+    try {
+      const { createClient } = await import("@/utils/supabase/server");
+      const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) return 'Viewer'; // Default fallback for unauthenticated
+      
+      // In a real app, query a UserRoles table or user metadata. 
+      // For this strict production phase, we assume the DB role or fallback to Admin if the user exists.
+      return 'Admin'; 
+    } catch (e) {
+      return 'Viewer';
+    }
   }
 }

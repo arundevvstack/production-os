@@ -1,30 +1,46 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Image as ImageIcon, Video, Mic, Music, Layout, Settings2, Play, Loader2, Brain, AlertTriangle } from "lucide-react";
+import { Sparkles, Image as ImageIcon, Video, Mic, Music, Layout, Play, Loader2, Brain, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type { Prisma } from "@prisma/client";
 
-export function GenerationWorkspace({ projectId, shot, promptSet, graphDependencies }: { projectId: string, shot: any, promptSet: any, graphDependencies?: any }) {
+// Infer type for shot with included relations based on the page.tsx fetch
+type ShotWithRelations = Prisma.ProductionShotGetPayload<{
+  include: {
+    creative_memories: true;
+    ProductionAsset: {
+      include: {
+        ProductionAssetVersion: true;
+      };
+    };
+    ProductionPromptSet: true;
+  };
+}>;
+
+export function GenerationWorkspace({ 
+  projectId, 
+  shot, 
+  promptSet, 
+  graphDependencies 
+}: { 
+  projectId: string; 
+  shot: ShotWithRelations; 
+  promptSet: any; 
+  graphDependencies?: any 
+}) {
   const [prompt, setPrompt] = useState(promptSet?.image_prompt || "");
   const [negativePrompt, setNegativePrompt] = useState(promptSet?.negative_prompt || "");
   const [assetType, setAssetType] = useState("Image");
   const [provider, setProvider] = useState("OpenRouter");
   const [model, setModel] = useState("anthropic/claude-3.5-sonnet:beta");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showConsistencyWarning, setShowConsistencyWarning] = useState(false);
   const router = useRouter();
 
   const activeMemories = shot.creative_memories || [];
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
-
-    // Consistency Checker Mock
-    if (activeMemories.length > 0 && provider !== "OpenRouter") {
-      setShowConsistencyWarning(true);
-      setTimeout(() => setShowConsistencyWarning(false), 4000);
-      return;
-    }
 
     setIsGenerating(true);
 
@@ -40,15 +56,19 @@ export function GenerationWorkspace({ projectId, shot, promptSet, graphDependenc
           sceneId: shot.scene_id,
           shotId: shot.id,
           promptSetId: promptSet?.id,
-          providerId: provider,
+          providerId: provider, // Note: The route expects provider_id (UUID), this UI currently uses provider string. 
           modelName: model,
           assetType,
           prompt: finalPrompt
         })
       });
 
+      const contentType = res.headers.get("content-type") ?? "";
       if (!res.ok) {
-        throw new Error("Generation failed");
+          throw new Error(await res.text());
+      }
+      if (!contentType.includes("application/json")) {
+          throw new Error(`Expected JSON but received ${contentType}\n${await res.text()}`);
       }
       
       router.refresh();
@@ -69,13 +89,6 @@ export function GenerationWorkspace({ projectId, shot, promptSet, graphDependenc
 
   return (
     <div className="flex flex-col h-full bg-slate-950 relative">
-      {/* Consistency Checker Warning Overlay */}
-      {showConsistencyWarning && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-600/90 text-white px-6 py-3 rounded-full flex items-center gap-3 backdrop-blur-md shadow-2xl z-50 animate-in fade-in slide-in-from-top-4">
-          <AlertTriangle className="h-5 w-5" />
-          <span className="text-sm font-bold">Consistency Warning: Provider mismatch with Brand Memory!</span>
-        </div>
-      )}
 
       <div className="flex-1 p-8 overflow-y-auto max-w-4xl mx-auto w-full space-y-8">
         
@@ -108,10 +121,8 @@ export function GenerationWorkspace({ projectId, shot, promptSet, graphDependenc
               onChange={(e) => setProvider(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition"
             >
-              <option value="OpenRouter">OpenRouter</option>
-              <option value="Runway" disabled>Runway (Coming Soon)</option>
-              <option value="Luma" disabled>Luma (Coming Soon)</option>
-              <option value="Midjourney" disabled>Midjourney (Coming Soon)</option>
+              {/* Note: This should be dynamically loaded in the future. */}
+              <option value="b11cb3ab-90df-4f4c-bc31-011293a985e5">OpenRouter (Default)</option>
             </select>
           </div>
           <div className="space-y-2">
@@ -134,7 +145,6 @@ export function GenerationWorkspace({ projectId, shot, promptSet, graphDependenc
               <Brain className="h-4 w-4 text-pink-400" />
               Active Memory Profiles
             </div>
-            <button className="text-xs text-blue-400 hover:underline">Attach Profile</button>
           </div>
           
           {activeMemories.length === 0 ? (
@@ -185,33 +195,6 @@ export function GenerationWorkspace({ projectId, shot, promptSet, graphDependenc
           </div>
         </div>
 
-        {/* Advanced Parameters Mockup */}
-        <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-900/30">
-          <button className="w-full px-4 py-3 flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-white transition bg-slate-900/50">
-            <Settings2 className="h-4 w-4" />
-            Advanced Parameters
-          </button>
-          <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-slate-800 opacity-50 pointer-events-none">
-            {/* Visual mockups for UI only */}
-            <div>
-              <div className="text-[10px] uppercase text-slate-500 mb-1">Aspect Ratio</div>
-              <div className="text-sm text-slate-300 bg-slate-800 px-3 py-1.5 rounded">16:9</div>
-            </div>
-            <div>
-              <div className="text-[10px] uppercase text-slate-500 mb-1">CFG Scale</div>
-              <div className="text-sm text-slate-300 bg-slate-800 px-3 py-1.5 rounded">7.5</div>
-            </div>
-            <div>
-              <div className="text-[10px] uppercase text-slate-500 mb-1">Steps</div>
-              <div className="text-sm text-slate-300 bg-slate-800 px-3 py-1.5 rounded">30</div>
-            </div>
-            <div>
-              <div className="text-[10px] uppercase text-slate-500 mb-1">Seed</div>
-              <div className="text-sm text-slate-300 bg-slate-800 px-3 py-1.5 rounded">Random</div>
-            </div>
-          </div>
-        </div>
-
         {/* Graph Dependencies UI */}
         {graphDependencies && graphDependencies.edges && graphDependencies.edges.length > 0 && (
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
@@ -233,8 +216,7 @@ export function GenerationWorkspace({ projectId, shot, promptSet, graphDependenc
 
       {/* Sticky Bottom Generate Bar */}
       <div className="bg-slate-900 border-t border-slate-800 p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="text-xs text-slate-500 font-mono">Cost Est: ~0.002 credits</div>
+        <div className="max-w-4xl mx-auto flex items-center justify-end">
           <button 
             onClick={handleGenerate}
             disabled={isGenerating || !prompt.trim()}

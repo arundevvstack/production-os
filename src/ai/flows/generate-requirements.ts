@@ -38,44 +38,6 @@ const ScopeOutputSchema = z.object({
 });
 export type ScopeOutput = z.infer<typeof ScopeOutputSchema>;
 
-// --- MOCK FALLBACKS ---
-
-function getMockBudget(input: RequirementInput): BudgetOutput {
-  const isHighEnd = (input.projectType || "").toLowerCase().includes("commercial") || (input.resolution === "8K");
-  return {
-    budget: isHighEnd ? "1500000" : "250000",
-    currency: "INR"
-  };
-}
-
-function getMockTimeline(input: RequirementInput): TimelineOutput {
-  const now = new Date();
-  
-  const addDays = (date: Date, days: number) => {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  };
-  
-  const isUrgent = (input.priority || "").toLowerCase() === "urgent";
-  const start = addDays(now, isUrgent ? 2 : 7);
-  const draft = addDays(start, isUrgent ? 7 : 14);
-  const final = addDays(draft, isUrgent ? 3 : 7);
-
-  return {
-    start_date: start.toISOString().split('T')[0],
-    first_draft: draft.toISOString().split('T')[0],
-    delivery_date: final.toISOString().split('T')[0],
-  };
-}
-
-function getMockScope(input: RequirementInput): ScopeOutput {
-  const type = input.projectType || "video project";
-  return {
-    scope_of_work: `Pre-Production: Concept finalization, scriptwriting, and talent sourcing.\nProduction: 2-day shoot with a standard cinema crew for a ${type}.\nPost-Production: Editing, basic color grading, standard graphics, and 2 rounds of revisions.\nDeliverables: ${(input.deliverables || []).join(", ") || "Standard exports"}.`
-  };
-}
-
 // --- PROMPTS ---
 
 const generateBudgetPrompt = ai.definePrompt({
@@ -128,12 +90,12 @@ Return a JSON with a single "scope_of_work" string field detailing Pre-Productio
 async function fetchHistoricalContext(projectType?: string) {
   if (!projectType) return "";
   try {
-    const past = await prisma.requirement.findMany({
+    const past = await (prisma as any).requirement.findMany({
       orderBy: { updatedAt: 'desc' },
       take: 20
     });
     
-    const matching = past.filter(p => {
+    const matching = past.filter((p: any) => {
       const details = p.project_details as any;
       return details && details.project_type === projectType;
     }).slice(0, 3);
@@ -143,7 +105,7 @@ async function fetchHistoricalContext(projectType?: string) {
     let context = "--- HISTORICAL PRECEDENTS (LEARNED DATA) ---\n";
     context += "Use the following past completed projects of type '" + projectType + "' to inform your estimates (learn from these budgets, timelines, and scopes):\n\n";
     
-    matching.forEach((p, i) => {
+    matching.forEach((p: any, i: any) => {
       const pDetails = p.project_details as any || {};
       const budget = pDetails.budget || "Unknown";
       const currency = pDetails.currency || "INR";
@@ -167,39 +129,39 @@ async function fetchHistoricalContext(projectType?: string) {
 
 export async function generateRequirementBudget(input: RequirementInput): Promise<BudgetOutput> {
   const hasKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
-  if (!hasKey) return getMockBudget(input);
+  if (!hasKey) throw new Error("Missing Google AI API Key");
   try {
     input.historicalContext = await fetchHistoricalContext(input.projectType);
     const { output } = await generateBudgetPrompt(input);
     return output!;
   } catch (error) {
     console.error("Budget AI Gen failed:", error);
-    return getMockBudget(input);
+    throw new Error("Failed to generate budget via AI.");
   }
 }
 
 export async function generateRequirementTimeline(input: RequirementInput): Promise<TimelineOutput> {
   const hasKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
-  if (!hasKey) return getMockTimeline(input);
+  if (!hasKey) throw new Error("Missing Google AI API Key");
   try {
     input.historicalContext = await fetchHistoricalContext(input.projectType);
     const { output } = await generateTimelinePrompt(input);
     return output!;
   } catch (error) {
     console.error("Timeline AI Gen failed:", error);
-    return getMockTimeline(input);
+    throw new Error("Failed to generate timeline via AI.");
   }
 }
 
 export async function generateRequirementScope(input: RequirementInput): Promise<ScopeOutput> {
   const hasKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
-  if (!hasKey) return getMockScope(input);
+  if (!hasKey) throw new Error("Missing Google AI API Key");
   try {
     input.historicalContext = await fetchHistoricalContext(input.projectType);
     const { output } = await generateScopePrompt(input);
     return output!;
   } catch (error) {
     console.error("Scope AI Gen failed:", error);
-    return getMockScope(input);
+    throw new Error("Failed to generate scope via AI.");
   }
 }

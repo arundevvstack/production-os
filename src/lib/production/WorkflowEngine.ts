@@ -1,84 +1,274 @@
 import prisma from "@/lib/prisma";
+import { 
+  FileText, List, BookOpen, ImageIcon, 
+  Clapperboard, Video, Sparkles, Wand2, 
+  Library, CheckCircle, Scissors, UploadCloud, Settings, Info, Briefcase, PlayCircle, Star
+} from "lucide-react";
+
+export interface WorkflowStage {
+  id: string;
+  title: string;
+  href: string;
+  icon: any;
+  status: string;
+  progress: number;
+  locked: boolean;
+  group: string;
+}
 
 export class WorkflowEngine {
   /**
-   * Calculates what stages are currently active and available
-   * based on the progress of their dependencies.
+   * Retrieves all 20 enterprise workflow stages for a given project.
    */
-  static evaluateStageStatus(
-    stageKey: 'script' | 'storyboard' | 'scene_workspace' | 'shot_list' | 'prompts',
-    project: any // Passed from Prisma include
-  ): { isLocked: boolean; status: string } {
-    
-    // For MVP, we are hard-coding the mappings to our 5 known stages
-    // as defined in the DB models `is_approved` and `is_completed`
-    // but exposing them via a unified Engine interface to prepare for dynamic workflows.
-    
-    switch (stageKey) {
-      case 'script':
-        return { 
-          isLocked: false, 
-          status: project.production_script?.is_locked ? "Approved" : "In Progress" 
-        };
-      
-      case 'storyboard':
-        const scriptLocked = project.production_script?.is_locked ?? false;
-        return {
-          isLocked: !scriptLocked,
-          status: !scriptLocked ? "Blocked" : (project.production_storyboard?.is_completed ? "Completed" : "In Progress")
-        };
-        
-      case 'scene_workspace':
-        const storyboardCompleted2 = project.production_storyboard?.is_completed ?? false;
-        return {
-          isLocked: !storyboardCompleted2,
-          status: !storyboardCompleted2 ? "Blocked" : "In Progress"
-        };
-        
-      case 'shot_list':
-        const storyboardCompleted = project.production_storyboard?.is_completed ?? false;
-        return {
-          isLocked: !storyboardCompleted,
-          status: !storyboardCompleted ? "Blocked" : "In Progress"
-        };
-        
-      case 'prompts':
-        // Prompts become unlocked when Storyboard is completed in this MVP
-        const sbCompleted = project.production_storyboard?.is_completed ?? false;
-        return {
-          isLocked: !sbCompleted,
-          status: !sbCompleted ? "Blocked" : "In Progress"
-        };
-        
-      default:
-        return { isLocked: true, status: "Unknown" };
-    }
-  }
-
-  static async autoUnlockNextStage(projectId: string) {
-    // A background service that checks dependencies and creates the next stage 
-    // records automatically (e.g. creating a blank storyboard when script is approved)
+  static async getProjectStages(projectId: string): Promise<WorkflowStage[]> {
     const project = await prisma.project.findUnique({
       where: { id: projectId },
       include: {
-        production_script: true,
-        production_storyboard: true,
+        ProductionScript: true,
+        ProductionVisualBible: { include: { Versions: true } },
+        ProductionStoryboard: true
       }
     });
 
-    if (project?.production_script?.is_locked && !project.production_storyboard) {
-      await prisma.productionStoryboard.create({
-        data: { project_id: projectId, script_id: project.production_script.id }
-      });
-      // Also log activity
-      await prisma.productionActivityEvent.create({
-        data: {
-          project_id: projectId,
-          event_type: 'STAGE_UNLOCKED',
-          description: 'Storyboard stage has been unlocked',
-          actor_id: 'system'
+    if (!project) return [];
+
+    const isScriptApproved = project.ProductionScript?.is_approved || false;
+    const isScriptLocked = project.ProductionScript?.is_locked || false;
+    
+    const isBreakdownCompleted = project.ProductionVisualBible ? true : false; 
+    const isVisualBibleApproved = project.ProductionVisualBible?.Versions?.[0]?.status === "Approved" || false;
+    const isStoryboardCompleted = project.ProductionStoryboard?.is_completed || false;
+    
+    let isSceneCompleted = false;
+    let isShotCompleted = false;
+    let isPromptCompleted = false;
+
+    if (project.ProductionStoryboard) {
+      const sceneCount = await prisma.productionScene.count({ where: { storyboard_id: project.ProductionStoryboard.id } });
+      isSceneCompleted = sceneCount > 0;
+      
+      if (isSceneCompleted) {
+        const shotCount = await prisma.productionShot.count({
+          where: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } }
+        });
+        isShotCompleted = shotCount > 0;
+
+        if (isShotCompleted) {
+          const promptCount = await prisma.productionPrompt.count({
+            where: { ProductionShot: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } }
+          });
+          isPromptCompleted = promptCount > 0;
         }
-      });
+      }
     }
+
+    const determineStatus = (isCompleted: boolean, isLocked: boolean) => {
+      if (isLocked) return "Blocked";
+      if (isCompleted) return "Completed";
+      return "In Progress";
+    };
+
+    return [
+      {
+        id: 'overview',
+        title: 'Project',
+        href: `/projects/${project.id}`,
+        icon: Info,
+        status: "Active",
+        progress: 100,
+        locked: false,
+        group: 'General'
+      },
+      {
+        id: 'requirement',
+        title: 'Requirement (Optional)',
+        href: `/projects/${project.id}/requirement`,
+        icon: Briefcase,
+        status: "Completed",
+        progress: 100,
+        locked: false,
+        group: 'Pre Production'
+      },
+      {
+        id: 'script',
+        title: 'Script',
+        href: `/projects/${project.id}/script`,
+        icon: FileText,
+        status: isScriptApproved ? "Completed" : "In Progress",
+        progress: isScriptApproved ? 100 : 0,
+        locked: false,
+        group: 'Pre Production'
+      },
+      {
+        id: 'ai_breakdown',
+        title: 'AI Breakdown',
+        href: `/projects/${project.id}/breakdown`,
+        icon: List,
+        status: determineStatus(isBreakdownCompleted, false),
+        progress: isBreakdownCompleted ? 100 : 0,
+        locked: false,
+        group: 'Pre Production'
+      },
+      {
+        id: 'production_breakdown_review',
+        title: 'Production Breakdown Review',
+        href: `/projects/${project.id}/breakdown/review`,
+        icon: CheckCircle,
+        status: determineStatus(isBreakdownCompleted, !isBreakdownCompleted),
+        progress: isBreakdownCompleted ? 100 : 0,
+        locked: !isBreakdownCompleted,
+        group: 'Pre Production'
+      },
+      {
+        id: 'visual_bible',
+        title: 'Visual Bible',
+        href: `/projects/${project.id}/visual-bible`,
+        icon: BookOpen,
+        status: determineStatus(isVisualBibleApproved, !isBreakdownCompleted),
+        progress: isVisualBibleApproved ? 100 : 0,
+        locked: !isBreakdownCompleted,
+        group: 'Visual Planning'
+      },
+      {
+        id: 'visual_bible_review',
+        title: 'Visual Bible Review',
+        href: `/projects/${project.id}/visual-bible/review`,
+        icon: CheckCircle,
+        status: determineStatus(isVisualBibleApproved, !isVisualBibleApproved),
+        progress: isVisualBibleApproved ? 100 : 0,
+        locked: !isVisualBibleApproved,
+        group: 'Visual Planning'
+      },
+      {
+        id: 'storyboard',
+        title: 'Storyboard',
+        href: `/projects/${project.id}/storyboard`,
+        icon: ImageIcon,
+        status: determineStatus(isStoryboardCompleted, !isVisualBibleApproved),
+        progress: isStoryboardCompleted ? 100 : 0,
+        locked: !isVisualBibleApproved,
+        group: 'Visual Planning'
+      },
+      {
+        id: 'storyboard_review',
+        title: 'Storyboard Review',
+        href: `/projects/${project.id}/storyboard/review`,
+        icon: CheckCircle,
+        status: determineStatus(isStoryboardCompleted, !isStoryboardCompleted),
+        progress: isStoryboardCompleted ? 100 : 0,
+        locked: !isStoryboardCompleted,
+        group: 'Visual Planning'
+      },
+      {
+        id: 'scenes',
+        title: 'Scenes',
+        href: `/projects/${project.id}/scenes`,
+        icon: Clapperboard,
+        status: determineStatus(isSceneCompleted, !isStoryboardCompleted),
+        progress: isSceneCompleted ? 100 : 0,
+        locked: !isStoryboardCompleted,
+        group: 'Scene Planning'
+      },
+      {
+        id: 'scene_review',
+        title: 'Scene Review',
+        href: `/projects/${project.id}/scenes/review`,
+        icon: CheckCircle,
+        status: determineStatus(isSceneCompleted, !isSceneCompleted),
+        progress: isSceneCompleted ? 100 : 0,
+        locked: !isSceneCompleted,
+        group: 'Scene Planning'
+      },
+      {
+        id: 'shot_planner',
+        title: 'Shot Planner',
+        href: `/projects/${project.id}/shots`,
+        icon: Video,
+        status: determineStatus(isShotCompleted, !isSceneCompleted),
+        progress: isShotCompleted ? 100 : 0,
+        locked: !isSceneCompleted,
+        group: 'Scene Planning'
+      },
+      {
+        id: 'shot_review',
+        title: 'Shot Review',
+        href: `/projects/${project.id}/shots/review`,
+        icon: CheckCircle,
+        status: determineStatus(isShotCompleted, !isShotCompleted),
+        progress: isShotCompleted ? 100 : 0,
+        locked: !isShotCompleted,
+        group: 'Scene Planning'
+      },
+      {
+        id: 'prompt_studio',
+        title: 'Prompt Studio',
+        href: `/projects/${project.id}/prompts`,
+        icon: Sparkles,
+        status: determineStatus(isPromptCompleted, !isShotCompleted),
+        progress: isPromptCompleted ? 100 : 0,
+        locked: !isShotCompleted,
+        group: 'Prompt Engineering'
+      },
+      {
+        id: 'prompt_review',
+        title: 'Prompt Review',
+        href: `/projects/${project.id}/prompts/review`,
+        icon: CheckCircle,
+        status: determineStatus(isPromptCompleted, !isPromptCompleted),
+        progress: isPromptCompleted ? 100 : 0,
+        locked: !isPromptCompleted,
+        group: 'Prompt Engineering'
+      },
+      {
+        id: 'generation_studio',
+        title: 'Generation Studio',
+        href: `/projects/${project.id}/generation`,
+        icon: Wand2,
+        status: determineStatus(false, !isPromptCompleted),
+        progress: 0,
+        locked: !isPromptCompleted,
+        group: 'Generation'
+      },
+      {
+        id: 'ai_asset_review',
+        title: 'AI Asset Review',
+        href: `/projects/${project.id}/assets/review`,
+        icon: Star,
+        status: determineStatus(false, true),
+        progress: 0,
+        locked: true,
+        group: 'Review'
+      },
+      {
+        id: 'asset_library',
+        title: 'Asset Library',
+        href: `/projects/${project.id}/assets`,
+        icon: Library,
+        status: determineStatus(false, true),
+        progress: 0,
+        locked: true,
+        group: 'Review'
+      },
+      {
+        id: 'editing',
+        title: 'Editing',
+        href: `/projects/${project.id}/editing`,
+        icon: Scissors,
+        status: "Blocked",
+        progress: 0,
+        locked: true,
+        group: 'Delivery'
+      },
+      {
+        id: 'delivery',
+        title: 'Delivery',
+        href: `/projects/${project.id}/delivery`,
+        icon: UploadCloud,
+        status: "Blocked",
+        progress: 0,
+        locked: true,
+        group: 'Delivery'
+      }
+    ];
   }
 }

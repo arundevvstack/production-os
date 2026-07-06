@@ -24,12 +24,14 @@ export function AssetReviewBar({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status })
       });
-      if (res.ok) {
-        router.refresh();
-      } else {
-        const json = await res.json();
-        alert(`Failed to update status: ${json.error}`);
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!res.ok) {
+          throw new Error(await res.text());
       }
+      if (!contentType.includes("application/json")) {
+          throw new Error(`Expected JSON but received ${contentType}\n${await res.text()}`);
+      }
+      router.refresh();
     } catch (e) {
       alert("Error reviewing asset.");
     } finally {

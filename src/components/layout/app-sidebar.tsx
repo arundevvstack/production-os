@@ -1,84 +1,63 @@
-
 "use client";
 
 import * as React from "react";
 import {
-  LayoutGrid, Film, Users, Briefcase, FileText, Receipt, Search, PieChart, 
-  UserCircle, Plus, ShieldCheck, LogOut, Loader2, Building2, Wallet, 
-  Settings2, Archive, Bot
+  Folder, LayoutGrid, Brain, Compass, FileText, Image as ImageIcon, 
+  Clapperboard, Video, Sparkles, Wand2, Archive, Settings, LogOut, Loader2,
+  Camera, Briefcase, Activity, Home, ClipboardList, Scissors, Music, 
+  CheckCircle, Package, File, ChevronDown
 } from "lucide-react";
+import * as Icons from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarHeader, SidebarMenu, 
   SidebarMenuButton, SidebarMenuItem, SidebarFooter, useSidebar, SidebarGroupLabel
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import useSWR from "swr";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
-import { Camera } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useTenant } from "@/hooks/use-tenant";
-import { supabase } from "@/supabase/client";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/logo";
+import { useSupabaseDoc } from '@/supabase/hooks/use-doc';
+import { useSupabase } from '@/supabase/provider';
 
-interface NavItem {
-  title: string;
-  url: string;
-  icon: React.ElementType;
-  module: string;
-  isCore?: boolean;
-  exact?: boolean;
-  hideFrom?: string[];
-}
-
-export const navGroups: { label: string; items: NavItem[] }[] = [
-  { label: "Workspace", items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, module: "dashboard", isCore: true, exact: true },
-      { title: "AI Command", url: "/ai-command", icon: Bot, module: "ai_command", isCore: true, hideFrom: ['EMPLOYEE'] },
-      { title: "Projects", url: "/projects", icon: Film, module: "projects", isCore: true },
-      { title: "Team", url: "/team", icon: UserCircle, module: "team" },
-      { title: "Analytics", url: "/reports", icon: PieChart, module: "reports" },
-    ]},
-  { label: "Growth & CRM", items: [
-      { title: "Clients", url: "/clients", icon: Building2, module: "clients", isCore: true },
-      { title: "Sales CRM", url: "/crm", icon: Briefcase, module: "crm" },
-      { title: "Proposals", url: "/proposals", icon: FileText, module: "proposals" },
-      { title: "Market Research", url: "/research", icon: Search, module: "research" },
-    ]},
-  { label: "Production", items: [
-      { title: "Service Builder", url: "/service-builder", icon: Settings2, module: "services" },
-      { title: "Talent Network", url: "/talents", icon: Users, module: "talents" },
-      { title: "Operations", url: "/ops/command-center", icon: ShieldCheck, module: "ops" },
-    ]},
-  { label: "Finance", items: [
-      { title: "Finance Dashboard", url: "/finance", icon: PieChart, module: "finance" },
-      { title: "Invoice and Quote", url: "/invoices", icon: Receipt, module: "invoices" },
-      { title: "Accounts", url: "/accounts", icon: Wallet, module: "accounts" },
-    ]},
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, isLoading: isAuthLoading } = useSupabase();
+  const { data: profile, isLoading: isProfileLoading } = useSupabaseDoc('User', user?.id || null);
+  const isLoading = isAuthLoading || isProfileLoading;
   
-];
-
-export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { state } = useSidebar();
-  const { profile, company, isLoading, isModuleEnabled, hasPermission, isSuperAdmin } = useTenant();
-  // isMounted prevents SSR/hydration mismatch causing all links to appear active
+  
   const [isMounted, setIsMounted] = React.useState(false);
-
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
+
+  // Extract projectId from URL if present
+  const projectIdMatch = pathname?.match(/\/production\/projects\/([^\/]+)/);
+  const projectId = projectIdMatch ? projectIdMatch[1] : null;
+
+  const { data: workflowTree, isLoading: isWorkflowLoading } = useSWR(
+    projectId ? `/api/v1/projects/${projectId}/workflow` : null,
+    (url: string) => fetch(url).then(async (res) => {
+        const contentType = res.headers.get("content-type") ?? "";
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
+        if (!contentType.includes("application/json")) {
+            throw new Error(`Expected JSON but received ${contentType}\n${await res.text()}`);
+        }
+        return res.json();
+    })
+  );
+
+  React.useEffect(() => { setIsMounted(true); }, []);
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -89,7 +68,6 @@ export function AppSidebar() {
       toast({ variant: "destructive", title: "Invalid File", description: "Please upload an image file." });
       return;
     }
-
     if (file.size > 2 * 1024 * 1024) { 
       toast({ variant: "destructive", title: "File Too Large", description: "Image must be less than 2MB." });
       return;
@@ -100,21 +78,19 @@ export function AppSidebar() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('uid', uid);
-
       const res = await fetch('/api/v1/user/avatar', {
         method: 'POST',
         body: formData,
       });
-
-      const data = await res.json();
-
+      const contentType = res.headers.get("content-type") ?? "";
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to upload avatar');
+          throw new Error(await res.text());
       }
-
+      if (!contentType.includes("application/json")) {
+          throw new Error(`Expected JSON but received ${contentType}\n${await res.text()}`);
+      }
+      const data = await res.json();
       toast({ title: "Avatar Updated", description: "Your profile picture has been updated." });
-      
-      // The useTenant hook will automatically reflect the change via Supabase realtime subscription.
     } catch (error: any) {
       toast({ variant: "destructive", title: "Upload Failed", description: error.message });
     } finally {
@@ -123,18 +99,9 @@ export function AppSidebar() {
     }
   };
 
-  React.useEffect(() => { setIsMounted(true); }, []);
-
-  // Stable active check: use startsWith so sub-routes stay highlighted
-  const isNavItemActive = (item: NavItem): boolean => {
-    if (!isMounted || !pathname) return false;
-    if (item.exact) return pathname === item.url;
-    return pathname === item.url || pathname.startsWith(item.url + '/');
-  };
-
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      await fetch('/api/v1/auth/logout', { method: 'POST' });
       toast({ title: "Logged out", description: "Successfully logged out." });
       router.push('/login');
     } catch (error) {
@@ -142,7 +109,11 @@ export function AppSidebar() {
     }
   };
 
-  const logoUrl = PlaceHolderImages.find(img => img.id === 'app-logo')?.imageUrl || "";
+  const isNavItemActive = (url: string, exact: boolean = false): boolean => {
+    if (!isMounted || !pathname) return false;
+    if (exact) return pathname === url;
+    return pathname === url || pathname.startsWith(url + '/');
+  };
 
   if (isLoading) {
     return (
@@ -163,48 +134,146 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="px-4 gap-0">
-        {navGroups.map((group) => {
-          const visibleItems = group.items.filter(item => {
-            if (item.hideFrom && profile?.role_id && item.hideFrom.includes(profile.role_id)) {
-              return false;
-            }
-            // Core items bypass company-level module disabling, but ALL items must pass RBAC role permissions
-            return hasPermission(item.module, 'view') && (item.isCore || isModuleEnabled(item.module));
-          });
-          if (visibleItems.length === 0) return null;
-
-          return (
-            <SidebarGroup key={group.label} className="py-1">
-                <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-normal text-muted-foreground mb-1 h-4">{group.label}</SidebarGroupLabel>
-                <SidebarMenu className="gap-0.5">
-                    {visibleItems.map((item) => {
-                      const isActive = isNavItemActive(item);
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={cn(
-                              "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                              isActive 
-                                ? "bg-primary/10 text-black dark:text-white hover:bg-primary/15" 
-                                : "hover:bg-secondary/50 text-black dark:text-white/80 hover:text-black dark:text-white"
-                            )}>
-                            <Link href={item.url} className="flex items-center gap-3 w-full">
-                                {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                                <item.icon className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
-                                <span className={cn("text-[13px] tracking-tight", isActive ? "font-black" : "font-medium")}>{item.title}</span>
-                            </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      );
-                    })}
-                </SidebarMenu>
-            </SidebarGroup>
-          );
-        })}
-
         
+        {/* Top Level Workspace */}
+        <SidebarGroup className="py-1">
+          <SidebarMenu className="gap-0.5">
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isNavItemActive('/', true)} className={cn(
+                "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
+                isNavItemActive('/', true) ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+              )}>
+                <Link href="/" className="flex items-center gap-3 w-full">
+                  {isNavItemActive('/', true) && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
+                  <Home className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/', true) ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  <span className={cn("text-[13px] tracking-tight", isNavItemActive('/', true) ? "font-black" : "font-medium")}>Home</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isNavItemActive('/projects')} className={cn(
+                "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
+                isNavItemActive('/projects') ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+              )}>
+                <Link href="/projects" className="flex items-center gap-3 w-full">
+                  {isNavItemActive('/projects') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
+                  <Folder className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/projects') ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  <span className={cn("text-[13px] tracking-tight", isNavItemActive('/projects') ? "font-black" : "font-medium")}>Projects</span>
+                </Link>
+              </SidebarMenuButton>
+              {/* Optional sub-items can go here if needed later (Active, Archived, Templates) */}
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Current Project specific links */}
+        {projectId && workflowTree && (
+          <>
+            <div className="px-3 mt-4 mb-2 flex flex-col gap-2">
+              <div className="flex items-center">
+                <div className="h-px bg-border flex-1" />
+                <span className="px-2 text-[9px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">Current Project</span>
+                <div className="h-px bg-border flex-1" />
+              </div>
+              
+              {/* Project Card */}
+              <div className="flex flex-col p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+                <div className="text-[13px] font-black text-foreground truncate w-full mb-1">
+                  {workflowTree.projectCard?.name || "Project Name"}
+                </div>
+                <div className="flex justify-between items-center text-[10px] text-muted-foreground">
+                  <span className="font-semibold uppercase tracking-wider">{workflowTree.projectCard?.type}</span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    {workflowTree.projectCard?.status}
+                  </span>
+                </div>
+                <div className="mt-3 flex flex-col gap-1">
+                  <div className="flex justify-between text-[10px] font-medium">
+                    <span>Progress</span>
+                    <span>{workflowTree.projectCard?.progress || 0}%</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-primary rounded-full" 
+                      style={{ width: `${workflowTree.projectCard?.progress || 0}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Dynamic Workflow Groups */}
+            {workflowTree.groups?.map((group: any) => (
+              <SidebarGroup key={group.id} className="py-1">
+                {group.title && (
+                  <SidebarGroupLabel className="px-3 text-[10px] font-normal uppercase tracking-widest text-muted-foreground mb-1 h-4">
+                    {group.title}
+                  </SidebarGroupLabel>
+                )}
+                <SidebarMenu className="gap-0.5">
+                  {group.items.map((item: any) => {
+                    const isActive = isNavItemActive(item.url, item.exact);
+                    const IconComponent = (Icons as any)[item.icon] || Icons.Circle;
+                    
+                    return (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={isActive} 
+                          tooltip={item.title} 
+                          className={cn(
+                            "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
+                            isActive ? "bg-primary/10 text-black dark:text-white hover:bg-primary/15" : "hover:bg-secondary/50 text-black dark:text-white/80 hover:text-black dark:text-white",
+                            item.isLocked && "opacity-60 grayscale cursor-not-allowed"
+                          )}
+                        >
+                          <Link href={item.isLocked ? "#" : item.url} className="flex items-center justify-between w-full">
+                            <div className="flex items-center gap-3">
+                              {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
+                              <IconComponent className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                              <span className={cn("text-[13px] tracking-tight", isActive ? "font-black" : "font-medium")}>
+                                {item.title}
+                              </span>
+                            </div>
+                            
+                            {/* Badges/Indicators */}
+                            {item.badge ? (
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 bg-primary/20 text-primary rounded-sm whitespace-nowrap">
+                                {item.badge}
+                              </span>
+                            ) : item.status === "Completed" ? (
+                              <Icons.CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                            ) : item.isLocked ? (
+                              <Icons.Lock className="w-3 h-3 text-muted-foreground shrink-0" />
+                            ) : null}
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroup>
+            ))}
+          </>
+        )}
+
       </SidebarContent>
 
       <SidebarFooter className="p-4">
+        <div className="w-full h-px bg-border/50 mb-4" />
+        <SidebarMenu className="gap-0.5 mb-2">
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="h-9 rounded-[10px] px-3 hover:bg-secondary/50 text-black dark:text-white/80">
+              <Link href="/settings" className="flex items-center gap-3 w-full">
+                <Settings className="size-4 text-black dark:text-white/60" />
+                <span className="text-[13px] font-medium tracking-tight">Workspace Settings</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+
         <input type="file" ref={fileInputRef} onChange={handleAvatarUpload} accept="image/*" className="hidden" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -227,7 +296,7 @@ export function AppSidebar() {
                 <div className="flex flex-col min-w-0 flex-1">
                   <span className="text-[13px] font-black tracking-tight truncate text-black dark:text-white leading-none">{profile?.fullName}</span>
                   <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-normal">
-                    <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">{company?.name || 'Workspace'}</span>
+                    <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">{'Workspace'}</span>
                   </span>
                 </div>
               )}
@@ -240,20 +309,6 @@ export function AppSidebar() {
               <Camera className="mr-2 h-4 w-4" />
               Change Thumbnail
             </DropdownMenuItem>
-            {profile?.role_id !== 'EMPLOYEE' && (
-              <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
-                <Link href="/archives"><Archive className="mr-2 h-4 w-4" /> Archives</Link>
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
-              <Link href="/settings"><Settings2 className="mr-2 h-4 w-4" /> Preferences</Link>
-            </DropdownMenuItem>
-            
-            {isSuperAdmin && (
-              <DropdownMenuItem asChild className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary">
-                <Link href="/settings/rbac"><ShieldCheck className="mr-2 h-4 w-4" /> Access Control</Link>
-              </DropdownMenuItem>
-            )}
             
             <DropdownMenuSeparator className="bg-border/50 my-2" />
             

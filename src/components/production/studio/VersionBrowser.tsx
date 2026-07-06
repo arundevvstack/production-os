@@ -8,7 +8,7 @@ import Link from "next/link";
 export function VersionBrowser({ assets }: { assets: any[] }) {
   // Flatten all versions across all generated assets for this shot
   const allVersions = assets.flatMap(asset => 
-    asset.versions.map((v: any) => ({
+    asset.ProductionAssetVersion.map((v: any) => ({
       ...v,
       assetId: asset.id,
       assetType: asset.type
@@ -53,7 +53,7 @@ export function VersionBrowser({ assets }: { assets: any[] }) {
               
               {/* Overlay Actions */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-3 backdrop-blur-sm">
-                <Link href={`/production/projects/${version.asset.project_id}/assets/${version.assetId}`} className="h-8 w-8 bg-slate-800 hover:bg-blue-600 rounded-full flex items-center justify-center text-white transition">
+                <Link href={`/projects/${version.asset.project_id}/assets/${version.assetId}`} className="h-8 w-8 bg-slate-800 hover:bg-blue-600 rounded-full flex items-center justify-center text-white transition">
                   <ZoomIn className="h-4 w-4" />
                 </Link>
                 {version.status !== "Approved" && (

@@ -48,11 +48,18 @@ export function CreateJobDialog({
           shot_id: shotId
         })
       });
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!res.ok) {
+          throw new Error(await res.text());
+      }
+      if (!contentType.includes("application/json")) {
+          throw new Error(`Expected JSON but received ${contentType}\n${await res.text()}`);
+      }
       const data = await res.json();
       
       if (data.success && data.assetId) {
         setIsOpen(false);
-        router.push(`/production/projects/${projectId}/assets/${data.assetId}`);
+        router.push(`/projects/${projectId}/assets/${data.assetId}`);
       } else {
         alert("Generation failed: " + (data.error || "Unknown error"));
       }

@@ -1,29 +1,65 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 export async function POST(
-  req: Request,
-  { params }: { params: { projectId: string, assetId: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ projectId: string; assetId: string }> }
 ) {
   try {
-    const body = await req.json();
-    const { status, notes } = body;
-
-    if (!["Approved", "Rejected", "Needs Regeneration"].includes(status)) {
-      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    const { projectId, assetId } = await params;
+    const body = await request.json();
+    
+    // Validate request
+    if (!body.versionId || !body.decision || !body.scores) {
+      return NextResponse.json({ error: "Missing review fields (versionId, decision, scores)" }, { status: 400 });
     }
 
-    const updatedAsset = await prisma.productionAsset.update({
-      where: { id: params.assetId },
+    // Determine target status
+    const decisionStatus = body.decision; // "Approved", "Rejected", "Needs Revision"
+    
+    const version = await prisma.productionAssetVersion.findUnique({
+      where: { id: body.versionId, asset_id: assetId }
+    });
+
+    if (!version) {
+      return NextResponse.json({ error: "Asset version not found" }, { status: 404 });
+    }
+
+    // Merge human review into metadata
+    const currentMetadata = (version.metadata as Record<string, any>) || {};
+    const newMetadata = {
+      ...currentMetadata,
+      human_review: {
+        ...body.scores,
+        decision: decisionStatus,
+        notes: body.notes || "",
+        reviewed_at: new Date().toISOString(),
+        reviewer_id: "system_user" // Mock auth context
+      }
+    };
+
+    // Update version
+    const updatedVersion = await prisma.productionAssetVersion.update({
+      where: { id: body.versionId },
       data: {
-        status,
-        notes: notes || null
+        metadata: newMetadata,
+        status: decisionStatus,
+        updated_at: new Date()
       }
     });
 
-    return NextResponse.json({ success: true, asset: updatedAsset });
+    // Update master asset status
+    await prisma.productionAsset.update({
+      where: { id: assetId },
+      data: {
+        status: decisionStatus,
+        updated_at: new Date()
+      }
+    });
+
+    return NextResponse.json(updatedVersion);
   } catch (error: any) {
-    console.error("Asset Review Error:", error);
+    console.error("Asset Review POST Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

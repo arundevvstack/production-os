@@ -30,7 +30,7 @@ export function ActivityTimeline({ events }: ActivityTimelineProps) {
             <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-white border p-4 rounded-xl shadow-sm">
               <div className="flex items-center justify-between mb-1">
                 <div className="font-bold text-slate-900 text-sm">{event.actorName}</div>
-                <time className="text-[10px] font-medium text-slate-400">{new Date(event.created_at).toLocaleString()}</time>
+                <time className="text-[10px] font-medium text-slate-400" suppressHydrationWarning>{new Date(event.created_at).toLocaleString()}</time>
               </div>
               <div className="text-sm text-slate-600">{event.description}</div>
             </div>
