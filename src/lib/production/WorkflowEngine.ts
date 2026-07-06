@@ -1,15 +1,11 @@
 import prisma from "@/lib/prisma";
-import { 
-  FileText, List, BookOpen, ImageIcon, 
-  Clapperboard, Video, Sparkles, Wand2, 
-  Library, CheckCircle, Scissors, UploadCloud, Settings, Info, Briefcase, PlayCircle, Star
-} from "lucide-react";
+import { cache } from "react";
 
 export interface WorkflowStage {
   id: string;
   title: string;
   href: string;
-  icon: any;
+  icon: string;
   status: string;
   progress: number;
   locked: boolean;
@@ -20,7 +16,7 @@ export class WorkflowEngine {
   /**
    * Retrieves all 20 enterprise workflow stages for a given project.
    */
-  static async getProjectStages(projectId: string): Promise<WorkflowStage[]> {
+  static getProjectStages = cache(async (projectId: string): Promise<WorkflowStage[]> => {
     const project = await prisma.project.findUnique({
       where: { id: projectId },
       include: {
@@ -44,22 +40,16 @@ export class WorkflowEngine {
     let isPromptCompleted = false;
 
     if (project.ProductionStoryboard) {
-      const sceneCount = await prisma.productionScene.count({ where: { storyboard_id: project.ProductionStoryboard.id } });
-      isSceneCompleted = sceneCount > 0;
+      const sbId = project.ProductionStoryboard.id;
+      const [sceneCount, shotCount, promptCount] = await Promise.all([
+        prisma.productionScene.count({ where: { storyboard_id: sbId } }),
+        prisma.productionShot.count({ where: { ProductionScene: { storyboard_id: sbId } } }),
+        prisma.productionPrompt.count({ where: { ProductionShot: { ProductionScene: { storyboard_id: sbId } } } })
+      ]);
       
-      if (isSceneCompleted) {
-        const shotCount = await prisma.productionShot.count({
-          where: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } }
-        });
-        isShotCompleted = shotCount > 0;
-
-        if (isShotCompleted) {
-          const promptCount = await prisma.productionPrompt.count({
-            where: { ProductionShot: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } }
-          });
-          isPromptCompleted = promptCount > 0;
-        }
-      }
+      isSceneCompleted = sceneCount > 0;
+      isShotCompleted = shotCount > 0;
+      isPromptCompleted = promptCount > 0;
     }
 
     const determineStatus = (isCompleted: boolean, isLocked: boolean) => {
@@ -73,7 +63,7 @@ export class WorkflowEngine {
         id: 'overview',
         title: 'Project',
         href: `/projects/${project.id}`,
-        icon: Info,
+        icon: "Info",
         status: "Active",
         progress: 100,
         locked: false,
@@ -83,7 +73,7 @@ export class WorkflowEngine {
         id: 'requirement',
         title: 'Requirement (Optional)',
         href: `/projects/${project.id}/requirement`,
-        icon: Briefcase,
+        icon: "Briefcase",
         status: "Completed",
         progress: 100,
         locked: false,
@@ -93,7 +83,7 @@ export class WorkflowEngine {
         id: 'script',
         title: 'Script',
         href: `/projects/${project.id}/script`,
-        icon: FileText,
+        icon: "FileText",
         status: isScriptApproved ? "Completed" : "In Progress",
         progress: isScriptApproved ? 100 : 0,
         locked: false,
@@ -103,7 +93,7 @@ export class WorkflowEngine {
         id: 'ai_breakdown',
         title: 'AI Breakdown',
         href: `/projects/${project.id}/breakdown`,
-        icon: List,
+        icon: "List",
         status: determineStatus(isBreakdownCompleted, false),
         progress: isBreakdownCompleted ? 100 : 0,
         locked: false,
@@ -113,7 +103,7 @@ export class WorkflowEngine {
         id: 'production_breakdown_review',
         title: 'Production Breakdown Review',
         href: `/projects/${project.id}/breakdown/review`,
-        icon: CheckCircle,
+        icon: "CheckCircle",
         status: determineStatus(isBreakdownCompleted, !isBreakdownCompleted),
         progress: isBreakdownCompleted ? 100 : 0,
         locked: !isBreakdownCompleted,
@@ -123,7 +113,7 @@ export class WorkflowEngine {
         id: 'visual_bible',
         title: 'Visual Bible',
         href: `/projects/${project.id}/visual-bible`,
-        icon: BookOpen,
+        icon: "BookOpen",
         status: determineStatus(isVisualBibleApproved, !isBreakdownCompleted),
         progress: isVisualBibleApproved ? 100 : 0,
         locked: !isBreakdownCompleted,
@@ -133,7 +123,7 @@ export class WorkflowEngine {
         id: 'visual_bible_review',
         title: 'Visual Bible Review',
         href: `/projects/${project.id}/visual-bible/review`,
-        icon: CheckCircle,
+        icon: "CheckCircle",
         status: determineStatus(isVisualBibleApproved, !isVisualBibleApproved),
         progress: isVisualBibleApproved ? 100 : 0,
         locked: !isVisualBibleApproved,
@@ -143,7 +133,7 @@ export class WorkflowEngine {
         id: 'storyboard',
         title: 'Storyboard',
         href: `/projects/${project.id}/storyboard`,
-        icon: ImageIcon,
+        icon: "ImageIcon",
         status: determineStatus(isStoryboardCompleted, !isVisualBibleApproved),
         progress: isStoryboardCompleted ? 100 : 0,
         locked: !isVisualBibleApproved,
@@ -153,7 +143,7 @@ export class WorkflowEngine {
         id: 'storyboard_review',
         title: 'Storyboard Review',
         href: `/projects/${project.id}/storyboard/review`,
-        icon: CheckCircle,
+        icon: "CheckCircle",
         status: determineStatus(isStoryboardCompleted, !isStoryboardCompleted),
         progress: isStoryboardCompleted ? 100 : 0,
         locked: !isStoryboardCompleted,
@@ -163,7 +153,7 @@ export class WorkflowEngine {
         id: 'scenes',
         title: 'Scenes',
         href: `/projects/${project.id}/scenes`,
-        icon: Clapperboard,
+        icon: "Clapperboard",
         status: determineStatus(isSceneCompleted, !isStoryboardCompleted),
         progress: isSceneCompleted ? 100 : 0,
         locked: !isStoryboardCompleted,
@@ -173,7 +163,7 @@ export class WorkflowEngine {
         id: 'scene_review',
         title: 'Scene Review',
         href: `/projects/${project.id}/scenes/review`,
-        icon: CheckCircle,
+        icon: "CheckCircle",
         status: determineStatus(isSceneCompleted, !isSceneCompleted),
         progress: isSceneCompleted ? 100 : 0,
         locked: !isSceneCompleted,
@@ -183,7 +173,7 @@ export class WorkflowEngine {
         id: 'shot_planner',
         title: 'Shot Planner',
         href: `/projects/${project.id}/shots`,
-        icon: Video,
+        icon: "Video",
         status: determineStatus(isShotCompleted, !isSceneCompleted),
         progress: isShotCompleted ? 100 : 0,
         locked: !isSceneCompleted,
@@ -193,7 +183,7 @@ export class WorkflowEngine {
         id: 'shot_review',
         title: 'Shot Review',
         href: `/projects/${project.id}/shots/review`,
-        icon: CheckCircle,
+        icon: "CheckCircle",
         status: determineStatus(isShotCompleted, !isShotCompleted),
         progress: isShotCompleted ? 100 : 0,
         locked: !isShotCompleted,
@@ -203,7 +193,7 @@ export class WorkflowEngine {
         id: 'prompt_studio',
         title: 'Prompt Studio',
         href: `/projects/${project.id}/prompts`,
-        icon: Sparkles,
+        icon: "Wand2",
         status: determineStatus(isPromptCompleted, !isShotCompleted),
         progress: isPromptCompleted ? 100 : 0,
         locked: !isShotCompleted,
@@ -213,7 +203,7 @@ export class WorkflowEngine {
         id: 'prompt_review',
         title: 'Prompt Review',
         href: `/projects/${project.id}/prompts/review`,
-        icon: CheckCircle,
+        icon: "CheckCircle",
         status: determineStatus(isPromptCompleted, !isPromptCompleted),
         progress: isPromptCompleted ? 100 : 0,
         locked: !isPromptCompleted,
@@ -223,7 +213,7 @@ export class WorkflowEngine {
         id: 'generation_studio',
         title: 'Generation Studio',
         href: `/projects/${project.id}/generation`,
-        icon: Wand2,
+        icon: "Sparkles",
         status: determineStatus(false, !isPromptCompleted),
         progress: 0,
         locked: !isPromptCompleted,
@@ -233,7 +223,7 @@ export class WorkflowEngine {
         id: 'ai_asset_review',
         title: 'AI Asset Review',
         href: `/projects/${project.id}/assets/review`,
-        icon: Star,
+        icon: "Star",
         status: determineStatus(false, true),
         progress: 0,
         locked: true,
@@ -243,7 +233,7 @@ export class WorkflowEngine {
         id: 'asset_library',
         title: 'Asset Library',
         href: `/projects/${project.id}/assets`,
-        icon: Library,
+        icon: "Library",
         status: determineStatus(false, true),
         progress: 0,
         locked: true,
@@ -253,7 +243,7 @@ export class WorkflowEngine {
         id: 'editing',
         title: 'Editing',
         href: `/projects/${project.id}/editing`,
-        icon: Scissors,
+        icon: "PlayCircle",
         status: "Blocked",
         progress: 0,
         locked: true,
@@ -263,12 +253,12 @@ export class WorkflowEngine {
         id: 'delivery',
         title: 'Delivery',
         href: `/projects/${project.id}/delivery`,
-        icon: UploadCloud,
+        icon: "UploadCloud",
         status: "Blocked",
         progress: 0,
         locked: true,
         group: 'Delivery'
       }
     ];
-  }
+  });
 }

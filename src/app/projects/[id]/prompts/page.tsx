@@ -1,9 +1,17 @@
 import React from "react";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import { StageHeader } from "@/components/production/StageHeader";
 import { Terminal, Settings, Database, SlidersHorizontal, ImagePlay, Activity, FileText } from "lucide-react";
+
+import { ApprovePromptButton } from "./ApprovePromptButton";
+import { ApproveAllPromptsButton } from "./ApproveAllPromptsButton";
+import { CopyButton } from "./CopyButton";
+import { CopyAllButton } from "./CopyAllButton";
+import { EditPromptSpecsModal } from "./EditPromptSpecsModal";
+import { RegeneratePromptButton } from "./RegeneratePromptButton";
 
 export default async function PromptsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -30,6 +38,8 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
 
   const allShots = project.ProductionStoryboard?.ProductionScene.flatMap((s: any) => s.ProductionShot) || [];
   const allPrompts = allShots.flatMap((s: any) => s.ProductionPrompt);
+  
+  const hasUnapprovedPrompts = allPrompts.some((p: any) => p.Versions[0]?.status !== "Approved");
 
   async function triggerPromptGen() {
     "use server";
@@ -76,56 +86,131 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
               <Database className="text-indigo-500 w-5 h-5" />
               <span className="font-bold">Enterprise Prompt Repository</span>
             </div>
-            <button className="px-4 py-2 bg-slate-900 text-white rounded-md text-sm font-semibold hover:bg-slate-800 transition">
-              Send Approved Prompts to Generation Studio
-            </button>
+            <div className="flex items-center gap-3">
+              <ApproveAllPromptsButton projectId={resolvedParams.id} hasUnapproved={hasUnapprovedPrompts} />
+              <form action={triggerPromptGen}>
+                <button className="px-4 py-2 border border-slate-300 text-slate-700 rounded-md text-sm font-semibold hover:bg-slate-50 transition">
+                  Regenerate Prompts
+                </button>
+              </form>
+              <Link href={`/projects/${resolvedParams.id}/generation`} className="px-4 py-2 bg-slate-900 text-white rounded-md text-sm font-semibold hover:bg-slate-800 transition">
+                Send Approved Prompts to Generation Studio
+              </Link>
+            </div>
           </div>
 
-          {allShots.map((shot: any) => {
-            if (shot.ProductionPrompt.length === 0) return null;
-            const prompt = shot.ProductionPrompt[0];
-            const v = prompt.Versions[0];
-            
-            return (
-              <div key={prompt.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                <div className="bg-slate-900 text-slate-100 p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-slate-800 px-2 py-1 rounded text-xs font-mono font-bold text-emerald-400">SHOT ID: {shot.shot_number}</div>
-                    <h3 className="font-bold">Master Generation Prompt</h3>
+          <div className="space-y-8">
+            {allShots.map((shot: any) => {
+              if (shot.ProductionPrompt.length === 0) return null;
+              const prompt = shot.ProductionPrompt[0];
+              const v = prompt.Versions[0];
+              
+              const isApproved = v?.status === "Approved";
+              
+              return (
+                <div 
+                  key={prompt.id} 
+                  className={`relative group bg-white border ${isApproved ? 'border-emerald-500 shadow-emerald-100' : 'border-slate-200/60'} rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl`}
+                >
+                  {/* Premium Header */}
+                  <div className={`p-5 flex items-center justify-between ${isApproved ? 'bg-gradient-to-r from-emerald-900 to-emerald-950' : 'bg-gradient-to-r from-slate-900 to-slate-950'} text-slate-100 border-b border-white/10`}>
+                    <div className="flex items-center gap-4">
+                      <div className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold tracking-widest ${isApproved ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/10 text-slate-300'}`}>
+                        SHOT ID {shot.shot_number}
+                      </div>
+                      <h3 className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                        Master Generation Prompt
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-300 shadow-inner">
+                        Provider: {v?.model_rec}
+                      </span>
+                      <CopyAllButton version={v} />
+                      <RegeneratePromptButton versionId={v.id} projectId={resolvedParams.id} />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="bg-slate-700 px-2 py-1 rounded text-xs font-bold uppercase">Provider: {v?.model_rec}</span>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x border-b">
-                  <div className="p-4 bg-slate-50">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1"><ImagePlay className="w-3 h-3" /> Image / Video Prompt</div>
-                    <textarea readOnly className="w-full text-sm font-mono text-slate-700 bg-white border rounded p-3 h-32 focus:outline-none focus:ring-2" value={v?.video_prompt || v?.image_prompt || ''} />
-                  </div>
-                  <div className="p-4 bg-slate-50">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1"><FileText className="w-3 h-3" /> Technical Specs</div>
-                    <textarea readOnly className="w-full text-sm font-mono text-slate-700 bg-white border rounded p-3 h-32 focus:outline-none focus:ring-2" value={`Camera: ${v?.camera_prompt}\nLighting: ${v?.lighting_prompt}\nEnvironment: ${v?.environment_prompt}`} />
-                  </div>
-                  <div className="p-4 bg-slate-50">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Activity className="w-3 h-3" /> Negative Prompt</div>
-                    <textarea readOnly className="w-full text-sm font-mono text-slate-700 bg-white border border-red-200 rounded p-3 h-32 focus:outline-none focus:ring-2" value={v?.negative_prompt || ''} />
-                  </div>
-                </div>
+                  
+                  {/* Prompt Content */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-1 p-1 bg-slate-100">
+                    {/* Image/Video Prompt */}
+                    <div className="p-5 bg-white rounded-l-xl flex flex-col h-full group-hover:bg-slate-50 transition-colors">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-[11px] font-black text-indigo-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                          <ImagePlay className="w-4 h-4" /> Motion Prompt
+                        </div>
+                        <CopyButton content={v?.video_prompt || v?.image_prompt || ''} label="Motion Prompt" />
+                      </div>
+                      <div className="relative flex-grow">
+                        <p className="w-full text-sm font-mono text-slate-700 leading-relaxed selection:bg-indigo-100">
+                          {v?.video_prompt || v?.image_prompt || ''}
+                        </p>
+                      </div>
+                    </div>
 
-                <div className="p-4 flex items-center justify-between bg-white">
-                  <div className="flex items-center gap-4 text-xs font-bold text-slate-500">
-                    <span className="flex items-center gap-1"><SlidersHorizontal className="w-3 h-3" /> Aspect: {v?.aspect_ratio}</span>
-                    <span>Status: {v?.status}</span>
+                    {/* Technical Specs */}
+                    <div className="p-5 bg-white flex flex-col h-full group-hover:bg-slate-50 transition-colors">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-[11px] font-black text-amber-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                          <FileText className="w-4 h-4" /> Technical Specs
+                        </div>
+                        <CopyButton content={`Camera: ${v?.camera_prompt}\nLighting: ${v?.lighting_prompt}\nEnvironment: ${v?.environment_prompt}`} label="Technical Specs" />
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <span className="text-xs font-bold text-slate-400 block mb-1">CAMERA</span>
+                          <p className="text-sm font-mono text-slate-700">{v?.camera_prompt}</p>
+                        </div>
+                        <div>
+                          <span className="text-xs font-bold text-slate-400 block mb-1">LIGHTING</span>
+                          <p className="text-sm font-mono text-slate-700">{v?.lighting_prompt}</p>
+                        </div>
+                        <div>
+                          <span className="text-xs font-bold text-slate-400 block mb-1">ENVIRONMENT</span>
+                          <p className="text-sm font-mono text-slate-700">{v?.environment_prompt}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Negative Prompt */}
+                    <div className="p-5 bg-white rounded-r-xl flex flex-col h-full group-hover:bg-slate-50 transition-colors">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-[11px] font-black text-rose-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                          <Activity className="w-4 h-4" /> Negative Exclusions
+                        </div>
+                        <CopyButton content={v?.negative_prompt || ''} label="Negative Exclusions" />
+                      </div>
+                      <p className="w-full text-sm font-mono text-rose-700/80 leading-relaxed bg-rose-50/50 p-4 rounded-xl border border-rose-100">
+                        {v?.negative_prompt || ''}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-x-2">
-                    <button className="px-4 py-2 border text-slate-600 rounded font-semibold text-sm hover:bg-slate-50 transition">Edit Specs</button>
-                    <button className="px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded font-semibold text-sm hover:bg-emerald-100 transition">Approve Prompt</button>
+
+                  {/* Footer Actions */}
+                  <div className="px-6 py-4 flex items-center justify-between bg-white border-t border-slate-100">
+                    <div className="flex items-center gap-6 text-xs font-bold text-slate-500 tracking-wide">
+                      <span className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border">
+                        <SlidersHorizontal className="w-4 h-4 text-slate-400" /> Aspect: {v?.aspect_ratio}
+                      </span>
+                      {isApproved ? (
+                        <span className="text-emerald-500 flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
+                          <Activity className="w-4 h-4" /> APPROVED
+                        </span>
+                      ) : (
+                        <span className="text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
+                          STATUS: DRAFT
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <EditPromptSpecsModal version={v} projectId={resolvedParams.id} />
+                      <ApprovePromptButton versionId={v.id} projectId={resolvedParams.id} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

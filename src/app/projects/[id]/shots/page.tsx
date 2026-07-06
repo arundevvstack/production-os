@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { StageHeader } from "@/components/production/StageHeader";
 import { Camera, ListVideo, Frame, Search, Maximize2, CheckCircle2 } from "lucide-react";
+import { ApproveAllShotsButton } from "./ApproveAllShotsButton";
 
 export default async function ShotListPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -77,9 +78,7 @@ export default async function ShotListPage({ params }: { params: Promise<{ id: s
           <div className="flex items-center justify-between border-b pb-4">
             <h2 className="text-2xl font-bold tracking-tight">Shot List</h2>
             <div className="flex gap-2">
-              <button className="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm font-semibold hover:bg-emerald-700 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4" /> Approve All Shots
-              </button>
+              <ApproveAllShotsButton projectId={project.id} />
             </div>
           </div>
 

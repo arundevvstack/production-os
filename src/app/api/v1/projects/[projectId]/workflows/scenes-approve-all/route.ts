@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request, { params }: { params: { projectId: string } }) {
   try {
-    const projectId = params.projectId;
+    const { projectId } = await params;
 
     // Get the root storyboard
     const storyboard = await prisma.productionStoryboard.findFirst({

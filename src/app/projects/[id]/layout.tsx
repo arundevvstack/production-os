@@ -37,11 +37,11 @@ export default async function ProjectLayout({
   const currentStage = stages.find(s => currentPath === s.href) || stages[0];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
+    <div className="flex h-screen overflow-hidden bg-slate-100 font-sans">
       <ProjectSidebar stages={stages} currentPath={currentPath} />
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <div className="flex-1 flex flex-col h-[calc(100vh-2rem)] overflow-hidden relative mr-4 my-4 bg-white rounded-3xl shadow-sm border border-slate-200">
         <ProjectHeader project={project} currentStage={currentStage} />
-        <main className="flex-1 overflow-y-auto p-6 bg-slate-50">
+        <main className="flex-1 overflow-y-auto bg-white rounded-b-3xl">
           {children}
         </main>
         <SmartNotifications />

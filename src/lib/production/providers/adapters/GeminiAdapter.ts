@@ -70,18 +70,37 @@ export class GeminiAdapter implements ProviderAdapterInterface {
       ...options
     };
 
-    const response = await fetch(`${this.baseUrl}/${model}:generateContent?key=${apiKey}`, {
+    let usedModel = model;
+    let response = await fetch(`${this.baseUrl}/${usedModel}:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) throw new Error(await response.text());
+    if (!response.ok) {
+      const errorText = await response.text();
+      // If we hit a quota error on a higher tier model, fallback to the older free tier model
+      if ((errorText.includes("quota") || response.status === 429) && usedModel !== "gemini-1.5-flash") {
+        console.warn(`Quota exceeded for ${usedModel}. Falling back to free model gemini-1.5-flash...`);
+        usedModel = "gemini-1.5-flash";
+        response = await fetch(`${this.baseUrl}/${usedModel}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+           throw new Error(await response.text());
+        }
+      } else {
+        throw new Error(errorText);
+      }
+    }
+
     const data = await response.json();
     
     return {
       textContent: data.candidates?.[0]?.content?.parts?.[0]?.text || "",
-      metadata: { provider: "Gemini", model: model, durationMs: Date.now() - startTime, raw_response: data }
+      metadata: { provider: "Gemini", model: usedModel, durationMs: Date.now() - startTime, raw_response: data }
     };
   }
 }

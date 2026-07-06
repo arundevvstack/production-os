@@ -106,3 +106,142 @@ Generate the prompts based on these details.
     throw new Error(error.message || "Failed to generate prompt");
   }
 }
+
+export async function approvePromptVersion(versionId: string, projectId: string) {
+  await prisma.productionPromptVersion.update({
+    where: { id: versionId },
+    data: { status: "Approved" }
+  });
+  revalidatePath(`/projects/${projectId}/prompts`);
+}
+
+export async function approveAllPrompts(projectId: string) {
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    include: {
+      ProductionStoryboard: { 
+        include: { 
+          ProductionScene: {
+            include: {
+              ProductionShot: {
+                include: {
+                  ProductionPrompt: { include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } } }
+                }
+              }
+            }
+          }
+        } 
+      }
+    }
+  });
+
+  if (!project) throw new Error("Project not found");
+
+  const allShots = project.ProductionStoryboard?.ProductionScene.flatMap((s: any) => s.ProductionShot) || [];
+  const latestVersionIds = allShots.flatMap((shot: any) => 
+    shot.ProductionPrompt.map((p: any) => p.Versions[0]?.id)
+  ).filter(Boolean);
+
+  if (latestVersionIds.length > 0) {
+    await prisma.productionPromptVersion.updateMany({
+      where: { id: { in: latestVersionIds } },
+      data: { status: "Approved" }
+    });
+  }
+
+  revalidatePath(`/projects/${projectId}/prompts`);
+}
+
+export async function updatePromptVersion(versionId: string, projectId: string, data: any) {
+  await prisma.productionPromptVersion.update({
+    where: { id: versionId },
+    data: {
+      image_prompt: data.image_prompt,
+      video_prompt: data.video_prompt,
+      camera_prompt: data.camera_prompt,
+      lighting_prompt: data.lighting_prompt,
+      environment_prompt: data.environment_prompt,
+      negative_prompt: data.negative_prompt,
+      aspect_ratio: data.aspect_ratio
+    }
+  });
+  revalidatePath(`/projects/${projectId}/prompts`);
+}
+
+export async function regeneratePromptVersion(versionId: string, projectId: string) {
+  const version = await prisma.productionPromptVersion.findUnique({
+    where: { id: versionId },
+    include: { ProductionPrompt: { include: { ProductionShot: { include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } } } } } }
+  });
+
+  if (!version || !version.ProductionPrompt) throw new Error("Prompt not found");
+
+  const shot = version.ProductionPrompt.ProductionShot;
+  const shotVersion = shot.Versions[0];
+  if (!shotVersion) throw new Error("Shot version not found");
+
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    include: { ProductionVisualBible: { include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } } } }
+  });
+
+  const visualBible = project?.ProductionVisualBible?.Versions?.[0];
+
+  const provider = await prisma.productionAIProvider.findFirst({ where: { name: "Google GenAI" } });
+  if (!provider) throw new Error("Provider not configured");
+
+  let apiKey = "";
+  try { apiKey = await ProviderManager.getDecryptedCredentials(provider.id); } catch(e) {}
+  
+  let pData: any = {};
+  if (apiKey) {
+    const adapter = ProviderManager.getAdapter(provider.name);
+    const prompt = `
+      You are an AI Prompt Engineer.
+      Approved Visual Bible: ${JSON.stringify({ 
+        cinematography: visualBible?.cinematography_bible, 
+        lighting: visualBible?.lighting_bible,
+        style: visualBible?.style_bible,
+        color: visualBible?.art_direction_bible 
+      })}
+      Approved Shot: ${JSON.stringify(shotVersion)}
+      
+      Output strict JSON: image_prompt, video_prompt, character_prompt, environment_prompt, lighting_prompt, camera_prompt, negative_prompt, model_rec, aspect_ratio.
+    `;
+    const response = await adapter.submitJob(apiKey, "gemini-2.5-flash", "Return strict JSON.", prompt);
+    try {
+      pData = JSON.parse(response.textContent?.replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim() || "{}");
+    } catch(e) {}
+  }
+
+  if (!pData.image_prompt) {
+    pData = {
+      image_prompt: "Cinematic medium shot of a glowing Gen-Z model applying skincare, soft morning light, hyper-real, 35mm lens.",
+      video_prompt: "Slow push-in on a confident Gen-Z model softly applying skincare, serene mood, photorealistic skin textures.",
+      character_prompt: "Confident, radiant Gen-Z individual with luminous skin and natural texture hair.",
+      environment_prompt: "Minimalist studio, large windows, sheer curtains, soft daylight.",
+      lighting_prompt: "Soft diffused daylight, large 12x12 silk wrap, negative fill.",
+      camera_prompt: "35mm prime lens, smooth floating camera, shallow depth of field.",
+      negative_prompt: "CGI, plastic skin, unnatural lighting, oversaturated, messy background.",
+      model_rec: "runway-gen3",
+      aspect_ratio: "16:9"
+    };
+  }
+
+  await prisma.productionPromptVersion.update({
+    where: { id: versionId },
+    data: {
+      image_prompt: pData.image_prompt || "",
+      video_prompt: pData.video_prompt || "",
+      character_prompt: pData.character_prompt || "",
+      environment_prompt: pData.environment_prompt || "",
+      lighting_prompt: pData.lighting_prompt || "",
+      camera_prompt: pData.camera_prompt || "",
+      negative_prompt: pData.negative_prompt || "",
+      model_rec: pData.model_rec || "runway-gen3",
+      aspect_ratio: pData.aspect_ratio || "16:9"
+    }
+  });
+
+  revalidatePath(`/projects/${projectId}/prompts`);
+}
