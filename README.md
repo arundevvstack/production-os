@@ -1,43 +1,56 @@
-# Local AI Production Studio v1.0.0
+# Local AI Production Studio
 
-A secure, offline-first Next.js interface for managing local AI Generation via a FastAPI Diffusers Gateway. 
-This application provides a comprehensive Project Workspace, Prompt Library, Generation Studio, and Asset Library tailored to run completely locally on a dedicated AI server (e.g., RTX 4070).
+A desktop-grade, single-user AI image generation studio powered by your local GPU.
+No cloud. No subscriptions. No API keys. Your RTX runs everything.
 
-## Architecture
-- **Frontend:** Next.js (App Router), TailwindCSS, Radix UI, Lucide React
-- **Backend:** Next.js Serverless API routes securely proxying to local FastAPI.
-- **Database:** Prisma ORM with PostgreSQL.
-- **AI Gateway:** A decoupled FastAPI application utilizing Hugging Face Diffusers, optimized for local inference pipelines.
+## What It Is
 
-## Getting Started
+A complete creative application that lets you:
+- Generate AI images using locally downloaded models
+- Manage prompts, projects, and assets
+- Monitor your GPU in real time
+- Export your work
 
-1. **Environment Setup**
-   Copy `.env.example` to `.env` (or configure your local `.env`) and ensure you have valid Postgres credentials and your `LOCAL_AI_GATEWAY_KEY` securely configured.
+## Stack
 
-2. **Database Initialization**
-   ```bash
-   npx prisma generate
-   npx prisma db push
-   ```
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 16 |
+| Database | SQLite via Prisma |
+| AI Gateway | FastAPI + Hugging Face Diffusers |
+| Storage | Local filesystem / Supabase Storage |
+| GPU | NVIDIA RTX (CUDA 12.x) |
 
-3. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+## Quick Start
 
-4. **Run the Studio**
-   ```bash
-   npm run dev
-   ```
+See [QUICKSTART.md](./QUICKSTART.md) for the fastest path to your first generated image.
 
-5. **Start the AI Gateway**
-   Ensure your local Python FastAPI server is running in its virtual environment on port `8000`:
-   ```bash
-   uvicorn main:app --port 8000 --host 0.0.0.0
-   ```
+## Full Installation
 
-## Production Build
-```bash
-npm run build
-npm start
-```
+See [INSTALL.md](./INSTALL.md) for complete environment setup.
+
+## Requirements
+
+- Windows 10/11
+- Node.js 20+
+- Python 3.11+
+- NVIDIA GPU with CUDA 12.x
+- 12 GB VRAM minimum (RTX 3080 / RTX 4070 or better)
+- 50 GB free disk space for models
+
+## Modules
+
+| Module | Description |
+|--------|-------------|
+| Dashboard | Overview of recent projects and generations |
+| Projects | Create and manage creative projects |
+| Generation Studio | Generate images with full parameter control |
+| Prompt Library | Create, tag, favorite, and reuse prompts |
+| Asset Library | Browse, preview, and manage generated images |
+| Model Manager | View and manage locally downloaded AI models |
+| Gateway Monitor | Real-time GPU, VRAM, and queue monitoring |
+| Settings | Read-only configuration status view |
+
+## License
+
+See [LICENSE.md](./LICENSE.md)

@@ -1,38 +1,103 @@
-# Troubleshooting Guide
+# TROUBLESHOOTING
 
-## AI Gateway Issues
+## Gateway Won't Start
 
-### 1. `CUDA out of memory`
-**Symptom**: Gateway responds with `507 Insufficient Storage` or `OUT_OF_MEMORY` error code.
-**Cause**: The GPU does not have enough VRAM to load the model or generate the image at the requested resolution.
-**Solution**: 
-- Close other GPU-intensive applications (e.g. video games, local LLMs).
-- Reduce the image resolution (e.g., from 1024x1024 to 512x512).
-- Restart the Gateway server.
+**Symptom**: `uvicorn: command not found` or Python import errors.
 
-### 2. `403 Invalid request signature`
-**Symptom**: The Next.js application logs `Gateway Proxy Error` and the Gateway returns `403 Forbidden`.
-**Cause**: The `LOCAL_AI_GATEWAY_KEY` does not match between the Next.js Vercel environment and the local PC's `.env` file, or the payload was tampered with in transit.
-**Solution**: Ensure the keys match exactly in both `.env` configurations.
+**Fix**:
+```bash
+cd docker/ai-gateway
+python -m venv .venv
+.\.venv\Scripts\pip install -r requirements.txt
+.\.venv\Scripts\uvicorn main:app --port 8000 --host 0.0.0.0
+```
 
-### 3. `403 Request expired (Replay Protection)`
-**Symptom**: Requests take a long time to reach the Gateway and are rejected.
-**Cause**: The Gateway blocks requests with timestamps older than 5 minutes to prevent replay attacks.
-**Solution**: Ensure the clock on the Vercel server and the local PC are synchronized via NTP.
+---
 
-### 4. `401 Unauthorized (Gated Model)`
-**Symptom**: The Gateway fails to download `FLUX.1-schnell`.
-**Cause**: Missing or invalid Hugging Face token.
-**Solution**: Provide a valid `HUGGING_FACE_HUB_TOKEN` in the `.env` and ensure you have accepted the license agreement on the Hugging Face website.
+## Gateway Status Shows "Offline" in UI
 
-## Supabase Issues
+**Symptom**: Monitor page shows "Disconnected". Gateway is running but UI can't reach it.
 
-### 1. `Supabase upload failed: Bucket not found`
-**Symptom**: The image generates on the local PC, but Next.js fails to upload it.
-**Cause**: The `assets` bucket has not been created in Supabase Storage.
-**Solution**: Go to the Supabase Dashboard > Storage and create a new public bucket named `assets`.
+**Check**:
+1. Confirm gateway is running: `Invoke-RestMethod http://localhost:8000/health`
+2. Confirm `LOCAL_AI_URL=http://localhost:8000` is set in `.env`
+3. Restart Next.js after changing `.env`
 
-### 2. `Invalid prisma.productionAsset.create() invocation`
-**Symptom**: Generation finishes but the DB throws a Prisma error during creation.
-**Cause**: Schema mismatch or database was not migrated.
-**Solution**: Run `npx prisma db push` or `npx prisma migrate deploy` to ensure your Supabase database schema is up-to-date.
+---
+
+## CUDA Not Detected
+
+**Symptom**: GPU shows as unavailable in Gateway Monitor.
+
+**Fix**:
+```bash
+# In AI Gateway venv
+python -c "import torch; print(torch.cuda.is_available())"
+```
+
+If `False`:
+- Reinstall PyTorch with CUDA: `pip install torch --index-url https://download.pytorch.org/whl/cu121`
+- Verify CUDA toolkit is installed: `nvidia-smi`
+
+---
+
+## Generation Fails Immediately
+
+**Symptom**: Job created but shows `Failed` status within seconds.
+
+**Common causes**:
+1. **Wrong provider_id** — The local gateway provider must exist in the database. Run `node scripts/seed-workflow-templates.js`.
+2. **Gateway offline** — Check gateway is running on port 8000.
+3. **VRAM insufficient** — Try the `nota-ai/bk-sdm-tiny` validation model (2 GB VRAM).
+
+---
+
+## "Foreign key constraint violated" Error
+
+**Symptom**: Job creation returns 500 with FK error on `provider_id`.
+
+**Fix**: Ensure the database is seeded with the local provider record:
+```bash
+node scripts/seed-workflow-templates.js
+```
+
+---
+
+## Prisma Migration Errors
+
+**Symptom**: `npx prisma db push` fails.
+
+**Fix**:
+```bash
+# Reset the database (WARNING: deletes all data)
+npx prisma migrate reset
+npx prisma db push
+```
+
+---
+
+## npm install Fails
+
+**Symptom**: EPERM errors renaming files during install.
+
+**Cause**: The Prisma query engine DLL is locked by a running Next.js process.
+
+**Fix**: Stop all running Node processes, then re-run `npm install`.
+
+---
+
+## Generated Images Don't Appear in Asset Library
+
+**Symptom**: Job completes but no image shows in the asset library.
+
+**Fix**: The asset is saved in the database. Refresh the Asset Library page.
+If still missing, check the `ProductionAsset` table in your database.
+
+---
+
+## Port 3000 Already In Use
+
+**Symptom**: Next.js fails to start on port 3000.
+
+**Fix**: The app defaults to port 3003 in dev mode. Check your `package.json` dev script.
+Or kill the process: `npx kill-port 3000`

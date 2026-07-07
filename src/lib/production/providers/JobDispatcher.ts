@@ -121,8 +121,11 @@ export class JobDispatcher {
         data: { 
           status: isAsync ? "Running" : "Completed", 
           completed_at: isAsync ? null : new Date(),
-          external_job_id: normalizedResponse.metadata?.raw_response?.id || null, // e.g. task id
-          metadata: normalizedResponse.metadata as any
+          external_job_id: normalizedResponse.metadata?.raw_response?.id || null,
+          metadata: {
+            ...(normalizedResponse.metadata as any),
+            result_url: normalizedResponse.assetUrl || null
+          }
         }
       });
 

@@ -93,11 +93,23 @@ export async function POST(request: Request, { params }: { params: Promise<{ pro
     const body = await request.json();
     const { provider_id, asset_type, model_name, options, character_id } = body;
 
+    // Resolve logical "local_gateway" name to the actual DB provider UUID
+    let resolvedProviderId = provider_id;
+    if (provider_id === "local_gateway" || provider_id === "local") {
+      const localProvider = await prisma.productionAIProvider.findFirst({
+        where: { name: { contains: "Local" } }
+      });
+      if (!localProvider) {
+        return NextResponse.json({ error: "Local AI provider not found in database. Ensure the DB is seeded." }, { status: 400 });
+      }
+      resolvedProviderId = localProvider.id;
+    }
+
     const newJob = await prisma.productionAIJob.create({
       data: {
         id: require('crypto').randomUUID(),
         project_id: projectId,
-        provider_id,
+        provider_id: resolvedProviderId,
         asset_type,
         model_name,
         metadata: options,

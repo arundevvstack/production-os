@@ -44,12 +44,22 @@ export class ProviderManager {
 
     const cred = creds[0];
 
+    // Local providers (Local FLUX, Local AI) use HMAC env vars, not stored credentials.
+    // Return an empty string so the adapter can proceed with its own signing logic.
     if (!cred || !cred.api_key_encrypted) {
-
+      const isLocal = provider?.name?.toLowerCase().includes("local");
+      if (isLocal) return "";
       throw new Error("No credentials configured for this provider");
     }
 
-    return CryptoUtils.decrypt(cred.api_key_encrypted);
+    try {
+      return CryptoUtils.decrypt(cred.api_key_encrypted);
+    } catch (e) {
+      // If decryption fails (e.g. key rotation), return empty for local providers
+      const isLocal = provider?.name?.toLowerCase().includes("local");
+      if (isLocal) return "";
+      throw new Error("Failed to decrypt credentials. The encryption key may have changed.");
+    }
   }
 
   /**
