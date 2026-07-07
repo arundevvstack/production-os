@@ -2,6 +2,7 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { StageHeader } from "@/components/production/StageHeader";
 import { BookOpen } from "lucide-react";
 import { VisualBibleViewer } from "./VisualBibleViewer";
@@ -32,7 +33,11 @@ export default async function VisualBiblePage({ params }: { params: Promise<{ id
 
   async function triggerVisualBibleGen() {
     "use server";
-    const res = await fetch(`http://localhost:${process.env.PORT || 3003}/api/v1/projects/${resolvedParams.id}/workflows/visual-bible-gen`, {
+    const headerStore = await headers();
+    const host = headerStore.get('host') || `localhost:${process.env.PORT || 3003}`;
+    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+    
+    const res = await fetch(`${protocol}://${host}/api/v1/projects/${resolvedParams.id}/workflows/visual-bible-gen`, {
       method: "POST"
     });
     const contentType = res.headers.get("content-type") ?? "";

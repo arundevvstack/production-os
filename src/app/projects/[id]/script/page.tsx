@@ -42,6 +42,7 @@ export default async function ScriptPage({ params }: { params: Promise<{ id: str
     "use server";
     if (!latestScript || !project) return;
     await verifyScript(latestScript.id, project.id);
+    redirect(`/projects/${project.id}/breakdown`);
   }
 
   return (
@@ -70,7 +71,19 @@ export default async function ScriptPage({ params }: { params: Promise<{ id: str
             items={fakeChecklist} 
             onToggleItem={async (id, status) => {
               "use server";
-              console.log('Toggled', id, status);
+              if (!latestScript) return;
+              if (id === '2') {
+                await prisma.productionScript.update({
+                  where: { id: latestScript.id },
+                  data: { is_approved: status }
+                });
+              } else if (id === '3') {
+                await prisma.productionScript.update({
+                  where: { id: latestScript.id },
+                  data: { is_locked: status }
+                });
+              }
+              revalidatePath(`/projects/${project.id}`, 'layout');
             }} 
           />
           <CommentThread 

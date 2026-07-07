@@ -62,7 +62,7 @@ export class WorkflowEngine {
 
     // 2. Script
     const isScriptUnlocked = isWorkspaceComplete;
-    const isScriptComplete = !!project.ProductionScript?.content && project.ProductionScript.content.length > 50;
+    const isScriptComplete = !!project.ProductionScript?.is_locked;
 
     // 3. Breakdown
     const isBreakdownUnlocked = isScriptComplete;
@@ -74,15 +74,19 @@ export class WorkflowEngine {
     if (project.ProductionVisualBible) {
       const v = project.ProductionVisualBible.Versions?.[0];
       if (v) {
-        try {
-          const vbJson = typeof v.style_bible === 'string' ? JSON.parse(v.style_bible) : v.style_bible;
-          if (vbJson && vbJson.style && vbJson.lighting && vbJson.camera && vbJson.mood) {
-            isVisualBibleComplete = true;
-          } else if (vbJson && typeof vbJson === 'object' && Object.keys(vbJson).length > 0) {
-            isVisualBibleComplete = !!(vbJson.style?.look || vbJson.lighting?.style || vbJson.camera?.style || vbJson.mood?.overall);
+        if (v.status === 'Approved') {
+          isVisualBibleComplete = true;
+        } else {
+          try {
+            const vbJson = typeof v.style_bible === 'string' ? JSON.parse(v.style_bible) : v.style_bible;
+            if (vbJson && vbJson.style && vbJson.lighting && vbJson.camera && vbJson.mood) {
+              isVisualBibleComplete = true;
+            } else if (vbJson && typeof vbJson === 'object' && Object.keys(vbJson).length > 0) {
+              isVisualBibleComplete = !!(vbJson.style?.look || vbJson.lighting?.style || vbJson.camera?.style || vbJson.mood?.overall);
+            }
+          } catch(e) {
+            isVisualBibleComplete = !!v.style_bible;
           }
-        } catch(e) {
-          isVisualBibleComplete = !!v.style_bible;
         }
       }
     }

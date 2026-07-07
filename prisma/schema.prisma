@@ -914,6 +914,7 @@ model ProductionShotVersion {
   dialogue           String?
   audio              String?
   fx                 String?
+  reference_image_url String?
   status             String         @default("Draft")
   created_at         DateTime       @default(now())
   Shot               ProductionShot @relation(fields: [shot_id], references: [id], onDelete: Cascade)

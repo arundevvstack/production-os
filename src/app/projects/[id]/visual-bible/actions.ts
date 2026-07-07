@@ -35,7 +35,7 @@ export async function approveVisualBible(projectId: string, versionId: string) {
       data: { status: "Approved" }
     });
     
-    revalidatePath(`/projects/${projectId}`);
+    revalidatePath(`/projects/${projectId}`, 'layout');
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };

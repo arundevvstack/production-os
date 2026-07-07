@@ -16,11 +16,13 @@ const iconMap: Record<string, any> = {
   Briefcase, PlayCircle, Star
 };
 
+import { usePathname } from "next/navigation";
 import { SettingsModal } from "@/components/system/SettingsModal";
 
-export function ProjectSidebar({ workflowState, currentPath }: { workflowState: WorkflowState, currentPath: string }) {
+export function ProjectSidebar({ workflowState }: { workflowState: WorkflowState }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const currentPath = usePathname();
 
   const { stages } = workflowState;
 

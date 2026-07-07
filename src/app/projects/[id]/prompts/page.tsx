@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { StageHeader } from "@/components/production/StageHeader";
 import { Terminal, Settings, Database, SlidersHorizontal, ImagePlay, Activity, FileText } from "lucide-react";
 
@@ -47,7 +48,11 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
 
   async function triggerPromptGen() {
     "use server";
-    const res = await fetch(`http://localhost:${process.env.PORT || 3003}/api/v1/projects/${resolvedParams.id}/workflows/prompt-gen`, {
+    const headerStore = await headers();
+    const host = headerStore.get('host') || `localhost:${process.env.PORT || 3003}`;
+    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+    
+    const res = await fetch(`${protocol}://${host}/api/v1/projects/${resolvedParams.id}/workflows/prompt-gen`, {
       method: "POST"
     });
     const contentType = res.headers.get("content-type") ?? "";

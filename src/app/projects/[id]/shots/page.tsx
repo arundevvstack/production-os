@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { StageHeader } from "@/components/production/StageHeader";
 import { Camera, ListVideo, Frame, Search, Maximize2, CheckCircle2 } from "lucide-react";
 import { ApproveAllShotsButton } from "./ApproveAllShotsButton";
+import { EditShotButton } from "./EditShotButton";
 import { WorkflowEngine } from "@/lib/production/WorkflowEngine";
 
 export default async function ShotListPage({ params }: { params: Promise<{ id: string }> }) {
@@ -105,6 +106,7 @@ export default async function ShotListPage({ params }: { params: Promise<{ id: s
                         <th className="px-4 py-3">Movement</th>
                         <th className="px-4 py-3">Blocking / Action</th>
                         <th className="px-4 py-3 text-right">Status</th>
+                        <th className="px-4 py-3"></th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -114,9 +116,15 @@ export default async function ShotListPage({ params }: { params: Promise<{ id: s
                           <tr key={(shot as any).id} className="hover:bg-slate-50 transition">
                             <td className="px-4 py-4 text-center font-bold text-slate-400">{scene.scene_number}.{shot.shot_number}</td>
                             <td className="px-4 py-4 font-semibold text-slate-700">
-                              <div className="flex items-center gap-2">
-                                <Frame className="w-4 h-4 text-slate-400" />
-                                {v?.shot_type || 'Auto'}
+                              <div className="flex items-center gap-3">
+                                {v?.reference_image_url ? (
+                                  <img src={v.reference_image_url} alt="Shot reference" className="w-12 h-8 object-cover rounded shadow-sm border border-slate-200" />
+                                ) : (
+                                  <div className="w-12 h-8 bg-slate-100 flex items-center justify-center rounded border border-slate-200">
+                                    <Frame className="w-4 h-4 text-slate-400" />
+                                  </div>
+                                )}
+                                <div>{v?.shot_type || 'Auto'}</div>
                               </div>
                             </td>
                             <td className="px-4 py-4">
@@ -133,6 +141,9 @@ export default async function ShotListPage({ params }: { params: Promise<{ id: s
                               <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
                                 {v?.status || 'Draft'}
                               </span>
+                            </td>
+                            <td className="px-4 py-4 text-right">
+                              <EditShotButton shot={shot} projectId={project.id} />
                             </td>
                           </tr>
                         );

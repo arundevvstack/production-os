@@ -6,6 +6,7 @@ import { StageHeader } from "@/components/production/StageHeader";
 import { ImageIcon, Clapperboard, MapPin, Users, Sun, Camera, FileText, RefreshCw } from "lucide-react";
 import { SceneImage } from "./SceneImage";
 import ApproveSceneButton from "./ApproveSceneButton";
+import ApproveAllScenesButton from "./ApproveAllScenesButton";
 import { EditSceneButton } from "./EditSceneButton";
 import { WorkflowEngine } from "@/lib/production/WorkflowEngine";
 
@@ -76,7 +77,8 @@ export default async function StoryboardPage({ params }: { params: Promise<{ id:
         </div>
       ) : (
         <>
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end gap-3 mb-4">
+            <ApproveAllScenesButton projectId={project.id} allApproved={scenes.length > 0 && scenes.every((s: any) => s.is_approved)} />
             <form action={triggerStoryboardGen}>
               <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 transition-all shadow-sm">
                 <RefreshCw className="w-4 h-4" /> Regenerate All Storyboards

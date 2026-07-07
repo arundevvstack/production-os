@@ -44,7 +44,7 @@ export function ScriptContainer({ projectId, scripts }: ScriptContainerProps) {
       }
       const data = await res.json();
       toast({ title: "Analysis Complete", description: "Production breakdown has been extracted successfully." });
-      router.refresh();
+      router.push(`/projects/${projectId}/breakdown`);
     } catch (e: any) {
       toast({ title: "Analysis Failed", description: e.message, variant: "destructive" });
     } finally {

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Camera, Film, Users, MapPin, Zap, Music, Sun, PenTool, CheckCircle2, Edit3, X, Save, Loader2, Copy } from "lucide-react";
 import { updateVisualBibleVersion, approveVisualBible } from "./actions";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 function formatKey(key: string) {
   return key.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
@@ -53,6 +54,7 @@ export function VisualBibleViewer({ projectId, version, readOnly = false }: { pr
   const [isApproving, setIsApproving] = useState(false);
   const [editJson, setEditJson] = useState("");
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleEditClick = () => {
     // Exclude metadata fields to only edit the bible content
@@ -90,6 +92,7 @@ export function VisualBibleViewer({ projectId, version, readOnly = false }: { pr
     const res = await approveVisualBible(projectId, version.id);
     if (res.success) {
       toast({ title: "Approved!", description: "Visual Bible is approved. You can now move to the next stage." });
+      router.push(`/projects/${projectId}/characters`);
     } else {
       toast({ title: "Error", description: res.error, variant: "destructive" });
     }
@@ -139,6 +142,14 @@ export function VisualBibleViewer({ projectId, version, readOnly = false }: { pr
               >
                 {isApproving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />} 
                 Approve Bible
+              </button>
+            )}
+            {version.status === "Approved" && (
+              <button 
+                onClick={() => router.push(`/projects/${projectId}/characters`)}
+                className="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 flex items-center gap-2 transition-all shadow-sm shadow-indigo-600/20"
+              >
+                Proceed to Character Manager &rarr;
               </button>
             )}
           </div>

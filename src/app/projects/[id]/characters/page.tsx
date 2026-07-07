@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, User, Sparkles, ImageIcon, Trash2, Edit2, ExternalLink, Check, X } from "lucide-react";
+import { Plus, User, Sparkles, ImageIcon, Trash2, Edit2, ExternalLink, Check, X, Loader2, RefreshCw } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 function CharacterCard({ char, projectId, onUpdate, onDelete, onGenerate }: {
@@ -22,6 +22,26 @@ function CharacterCard({ char, projectId, onUpdate, onDelete, onGenerate }: {
     first_appearance: char.first_appearance || "", last_appearance: char.last_appearance || "", 
     relationships: char.relationships || "", importance: char.importance || "" 
   });
+  const [generating, setGenerating] = useState(false);
+
+  const generateSheet = async () => {
+    setGenerating(true);
+    try {
+      const res = await fetch(`/api/v1/projects/${projectId}/characters/${char.id}/generate`, { method: "POST" });
+      const data = await res.json();
+      if (data.success && data.character) {
+        onUpdate(char.id, { reference_image_url: data.character.reference_image_url });
+        toast({ title: "Reference Sheet Generated", description: "Successfully generated new character reference image." });
+      } else {
+        toast({ title: "Generation Failed", description: data.error || "Failed to generate image.", variant: "destructive" });
+      }
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Generation Failed", description: "An unexpected error occurred.", variant: "destructive" });
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const save = async () => {
     const res = await fetch(`/api/v1/projects/${projectId}/characters/${char.id}`, {
@@ -83,7 +103,11 @@ function CharacterCard({ char, projectId, onUpdate, onDelete, onGenerate }: {
                 {char.description && <p className="text-xs text-slate-500 mt-2 line-clamp-2">{char.description}</p>}
                 {char.relationships && <p className="text-[10px] text-slate-400 mt-1 italic line-clamp-1">Backstory: {char.relationships}</p>}
                 
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-3 items-center">
+                  <Button size="sm" onClick={generateSheet} disabled={generating} className={`h-6 text-[10px] px-2 ${char.reference_image_url ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>
+                    {generating ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : (char.reference_image_url ? <RefreshCw className="h-3 w-3 mr-1" /> : <Sparkles className="h-3 w-3 mr-1" />)}
+                    {char.reference_image_url ? "Regenerate" : "Generate Reference"}
+                  </Button>
                   <Button size="sm" variant="outline" className="h-6 text-[10px] px-2" onClick={() => onGenerate(char, "Portrait")}>
                     <Sparkles className="h-3 w-3 mr-1" /> Portrait
                   </Button>

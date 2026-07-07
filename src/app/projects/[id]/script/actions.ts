@@ -50,7 +50,7 @@ export async function verifyScript(scriptId: string, projectId: string) {
     data: { is_locked: true, is_approved: true, updated_at: new Date() }
   });
   
-  revalidatePath(`/projects/${projectId}/script`);
+  revalidatePath(`/projects/${projectId}`, 'layout');
 }
 
 export async function duplicateVerifiedScript(projectId: string, content: string) {
