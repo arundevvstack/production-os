@@ -6,10 +6,12 @@ import { ReviewEngine } from "../engines/ReviewEngine";
 export class JobDispatcher {
   
   static async dispatchJob(jobId: string): Promise<void> {
-    const job = await prisma.productionAIJob.findUnique({
+    const job = await prisma.productionAIJob.findUniqueOrThrow({
       where: { id: jobId },
       include: { ProductionAIProvider: true }
     });
+
+    const originalMetadata = (job.metadata as Record<string, any>) || {};
 
     if (!job) throw new Error("Job not found");
     if (job.status !== "Queued") throw new Error(`Job is already ${job.status}`);
@@ -23,7 +25,9 @@ export class JobDispatcher {
       const apiKey = await ProviderManager.getDecryptedCredentials(job.provider_id);
       const adapter = ProviderManager.getAdapter(job.ProductionAIProvider.name);
 
-      let promptText = "Generate content";
+      // Resolve prompt: prefer inline options.prompt from Generation Studio, then prompt_set_id lookup
+      const jobOptions = (job.metadata as GenerationOptions) || {};
+      let promptText = (jobOptions as any).prompt || "Generate content";
       if (job.prompt_set_id) {
         const pSet = await prisma.productionPrompt.findUnique({ 
           where: { id: job.prompt_set_id },
@@ -34,17 +38,15 @@ export class JobDispatcher {
           promptText = v.image_prompt || v.video_prompt || v.animation_prompt || promptText;
         }
       }
-
-      // Merge prompt with any explicit options from job metadata
-      const jobOptions = (job.metadata as GenerationOptions) || {};
       
       let normalizedResponse: NormalizedProviderResponse;
 
       // Switch generation based on Asset Type
       const aType = job.asset_type.toLowerCase();
       
-      // If the adapter has a specialized submitJob (like LocalFlux), use that for async
-      if (adapter.submitJob && job.ProductionAIProvider.name.toLowerCase().includes("local flux")) {
+      // Prefer submitJob for any adapter that exposes it (LocalAIGatewayAdapter, etc.)
+      // generateImage on LocalAIGatewayAdapter is deprecated and throws.
+      if (adapter.submitJob && (aType.includes("image") || aType.includes("Image"))) {
         normalizedResponse = await adapter.submitJob(apiKey, job.model_name, promptText, jobOptions);
       } else if (aType.includes("image")) {
         normalizedResponse = await adapter.generateImage(apiKey, job.model_name, promptText, jobOptions);
@@ -123,6 +125,9 @@ export class JobDispatcher {
           completed_at: isAsync ? null : new Date(),
           external_job_id: normalizedResponse.metadata?.raw_response?.id || null,
           metadata: {
+            // Preserve original options (prompt, steps, cfg, seed, width, height, etc.)
+            ...originalMetadata,
+            // Overlay generation result metadata
             ...(normalizedResponse.metadata as any),
             result_url: normalizedResponse.assetUrl || null
           }

@@ -51,9 +51,12 @@ export default function GenerationStudioPage() {
         const res = await fetch(`/api/v1/gateway-proxy/models`);
         if (res.ok) {
           const data = await res.json();
-          setModels(data);
-          if (data.length > 0 && !selectedModel) {
-            setSelectedModel(data[0].id);
+          // Only show models that are locally cached — uncached models require large
+          // downloads that block the gateway's single-threaded uvicorn process
+          const cachedModels = data.filter((m: any) => m.cached === true);
+          setModels(cachedModels);
+          if (cachedModels.length > 0 && !selectedModel) {
+            setSelectedModel(cachedModels[0].id);
           }
         }
       } catch (e) {
@@ -132,20 +135,21 @@ export default function GenerationStudioPage() {
   };
 
   const handleRetry = (job: any) => {
-    if (job.options) {
-      setPromptText(job.options.prompt || "");
-      setNegativePrompt(job.options.negativePrompt || "");
-      setSteps(job.options.steps || 4);
-      setCfg(job.options.cfg || 3.5);
-      setWidth(job.options.width || 1024);
-      setHeight(job.options.height || 1024);
-      if (job.options.scheduler) setScheduler(job.options.scheduler);
-      if (job.options.seed) {
-        setSeed(String(job.options.seed));
-        setIsRandomSeed(false);
-      }
-      if (job.model_name) setSelectedModel(job.model_name);
+    // Options are stored as job.metadata in the DB (passed as `options` to the API)
+    const opts = job.metadata || {};
+    setPromptText(opts.prompt || "");
+    setNegativePrompt(opts.negativePrompt || "");
+    setSteps(opts.steps || 4);
+    setCfg(opts.cfg || 3.5);
+    setWidth(opts.width || 1024);
+    setHeight(opts.height || 1024);
+    if (opts.scheduler) setScheduler(opts.scheduler);
+    if (opts.seed) {
+      setSeed(String(opts.seed));
+      setIsRandomSeed(false);
     }
+    if (job.model_name) setSelectedModel(job.model_name);
+    toast({ title: "Settings Loaded", description: `Loaded settings from job ${job.id.substring(0,8)}` });
   };
 
   const handleReuseLast = () => {
@@ -383,7 +387,7 @@ function JobRow({ job, onSelect, isSelected, onRetry, onStop }: { job: any, onSe
           : <div className="h-8 w-8 rounded-full border-2 border-dashed border-slate-300" />}
         
         <div>
-          <p className="font-medium text-sm line-clamp-1">{job.options?.prompt || 'No Prompt'}</p>
+          <p className="font-medium text-sm line-clamp-1">{job.metadata?.prompt || job.metadata?.raw_response?.prompt || 'No Prompt'}</p>
           <p className="text-xs text-slate-500 mt-1">{job.model_name} • {job.id.substring(0,8)}</p>
         </div>
       </div>

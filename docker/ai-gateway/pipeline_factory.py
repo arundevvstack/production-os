@@ -16,34 +16,38 @@ class DiffusersPipeline(BasePipeline):
     def __init__(self):
         self.pipe = None
         self.model_id = None
+        self._lock = __import__('threading').Lock()
         
     def load(self, model_id: str):
-        if self.model_id == model_id and self.pipe is not None:
-            return
-            
-        print(f"PipelineFactory: Loading DiffusersPipeline for {model_id}...")
-        if self.pipe is not None:
-            del self.pipe
-            torch.cuda.empty_cache()
-            
-        from diffusers import DiffusionPipeline
-        if os.path.exists(model_id) and model_id.endswith('.safetensors'):
-            self.pipe = DiffusionPipeline.from_single_file(
-                model_id,
-                torch_dtype=torch.bfloat16
-            )
-        else:
-            self.pipe = DiffusionPipeline.from_pretrained(
-                model_id,
-                torch_dtype=torch.bfloat16,
-                safety_checker=None,
-                use_safetensors=True
-            )
-        self.pipe.enable_model_cpu_offload()
-        self.model_id = model_id
+        with self._lock:
+            if self.model_id == model_id and self.pipe is not None:
+                return
+                
+            print(f"PipelineFactory: Loading DiffusersPipeline for {model_id}...")
+            if self.pipe is not None:
+                del self.pipe
+                torch.cuda.empty_cache()
+                
+            from diffusers import DiffusionPipeline
+            if os.path.exists(model_id) and model_id.endswith('.safetensors'):
+                self.pipe = DiffusionPipeline.from_single_file(
+                    model_id,
+                    torch_dtype=torch.bfloat16
+                )
+            else:
+                self.pipe = DiffusionPipeline.from_pretrained(
+                    model_id,
+                    torch_dtype=torch.bfloat16,
+                    safety_checker=None,
+                    use_safetensors=True
+                )
+            self.pipe.enable_model_cpu_offload()
+            self.model_id = model_id
         
     def generate(self, request_data: dict, model_def: dict, storage_dir: str):
         import uuid
+        if not hasattr(self, 'pipe') or self.pipe is None:
+            raise RuntimeError(f"Pipeline not loaded. Call load() before generate(). model_id={self.model_id}")
         prompt = request_data.get('prompt')
         seed = request_data.get('seed')
         if seed is None:
@@ -68,6 +72,7 @@ class DiffusersPipeline(BasePipeline):
             "filename": filename,
             "seed": seed
         }
+
 
 class VideoStubPipeline(BasePipeline):
     def load(self, model_id: str):

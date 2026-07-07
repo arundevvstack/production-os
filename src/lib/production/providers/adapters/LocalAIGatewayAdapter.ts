@@ -37,34 +37,46 @@ export class LocalAIGatewayAdapter implements ProviderAdapterInterface {
     const payload = {
       prompt,
       model: model || process.env.LOCAL_AI_DEFAULT_MODEL || "black-forest-labs/FLUX.1-schnell",
-      // Image/Video args
       width: options?.width || 1024,
       height: options?.height || 1024,
       steps: options?.steps || 4,
       cfg: options?.cfg || 3.5,
       seed: options?.seed,
       negative_prompt: options?.negativePrompt,
-      // Audio/Voice args
       duration: options?.duration,
       voice_id: options?.voiceId
     };
 
-    const response = await fetch(`${this.getBaseUrl()}/generate`, {
+    // Route through the Next.js proxy (LOCAL_AI_URL) which handles HMAC signing in hybrid mode.
+    // In local dev mode, LOCAL_AI_URL also points to the proxy which forwards without signing.
+    // Never call the raw gateway directly — it requires auth headers we don't send here.
+    const proxyUrl = process.env.LOCAL_AI_URL || "http://localhost:3003/api/v1/gateway-proxy";
+    const generateUrl = `${proxyUrl}/generate`;
+
+    console.log(`[LocalAIGatewayAdapter] POST ${generateUrl}`);
+    console.log(`[LocalAIGatewayAdapter] Payload:`, JSON.stringify(payload));
+
+    const response = await fetch(generateUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(300000), // 5 minutes — matches LOCAL_AI_TIMEOUT
     });
 
+    console.log(`[LocalAIGatewayAdapter] Response status: ${response.status}`);
+
     if (!response.ok) {
-      throw new Error(`AI Gateway Error: ${await response.text()}`);
+      const errText = await response.text();
+      console.error(`[LocalAIGatewayAdapter] Error body:`, errText);
+      throw new Error(`AI Gateway Error ${response.status}: ${errText}`);
     }
 
     const data = await response.json();
     
-    // In Native V1 Mode, the gateway processes synchronously and returns the completed data
     if (data.status === "completed") {
       const storageAdapter = StorageManager.getAdapter();
       const publicUrl = storageAdapter.getPublicUrl(data.url_path);
+      console.log(`[LocalAIGatewayAdapter] Generation complete. Asset URL: ${publicUrl}`);
       
       return {
         assetUrl: publicUrl,
