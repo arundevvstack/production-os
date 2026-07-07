@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { WorkflowStage } from "@/lib/production/WorkflowEngine";
+import { WorkflowState, WorkflowStage } from "@/lib/production/WorkflowEngine";
 import { 
   Search, Settings, HelpCircle, ChevronRight, MoreVertical, LayoutPanelLeft,
   FileText, List, BookOpen, ImageIcon, Clapperboard, Video, Sparkles, 
   Wand2, Library, CheckCircle, Scissors, UploadCloud, Info, Briefcase, 
-  PlayCircle, Star
+  PlayCircle, Star, Lock
 } from "lucide-react";
 
 const iconMap: Record<string, any> = {
@@ -18,9 +18,11 @@ const iconMap: Record<string, any> = {
 
 import { SettingsModal } from "@/components/system/SettingsModal";
 
-export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[], currentPath: string }) {
+export function ProjectSidebar({ workflowState, currentPath }: { workflowState: WorkflowState, currentPath: string }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const { stages } = workflowState;
 
   // Group stages by their defined group
   const groupedStages = stages.reduce((acc, stage) => {
@@ -95,20 +97,39 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
                     <li key={stage.id}>
                       <Link
                         href={isLocked ? "#" : stage.href}
-                        title={isCollapsed ? stage.title : undefined}
+                        title={isLocked ? "Complete previous stage to unlock." : (isCollapsed ? stage.title : undefined)}
                         className={`flex items-center ${isCollapsed ? 'justify-center p-2.5 mx-auto w-10 h-10' : 'space-x-3 px-3 py-2'} rounded-xl text-sm font-semibold transition-all duration-200 ${
                           isActive 
-                            ? "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400"
-                            : isLocked
-                              ? "text-slate-300 dark:text-slate-700 cursor-not-allowed opacity-50"
-                              : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200"
+                            ? 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400' 
+                            : isLocked 
+                              ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-60 hover:bg-transparent'
+                              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
                         }`}
+                        onClick={(e) => isLocked && e.preventDefault()}
                       >
-                        <StageIcon className={`flex-shrink-0 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
-                        {!isCollapsed && <span className="flex-1 truncate">{stage.title}</span>}
+                        <div className={`relative flex items-center justify-center ${isCollapsed ? '' : 'w-6 h-6'}`}>
+                          <StageIcon className={`${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-red-600 dark:text-red-400' : ''}`} />
+                          
+                          {/* Status Indicators overlaying the icon */}
+                          {stage.status === 'Completed' && (
+                            <div className="absolute -bottom-1 -right-1 bg-white dark:bg-slate-900 rounded-full">
+                              <CheckCircle className="w-3 h-3 text-emerald-500" />
+                            </div>
+                          )}
+                          {isLocked && (
+                            <div className="absolute -bottom-1 -right-1 bg-white dark:bg-slate-900 rounded-full">
+                              <Lock className="w-3 h-3 text-slate-400" />
+                            </div>
+                          )}
+                        </div>
                         
-                        {!isCollapsed && stage.status === "Approved" && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Approved" />
+                        {!isCollapsed && (
+                          <div className="flex-1 flex items-center justify-between min-w-0">
+                            <span className="truncate">{stage.title}</span>
+                            {stage.status === 'Active' && (
+                              <span className="w-2 h-2 rounded-full bg-red-500 shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.5)] animate-pulse" />
+                            )}
+                          </div>
                         )}
                       </Link>
                     </li>
@@ -118,7 +139,6 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
             </div>
           ))}
         </div>
-
         {/* Footer Actions */}
         <div className="p-3 border-t border-slate-50 dark:border-slate-800">
           <ul className="space-y-1 mb-2">
@@ -135,7 +155,6 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
               </button>
             </li>
           </ul>
-
           {/* User Profile */}
           <button className={`w-full flex items-center ${isCollapsed ? 'justify-center p-1 mx-auto w-10 h-10' : 'gap-3 p-2 px-3'} hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors`}>
             <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex-shrink-0 border border-slate-300 dark:border-slate-600">

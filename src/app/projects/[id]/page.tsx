@@ -18,12 +18,13 @@ export default function ProjectWorkspacePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [recentAssets, setRecentAssets] = useState<any[]>([]);
   const [recentPrompts, setRecentPrompts] = useState<any[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [workflowState, setWorkflowState] = useState<any>(null);
 
   useEffect(() => {
     fetchProject();
     fetchRecentAssets();
     fetchRecentPrompts();
+    fetchWorkflowState();
   }, [projectId]);
 
   // Debounced auto-save
@@ -111,6 +112,18 @@ export default function ProjectWorkspacePage() {
     }
   };
 
+  const fetchWorkflowState = async () => {
+    try {
+      const res = await fetch(`/api/v1/projects/${projectId}/workflow`);
+      if (res.ok) {
+        const data = await res.json();
+        setWorkflowState(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   if (!project) return <div className="p-12 text-center text-slate-500">Loading Workspace...</div>;
 
   return (
@@ -121,43 +134,65 @@ export default function ProjectWorkspacePage() {
           <p className="text-slate-500">Project Workspace</p>
         </div>
         <div className="flex gap-2">
-           <Button variant="outline" size="icon" onClick={() => { fetchProject(); fetchRecentAssets(); }} title="Sync Workspace">
+           <Button variant="outline" size="icon" onClick={() => { fetchProject(); fetchRecentAssets(); fetchWorkflowState(); }} title="Sync Workspace">
              <RefreshCw className="w-4 h-4" />
-           </Button>
-           <Button onClick={() => router.push(`/projects/${projectId}/generation`)}>
-             <Sparkles className="mr-2 h-4 w-4" /> Generate
            </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors" onClick={() => router.push(`/projects/${projectId}/generation`)}>
+        <Card className="bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Generation Studio</CardTitle>
-            <Sparkles className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-sm font-medium text-red-800 dark:text-red-400">Current Stage</CardTitle>
+            <Sparkles className="h-4 w-4 text-red-600 dark:text-red-500" />
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground mt-2">Create new assets</p>
+            {workflowState ? (
+                <>
+                  <div className="text-2xl font-bold text-red-900 dark:text-red-300 truncate">{workflowState.currentStage?.title || "Workspace"}</div>
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-xs text-red-700/80 dark:text-red-400/80">{workflowState.progress}% Complete</p>
+                    <Button size="sm" variant="outline" className="h-6 text-xs bg-white dark:bg-slate-900 hover:bg-red-100 border-red-200 text-red-700" onClick={() => router.push(workflowState.nextStage?.href || `/projects/${projectId}`)}>Resume</Button>
+                  </div>
+                  {workflowState.remainingTasks?.length > 0 && (
+                    <div className="mt-3 text-[10px] text-red-700/70 border-t border-red-200/50 pt-2 line-clamp-1" title={workflowState.remainingTasks.join(", ")}>
+                      Next: {workflowState.remainingTasks[0]}
+                    </div>
+                  )}
+                </>
+            ) : (
+                <div className="animate-pulse h-12 bg-red-100 rounded"></div>
+            )}
           </CardContent>
         </Card>
 
-        <Card className="hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors" onClick={() => router.push(`/projects/${projectId}/assets`)}>
+        <Card className="hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors" onClick={() => router.push(`/projects/${projectId}/characters`)}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Asset Library</CardTitle>
-            <ImageIcon className="h-4 w-4 text-indigo-500" />
+            <CardTitle className="text-sm font-medium">Characters</CardTitle>
+            <span className="text-2xl font-bold">{project.counts?.characters || 0}</span>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground mt-2">View generated files</p>
+            <p className="text-xs text-muted-foreground mt-1">Active characters</p>
           </CardContent>
         </Card>
 
-        <Card className="hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors" onClick={() => router.push(`/projects/${projectId}/prompts`)}>
+        <Card className="hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors" onClick={() => router.push(`/projects/${projectId}/scenes`)}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Prompt Library</CardTitle>
-            <Wand2 className="h-4 w-4 text-purple-500" />
+            <CardTitle className="text-sm font-medium">Scenes</CardTitle>
+            <span className="text-2xl font-bold">{project.counts?.scenes || 0}</span>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground mt-2">Saved prompt templates</p>
+            <p className="text-xs text-muted-foreground mt-1">Story scenes</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors" onClick={() => router.push(`/projects/${projectId}/shots`)}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Shots</CardTitle>
+            <span className="text-2xl font-bold">{project.counts?.shots || 0}</span>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground mt-1">Planned camera shots</p>
           </CardContent>
         </Card>
       </div>

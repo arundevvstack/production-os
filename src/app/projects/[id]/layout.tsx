@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { WorkflowEngine } from "@/lib/production/WorkflowEngine";
 import { ProjectSidebar } from "@/components/projects/ProjectSidebar";
 import { ProjectHeader } from "@/components/projects/ProjectHeader";
+import { WorkflowFooter } from "@/components/projects/WorkflowFooter";
 import { SmartNotifications } from "@/components/ui/SmartNotifications";
 import { headers } from "next/headers";
 
@@ -28,21 +29,26 @@ export default async function ProjectLayout({
     redirect("/projects");
   }
 
-  const stages = await WorkflowEngine.getProjectStages(id);
+  const workflowState = await WorkflowEngine.getWorkflowState(id);
   
   // Extract pathname safely from headers in app router
   const headersList = await headers();
   const currentPath = headersList.get("x-invoke-path") || `/projects/${id}`;
 
-  const currentStage = stages.find(s => currentPath === s.href) || stages[0];
+  const lockedStage = workflowState.lockedStages.find(s => s.href === currentPath);
+  if (lockedStage) {
+    // If user tries to access a locked stage, redirect them to the active stage or workspace
+    redirect(workflowState.nextStage?.href || `/projects/${id}?locked=true`);
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-200/50 font-sans">
-      <ProjectSidebar stages={stages} currentPath={currentPath} />
+      <ProjectSidebar workflowState={workflowState} currentPath={currentPath} />
       <div className="flex-1 flex flex-col h-[calc(100vh-2.5rem)] overflow-hidden relative ml-2 mr-8 my-5 bg-white rounded-3xl shadow-sm border border-slate-200">
-        <ProjectHeader project={project} currentStage={currentStage} />
+        <ProjectHeader project={project} workflowState={workflowState} />
         <main className="flex-1 overflow-y-auto bg-white rounded-b-3xl">
           {children}
+          <WorkflowFooter workflowState={workflowState} />
         </main>
         <SmartNotifications />
       </div>

@@ -1,10 +1,12 @@
 import React from "react";
-import { WorkflowStage } from "@/lib/production/WorkflowEngine";
+import { WorkflowState } from "@/lib/production/WorkflowEngine";
 
 import { DeleteProjectButton } from "./DeleteProjectButton";
 import { Briefcase, Hash, Activity } from "lucide-react";
 
-export function ProjectHeader({ project, currentStage }: { project: any, currentStage?: WorkflowStage }) {
+export function ProjectHeader({ project, workflowState }: { project: any, workflowState: WorkflowState }) {
+  const { currentStage, progress, stages } = workflowState;
+
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-5 md:px-8 border-b border-slate-100 bg-white gap-4 sticky top-0 z-10 rounded-t-3xl">
       <div className="flex items-center gap-4">
@@ -28,6 +30,15 @@ export function ProjectHeader({ project, currentStage }: { project: any, current
       
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-5 bg-slate-50 p-2 pl-5 rounded-2xl border border-slate-100 shadow-sm">
+          {stages.length > 0 && (
+            <div className="flex items-center gap-5 text-sm mr-2">
+              <div className="flex flex-col items-start md:items-end">
+                <span className="text-slate-400 uppercase tracking-widest text-[9px] font-bold mb-0.5">Workflow</span>
+                <span className="font-bold text-slate-800">{progress}%</span>
+              </div>
+              <div className="h-8 w-px bg-slate-200"></div>
+            </div>
+          )}
           {currentStage && (
             <div className="flex items-center gap-5 text-sm">
               <div className="flex flex-col items-start md:items-end">
