@@ -56,6 +56,7 @@ model ProductionAIJob {
   project_id             String
   scene_id               String?
   shot_id                String?
+  character_id           String?
   prompt_set_id          String?
   provider_id            String
   asset_type             String
@@ -77,6 +78,8 @@ model ProductionAIJob {
   ProductionScene        ProductionScene?         @relation(fields: [scene_id], references: [id])
   ProductionShot         ProductionShot?          @relation(fields: [shot_id], references: [id])
   ProductionAssetVersion ProductionAssetVersion[]
+
+  @@index([project_id])
 }
 
 model ProductionAIProvider {
@@ -125,6 +128,10 @@ model ProductionAsset {
   ProductionScene        ProductionScene?         @relation(fields: [scene_id], references: [id])
   ProductionShot         ProductionShot?          @relation(fields: [shot_id], references: [id])
   ProductionAssetVersion ProductionAssetVersion[]
+
+  @@index([project_id])
+  @@index([scene_id])
+  @@index([shot_id])
 }
 
 model ProductionAssetPlaceholder {
@@ -161,6 +168,8 @@ model ProductionAssetVersion {
   updated_at      DateTime
   ProductionAsset ProductionAsset  @relation(fields: [asset_id], references: [id], onDelete: Cascade)
   ProductionAIJob ProductionAIJob? @relation(fields: [job_id], references: [id])
+
+  @@index([asset_id])
 }
 
 model ProductionAttachment {
@@ -227,6 +236,8 @@ model ProductionLog {
   content    Json
   created_at DateTime @default(now())
   Project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+  @@index([project_id])
 }
 
 model ProductionProviderCredential {
@@ -530,24 +541,26 @@ model ProductionTimelineEvent {
 }
 
 model ProductionCharacter {
-  id               String              @id @default(uuid())
-  project_id       String
-  script_id        String
-  name             String
-  age              String?
-  gender           String?
-  description      String?
-  personality      String?
-  relationships    String?
-  importance       String?
-  first_appearance String?
-  last_appearance  String?
-  created_at       DateTime            @default(now())
-  updated_at       DateTime            @updatedAt
-  Project          Project             @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  ProductionScript ProductionScript    @relation(fields: [script_id], references: [id], onDelete: Cascade)
-  Costumes         ProductionCostume[]
-  Makeup           ProductionMakeup[]
+  id                  String              @id @default(uuid())
+  project_id          String
+  script_id           String
+  name                String
+  age                 String?
+  gender              String?
+  description         String?
+  personality         String?
+  relationships       String?
+  importance          String?
+  first_appearance    String?
+  last_appearance     String?
+  reference_prompt    String?
+  reference_image_url String?
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
+  Project             Project             @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  ProductionScript    ProductionScript    @relation(fields: [script_id], references: [id], onDelete: Cascade)
+  Costumes            ProductionCostume[]
+  Makeup              ProductionMakeup[]
 
   @@index([project_id])
   @@index([script_id])
@@ -841,6 +854,8 @@ model ProductionScene {
   ProductionStoryboard       ProductionStoryboard         @relation(fields: [storyboard_id], references: [id], onDelete: Cascade)
   Versions                   ProductionSceneVersion[]
   ProductionShot             ProductionShot[]
+
+  @@index([storyboard_id])
 }
 
 model ProductionSceneVersion {
@@ -879,6 +894,8 @@ model ProductionShot {
   ProductionScene            ProductionScene              @relation(fields: [scene_id], references: [id], onDelete: Cascade)
   Versions                   ProductionShotVersion[]
   creative_memories          ProductionCreativeMemory[]   @relation("ShotToMemory")
+
+  @@index([scene_id])
 }
 
 model ProductionShotVersion {
@@ -916,6 +933,8 @@ model ProductionPrompt {
   ProductionAsset ProductionAsset[]
   ProductionShot  ProductionShot            @relation(fields: [shot_id], references: [id], onDelete: Cascade)
   Versions        ProductionPromptVersion[]
+
+  @@index([shot_id])
 }
 
 model ProductionPromptVersion {

@@ -16,8 +16,11 @@ const iconMap: Record<string, any> = {
   Briefcase, PlayCircle, Star
 };
 
+import { SettingsModal } from "@/components/system/SettingsModal";
+
 export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[], currentPath: string }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Group stages by their defined group
   const groupedStages = stages.reduce((acc, stage) => {
@@ -30,7 +33,8 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
 
   return (
     <div className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-72'} flex-shrink-0 m-4`}>
-      <div className="h-full bg-white rounded-3xl shadow-sm border border-slate-100 flex flex-col overflow-hidden relative">
+      <SettingsModal open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
+      <div className="h-full bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col overflow-hidden relative">
         
         {/* Header - Logo */}
         <div className="p-5 flex items-center justify-between">
@@ -40,14 +44,14 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
             </div>
             {!isCollapsed && (
               <div className="flex flex-col">
-                <span className="font-bold text-sm text-slate-900 truncate">Production OS</span>
-                <span className="text-xs text-slate-500 truncate">Studio Plan</span>
+                <span className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">Production OS</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 truncate">Studio Plan</span>
               </div>
             )}
           </div>
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-slate-400 hover:text-slate-600 focus:outline-none flex-shrink-0"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none flex-shrink-0"
           >
             <LayoutPanelLeft className="w-4 h-4" />
           </button>
@@ -61,9 +65,9 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
               <input 
                 type="text" 
                 placeholder="Search" 
-                className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-9 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500/50 transition-all placeholder:text-slate-400 text-slate-700"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl pl-9 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500/50 transition-all placeholder:text-slate-400 text-slate-700 dark:text-slate-200"
               />
-              <div className="absolute right-2 bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-medium text-slate-400 shadow-sm">
+              <div className="absolute right-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded px-1.5 py-0.5 text-[10px] font-medium text-slate-400 dark:text-slate-300 shadow-sm">
                 ⌘K
               </div>
             </div>
@@ -76,7 +80,7 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
             <div key={groupName}>
               {!isCollapsed && (
                 <div className="flex items-center justify-between px-3 mb-2">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <h4 className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                     {groupName}
                   </h4>
                 </div>
@@ -94,10 +98,10 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
                         title={isCollapsed ? stage.title : undefined}
                         className={`flex items-center ${isCollapsed ? 'justify-center p-2.5 mx-auto w-10 h-10' : 'space-x-3 px-3 py-2'} rounded-xl text-sm font-semibold transition-all duration-200 ${
                           isActive 
-                            ? "bg-red-50 text-red-600"
+                            ? "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400"
                             : isLocked
-                              ? "text-slate-300 cursor-not-allowed opacity-50"
-                              : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                              ? "text-slate-300 dark:text-slate-700 cursor-not-allowed opacity-50"
+                              : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200"
                         }`}
                       >
                         <StageIcon className={`flex-shrink-0 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
@@ -116,16 +120,16 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
         </div>
 
         {/* Footer Actions */}
-        <div className="p-3 border-t border-slate-50">
+        <div className="p-3 border-t border-slate-50 dark:border-slate-800">
           <ul className="space-y-1 mb-2">
             <li>
-              <button className={`w-full flex items-center ${isCollapsed ? 'justify-center p-2.5 mx-auto w-10 h-10' : 'space-x-3 px-3 py-2'} rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all`}>
+              <button onClick={() => setIsSettingsOpen(true)} className={`w-full flex items-center ${isCollapsed ? 'justify-center p-2.5 mx-auto w-10 h-10' : 'space-x-3 px-3 py-2'} rounded-xl text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200 transition-all`}>
                 <Settings className={`flex-shrink-0 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
                 {!isCollapsed && <span>Settings</span>}
               </button>
             </li>
             <li>
-              <button className={`w-full flex items-center ${isCollapsed ? 'justify-center p-2.5 mx-auto w-10 h-10' : 'space-x-3 px-3 py-2'} rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all`}>
+              <button className={`w-full flex items-center ${isCollapsed ? 'justify-center p-2.5 mx-auto w-10 h-10' : 'space-x-3 px-3 py-2'} rounded-xl text-sm font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200 transition-all`}>
                 <HelpCircle className={`flex-shrink-0 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
                 {!isCollapsed && <span>Help</span>}
               </button>
@@ -133,15 +137,15 @@ export function ProjectSidebar({ stages, currentPath }: { stages: WorkflowStage[
           </ul>
 
           {/* User Profile */}
-          <button className={`w-full flex items-center ${isCollapsed ? 'justify-center p-1 mx-auto w-10 h-10' : 'gap-3 p-2 px-3'} hover:bg-slate-50 rounded-xl transition-colors`}>
-            <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden flex-shrink-0 border border-slate-300">
+          <button className={`w-full flex items-center ${isCollapsed ? 'justify-center p-1 mx-auto w-10 h-10' : 'gap-3 p-2 px-3'} hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors`}>
+            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex-shrink-0 border border-slate-300 dark:border-slate-600">
               <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=Admin`} alt="User" className="w-full h-full object-cover" />
             </div>
             {!isCollapsed && (
               <>
                 <div className="flex flex-col text-left flex-1 min-w-0">
-                  <span className="text-sm font-bold text-slate-700 truncate">Sandra More</span>
-                  <span className="text-[10px] font-medium text-slate-400 truncate">sandra@gmail.com</span>
+                  <span className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">Sandra More</span>
+                  <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 truncate">sandra@gmail.com</span>
                 </div>
                 <MoreVertical className="w-4 h-4 text-slate-400 flex-shrink-0" />
               </>

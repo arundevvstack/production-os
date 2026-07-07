@@ -42,7 +42,7 @@ export async function GET() {
 
       activeProjectsData.push({
         id: project.id,
-        name: project.name,
+        name: project.project_name,
         health: health.overall_score,
         assets: project.ProductionAsset.length,
         jobs: project.ProductionAIJob.length,

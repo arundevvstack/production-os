@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/production_os
+      - LOCAL_AI_ENABLED=true
+      - LOCAL_AI_URL=http://ai-gateway:8000
+      - LOCAL_AI_DEFAULT_MODEL=black-forest-labs/FLUX.1-schnell
+      - LOCAL_AI_TIMEOUT=300
+      - LOCAL_AI_MAX_CONCURRENT=2
+    depends_on:
+      - postgres
+      - ai-gateway
+      - redis
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/storage
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: production_os
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  ai-gateway:
+    build:
+      context: ./docker/ai-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN:-}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    volumes:
+      - ./storage:/storage
+      - ./models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  gpu-worker:
+    build:
+      context: ./docker/ai-gateway
+      dockerfile: Dockerfile
+    command: rq worker high default low -u redis://redis:6379/0
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN:-}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    volumes:
+      - ./storage:/storage
+      - ./models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  postgres_data:
+  redis_data:

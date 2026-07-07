@@ -79,7 +79,7 @@ async function main() {
 
   // 3. Create SuperAdmin entry
   await client.query(`
-    INSERT INTO public."SuperAdmin" (id, email, "createdAt")
+    INSERT INTO public."SuperAdmin" (id, email, "granted_at")
     VALUES ('77f2603b-a1a5-459d-bf95-c07d905be9fc', 'arundevv.com@gmail.com', NOW())
     ON CONFLICT (id) DO NOTHING;
   `);

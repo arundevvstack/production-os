@@ -42,7 +42,11 @@ export class JobDispatcher {
 
       // Switch generation based on Asset Type
       const aType = job.asset_type.toLowerCase();
-      if (aType.includes("image")) {
+      
+      // If the adapter has a specialized submitJob (like LocalFlux), use that for async
+      if (adapter.submitJob && job.ProductionAIProvider.name.toLowerCase().includes("local flux")) {
+        normalizedResponse = await adapter.submitJob(apiKey, job.model_name, promptText, jobOptions);
+      } else if (aType.includes("image")) {
         normalizedResponse = await adapter.generateImage(apiKey, job.model_name, promptText, jobOptions);
       } else if (aType.includes("video")) {
         normalizedResponse = await adapter.generateVideo(apiKey, job.model_name, promptText, jobOptions);
@@ -53,7 +57,6 @@ export class JobDispatcher {
       } else if (aType.includes("storyboard")) {
         normalizedResponse = await adapter.generateStoryboard(apiKey, job.model_name, promptText, jobOptions);
       } else {
-        // Fallback to chat/text completion
         if (adapter.submitJob) {
           normalizedResponse = await adapter.submitJob(apiKey, job.model_name, promptText, jobOptions);
         } else {

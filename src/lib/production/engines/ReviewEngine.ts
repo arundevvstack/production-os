@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 export interface AIReviewScore {
   visual_quality: number; // 0-100
@@ -80,7 +81,7 @@ export class ReviewEngine {
     await prisma.productionAssetVersion.update({
       where: { id: versionId },
       data: {
-        metadata: newMetadata,
+        metadata: newMetadata as unknown as Prisma.InputJsonValue,
         status: nextStatus,
         updated_at: new Date()
       }

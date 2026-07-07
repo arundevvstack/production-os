@@ -4,6 +4,8 @@ import { SupabaseProvider } from '@/supabase/provider';
 import { Toaster } from '@/components/ui/toaster';
 import { GlobalCommandMenu } from "@/components/system/GlobalCommandMenu";
 
+import { ThemeProvider } from "@/components/providers/theme-provider";
+
 export const metadata: Metadata = {
   title: 'DP Media OS | Multi-Tenant SaaS',
   description: 'Scalable Media Production OS for Companies',
@@ -22,11 +24,18 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased" suppressHydrationWarning>
-        <SupabaseProvider>
-          {children}
-          <Toaster />
-          <GlobalCommandMenu />
-        </SupabaseProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SupabaseProvider>
+            {children}
+            <Toaster />
+            <GlobalCommandMenu />
+          </SupabaseProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

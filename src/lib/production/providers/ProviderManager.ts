@@ -5,6 +5,7 @@ import { GeminiAdapter } from "./adapters/GeminiAdapter";
 import { RunwayAdapter } from "./adapters/RunwayAdapter";
 import { LumaAdapter } from "./adapters/LumaAdapter";
 import { FluxAdapter } from "./adapters/FluxAdapter";
+import { LocalAIGatewayAdapter } from "./adapters/LocalAIGatewayAdapter";
 import prisma from "@/lib/prisma";
 import { CryptoUtils } from "../CryptoUtils";
 import crypto from "crypto";
@@ -23,6 +24,8 @@ export class ProviderManager {
       case 'runway': return new RunwayAdapter();
       case 'luma': return new LumaAdapter();
       case 'flux': return new FluxAdapter();
+      case 'local flux': 
+      case 'local ai': return new LocalAIGatewayAdapter();
       default:
         throw new Error(`Provider adapter not found for: ${providerName}`);
     }
@@ -42,9 +45,7 @@ export class ProviderManager {
     const cred = creds[0];
 
     if (!cred || !cred.api_key_encrypted) {
-      if (provider?.name === "Google GenAI" && process.env.GEMINI_API_KEY) {
-        return process.env.GEMINI_API_KEY;
-      }
+
       throw new Error("No credentials configured for this provider");
     }
 
@@ -100,7 +101,7 @@ export class ProviderManager {
   }
 
   /**
-   * List all providers with their current credential status
+   * List all providers with their current credential status and supported models
    */
   static async getProviderStatuses(): Promise<any[]> {
     const providers = await prisma.productionAIProvider.findMany({
@@ -109,14 +110,37 @@ export class ProviderManager {
       }
     });
 
-    return providers.map(p => ({
-      id: p.id,
-      name: p.name,
-      category: p.category,
-      is_enabled: p.is_enabled,
-      status: p.ProductionProviderCredential[0]?.status || "Unconfigured",
-      last_tested_at: p.ProductionProviderCredential[0]?.last_tested_at || null
-    }));
+    const results = [];
+    for (const p of providers) {
+      let models: any[] = [];
+      const status = p.ProductionProviderCredential[0]?.status || "Unconfigured";
+      
+      // Try to fetch models if the provider is enabled
+      if (p.is_enabled) {
+        try {
+          const adapter = this.getAdapter(p.name);
+          const apiKey = status === "Online" && p.ProductionProviderCredential[0]
+            ? CryptoUtils.decrypt(p.ProductionProviderCredential[0].api_key_encrypted) 
+            : "dummy-key-for-local-models"; // local gateway might not need real key
+            
+          models = await adapter.listModels(apiKey);
+        } catch (e) {
+          console.error(`Failed to fetch models for ${p.name}:`, e);
+        }
+      }
+
+      results.push({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        is_enabled: p.is_enabled,
+        status,
+        last_tested_at: p.ProductionProviderCredential[0]?.last_tested_at || null,
+        models
+      });
+    }
+
+    return results;
   }
 
   /**

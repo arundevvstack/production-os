@@ -171,12 +171,12 @@ export async function updatePromptVersion(versionId: string, projectId: string, 
 export async function regeneratePromptVersion(versionId: string, projectId: string) {
   const version = await prisma.productionPromptVersion.findUnique({
     where: { id: versionId },
-    include: { ProductionPrompt: { include: { ProductionShot: { include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } } } } } }
+    include: { Prompt: { include: { ProductionShot: { include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } } } } } }
   });
 
-  if (!version || !version.ProductionPrompt) throw new Error("Prompt not found");
+  if (!version || !version.Prompt) throw new Error("Prompt not found");
 
-  const shot = version.ProductionPrompt.ProductionShot;
+  const shot = version.Prompt.ProductionShot;
   const shotVersion = shot.Versions[0];
   if (!shotVersion) throw new Error("Shot version not found");
 

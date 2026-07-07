@@ -1,0 +1,14 @@
+--extra-index-url https://download.pytorch.org/whl/cu121
+fastapi
+uvicorn
+torch
+
+torchvision
+torchaudio
+diffusers
+transformers
+accelerate
+pydantic
+python-multipart
+python-dotenv
+psutil

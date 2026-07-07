@@ -164,6 +164,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
               {/* Optional sub-items can go here if needed later (Active, Archived, Templates) */}
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isNavItemActive('/models')} className={cn(
+                "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
+                isNavItemActive('/models') ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+              )}>
+                <Link href="/models" className="flex items-center gap-3 w-full">
+                  {isNavItemActive('/models') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
+                  <Package className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/models') ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  <span className={cn("text-[13px] tracking-tight", isNavItemActive('/models') ? "font-black" : "font-medium")}>Models</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={isNavItemActive('/monitor')} className={cn(
+                "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
+                isNavItemActive('/monitor') ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+              )}>
+                <Link href="/monitor" className="flex items-center gap-3 w-full">
+                  {isNavItemActive('/monitor') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
+                  <Activity className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/monitor') ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  <span className={cn("text-[13px] tracking-tight", isNavItemActive('/monitor') ? "font-black" : "font-medium")}>Gateway Monitor</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
 
@@ -275,49 +300,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
 
         <input type="file" ref={fileInputRef} onChange={handleAvatarUpload} accept="image/*" className="hidden" />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className={cn(
-              "flex items-center gap-3 p-3 rounded-[10px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/60 dark:border-slate-700/60 hover:bg-white/60 dark:bg-slate-900/60 transition-all cursor-pointer group shadow-premium relative overflow-hidden",
-              state === "collapsed" ? "justify-center p-2" : ""
-            )}>
-              {isUploadingAvatar && (
-                <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 z-10 flex items-center justify-center backdrop-blur-sm">
-                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                </div>
-              )}
-              <Avatar className="h-10 w-10 ring-2 ring-white dark:ring-slate-900/80 shrink-0 shadow-lg group-hover:ring-primary/40 transition-all">
-                <AvatarImage src={profile?.avatar} />
-                <AvatarFallback className="bg-primary text-white text-[10px] font-black">
-                  {profile?.fullName?.substring(0, 2).toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              {state !== "collapsed" && (
-                <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[13px] font-black tracking-tight truncate text-black dark:text-white leading-none">{profile?.fullName}</span>
-                  <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-normal">
-                    <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">{'Workspace'}</span>
-                  </span>
-                </div>
-              )}
+        {/* Simplified User Profile */}
+        <div className={cn(
+          "flex items-center gap-3 p-3 rounded-[10px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/60 dark:border-slate-700/60 transition-all group shadow-premium relative overflow-hidden",
+          state === "collapsed" ? "justify-center p-2" : ""
+        )}>
+          <Avatar className="h-10 w-10 ring-2 ring-white dark:ring-slate-900/80 shrink-0 shadow-lg">
+            <AvatarFallback className="bg-primary text-white text-[10px] font-black">
+              US
+            </AvatarFallback>
+          </Avatar>
+          {state !== "collapsed" && (
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-[13px] font-black tracking-tight truncate text-black dark:text-white leading-none">Local User</span>
+              <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-normal">
+                <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">Local OS</span>
+              </span>
             </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-[12px] p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl border-white/60 dark:border-slate-700/60 shadow-premium">
-            <DropdownMenuLabel className="font-black text-[10px] uppercase tracking-wider text-muted-foreground">My Account</DropdownMenuLabel>
-            
-            <DropdownMenuItem className="cursor-pointer font-medium text-[13px] rounded-lg focus:bg-primary/10 focus:text-primary" onClick={() => fileInputRef.current?.click()}>
-              <Camera className="mr-2 h-4 w-4" />
-              Change Thumbnail
-            </DropdownMenuItem>
-            
-            <DropdownMenuSeparator className="bg-border/50 my-2" />
-            
-            <DropdownMenuItem className="cursor-pointer font-black text-[13px] text-destructive focus:bg-destructive/10 focus:text-destructive rounded-lg" onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Log Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          )}
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
