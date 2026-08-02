@@ -1,20 +1,19 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function PUT(req: Request, { params }: { params: { projectId: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ projectId: string }> }) {
   try {
+    const { projectId } = await params;
     const { sceneIndex, updatedScene } = await req.json();
 
     if (typeof sceneIndex !== 'number' || !updatedScene) {
       return NextResponse.json({ error: "Missing sceneIndex or updatedScene payload" }, { status: 400 });
     }
 
-    const projectId = params.projectId;
-
     // Get the latest storyboard version
     const storyboardVersion = await prisma.productionStoryboardVersion.findFirst({
       where: { 
-        storyboard: { project_id: projectId } 
+        Storyboard: { project_id: projectId } 
       },
       orderBy: { created_at: 'desc' }
     });

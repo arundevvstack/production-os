@@ -7,13 +7,13 @@ import {
   Search, Settings, HelpCircle, ChevronRight, MoreVertical, LayoutPanelLeft,
   FileText, List, BookOpen, ImageIcon, Clapperboard, Video, Sparkles, 
   Wand2, Library, CheckCircle, Scissors, UploadCloud, Info, Briefcase, 
-  PlayCircle, Star, Lock
+  PlayCircle, Star, Lock, MapPin
 } from "lucide-react";
 
 const iconMap: Record<string, any> = {
   FileText, List, BookOpen, ImageIcon, Clapperboard, Video, Sparkles, 
   Wand2, Library, CheckCircle, Scissors, UploadCloud, Settings, Info, 
-  Briefcase, PlayCircle, Star
+  Briefcase, PlayCircle, Star, MapPin
 };
 
 import { usePathname } from "next/navigation";

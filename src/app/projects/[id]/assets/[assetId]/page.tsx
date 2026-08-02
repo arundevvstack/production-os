@@ -49,7 +49,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <div className="flex items-center justify-between border-b pb-6">
         <div className="flex items-center gap-4">
           <Link href={`/projects/${resolvedParams.id}/assets`} className="h-10 w-10 rounded-full border bg-white flex items-center justify-center hover:bg-slate-50 transition text-slate-500">

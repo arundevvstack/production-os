@@ -5,28 +5,49 @@ import { PermissionEngine } from "@/lib/production/PermissionEngine";
 import { WorkflowEngine } from "@/lib/production/WorkflowEngine";
 import { revalidatePath } from "next/cache";
 
+// ---------------------------------------------------------------------------
+// ARCHITECTURE: ONE ProductionScript per Project (project_id is @unique).
+//   - createOrUpdateScript() always upserts — never creates a duplicate.
+//   - The `version` field increments on each content replacement.
+//   - There is no separate ScriptVersion table in this schema.
+// ---------------------------------------------------------------------------
+
 export async function createScriptVersion(projectId: string, content: string) {
-  const latestScript = await prisma.productionScript.findFirst({
-    where: { project_id: projectId },
-    orderBy: { version: 'desc' }
+  const existing = await prisma.productionScript.findUnique({
+    where: { project_id: projectId }
   });
 
-  const nextVersion = (latestScript?.version || 0) + 1;
-
-  const newScript = await prisma.productionScript.create({
-    data: {
-      id: require('crypto').randomUUID(),
-      updated_at: new Date(),
-      project_id: projectId,
-      version: nextVersion,
-      content,
-      is_locked: false,
-      is_approved: false
-    }
-  });
+  let script;
+  if (existing) {
+    // Increment version counter and replace content
+    script = await prisma.productionScript.update({
+      where: { project_id: projectId },
+      data: {
+        content,
+        version: existing.version + 1,
+        is_locked: false,
+        is_approved: false,
+        updated_at: new Date()
+      }
+    });
+  } else {
+    // First time — create the single script record for this project
+    script = await prisma.productionScript.create({
+      data: {
+        id: require('crypto').randomUUID(),
+        updated_at: new Date(),
+        project_id: projectId,
+        version: 1,
+        content,
+        is_locked: false,
+        is_approved: false
+      }
+    });
+  }
 
   revalidatePath(`/projects/${projectId}/script`);
-  return newScript;
+  revalidatePath(`/projects/${projectId}`, "layout");
+  return script;
 }
 
 export async function autoSaveScript(scriptId: string, content: string) {
@@ -54,7 +75,7 @@ export async function verifyScript(scriptId: string, projectId: string) {
 }
 
 export async function duplicateVerifiedScript(projectId: string, content: string) {
-    return createScriptVersion(projectId, content);
+  return createScriptVersion(projectId, content);
 }
 
 export async function parseUploadedScript(formData: FormData) {
@@ -77,7 +98,7 @@ export async function parseUploadedScript(formData: FormData) {
     extractedText = buffer.toString('utf-8');
   }
 
-  // Basic markdown to HTML conversion for the TipTap editor
+  // Basic paragraph wrapping for TipTap editor
   let html = extractedText
     .split('\n\n')
     .map(p => `<p>${p.replace(/\n/g, '<br/>')}</p>`)
@@ -120,19 +141,16 @@ Script Parameters:
 Please provide the full script now.
   `;
 
-  // Submit Job
   const fullPrompt = systemPrompt + "\n\n" + userPrompt;
   const response = await adapter.submitJob(apiKey, "gemini-2.5-flash", fullPrompt);
 
   if (!response.textContent) throw new Error("No response received from AI");
 
-  // Remove potential markdown fences from the response if the AI ignores instructions
   let html = response.textContent;
   if (html.startsWith("```html")) html = html.replace("```html", "");
   if (html.startsWith("```")) html = html.replace("```", "");
   if (html.endsWith("```")) html = html.slice(0, -3);
 
-  // Create new version
   return createScriptVersion(projectId, html.trim());
 }
 

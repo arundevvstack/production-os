@@ -2,7 +2,6 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { StageHeader } from "@/components/production/StageHeader";
 import { ChecklistPanel } from "@/components/production/ChecklistPanel";
 import { CommentThread } from "@/components/production/CommentThread";
 import { ActivityTimeline } from "@/components/production/ActivityTimeline";
@@ -18,7 +17,9 @@ export default async function ScriptPage({ params }: { params: Promise<{ id: str
     include: { ProductionScript: true }
   });
 
-  if (!project) redirect("/projects");
+  if (!project) {
+    redirect("/projects");
+  }
 
   const scripts = project.ProductionScript ? [project.ProductionScript] : [];
   const latestScript = scripts[0];
@@ -45,19 +46,33 @@ export default async function ScriptPage({ params }: { params: Promise<{ id: str
     redirect(`/projects/${project.id}/breakdown`);
   }
 
-  return (
-    <div className="max-w-6xl mx-auto">
-      <StageHeader 
-        title="Script"
-        status={statusInfo?.status || "Active"}
-        progress={statusInfo?.progress || 0}
-        assignedUser={"Unassigned"}
-        commentsCount={fakeComments.length}
-        attachmentsCount={1}
-        onComplete={completeScriptAction}
-        isCompleteLocked={latestScript?.is_locked || false}
-      />
+  async function toggleItemAction(id: string, status: boolean) {
+    "use server";
+    if (!latestScript) return;
+    if (id === '2') {
+      await prisma.productionScript.update({
+        where: { id: latestScript.id },
+        data: { is_approved: status }
+      });
+    } else if (id === '3') {
+      await prisma.productionScript.update({
+        where: { id: latestScript.id },
+        data: { is_locked: status }
+      });
+    }
+    if (project) {
+      revalidatePath(`/projects/${project.id}`, 'layout');
+    }
+  }
 
+  async function addCommentAction(content: string) {
+    "use server";
+    // Empty comment handler for V1
+  }
+
+  return (
+    <div className="h-full overflow-y-auto px-8 pt-6 pb-32 w-full">
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content Area */}
         <div className="lg:col-span-2 space-y-8">
@@ -69,29 +84,11 @@ export default async function ScriptPage({ params }: { params: Promise<{ id: str
         <div className="space-y-8">
           <ChecklistPanel 
             items={fakeChecklist} 
-            onToggleItem={async (id, status) => {
-              "use server";
-              if (!latestScript) return;
-              if (id === '2') {
-                await prisma.productionScript.update({
-                  where: { id: latestScript.id },
-                  data: { is_approved: status }
-                });
-              } else if (id === '3') {
-                await prisma.productionScript.update({
-                  where: { id: latestScript.id },
-                  data: { is_locked: status }
-                });
-              }
-              revalidatePath(`/projects/${project.id}`, 'layout');
-            }} 
+            onToggleItem={toggleItemAction} 
           />
           <CommentThread 
             comments={fakeComments}
-            onAddComment={async (content) => {
-              "use server";
-              console.log('Added comment', content);
-            }}
+            onAddComment={addCommentAction}
           />
         </div>
       </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { CheckAll } from "lucide-react";
 import { CheckCheck, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -36,6 +35,11 @@ export default function ApproveAllScenesButton({
       
       const data = await res.json();
       if (data.success) {
+        // Automatically extract scenes into the database
+        await fetch(`/api/v1/projects/${projectId}/workflows/scene-extraction`, {
+          method: "POST"
+        });
+        
         router.refresh();
         router.push(`/projects/${projectId}/scenes`);
       }

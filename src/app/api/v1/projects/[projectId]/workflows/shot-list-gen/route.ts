@@ -35,18 +35,17 @@ export async function POST(req: Request, { params }: { params: any }) {
 
     const visualBible = project.ProductionVisualBible?.Versions?.[0];
 
-    let provider = await prisma.productionAIProvider.findFirst({ where: { name: "OpenAI" } });
+    // Find any enabled text-capable provider (not just OpenAI)
+    const provider = await prisma.productionAIProvider.findFirst({
+      where: { is_enabled: true }
+    });
     if (!provider) {
-        throw new Error("OpenAI provider not configured in system.");
+      return NextResponse.json({ error: "No AI provider configured. Please add an API key in Settings → AI Providers." }, { status: 503 });
     }
 
-    let apiKey = "";
-    try {
-      apiKey = await ProviderManager.getDecryptedCredentials(provider.id);
-    } catch (e: any) {
-      console.warn("Failed to decrypt credentials, but we will proceed to use mock data fallback:", e.message);
-    }
+    const apiKey = await ProviderManager.getDecryptedCredentials(provider.id);
     const adapter = ProviderManager.getAdapter(provider.name);
+    const modelToUse = provider.supported_models?.[0] || 'gemini-2.5-flash';
     const createdShots = [];
 
     // We will process all scenes, sorting them by scene number to ensure they are generated in order.
@@ -85,35 +84,16 @@ export async function POST(req: Request, { params }: { params: any }) {
       const systemPrompt = "You return strictly valid JSON arrays of objects. No markdown formatting or code blocks outside the JSON.";
       let response;
       try {
-        response = await adapter.submitJob(apiKey, "gpt-4o", systemPrompt + "\n\n" + prompt);
+        response = await adapter.submitJob(apiKey, modelToUse, systemPrompt + "\n\n" + prompt);
       } catch (e: any) {
-        console.warn("AI Generation failed, falling back to mock data due to quota issues:", e.message);
-        response = {
-          textContent: JSON.stringify([
-            {
-              shot_number: 1,
-              shot_type: "Wide",
-              camera_angle: "Eye level",
-              lens: "24mm",
-              movement: "Static",
-              composition: "Rule of thirds",
-              frame_size: "Wide",
-              focus: "Deep",
-              character_blocking: "Actor walks in from the left."
-            },
-            {
-              shot_number: 2,
-              shot_type: "Close Up",
-              camera_angle: "Slight low angle",
-              lens: "50mm",
-              movement: "Slow Pan",
-              composition: "Center framed",
-              frame_size: "CU",
-              focus: "Shallow",
-              character_blocking: "Actor reacts to the environment."
-            }
-          ])
-        };
+        // ROOT CAUSE FIX: Do NOT fall back to generic mock shots.
+        // Generic shots ("Actor walks in from the left") have zero connection to actual scene content.
+        // Surface the error so the user knows exactly what is failing.
+        console.error(`[ShotListGen] AI failed for scene "${scene.title}":`, e.message);
+        return NextResponse.json({
+          error: `Shot generation failed for scene "${scene.title}": ${e.message}. Please check your AI provider configuration.`,
+          ai_error: true
+        }, { status: 503 });
       }
 
       if (!response || !response.textContent) {

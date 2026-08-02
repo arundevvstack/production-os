@@ -1,7 +1,6 @@
 import React from "react";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { StageHeader } from "@/components/production/StageHeader";
 import { Frame, CheckCircle2 } from "lucide-react";
 
 export default async function ShotReviewPage({ params }: { params: Promise<{ id: string }> }) {
@@ -46,19 +45,8 @@ export default async function ShotReviewPage({ params }: { params: Promise<{ id:
   const hasApprovedShots = allShots.some((shot: any) => shot.Versions[0]?.status === "Approved");
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-20">
-      <StageHeader 
-        title="Shot Review"
-        status={hasApprovedShots ? "COMPLETED" : "IN_PROGRESS"}
-        progress={hasApprovedShots ? 100 : 50}
-        commentsCount={0}
-        attachmentsCount={0}
-      />
-      
+    <div className="w-full space-y-6">
       <div className="space-y-10">
-        <div className="flex items-center justify-between border-b pb-4">
-          <h2 className="text-2xl font-bold tracking-tight">Approved Shot List</h2>
-        </div>
 
         {scenes.map((scene: any) => {
           if (scene.ProductionShot.length === 0) return null;

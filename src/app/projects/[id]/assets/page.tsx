@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Filter, Download, Trash, RefreshCw, Eye, CheckCircle2, Copy } from "lucide-react";
+import { Search, Filter, Download, Trash, RefreshCw, Eye, CheckCircle2, Copy, GitMerge } from "lucide-react";
 
-export default function AssetManagerPage() {
-  const params = useParams();
+export default function AssetManagerPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
   const router = useRouter();
-  const projectId = params.id as string;
+  const projectId = resolvedParams.id;
   const [assets, setAssets] = useState<any[]>([]);
   const [selectedAssets, setSelectedAssets] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,12 +70,11 @@ export default function AssetManagerPage() {
         <div className="flex gap-2">
           {selectedAssets.size > 0 && (
             <>
-              <Button variant="outline" onClick={handleBulkApprove}><CheckCircle2 className="mr-2 h-4 w-4" /> Approve All</Button>
               <Button variant="outline"><Download className="mr-2 h-4 w-4" /> Export</Button>
               <Button variant="destructive"><Trash className="mr-2 h-4 w-4" /> Delete</Button>
             </>
           )}
-          <Button variant="default" onClick={() => router.push(`/projects/${projectId}/generation`)}>+ Generate</Button>
+          <Button variant="default" onClick={() => router.push(`/projects/${projectId}/generation`)}>+ Generation Studio</Button>
         </div>
       </div>
 
@@ -114,16 +113,20 @@ export default function AssetManagerPage() {
                   </div>
                   {currentVersion?.file_url ? (
                     asset.type.includes('Image') ? (
-                      <img src={currentVersion.file_url} alt="Asset" className="w-full h-full object-cover" />
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={currentVersion.file_url} alt="Asset" className="w-full h-full" style={{ objectFit: "contain" }} />
                     ) : (
-                      <video src={currentVersion.file_url} className="w-full h-full object-cover" />
+                      <video src={currentVersion.file_url} className="w-full h-full" style={{ objectFit: "contain" }} />
                     )
                   ) : (
                     <span className="text-xs text-slate-400">Processing...</span>
                   )}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                     <Button size="icon" variant="secondary" onClick={() => router.push(`/projects/${projectId}/assets/compare?id=${asset.id}`)}><Eye className="h-4 w-4" /></Button>
-                     <Button size="icon" variant="secondary" onClick={() => router.push(`/projects/${projectId}/reviews`)}><CheckCircle2 className="h-4 w-4" /></Button>
+                     {currentVersion?.file_url && (
+                        <a href={currentVersion.file_url} target="_blank" rel="noopener noreferrer">
+                          <Button size="icon" variant="secondary"><Eye className="h-4 w-4" /></Button>
+                        </a>
+                     )}
                   </div>
                 </div>
                 <CardContent className="p-3">
@@ -132,9 +135,27 @@ export default function AssetManagerPage() {
                     {aiScore && <Badge variant="outline" className="text-[10px]">AI: {aiScore}</Badge>}
                   </div>
                   <p className="text-xs text-slate-500 truncate">{currentVersion?.model_name || "Unknown Model"}</p>
-                  <div className="mt-2 text-[10px] text-slate-400 flex justify-between">
+                  
+                  {/* Lineage Info */}
+                  <div className="mt-2 text-[10px] text-slate-500 border-t pt-2 space-y-1">
+                    <div className="flex items-center gap-1">
+                      <GitMerge className="h-3 w-3" />
+                      <span className="truncate">Prompt: {currentVersion?.prompt_version_id ? currentVersion.prompt_version_id.substring(0,8) : "Manual Composer"}</span>
+                    </div>
+                    {meta?.references?.characterId && (
+                      <div className="flex items-center gap-1 text-indigo-500">
+                         <span className="font-bold">Char ID:</span> <span className="truncate">{meta.references.characterId.substring(0,8)}</span>
+                      </div>
+                    )}
+                    {meta?.references?.locationId && (
+                      <div className="flex items-center gap-1 text-emerald-500">
+                         <span className="font-bold">Loc ID:</span> <span className="truncate">{meta.references.locationId.substring(0,8)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-2 text-[10px] text-slate-400 flex justify-between border-t pt-2">
                     <span>{new Date(asset.created_at).toLocaleDateString()}</span>
-                    <span>{meta.durationMs ? `${(meta.durationMs/1000).toFixed(1)}s` : ''}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -143,7 +164,6 @@ export default function AssetManagerPage() {
         </div>
       ) : (
         <div className="border rounded-lg bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-          {/* List View Implementation Placeholder */}
           <div className="p-8 text-center text-slate-500">List view active (Simplified for brevity)</div>
         </div>
       )}

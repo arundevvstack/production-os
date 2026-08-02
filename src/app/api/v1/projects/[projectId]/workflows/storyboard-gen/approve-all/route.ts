@@ -30,14 +30,19 @@ export async function POST(req: Request, { params }: { params: Promise<{ project
     // Set all scenes to approved
     scenes.forEach((s: any) => s.is_approved = true);
 
+    // Deep clone to ensure Prisma detects JSON change
+    const updatedContent = JSON.parse(JSON.stringify(scenes));
+
     // Save back to database
-    await prisma.productionStoryboardVersion.update({
+    const updatedVersion = await prisma.productionStoryboardVersion.update({
       where: { id: storyboardVersion.id },
       data: {
-        content: scenes,
+        content: updatedContent,
         status: 'approved'
       }
     });
+    
+    console.log(`Approved all ${scenes.length} scenes for version ${storyboardVersion.id}`);
 
     await prisma.productionStoryboard.update({
       where: { id: project!.ProductionStoryboard!.id },

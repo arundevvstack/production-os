@@ -4,16 +4,16 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { StageHeader } from "@/components/production/StageHeader";
-import { Terminal, Settings, Database, SlidersHorizontal, ImagePlay, Activity, FileText } from "lucide-react";
+import { Terminal, Database, ImagePlay, Activity, Wand2, Users, MapPin } from "lucide-react";
 
 import { ApprovePromptButton } from "./ApprovePromptButton";
 import { ApproveAllPromptsButton } from "./ApproveAllPromptsButton";
 import { CopyButton } from "./CopyButton";
 import { CopyAllButton } from "./CopyAllButton";
-import { EditPromptSpecsModal } from "./EditPromptSpecsModal";
+// import { EditPromptSpecsModal } from "./EditPromptSpecsModal";
 import { RegeneratePromptButton } from "./RegeneratePromptButton";
 import { WorkflowEngine } from "@/lib/production/WorkflowEngine";
+import { PromptCard } from "./PromptCard";
 
 export default async function PromptsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -44,7 +44,29 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
   const hasUnapprovedPrompts = allPrompts.some((p: any) => p.Versions[0]?.status !== "Approved");
 
   const workflowState = await WorkflowEngine.getWorkflowState(resolvedParams.id);
-  const statusInfo = workflowState.stages.find(s => s.id === 'prompts');
+  // NOTE: stage id is 'prompt_studio' in WorkflowEngine — not 'prompts'
+  const statusInfo = workflowState.stages.find(s => s.id === 'prompt_studio');
+  const intelStage = workflowState.stages.find(s => s.id === 'production_intelligence');
+
+  // WorkflowEngine emits status = "Completed" (not "Complete").
+  // Use the .locked boolean — it is the canonical source of truth.
+  if (statusInfo?.locked) {
+     return (
+        <div className="h-full overflow-y-auto px-8 pt-6 pb-32 space-y-6 w-full">
+                    <div className="border border-dashed border-slate-300 rounded-2xl p-16 text-center bg-white shadow-sm flex flex-col items-center justify-center">
+            <h2 className="text-xl font-bold text-slate-700 mb-2">Prompt Library Locked</h2>
+            <p className="text-slate-500 max-w-md mb-6">
+              Complete the Production Intelligence stage first to unlock your shot prompts.
+              {intelStage && !intelStage.locked && intelStage.status !== 'Completed' && (
+                <span className="block mt-2 text-amber-600 font-medium">
+                  Intelligence Engine is active — click "Compile All Packages" to complete it.
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+     );
+  }
 
   async function triggerPromptGen() {
     "use server";
@@ -53,28 +75,20 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
     const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
     
     const res = await fetch(`${protocol}://${host}/api/v1/projects/${resolvedParams.id}/workflows/prompt-gen`, {
-      method: "POST"
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
     });
-    const contentType = res.headers.get("content-type") ?? "";
+    
     if (!res.ok) {
         throw new Error(await res.text());
-    }
-    if (!contentType.includes("application/json")) {
-        throw new Error(`Expected JSON but received ${contentType}\n${await res.text()}`);
     }
     revalidatePath(`/projects/${resolvedParams.id}/prompts`);
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-20">
-      <StageHeader 
-        title="Prompt Studio"
-        status={statusInfo?.status || "Active"}
-        progress={statusInfo?.progress || 0}
-        commentsCount={0}
-        attachmentsCount={0}
-      />
-      
+    <div className="h-full overflow-y-auto px-8 pt-6 pb-32 space-y-6 w-full">
+            
       {allPrompts.length === 0 ? (
         <div className="border border-dashed border-slate-300 rounded-2xl p-16 text-center bg-white shadow-sm flex flex-col items-center justify-center">
           <Terminal className="w-16 h-16 text-slate-300 mb-4" />
@@ -84,7 +98,7 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
           </p>
           <form action={triggerPromptGen}>
             <button className="px-6 py-3 bg-black text-white rounded-lg font-semibold shadow hover:bg-slate-800 transition">
-              Generate Prompts from Shots
+              Generate Prompts from Packages
             </button>
           </form>
         </div>
@@ -93,7 +107,7 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
           <div className="bg-white border rounded-xl p-4 shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Database className="text-indigo-500 w-5 h-5" />
-              <span className="font-bold">Enterprise Prompt Repository</span>
+              <span className="font-bold">Shot Prompts</span>
             </div>
             <div className="flex items-center gap-3">
               <ApproveAllPromptsButton projectId={resolvedParams.id} hasUnapproved={hasUnapprovedPrompts} />
@@ -117,106 +131,7 @@ export default async function PromptsPage({ params }: { params: Promise<{ id: st
               const isApproved = v?.status === "Approved";
               
               return (
-                <div 
-                  key={prompt.id} 
-                  className={`relative group bg-white border ${isApproved ? 'border-emerald-500 shadow-emerald-100' : 'border-slate-200/60'} rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl`}
-                >
-                  {/* Premium Header */}
-                  <div className={`p-5 flex items-center justify-between ${isApproved ? 'bg-gradient-to-r from-emerald-900 to-emerald-950' : 'bg-gradient-to-r from-slate-900 to-slate-950'} text-slate-100 border-b border-white/10`}>
-                    <div className="flex items-center gap-4">
-                      <div className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold tracking-widest ${isApproved ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/10 text-slate-300'}`}>
-                        SHOT ID {shot.shot_number}
-                      </div>
-                      <h3 className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                        Master Generation Prompt
-                      </h3>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-300 shadow-inner">
-                        Provider: {v?.model_rec}
-                      </span>
-                      <CopyAllButton version={v} />
-                      <RegeneratePromptButton versionId={v.id} projectId={resolvedParams.id} />
-                    </div>
-                  </div>
-                  
-                  {/* Prompt Content */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-1 p-1 bg-slate-100">
-                    {/* Image/Video Prompt */}
-                    <div className="p-5 bg-white rounded-l-xl flex flex-col h-full group-hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-[11px] font-black text-indigo-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                          <ImagePlay className="w-4 h-4" /> Motion Prompt
-                        </div>
-                        <CopyButton content={v?.video_prompt || v?.image_prompt || ''} label="Motion Prompt" />
-                      </div>
-                      <div className="relative flex-grow">
-                        <p className="w-full text-sm font-mono text-slate-700 leading-relaxed selection:bg-indigo-100">
-                          {v?.video_prompt || v?.image_prompt || ''}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Technical Specs */}
-                    <div className="p-5 bg-white flex flex-col h-full group-hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-[11px] font-black text-amber-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                          <FileText className="w-4 h-4" /> Technical Specs
-                        </div>
-                        <CopyButton content={`Camera: ${v?.camera_prompt}\nLighting: ${v?.lighting_prompt}\nEnvironment: ${v?.environment_prompt}`} label="Technical Specs" />
-                      </div>
-                      <div className="space-y-4">
-                        <div>
-                          <span className="text-xs font-bold text-slate-400 block mb-1">CAMERA</span>
-                          <p className="text-sm font-mono text-slate-700">{v?.camera_prompt}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs font-bold text-slate-400 block mb-1">LIGHTING</span>
-                          <p className="text-sm font-mono text-slate-700">{v?.lighting_prompt}</p>
-                        </div>
-                        <div>
-                          <span className="text-xs font-bold text-slate-400 block mb-1">ENVIRONMENT</span>
-                          <p className="text-sm font-mono text-slate-700">{v?.environment_prompt}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Negative Prompt */}
-                    <div className="p-5 bg-white rounded-r-xl flex flex-col h-full group-hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-[11px] font-black text-rose-500 uppercase tracking-[0.2em] flex items-center gap-2">
-                          <Activity className="w-4 h-4" /> Negative Exclusions
-                        </div>
-                        <CopyButton content={v?.negative_prompt || ''} label="Negative Exclusions" />
-                      </div>
-                      <p className="w-full text-sm font-mono text-rose-700/80 leading-relaxed bg-rose-50/50 p-4 rounded-xl border border-rose-100">
-                        {v?.negative_prompt || ''}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Footer Actions */}
-                  <div className="px-6 py-4 flex items-center justify-between bg-white border-t border-slate-100">
-                    <div className="flex items-center gap-6 text-xs font-bold text-slate-500 tracking-wide">
-                      <span className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border">
-                        <SlidersHorizontal className="w-4 h-4 text-slate-400" /> Aspect: {v?.aspect_ratio}
-                      </span>
-                      {isApproved ? (
-                        <span className="text-emerald-500 flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
-                          <Activity className="w-4 h-4" /> APPROVED
-                        </span>
-                      ) : (
-                        <span className="text-amber-500 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
-                          STATUS: DRAFT
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <EditPromptSpecsModal version={v} projectId={resolvedParams.id} />
-                      <ApprovePromptButton versionId={v.id} projectId={resolvedParams.id} />
-                    </div>
-                  </div>
-                </div>
+                <PromptCard key={prompt.id} version={v} shot={shot} projectId={resolvedParams.id} />
               );
             })}
           </div>

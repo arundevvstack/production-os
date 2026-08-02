@@ -2,7 +2,6 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { StageHeader } from "@/components/production/StageHeader";
 import { ImageIcon, Clapperboard, MapPin, Users, Sun, Camera, FileText, RefreshCw } from "lucide-react";
 import { SceneImage } from "./SceneImage";
 import ApproveSceneButton from "./ApproveSceneButton";
@@ -37,8 +36,6 @@ export default async function StoryboardPage({ params }: { params: Promise<{ id:
 
   async function triggerStoryboardGen() {
     "use server";
-    // Normally this would be a queued background job, here we simulate triggering the API directly for demo.
-    // In production we use bullmq or trigger.dev
     const res = await fetch(`http://localhost:${process.env.PORT || 3003}/api/v1/projects/${resolvedParams.id}/workflows/storyboard-gen`, {
       method: "POST"
     });
@@ -52,16 +49,20 @@ export default async function StoryboardPage({ params }: { params: Promise<{ id:
     revalidatePath(`/projects/${resolvedParams.id}/storyboard`);
   }
 
+  async function extractScenesAction() {
+    "use server";
+    const res = await fetch(`http://localhost:${process.env.PORT || 3003}/api/v1/projects/${resolvedParams.id}/workflows/scene-extraction`, {
+      method: "POST"
+    });
+    if (!res.ok) {
+        throw new Error(await res.text());
+    }
+    revalidatePath(`/projects/${resolvedParams.id}`);
+  }
+
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <StageHeader 
-        title="AI Storyboard Editor"
-        status={statusInfo?.status || "Active"}
-        progress={statusInfo?.progress || 0}
-        commentsCount={0}
-        attachmentsCount={0}
-      />
-      
+    <div className="h-full overflow-y-auto px-8 pt-6 pb-32 space-y-6 w-full">
+            
       {!latestVersion ? (
         <div className="border border-dashed border-slate-300 rounded-2xl p-16 text-center bg-white shadow-sm flex flex-col items-center justify-center">
           <Clapperboard className="w-16 h-16 text-slate-300 mb-4" />
@@ -79,6 +80,11 @@ export default async function StoryboardPage({ params }: { params: Promise<{ id:
         <>
           <div className="flex justify-end gap-3 mb-4">
             <ApproveAllScenesButton projectId={project.id} allApproved={scenes.length > 0 && scenes.every((s: any) => s.is_approved)} />
+            <form action={extractScenesAction}>
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 flex items-center gap-2 transition-all shadow-sm">
+                <FileText className="w-4 h-4" /> Generate Production Scenes
+              </button>
+            </form>
             <form action={triggerStoryboardGen}>
               <button className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 transition-all shadow-sm">
                 <RefreshCw className="w-4 h-4" /> Regenerate All Storyboards

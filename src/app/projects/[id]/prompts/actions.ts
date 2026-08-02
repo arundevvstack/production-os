@@ -94,8 +94,10 @@ Generate the prompts based on these details.
         prompt_id: promptId,
         image_prompt: parsedData.image_prompt,
         video_prompt: parsedData.video_prompt,
-        character_prompt: parsedData.character_prompt,
-        environment_prompt: shot.environment || ""
+        provider_parameters: {
+          character_prompt: parsedData.character_prompt,
+          environment_prompt: shot.environment || ""
+        }
       }
     });
 
@@ -153,16 +155,26 @@ export async function approveAllPrompts(projectId: string) {
 }
 
 export async function updatePromptVersion(versionId: string, projectId: string, data: any) {
+  const version = await prisma.productionPromptVersion.findUnique({
+    where: { id: versionId }
+  });
+  if (!version) return;
+
+  const currentParams = (version.provider_parameters as Record<string, any>) || {};
+  const updatedParams = {
+    ...currentParams,
+    generation_specs: {
+      ...(currentParams.generation_specs || {}),
+      ...(data.generation_specs || {})
+    }
+  };
+
   await prisma.productionPromptVersion.update({
     where: { id: versionId },
     data: {
-      image_prompt: data.image_prompt,
-      video_prompt: data.video_prompt,
-      camera_prompt: data.camera_prompt,
-      lighting_prompt: data.lighting_prompt,
-      environment_prompt: data.environment_prompt,
-      negative_prompt: data.negative_prompt,
-      aspect_ratio: data.aspect_ratio
+      image_prompt: data.image_prompt !== undefined ? data.image_prompt : version.image_prompt,
+      negative_prompt: data.negative_prompt !== undefined ? data.negative_prompt : version.negative_prompt,
+      provider_parameters: updatedParams
     }
   });
   revalidatePath(`/projects/${projectId}/prompts`);
@@ -233,13 +245,15 @@ export async function regeneratePromptVersion(versionId: string, projectId: stri
     data: {
       image_prompt: pData.image_prompt || "",
       video_prompt: pData.video_prompt || "",
-      character_prompt: pData.character_prompt || "",
-      environment_prompt: pData.environment_prompt || "",
-      lighting_prompt: pData.lighting_prompt || "",
-      camera_prompt: pData.camera_prompt || "",
       negative_prompt: pData.negative_prompt || "",
-      model_rec: pData.model_rec || "runway-gen3",
-      aspect_ratio: pData.aspect_ratio || "16:9"
+      provider_parameters: {
+        character_prompt: pData.character_prompt || "",
+        environment_prompt: pData.environment_prompt || "",
+        lighting_prompt: pData.lighting_prompt || "",
+        camera_prompt: pData.camera_prompt || "",
+        model_rec: pData.model_rec || "runway-gen3",
+        aspect_ratio: pData.aspect_ratio || "16:9"
+      }
     }
   });
 

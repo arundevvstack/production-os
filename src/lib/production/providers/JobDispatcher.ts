@@ -35,7 +35,7 @@ export class JobDispatcher {
         });
         if (pSet && pSet.Versions.length > 0) {
           const v = pSet.Versions[0];
-          promptText = v.image_prompt || v.video_prompt || v.animation_prompt || promptText;
+          promptText = v.image_prompt || v.video_prompt || promptText;
         }
       }
       

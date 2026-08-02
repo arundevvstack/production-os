@@ -1,7 +1,6 @@
 import React from "react";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { StageHeader } from "@/components/production/StageHeader";
 import { Clapperboard, MapPin, Users, Sun, Camera, CheckCircle } from "lucide-react";
 import { SceneImage } from "../SceneImage";
 
@@ -28,15 +27,8 @@ export default async function StoryboardReviewPage({ params }: { params: Promise
   const scenes = latestVersion?.content ? (latestVersion.content as any[]) : [];
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-20">
-      <StageHeader 
-        title="Storyboard Review"
-        status={latestVersion?.status || "NOT_STARTED"}
-        progress={latestVersion?.status === 'approved' ? 100 : 0}
-        commentsCount={0}
-        attachmentsCount={0}
-      />
-      
+    <div className="w-full space-y-6 pb-20">
+            
       {!latestVersion ? (
         <div className="border border-dashed border-slate-300 rounded-2xl p-16 text-center bg-white shadow-sm flex flex-col items-center justify-center">
           <Clapperboard className="w-16 h-16 text-slate-300 mb-4" />

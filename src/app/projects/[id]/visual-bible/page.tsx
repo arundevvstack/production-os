@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { StageHeader } from "@/components/production/StageHeader";
 import { BookOpen } from "lucide-react";
 import { VisualBibleViewer } from "./VisualBibleViewer";
 import { WorkflowEngine } from "@/lib/production/WorkflowEngine";
@@ -51,15 +50,8 @@ export default async function VisualBiblePage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
-      <StageHeader 
-        title="AI Visual Bible"
-        status={statusInfo?.status || "Active"}
-        progress={statusInfo?.progress || 0}
-        commentsCount={0}
-        attachmentsCount={0}
-      />
-      
+    <div className="h-full overflow-y-auto px-8 pt-6 pb-32 space-y-6 w-full">
+            
       {!latestVersion ? (
         <div className="border border-dashed border-slate-300 rounded-2xl p-16 text-center bg-white shadow-sm flex flex-col items-center justify-center">
           <BookOpen className="w-16 h-16 text-slate-300 mb-4" />

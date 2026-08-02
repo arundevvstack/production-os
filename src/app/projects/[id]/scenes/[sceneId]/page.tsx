@@ -68,7 +68,7 @@ export default async function SceneDashboardPage({ params }: { params: Promise<{
   ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-10">
+    <div className="w-full space-y-10">
       <div className="border-b pb-6 mb-6">
         <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
           <Link href={`/projects/${resolvedParams.id}/scenes`} className="hover:text-black">Scenes</Link>

@@ -9,7 +9,7 @@ export default async function ProductionProjectsPage() {
   });
 
   return (
-    <div className="p-10 max-w-7xl mx-auto">
+    <div className="p-10 w-full">
       <div className="flex items-center justify-between mb-10">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Active Projects</h1>

@@ -102,7 +102,7 @@ export function ScriptContainer({ projectId, scripts }: ScriptContainerProps) {
         />
         <button
           onClick={() => triggerAnalysis(activeScript.id)}
-          disabled={isAnalyzing || activeScript.is_locked}
+          disabled={isAnalyzing}
           className="flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition disabled:opacity-50"
         >
           {isAnalyzing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Database className="w-4 h-4 mr-2" />}

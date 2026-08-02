@@ -70,35 +70,32 @@ export async function POST(req: Request, { params }: { params: any }) {
 
     let scenesData: any[] = [];
     try {
-      let provider = await prisma.productionAIProvider.findFirst({ where: { name: "OpenAI" } });
+      // Find any enabled text-capable provider (not just OpenAI)
+      const provider = await prisma.productionAIProvider.findFirst({
+        where: { is_enabled: true }
+      });
       if (!provider) {
-          throw new Error("OpenAI provider not configured in system.");
+        return NextResponse.json({ error: "No AI provider configured. Please add an API key in Settings → AI Providers." }, { status: 503 });
       }
 
       const apiKey = await ProviderManager.getDecryptedCredentials(provider.id);
       const adapter = ProviderManager.getAdapter(provider.name);
+      const modelToUse = provider.supported_models?.[0] || 'gemini-2.5-flash';
       const systemPrompt = "You return strictly valid JSON arrays of objects. No markdown formatting or code blocks outside the JSON.";
       
-      const response = await adapter.submitJob(apiKey, "gpt-4o", systemPrompt + "\n\n" + prompt);
+      const response = await adapter.submitJob(apiKey, modelToUse, systemPrompt + "\n\n" + prompt);
       if (!response.textContent) throw new Error("No response received from AI");
       scenesData = JSON.parse(response.textContent.replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim());
     } catch (e: any) {
-      console.warn("AI Generation or Credential fetch failed, falling back to mock data:", e.message);
-      // Fallback to mock data so the user can continue testing the flow
-      scenesData = storyboardScenes.map((sb, i) => ({
-        scene_number: i + 1,
-        title: `Scene ${i + 1}: ${sb.title || 'Action'}`,
-        description: sb.scene_summary || "A beautifully lit cinematic scene.",
-        mood: "Cinematic, dramatic",
-        objective: "Establish the setting and characters.",
-        scene_type: "EXT",
-        time_of_day: "DAY",
-        location_ref: sb.environment_description || "Main location",
-        characters_ref: sb.character_placement || "Main characters",
-        props_ref: "Relevant props",
-        blocking_notes: "Characters move naturally through the frame.",
-        camera_notes: sb.camera_angle || "Wide establishing shot."
-      }));
+      // ROOT CAUSE FIX: Do NOT fall back to mock scene data.
+      // Mock scenes ("Establish the setting and characters", "Characters move naturally")
+      // have no relationship to the actual script or breakdown.
+      // Surface the error explicitly so the user knows to check their provider config.
+      console.error("[SceneGen] AI generation failed — no mock fallback:", e.message);
+      return NextResponse.json({
+        error: `Scene generation failed: ${e.message}. Please check your AI provider configuration in Settings → AI Providers.`,
+        ai_error: true
+      }, { status: 503 });
     }
 
     const createdScenes = await prisma.$transaction(async (tx) => {

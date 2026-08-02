@@ -33,7 +33,7 @@ export default async function VisualBibleReviewPage({ params }: { params: Promis
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="w-full p-6">
       <VisualBibleViewer projectId={resolvedParams.id} version={latestVersion} readOnly={true} />
     </div>
   );

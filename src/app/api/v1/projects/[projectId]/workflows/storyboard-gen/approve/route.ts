@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function POST(req: Request, { params }: { params: any }) {
+export async function POST(req: Request, { params }: { params: Promise<{ projectId: string }> }) {
   try {
     const { projectId } = await params;
     const body = await req.json();
@@ -26,7 +26,12 @@ export async function POST(req: Request, { params }: { params: any }) {
       }
     });
 
-    const storyboardVersion = project?.ProductionStoryboard?.Versions?.[0];
+    const storyboard = project?.ProductionStoryboard;
+    if (!storyboard) {
+      return NextResponse.json({ error: "Storyboard not found." }, { status: 404 });
+    }
+
+    const storyboardVersion = storyboard.Versions?.[0];
     if (!storyboardVersion) {
       return NextResponse.json({ error: "Storyboard version not found." }, { status: 404 });
     }
@@ -55,12 +60,12 @@ export async function POST(req: Request, { params }: { params: any }) {
 
     if (newStatus === 'approved') {
       await prisma.productionStoryboard.update({
-        where: { id: project.ProductionStoryboard.id },
+        where: { id: storyboard.id },
         data: { is_completed: true }
       });
     } else {
       await prisma.productionStoryboard.update({
-        where: { id: project.ProductionStoryboard.id },
+        where: { id: storyboard.id },
         data: { is_completed: false }
       });
     }

@@ -32,7 +32,8 @@ export class WorkflowEngine {
       include: {
         ProductionScript: true,
         ProductionVisualBible: { include: { Versions: true } },
-        ProductionStoryboard: true
+        // Versions MUST be included — storyboardProgress calculation depends on the content array
+        ProductionStoryboard: { include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } } }
       }
     });
 
@@ -48,6 +49,7 @@ export class WorkflowEngine {
     const sceneCount = project.ProductionStoryboard ? await prisma.productionScene.count({ where: { storyboard_id: project.ProductionStoryboard.id } }) : 0;
     const shotCount = project.ProductionStoryboard ? await prisma.productionShot.count({ where: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } }) : 0;
     const promptCount = project.ProductionStoryboard ? await prisma.productionPrompt.count({ where: { ProductionShot: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } } }) : 0;
+    const packageCount = await prisma.productionPackage.count({ where: { project_id: projectId } });
     // ONLY assets generated successfully for THIS project
     const assetCount = await prisma.productionAsset.count({ where: { project_id: projectId, status: 'Completed' } });
 
@@ -62,10 +64,11 @@ export class WorkflowEngine {
 
     // 2. Script
     const isScriptUnlocked = isWorkspaceComplete;
+    const scriptExists = !!project.ProductionScript;
     const isScriptComplete = !!project.ProductionScript?.is_locked;
 
-    // 3. Breakdown
-    const isBreakdownUnlocked = isScriptComplete;
+    // 3. Breakdown — unlocks as soon as a script exists (user doesn't need to lock it first)
+    const isBreakdownUnlocked = scriptExists;
     const isBreakdownComplete = (characterCount > 0 || sceneCount > 0);
 
     // 4. Visual Bible
@@ -95,20 +98,46 @@ export class WorkflowEngine {
     const isCharUnlocked = isVisualBibleComplete;
     const isCharComplete = characterCount > 0;
 
-    // 6. Storyboard
-    const isStoryboardUnlocked = isCharComplete;
-    const isStoryboardComplete = sceneCount > 0;
+    // 5.5 Location Manager
+    const isLocationUnlocked = isVisualBibleComplete;
+    const isLocationComplete = locationCount > 0;
 
-    // 7. Scene Manager
+    // 6. Storyboard
+    const isStoryboardUnlocked = isCharComplete || isLocationComplete;
+    let storyboardProgress = 0;
+    if (project.ProductionStoryboard) {
+      const v = (project.ProductionStoryboard as any).Versions?.[0];
+      if (v && v.content) {
+        try {
+          const scenes = typeof v.content === 'string' ? JSON.parse(v.content) : v.content;
+          if (Array.isArray(scenes) && scenes.length > 0) {
+            const approved = scenes.filter((s: any) => s.is_approved).length;
+            storyboardProgress = Math.round((approved / scenes.length) * 100);
+          }
+        } catch (e) {}
+      }
+    }
+    // Storyboard is complete when 100% of scenes are approved.
+    // FALLBACK: if production scenes already exist (were extracted), treat storyboard as complete
+    // — the user already approved the storyboard and triggered extraction.
+    const isStoryboardComplete =
+      (storyboardProgress === 100 && project.ProductionStoryboard != null) ||
+      sceneCount > 0;
+
+    // 7. Scene Manager — unlocks when storyboard is complete
     const isSceneUnlocked = isStoryboardComplete;
     const isSceneComplete = sceneCount > 0;
 
-    // 8. Shot Manager
+    // 8. Shot Manager — unlocks when at least one production scene exists
     const isShotUnlocked = isSceneComplete;
     const isShotComplete = shotCount > 0;
 
+    // 8.5 Production Intelligence
+    const isIntelligenceUnlocked = isShotComplete;
+    const isIntelligenceComplete = packageCount > 0 && packageCount >= shotCount;
+
     // 9. Prompt Library
-    const isPromptUnlocked = isShotComplete;
+    const isPromptUnlocked = isIntelligenceComplete;
     const isPromptComplete = promptCount > 0;
 
     // 10. Generation Studio
@@ -124,9 +153,11 @@ export class WorkflowEngine {
       { id: 'breakdown', title: 'Breakdown', href: `/projects/${project.id}/breakdown`, icon: "List", status: isBreakdownComplete ? "Completed" : (isBreakdownUnlocked ? "Active" : "Locked"), progress: isBreakdownComplete ? 100 : 0, locked: !isBreakdownUnlocked, group: 'Creative Development' },
       { id: 'visual_bible', title: 'Visual Bible', href: `/projects/${project.id}/visual-bible`, icon: "BookOpen", status: isVisualBibleComplete ? "Completed" : (isVisualBibleUnlocked ? "Active" : "Locked"), progress: isVisualBibleComplete ? 100 : 0, locked: !isVisualBibleUnlocked, group: 'Creative Development' },
       { id: 'characters', title: 'Character Manager', href: `/projects/${project.id}/characters`, icon: "Star", status: isCharComplete ? "Completed" : (isCharUnlocked ? "Active" : "Locked"), progress: isCharComplete ? 100 : 0, locked: !isCharUnlocked, group: 'Production' },
+      { id: 'locations', title: 'Location Manager', href: `/projects/${project.id}/locations`, icon: "MapPin", status: isLocationComplete ? "Completed" : (isLocationUnlocked ? "Active" : "Locked"), progress: isLocationComplete ? 100 : 0, locked: !isLocationUnlocked, group: 'Production' },
       { id: 'storyboard', title: 'Storyboard', href: `/projects/${project.id}/storyboard`, icon: "Clapperboard", status: isStoryboardComplete ? "Completed" : (isStoryboardUnlocked ? "Active" : "Locked"), progress: isStoryboardComplete ? 100 : 0, locked: !isStoryboardUnlocked, group: 'Production' },
       { id: 'scenes', title: 'Scene Manager', href: `/projects/${project.id}/scenes`, icon: "ImageIcon", status: isSceneComplete ? "Completed" : (isSceneUnlocked ? "Active" : "Locked"), progress: isSceneComplete ? 100 : 0, locked: !isSceneUnlocked, group: 'Production' },
       { id: 'shots', title: 'Shot Manager', href: `/projects/${project.id}/shots`, icon: "Video", status: isShotComplete ? "Completed" : (isShotUnlocked ? "Active" : "Locked"), progress: isShotComplete ? 100 : 0, locked: !isShotUnlocked, group: 'Production' },
+      { id: 'production_intelligence', title: 'Intelligence Engine', href: `/projects/${project.id}/intelligence`, icon: "Cpu", status: isIntelligenceComplete ? "Completed" : (isIntelligenceUnlocked ? "Active" : "Locked"), progress: isIntelligenceComplete ? 100 : 0, locked: !isIntelligenceUnlocked, group: 'Production' },
       { id: 'prompt_studio', title: 'Prompt Library', href: `/projects/${project.id}/prompts`, icon: "Wand2", status: isPromptComplete ? "Completed" : (isPromptUnlocked ? "Active" : "Locked"), progress: isPromptComplete ? 100 : 0, locked: !isPromptUnlocked, group: 'AI Studio' },
       { id: 'generation_studio', title: 'Generation Studio', href: `/projects/${project.id}/generation`, icon: "Sparkles", status: isGenComplete ? "Completed" : (isGenUnlocked ? "Active" : "Locked"), progress: isGenComplete ? 100 : 0, locked: !isGenUnlocked, group: 'AI Studio' },
       { id: 'asset_library', title: 'Asset Library', href: `/projects/${project.id}/assets`, icon: "Library", status: isAssetUnlocked ? "Active" : "Locked", progress: 0, locked: !isAssetUnlocked, group: 'AI Studio' }
@@ -170,6 +201,7 @@ export class WorkflowEngine {
     if (!isStoryboardComplete) completionReasons['storyboard'] = ["Add at least one storyboard frame."];
     if (!isSceneComplete) completionReasons['scenes'] = ["Create at least one scene."];
     if (!isShotComplete) completionReasons['shots'] = ["Create at least one camera shot."];
+    if (!isIntelligenceComplete) completionReasons['production_intelligence'] = ["Compile production intelligence packages for all shots."];
     if (!isPromptComplete) completionReasons['prompt_studio'] = ["Generate at least one prompt."];
     if (!isGenComplete) completionReasons['generation_studio'] = ["Successfully generate at least one image/video."];
 

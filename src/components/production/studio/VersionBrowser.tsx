@@ -39,9 +39,10 @@ export function VersionBrowser({ assets }: { assets: any[] }) {
             <div className="aspect-video bg-slate-950 relative flex items-center justify-center overflow-hidden">
               {version.file_url ? (
                 version.assetType === 'Video' ? (
-                  <video src={version.file_url} className="w-full h-full object-cover" />
+                  <video src={version.file_url} className="w-full h-full" style={{ objectFit: 'contain' }} />
                 ) : (
-                  <img src={version.file_url} className="w-full h-full object-cover" />
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={version.file_url} alt="Asset preview" className="w-full h-full" style={{ objectFit: 'contain' }} />
                 )
               ) : version.assetType === 'Text' && version.metadata?.raw_response?.choices?.[0]?.message?.content ? (
                 <div className="w-full h-full p-3 text-[8px] font-mono text-slate-300 overflow-hidden break-words text-left">

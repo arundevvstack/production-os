@@ -1,6 +1,20 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+// ARCHITECTURE: one ProductionScript per project. Uses upsert — never create().
+async function ensureScript(projectId: string) {
+  return prisma.productionScript.upsert({
+    where: { project_id: projectId },
+    create: {
+      id: require("crypto").randomUUID(),
+      project_id: projectId,
+      content: "",
+      updated_at: new Date()
+    },
+    update: {}
+  });
+}
+
 export async function GET(_req: Request, { params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
   const characters = await prisma.productionCharacter.findMany({
@@ -14,12 +28,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ project
 export async function POST(req: Request, { params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
   const body = await req.json();
-  let script = await prisma.productionScript.findUnique({ where: { project_id: projectId } });
-  if (!script) {
-    script = await prisma.productionScript.create({
-      data: { id: require("crypto").randomUUID(), project_id: projectId, content: "", updated_at: new Date() }
-    });
-  }
+
+  const script = await ensureScript(projectId);
+
   const character = await prisma.productionCharacter.create({
     data: {
       project_id: projectId,
@@ -31,6 +42,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ project
       personality: body.personality || null,
       reference_prompt: body.reference_prompt || null,
       reference_image_url: body.reference_image_url || null,
+      metadata: body.metadata || null,
       updated_at: new Date()
     }
   });

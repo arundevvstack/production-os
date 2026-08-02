@@ -31,9 +31,24 @@ export function BreakdownSection({ title, icon, items }: BreakdownSectionProps) 
           <span className="text-emerald-500 bg-emerald-50 p-1.5 rounded-lg">{icon}</span>
           {title}
         </h3>
-        <span className="text-xs font-semibold text-slate-500 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
-          {items.length} {items.length === 1 ? 'item' : 'items'}
-        </span>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              if (approvedIds.size === items.length) {
+                setApprovedIds(new Set());
+              } else {
+                setApprovedIds(new Set(items.map(i => i.id)));
+              }
+            }}
+            className="text-[11px] font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-md transition-colors"
+          >
+            {approvedIds.size === items.length ? "Unapprove All" : "Approve All"}
+          </button>
+          <span className="text-xs font-semibold text-slate-500 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
+            {items.length} {items.length === 1 ? 'item' : 'items'}
+          </span>
+        </div>
       </div>
       
       <div className="p-5 space-y-3.5 overflow-y-auto flex-1 custom-scrollbar">

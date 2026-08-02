@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -16,6 +16,10 @@ export default function ApproveSceneButton({
   const [isApproved, setIsApproved] = useState(initialApproved);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsApproved(initialApproved);
+  }, [initialApproved]);
 
   const handleToggle = async () => {
     setLoading(true);

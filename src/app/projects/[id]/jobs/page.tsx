@@ -53,7 +53,7 @@ export default async function JobQueuePage({ params }: { params: Promise<{ id: s
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="w-full space-y-8">
       <div className="flex items-end justify-between border-b pb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">Job Queue</h1>

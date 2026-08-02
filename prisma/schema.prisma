@@ -69,6 +69,12 @@ model ProductionAIJob {
   error_message          String?
   external_job_id        String?
   metadata               Json?
+  request                Json?
+  response               Json?
+  generation_parameters  Json?
+  duration               Int?
+  cost                   Float?
+  retry_count            Int                      @default(0)
   created_at             DateTime                 @default(now())
   updated_at             DateTime
   productionPromptId     String?
@@ -166,8 +172,10 @@ model ProductionAssetVersion {
   is_current      Boolean          @default(true)
   created_at      DateTime         @default(now())
   updated_at      DateTime
+  prompt_version_id String?
   ProductionAsset ProductionAsset  @relation(fields: [asset_id], references: [id], onDelete: Cascade)
   ProductionAIJob ProductionAIJob? @relation(fields: [job_id], references: [id])
+  ProductionPromptVersion ProductionPromptVersion? @relation(fields: [prompt_version_id], references: [id])
 
   @@index([asset_id])
 }
@@ -379,6 +387,7 @@ model Project {
   ProjectHealthScore       ProjectHealthScore?
   ProjectMember            ProjectMember[]
   ProjectStage             ProjectStage[]
+  ProductionPackage        ProductionPackage[]
 }
 
 model ProjectHealthScore {
@@ -555,6 +564,8 @@ model ProductionCharacter {
   last_appearance     String?
   reference_prompt    String?
   reference_image_url String?
+  metadata            Json?
+  status              String              @default("Draft")
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt
   Project             Project             @relation(fields: [project_id], references: [id], onDelete: Cascade)
@@ -578,6 +589,8 @@ model ProductionLocation {
   scene_count      Int              @default(0)
   reference_images Json?
   production_notes String?
+  metadata         Json?
+  status           String           @default("Draft")
   created_at       DateTime         @default(now())
   updated_at       DateTime         @updatedAt
   Project          Project          @relation(fields: [project_id], references: [id], onDelete: Cascade)
@@ -894,6 +907,7 @@ model ProductionShot {
   ProductionScene            ProductionScene              @relation(fields: [scene_id], references: [id], onDelete: Cascade)
   Versions                   ProductionShotVersion[]
   creative_memories          ProductionCreativeMemory[]   @relation("ShotToMemory")
+  ProductionPackage          ProductionPackage?
 
   @@index([scene_id])
 }
@@ -940,25 +954,26 @@ model ProductionPrompt {
 
 model ProductionPromptVersion {
   id                 String           @id @default(uuid())
-  prompt_id          String
-  version_number     Int              @default(1)
-  image_prompt       String?
-  video_prompt       String?
-  animation_prompt   String?
-  environment_prompt String?
-  character_prompt   String?
-  camera_prompt      String?
-  lighting_prompt    String?
-  style_prompt       String?
-  negative_prompt    String?
-  seed               String?
-  aspect_ratio       String?
-  model_rec          String?
-  provider_rec       String?
-  quality_rec        String?
-  status             String           @default("Draft")
-  created_at         DateTime         @default(now())
-  Prompt             ProductionPrompt @relation(fields: [prompt_id], references: [id], onDelete: Cascade)
+  prompt_id              String
+  version_number         Int              @default(1)
+  image_prompt           String?
+  video_prompt           String?
+  camera_motion_prompt   String?
+  voice_prompt           String?
+  narration_prompt       String?
+  dialogue_prompt        String?
+  music_prompt           String?
+  background_score_prompt String?
+  sound_design_prompt    String?
+  foley_prompt           String?
+  thumbnail_prompt       String?
+  poster_prompt          String?
+  negative_prompt        String?
+  provider_parameters    Json?
+  status                 String           @default("Draft")
+  created_at             DateTime         @default(now())
+  Prompt                 ProductionPrompt @relation(fields: [prompt_id], references: [id], onDelete: Cascade)
+  ProductionAssetVersion ProductionAssetVersion[]
 
   @@index([prompt_id])
 }
@@ -1077,4 +1092,32 @@ model ProductionVisualBibleVersion {
   VisualBible          ProductionVisualBible @relation(fields: [visual_bible_id], references: [id], onDelete: Cascade)
 
   @@index([visual_bible_id])
+}
+
+model ProductionPackage {
+  id         String                     @id @default(uuid())
+  project_id String
+  shot_id    String                     @unique
+  status     String                     @default("Draft")
+  created_at DateTime                   @default(now())
+  updated_at DateTime                   @updatedAt
+  Project    Project                    @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  Shot       ProductionShot             @relation(fields: [shot_id], references: [id], onDelete: Cascade)
+  Versions   ProductionPackageVersion[]
+
+  @@index([project_id])
+}
+
+model ProductionPackageVersion {
+  id                String            @id @default(uuid())
+  package_id        String
+  version_number    Int               @default(1)
+  compiled_data     Json
+  validation_errors Json?
+  status            String            @default("Draft")
+  created_at        DateTime          @default(now())
+  created_by        String?
+  Package           ProductionPackage @relation(fields: [package_id], references: [id], onDelete: Cascade)
+
+  @@index([package_id])
 }

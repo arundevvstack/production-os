@@ -42,6 +42,7 @@ export class LocalAIGatewayAdapter implements ProviderAdapterInterface {
       steps: options?.steps || 4,
       cfg: options?.cfg || 3.5,
       seed: options?.seed,
+      reference_image_url: options?.reference_image_url,
       negative_prompt: options?.negativePrompt,
       duration: options?.duration,
       voice_id: options?.voiceId

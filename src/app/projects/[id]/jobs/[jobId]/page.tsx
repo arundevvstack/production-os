@@ -42,7 +42,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <Link href={`/projects/${resolvedParams.id}/jobs`} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-black transition">
         <ChevronLeft className="h-4 w-4 mr-1" /> Back to Queue
       </Link>

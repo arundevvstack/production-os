@@ -9,10 +9,9 @@ from typing import Optional, Dict
 from fastapi import FastAPI, HTTPException, Response, Request, Depends
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
-import torch
-import psutil
 from model_registry import get_available_models, get_model_definition
-from pipeline_factory import PipelineFactory
+from pipeline_factory import PipelineFactory, COMFYUI_URL
+import requests
 
 # Load environment variables from .env
 from dotenv import load_dotenv
@@ -39,70 +38,32 @@ def get_dir_size(path):
     return total_size
 
 def check_model_cached(model_id: str):
-    """Checks if a Hugging Face model exists in the cache directory."""
-    if not os.path.exists(CACHE_DIR):
-        return False
-    # Models are stored in ~/.cache/huggingface/hub/models--author--name
-    hub_dir = os.path.join(CACHE_DIR, "hub")
-    if not os.path.exists(hub_dir):
-        return False
-    
-    formatted_name = "models--" + model_id.replace("/", "--")
-    model_dir = os.path.join(hub_dir, formatted_name)
-    if os.path.exists(model_dir):
-        # Could also check for snapshots directory, but existence of the folder usually implies it was started.
-        snapshots_dir = os.path.join(model_dir, "snapshots")
-        if os.path.exists(snapshots_dir) and len(os.listdir(snapshots_dir)) > 0:
+    """Checks if a model is available in ComfyUI."""
+    try:
+        res = requests.get(f"{COMFYUI_URL}/object_info", timeout=2)
+        if res.status_code == 200:
+            # We assume ComfyUI manages models dynamically, so it's 'cached' 
+            # if we can hit ComfyUI. Actual node validation can be deeper.
             return True
+    except:
+        pass
     return False
 
 @app.on_event("startup")
 def startup_event():
     print("=" * 50)
-    print("AI Gateway Startup Validation")
+    print("AI Gateway Startup Validation (ComfyUI Backend)")
     print("=" * 50)
     
-    # 1. Hugging Face Token
-    hf_token = os.getenv("HUGGING_FACE_HUB_TOKEN") or os.getenv("HF_TOKEN")
-    if hf_token:
-        print("[OK] Hugging Face Token detected.")
-    else:
-        print("[WARNING] No Hugging Face Token detected. Gated models will fail to download.")
-        
-    # 2. Model Cache Directory
-    print(f"[INFO] Model Cache Directory: {CACHE_DIR}")
+    print(f"[INFO] COMFYUI_URL: {COMFYUI_URL}")
     
-    # 3. Disk Space and Permissions
     try:
-        os.makedirs(CACHE_DIR, exist_ok=True)
-        test_file = os.path.join(CACHE_DIR, ".test_write")
-        with open(test_file, "w") as f:
-            f.write("test")
-        os.remove(test_file)
-        print("[OK] Cache directory is writable.")
-        
-        disk_usage = shutil.disk_usage(CACHE_DIR)
-        free_gb = disk_usage.free / (1024**3)
-        if free_gb < 30:
-            print(f"[WARNING] Low disk space: {free_gb:.2f} GB free. Large models require ~23GB.")
-        else:
-            print(f"[OK] Sufficient disk space: {free_gb:.2f} GB free.")
-            
+        res = requests.get(f"{COMFYUI_URL}/system_stats", timeout=5)
+        res.raise_for_status()
+        print("[OK] Connected to ComfyUI.")
     except Exception as e:
-        print(f"[ERROR] Cache directory validation failed: {e}")
+        print(f"[WARNING] Failed to connect to ComfyUI at startup: {e}")
         
-    # 4. GPU / CUDA check
-    if torch.cuda.is_available():
-        print("[OK] CUDA is available.")
-        device_count = torch.cuda.device_count()
-        print(f"[OK] GPU Detected: {device_count} device(s).")
-        for i in range(device_count):
-            name = torch.cuda.get_device_name(i)
-            vram_gb = torch.cuda.get_device_properties(i).total_memory / (1024**3)
-            print(f"  - Device {i}: {name} ({vram_gb:.2f} GB VRAM)")
-    else:
-        print("[WARNING] CUDA is NOT available. Fallback to CPU mode.")
-
     print("=" * 50)
 
 async def verify_security(request: Request):
@@ -153,29 +114,36 @@ class GenerateRequest(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "gpu": torch.cuda.is_available()}
+    try:
+        res = requests.get(f"{COMFYUI_URL}/system_stats", timeout=3)
+        return {"status": "healthy", "comfyui": "connected"}
+    except:
+        return {"status": "unhealthy", "comfyui": "disconnected"}
 
 @app.get("/gpu")
 def gpu_status():
     status = {
-        "cuda_available": torch.cuda.is_available(),
-        "device_count": torch.cuda.device_count() if torch.cuda.is_available() else 0,
+        "cuda_available": False,
+        "device_count": 0,
         "devices": []
     }
     
-    if status["cuda_available"]:
-        for i in range(status["device_count"]):
-            status["devices"].append({
-                "id": i,
-                "name": torch.cuda.get_device_name(i),
-                "total_memory_gb": round(torch.cuda.get_device_properties(i).total_memory / (1024**3), 2),
-                "allocated_memory_gb": round(torch.cuda.memory_allocated(i) / (1024**3), 2),
-                "reserved_memory_gb": round(torch.cuda.memory_reserved(i) / (1024**3), 2)
-            })
+    try:
+        res = requests.get(f"{COMFYUI_URL}/system_stats", timeout=3)
+        if res.status_code == 200:
+            stats = res.json()
+            if "devices" in stats:
+                status["cuda_available"] = True
+                status["devices"] = stats["devices"]
+                status["device_count"] = len(stats["devices"])
+    except:
+        pass
+        
     return status
 
 @app.get("/metrics")
 def system_metrics():
+    import psutil
     return {
         "cpu_percent": psutil.cpu_percent(),
         "memory_percent": psutil.virtual_memory().percent,
@@ -282,57 +250,14 @@ def generate_asset(request: GenerateRequest):
         pipeline.load(model_id)
     except Exception as e:
         error_msg = str(e)
-        from huggingface_hub.utils import GatedRepoError, RepositoryNotFoundError
         import requests.exceptions
         
-        if isinstance(e, GatedRepoError) or "401" in error_msg or "gated repo" in error_msg.lower():
-            if ALLOW_MODEL_FALLBACK:
-                print(f"[WARN] Access to {model_id} restricted. Falling back to {FALLBACK_MODEL}.")
-                model_id = FALLBACK_MODEL
-                fallback_used = True
-                try:
-                    pipeline.load(model_id)
-                except Exception as inner_e:
-                    raise HTTPException(status_code=500, detail={
-                        "error_code": "FALLBACK_FAILED",
-                        "cause": str(inner_e),
-                        "suggested_fix": "The fallback model also failed to load.",
-                        "recovery_action": "Check Gateway logs."
-                    })
-            else:
-                raise HTTPException(status_code=401, detail={
-                    "error_code": "UNAUTHORIZED_GATED_MODEL",
-                    "cause": f"The model {model_id} is gated and requires authentication.",
-                    "suggested_fix": "1. Accept the license on HuggingFace.\n2. Ensure HUGGING_FACE_HUB_TOKEN is valid in .env.",
-                    "recovery_action": "Update .env or select an ungated model."
-                })
-        elif isinstance(e, RepositoryNotFoundError) or "404" in error_msg:
-            raise HTTPException(status_code=404, detail={
-                "error_code": "MODEL_NOT_FOUND",
-                "cause": f"The repository {model_id} does not exist on the Hub.",
-                "suggested_fix": "Verify the model ID spelling.",
-                "recovery_action": "Update the model registry with the correct Hugging Face ID."
-            })
-        elif "CUDA out of memory" in error_msg or "out of memory" in error_msg.lower():
-            raise HTTPException(status_code=507, detail={
-                "error_code": "OUT_OF_MEMORY",
-                "cause": "The GPU ran out of VRAM while loading the model.",
-                "suggested_fix": "Close other GPU applications or restart the gateway.",
-                "recovery_action": "Use a smaller model or lower resolution."
-            })
-        elif isinstance(e, requests.exceptions.ConnectionError) or "Connection aborted" in error_msg:
+        if isinstance(e, requests.exceptions.ConnectionError) or "Connection aborted" in error_msg or "Failed to connect" in error_msg:
             raise HTTPException(status_code=502, detail={
                 "error_code": "NETWORK_FAILURE",
-                "cause": "Failed to connect to Hugging Face Hub during model download.",
-                "suggested_fix": "Check your internet connection.",
+                "cause": f"Failed to connect to ComfyUI at {COMFYUI_URL}.",
+                "suggested_fix": "Ensure ComfyUI is running.",
                 "recovery_action": "Retry the generation."
-            })
-        elif "No space left on device" in error_msg:
-            raise HTTPException(status_code=507, detail={
-                "error_code": "DISK_FULL",
-                "cause": "Not enough disk space to download the model cache.",
-                "suggested_fix": "Free up disk space on the drive containing the .cache folder.",
-                "recovery_action": "Run POST /cache/clear to remove unused models."
             })
         else:
             raise HTTPException(status_code=500, detail={

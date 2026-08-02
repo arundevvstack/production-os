@@ -2,17 +2,19 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { StageHeader } from "@/components/production/StageHeader";
 import { Camera, ListVideo, Frame, Search, Maximize2, CheckCircle2 } from "lucide-react";
 import { ApproveAllShotsButton } from "./ApproveAllShotsButton";
 import { EditShotButton } from "./EditShotButton";
 import { WorkflowEngine } from "@/lib/production/WorkflowEngine";
+import { AssetCard } from "@/components/production/ui/AssetCard";
+import { StatusBadge } from "@/components/production/ui/StatusBadge";
 
 export default async function ShotListPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const project = await prisma.project.findUnique({
     where: { id: resolvedParams.id },
     include: { 
+      ProductionVisualBible: { include: { Versions: { orderBy: { version_number: 'desc' }, take: 1 } } },
       ProductionStoryboard: { 
         include: { 
           ProductionScene: {
@@ -56,15 +58,8 @@ export default async function ShotListPage({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-20">
-      <StageHeader 
-        title="Shot Planner"
-        status={statusInfo?.status || "Active"}
-        progress={statusInfo?.progress || 0}
-        commentsCount={0}
-        attachmentsCount={0}
-      />
-      
+    <div className="h-full overflow-y-auto px-8 pt-6 pb-32 space-y-6 w-full">
+            
       {allShots.length === 0 ? (
         <div className="border border-dashed border-slate-300 rounded-2xl p-16 text-center bg-white shadow-sm flex flex-col items-center justify-center">
           <ListVideo className="w-16 h-16 text-slate-300 mb-4" />
@@ -117,34 +112,29 @@ export default async function ShotListPage({ params }: { params: Promise<{ id: s
                             <td className="px-4 py-4 text-center font-bold text-slate-400">{scene.scene_number}.{shot.shot_number}</td>
                             <td className="px-4 py-4 font-semibold text-slate-700">
                               <div className="flex items-center gap-3">
-                                {v?.reference_image_url ? (
-                                  <img src={v.reference_image_url} alt="Shot reference" className="w-12 h-8 object-cover rounded shadow-sm border border-slate-200" />
-                                ) : (
-                                  <div className="w-12 h-8 bg-slate-100 flex items-center justify-center rounded border border-slate-200">
-                                    <Frame className="w-4 h-4 text-slate-400" />
-                                  </div>
-                                )}
+                                <AssetCard 
+                                  assetUrl={v?.reference_image_url}
+                                  className="w-16 shrink-0 rounded border border-slate-200"
+                                />
                                 <div>{v?.shot_type || 'Auto'}</div>
                               </div>
                             </td>
-                            <td className="px-4 py-4">
-                              <div className="text-slate-800 font-medium">{v?.lens || shot.lens}</div>
-                              <div className="text-slate-500 text-xs mt-0.5">{v?.camera_angle || shot.camera}</div>
-                            </td>
-                            <td className="px-4 py-4 text-slate-600">
-                              {v?.movement || shot.movement}
-                            </td>
-                            <td className="px-4 py-4 text-slate-600 max-w-xs truncate">
-                              {v?.character_blocking || 'No blocking specified'}
-                            </td>
-                            <td className="px-4 py-4 text-right">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
-                                {v?.status || 'Draft'}
-                              </span>
-                            </td>
-                            <td className="px-4 py-4 text-right">
-                              <EditShotButton shot={shot} projectId={project.id} />
-                            </td>
+                          <td className="px-4 py-4">
+                            <div className="text-slate-800 font-medium">{v?.lens || shot.lens}</div>
+                            <div className="text-slate-500 text-xs mt-0.5">{v?.camera_angle || shot.camera}</div>
+                          </td>
+                          <td className="px-4 py-4 text-slate-600">
+                            {v?.movement || shot.movement}
+                          </td>
+                          <td className="px-4 py-4 text-slate-600 max-w-xs truncate">
+                            {v?.character_blocking || 'No blocking specified'}
+                          </td>
+                          <td className="px-4 py-4 text-right">
+                            <StatusBadge status={v?.status || 'Pending'} />
+                          </td>
+                          <td className="px-4 py-4 text-right">
+                            <EditShotButton shot={shot} projectId={project.id} scene={scene} visualBible={(project as any).ProductionVisualBible} />
+                          </td>
                           </tr>
                         );
                       })}

@@ -7,29 +7,33 @@ import { EditShotModal } from "./EditShotModal";
 interface EditShotButtonProps {
   shot: any;
   projectId: string;
+  scene?: any;
+  visualBible?: any;
 }
 
-export function EditShotButton({ shot, projectId }: EditShotButtonProps) {
+export function EditShotButton({ shot, projectId, scene, visualBible }: EditShotButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const v = shot.Versions?.[0];
+  
+  const currentVersion = shot.Versions?.[0] || null;
 
   return (
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition"
-        title="Edit Shot Details"
+        className="p-2 hover:bg-slate-100 rounded text-slate-500 hover:text-slate-900 transition inline-flex items-center gap-2 text-sm font-medium"
       >
-        <Edit2 className="w-4 h-4" />
+        <Edit2 className="w-4 h-4" /> Edit Shot
       </button>
 
       {isOpen && (
-        <EditShotModal 
+        <EditShotModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          shotVersion={v || {}}
+          shotVersion={currentVersion}
           shot={shot}
           projectId={projectId}
+          scene={scene}
+          visualBible={visualBible}
         />
       )}
     </>
