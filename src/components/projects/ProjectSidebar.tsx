@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { WorkflowState, WorkflowStage } from "@/lib/production/WorkflowEngine";
 import { 
-  Search, Settings, HelpCircle, ChevronRight, MoreVertical, LayoutPanelLeft,
+  Search, Settings, HelpCircle, ChevronRight, ChevronLeft, MoreVertical, LayoutPanelLeft,
   FileText, List, BookOpen, ImageIcon, Clapperboard, Video, Sparkles, 
   Wand2, Library, CheckCircle, Scissors, UploadCloud, Info, Briefcase, 
   PlayCircle, Star, Lock, MapPin
@@ -86,9 +86,12 @@ export function ProjectSidebar({ workflowState, isMobile = false }: { workflowSt
           </button>
         </div>
 
-        {/* Search */}
+        {/* Search & Back */}
         {!isCollapsed && (
-          <div className="px-4 pb-4">
+          <div className="px-4 pb-4 space-y-3">
+            <Link href="/projects" className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground hover:text-foreground transition-colors p-1.5 -mx-1.5 rounded-md hover:bg-secondary/50 uppercase tracking-widest">
+              <ChevronLeft className="w-3.5 h-3.5" /> Projects Dashboard
+            </Link>
             <div className="relative flex items-center">
               <Search className="w-4 h-4 text-muted-foreground absolute left-3" />
               <input 
