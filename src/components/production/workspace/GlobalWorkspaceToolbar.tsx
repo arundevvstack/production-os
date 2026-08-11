@@ -15,11 +15,11 @@ export function GlobalWorkspaceToolbar() {
   // But for now, we render it globally.
 
   return (
-    <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3 bg-secondary/30 backdrop-blur-md px-8 py-2 border-b border-border sticky top-0 z-30 shrink-0">
+    <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3 bg-secondary/30 backdrop-blur-md px-4 py-3 md:px-8 md:py-2 border-b border-border sticky top-0 z-30 shrink-0">
       
       {/* LEFT: Search & KPIs */}
-      <div className="flex flex-1 items-center gap-4 min-w-0">
-        <div className="relative w-64 shrink-0">
+      <div className="flex flex-col sm:flex-row flex-1 items-stretch sm:items-center gap-3 sm:gap-4 min-w-0">
+        <div className="relative w-full sm:w-64 shrink-0">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
           <input 
             type="text" 
@@ -45,9 +45,9 @@ export function GlobalWorkspaceToolbar() {
       </div>
 
       {/* RIGHT: Actions */}
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex flex-wrap items-center gap-2 shrink-0 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
         {selectedIds.size > 0 && (
-          <div className="flex items-center gap-2 pr-3 border-r border-border mr-1 animate-in slide-in-from-right-4">
+          <div className="flex items-center gap-2 pr-3 border-r border-border mr-1 animate-in slide-in-from-right-4 whitespace-nowrap">
             <span className="text-xs font-bold text-foreground bg-secondary/50 px-2 py-1 rounded">{selectedIds.size} selected</span>
             {bulkActions}
           </div>

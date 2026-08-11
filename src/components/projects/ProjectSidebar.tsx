@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Image as ImageIcon2 } from "lucide-react";
 
-export function ProjectSidebar({ workflowState }: { workflowState: WorkflowState }) {
+export function ProjectSidebar({ workflowState, isMobile = false }: { workflowState: WorkflowState, isMobile?: boolean }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const currentPath = usePathname();
@@ -61,9 +61,9 @@ export function ProjectSidebar({ workflowState }: { workflowState: WorkflowState
   }, {} as Record<string, WorkflowStage[]>);
 
   return (
-    <div className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-72'} flex-shrink-0 m-4`}>
+    <div className={`${isMobile ? 'flex flex-col w-full h-full border-none m-0 rounded-none bg-background' : `hidden md:flex flex-col transition-all duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-72'} flex-shrink-0 m-4`}`}>
       <SettingsModal open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
-      <div className="h-full bg-background rounded-3xl shadow-premium border border-border flex flex-col overflow-hidden relative">
+      <div className={`h-full bg-background flex flex-col overflow-hidden relative ${isMobile ? '' : 'rounded-3xl shadow-premium border border-border'}`}>
         
         {/* Header - Logo */}
         <div className="p-5 flex items-center justify-between">

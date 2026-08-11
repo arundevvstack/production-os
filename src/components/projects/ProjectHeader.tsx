@@ -2,7 +2,9 @@ import React from "react";
 import { WorkflowState } from "@/lib/production/WorkflowEngine";
 import { DeleteProjectButton } from "./DeleteProjectButton";
 import { EditProjectDialog } from "./EditProjectDialog";
-import { Briefcase, Hash, Activity, ChevronRight } from "lucide-react";
+import { Briefcase, Hash, Activity, ChevronRight, Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { ProjectSidebar } from "./ProjectSidebar";
 
 export function ProjectHeader({ project, workflowState }: { project: any, workflowState: WorkflowState }) {
   const { currentStage, progress, stages } = workflowState;
@@ -11,10 +13,21 @@ export function ProjectHeader({ project, workflowState }: { project: any, workfl
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center justify-between px-6 py-5 md:px-8 bg-secondary/30 backdrop-blur-xl border-b border-border sticky top-0 z-20 rounded-t-3xl transition-all">
+    <div className="flex flex-col md:flex-row items-start md:items-center justify-between px-4 py-4 md:px-8 md:py-5 bg-secondary/30 backdrop-blur-xl border-b border-border sticky top-0 z-20 rounded-none md:rounded-t-3xl transition-all">
       {/* Left side: Icon & Info */}
-      <div className="flex items-center gap-4">
-        <div>
+      <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
+        <Sheet>
+          <SheetTrigger asChild>
+            <button className="md:hidden p-2 -ml-2 text-muted-foreground hover:text-foreground focus:outline-none">
+              <Menu className="w-5 h-5" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-72 bg-background border-r border-border">
+            <SheetTitle className="sr-only">Navigation</SheetTitle>
+            <ProjectSidebar workflowState={workflowState} isMobile />
+          </SheetContent>
+        </Sheet>
+        <div className="flex-1 min-w-0">
           <h1 className="text-2xl font-bold tracking-tight text-foreground leading-tight">
             {project.project_name}
           </h1>
@@ -32,7 +45,7 @@ export function ProjectHeader({ project, workflowState }: { project: any, workfl
       </div>
       
       {/* Right side: Stats & Actions */}
-      <div className="flex items-center gap-3 mt-4 md:mt-0 w-full md:w-auto">
+      <div className="flex flex-wrap md:flex-nowrap items-center gap-3 mt-4 md:mt-0 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
         <div className="flex flex-1 md:flex-initial items-center justify-between md:justify-start gap-4 bg-secondary/50 px-4 py-2.5 rounded-2xl ring-1 ring-white/10 shadow-sm">
           {stages.length > 0 && (
             <div className="flex items-center gap-3">

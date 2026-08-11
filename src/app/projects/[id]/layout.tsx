@@ -41,7 +41,7 @@ export default async function ProjectLayout({
       <IdentityProvider>
         <WorkspaceProvider>
           <ProjectSidebar workflowState={workflowState} />
-          <div className="flex-1 flex flex-col h-[calc(100vh-2.5rem)] overflow-hidden relative ml-2 mr-2 my-5 bg-secondary/10 rounded-3xl shadow-premium border border-white/10">
+          <div className="flex-1 flex flex-col h-screen md:h-[calc(100vh-2.5rem)] overflow-hidden relative m-0 md:ml-2 md:mr-2 md:my-5 bg-secondary/10 md:rounded-3xl shadow-premium border border-white/10">
             <ProjectHeader project={project} workflowState={workflowState} />
             <GlobalWorkspaceToolbar />
             
