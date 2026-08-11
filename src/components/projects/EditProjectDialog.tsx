@@ -79,11 +79,11 @@ export function EditProjectDialog({ project }: EditProjectDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="w-10 h-10 rounded-xl bg-white shadow-sm border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50">
+        <Button variant="outline" size="icon" className="w-10 h-10 rounded-xl bg-background shadow-sm border-border text-muted-foreground hover:text-foreground hover:bg-secondary">
           <Settings className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] rounded-xl border-0 bg-white shadow-2xl p-6">
+      <DialogContent className="sm:max-w-[425px] rounded-xl border border-border bg-background shadow-2xl p-6">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-black tracking-tight flex items-center gap-2">
             <Edit2 className="h-5 w-5 text-primary" />
@@ -153,14 +153,14 @@ export function EditProjectDialog({ project }: EditProjectDialogProps) {
               type="button" 
               variant="outline" 
               onClick={() => setIsOpen(false)}
-              className="font-bold"
+              className="font-bold border-border bg-background hover:bg-secondary text-foreground"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="gap-2 bg-primary text-white font-bold"
+              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-premium"
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Changes"}
             </Button>

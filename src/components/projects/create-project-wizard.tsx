@@ -84,7 +84,7 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] rounded-xl border-0 bg-white dark:bg-slate-900 shadow-2xl p-6">
+      <DialogContent className="sm:max-w-[425px] rounded-xl border border-border bg-background shadow-2xl p-6">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-black tracking-tight flex items-center gap-2">
             <Rocket className="h-5 w-5 text-primary" />
@@ -138,14 +138,14 @@ export function CreateProjectWizard({ isOpen, onOpenChange, defaultValues, onSuc
               type="button" 
               variant="outline" 
               onClick={() => onOpenChange(false)}
-              className="font-bold"
+              className="font-bold border-border bg-background hover:bg-secondary text-foreground"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="gap-2 bg-primary text-white font-bold"
+              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-premium"
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
               Create

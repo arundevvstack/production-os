@@ -26,15 +26,15 @@ export function ProductionMetrics({ project }: ProductionMetricsProps) {
       {metrics.map((m, idx) => (
         <Card 
           key={idx} 
-          className="group cursor-pointer hover:shadow-md transition-all duration-300 border-slate-200 hover:border-slate-300 bg-white"
+          className="group cursor-pointer hover:shadow-premium transition-all duration-300 border-border hover:border-white/20 bg-secondary/30"
           onClick={() => router.push(`/projects/${project.id}/${m.path}`)}
         >
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">{m.label}</p>
-              <p className="text-2xl font-bold text-slate-800">{m.count}</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">{m.label}</p>
+              <p className="text-2xl font-bold text-foreground">{m.count}</p>
             </div>
-            <div className={`w-10 h-10 rounded-full ${m.bg} flex items-center justify-center transition-transform group-hover:scale-110`}>
+            <div className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center transition-transform group-hover:scale-110 ring-1 ring-white/5`}>
               <m.icon className={`w-5 h-5 ${m.color}`} />
             </div>
           </CardContent>

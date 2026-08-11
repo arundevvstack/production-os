@@ -7,7 +7,17 @@ export async function GET() {
     const projects = await prisma.project.findMany({
       include: {
         ProductionAIJob: { select: { id: true, status: true, provider_id: true, metadata: true } },
-        ProductionAsset: { select: { id: true, status: true } }
+        ProductionAsset: { 
+          select: { 
+            id: true, 
+            status: true,
+            type: true,
+            ProductionAssetVersion: {
+              where: { is_current: true },
+              select: { file_url: true }
+            }
+          } 
+        }
       }
     });
 
@@ -40,12 +50,22 @@ export async function GET() {
          providerUsage[job.provider_id] = (providerUsage[job.provider_id] || 0) + 1;
       });
 
+      let thumbnailUrl = null;
+      const imageAssets = project.ProductionAsset.filter(a => a.type === 'Image' || a.type === 'Master_Portrait');
+      for (const asset of imageAssets) {
+        if (asset.ProductionAssetVersion && asset.ProductionAssetVersion.length > 0 && asset.ProductionAssetVersion[0].file_url) {
+          thumbnailUrl = asset.ProductionAssetVersion[0].file_url;
+          break;
+        }
+      }
+
       activeProjectsData.push({
         id: project.id,
         name: project.project_name,
         health: health.overall_score,
         assets: project.ProductionAsset.length,
         jobs: project.ProductionAIJob.length,
+        thumbnailUrl: thumbnailUrl,
         blocked: pFailed > (project.ProductionAIJob.length * 0.2) // Simplified blocked logic
       });
     }

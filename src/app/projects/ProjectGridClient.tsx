@@ -42,17 +42,33 @@ export function ProjectGridClient({ projects }: { projects: any[] }) {
     }
   };
 
+  const getGradient = (name: string) => {
+    const colors = [
+      'from-red-500 to-orange-500',
+      'from-blue-500 to-indigo-500',
+      'from-emerald-500 to-teal-500',
+      'from-purple-500 to-pink-500',
+      'from-amber-500 to-orange-600',
+      'from-cyan-500 to-blue-500',
+      'from-rose-500 to-red-600',
+    ];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  };
+
   return (
     <div>
       {selectedIds.length > 0 && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center justify-between">
+        <div className="mb-6 p-4 bg-red-50/80 backdrop-blur-md border border-red-200 rounded-xl flex items-center justify-between shadow-sm">
           <span className="text-red-700 font-medium">
             {selectedIds.length} project(s) selected
           </span>
           <button 
             onClick={handleBulkDelete}
             disabled={deleting}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 transition"
+            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 transition shadow-md hover:shadow-red-500/20"
           >
             <Trash2 className="w-4 h-4" />
             {deleting ? "Deleting..." : "Delete Selected"}
@@ -60,44 +76,75 @@ export function ProjectGridClient({ projects }: { projects: any[] }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {projects.map((project) => {
           const isSelected = selectedIds.includes(project.id);
           return (
             <div 
               key={project.id} 
-              className={`relative block border rounded-2xl p-6 bg-white shadow-sm hover:shadow-md transition ${isSelected ? 'ring-2 ring-red-500 border-red-500' : ''}`}
+              className={`group relative flex flex-col bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border ${isSelected ? 'border-red-500 ring-4 ring-red-500/20' : 'border-slate-200/50 dark:border-slate-800/50'} shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1`}
             >
-              <div className="absolute top-4 left-4 z-10">
+              {/* Checkbox (Absolute) */}
+              <div 
+                className="absolute top-4 left-4 z-20 bg-black/30 backdrop-blur-md rounded-md p-1 cursor-pointer"
+                onClick={(e) => { e.stopPropagation(); toggleSelect(project.id); }}
+              >
                 <input 
                   type="checkbox" 
                   checked={isSelected}
-                  onChange={() => toggleSelect(project.id)}
-                  className="w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer"
+                  onChange={() => {}} // Handled by parent div
+                  className="w-5 h-5 rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer pointer-events-none"
                 />
               </div>
 
-              <Link href={`/projects/${project.id}`} className="block pl-8">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-10 w-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                    <Folder className="h-5 w-5 text-slate-600 transition" />
+              {/* Clickable Area */}
+              <div className="cursor-pointer flex flex-col flex-1" onClick={() => router.push(`/projects/${project.id}`)}>
+                {/* Thumbnail Header */}
+                <div className="w-full h-48 relative overflow-hidden bg-slate-100 dark:bg-slate-800">
+                  {project.thumbnailUrl ? (
+                    <img 
+                      src={project.thumbnailUrl} 
+                      alt={project.project_name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className={`w-full h-full bg-gradient-to-br ${getGradient(project.project_name)} opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 flex items-center justify-center`}>
+                      <Folder className="w-12 h-12 text-white/50" />
+                    </div>
+                  )}
+                  {/* Overlay shadow */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 pointer-events-none" />
+                  
+                  {/* Floating Badges */}
+                  <div className="absolute top-3 right-3 flex gap-2 pointer-events-none">
+                    <div className="px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-1.5 text-white text-[10px] font-bold uppercase tracking-wider">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" /> {project.status}
+                    </div>
                   </div>
-                  <span className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full border border-green-200">
-                    {project.status.toUpperCase()}
-                  </span>
                 </div>
-                <h3 className="font-semibold text-lg truncate" title={project.project_name}>{project.project_name}</h3>
-                <div className="mt-6 flex items-center text-sm font-medium text-slate-500 hover:text-black transition">
-                  Open Workspace
-                  <ArrowRight className="h-4 w-4 ml-2" />
+
+                {/* Card Content */}
+                <div className="p-5 flex flex-col flex-1">
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white truncate mb-1">{project.project_name}</h3>
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-1">
+                    <Folder className="w-3.5 h-3.5" /> {project.assets_count || 0} Assets
+                  </p>
+                  
+                  <div className="mt-auto flex items-center justify-between">
+                    <div className="text-sm font-bold text-primary group-hover:translate-x-1 transition-transform flex items-center">
+                      Open Workspace <ArrowRight className="w-4 h-4 ml-1" />
+                    </div>
+                  </div>
                 </div>
-              </Link>
+              </div>
             </div>
           );
         })}
         {projects.length === 0 && (
-          <div className="col-span-full py-20 text-center border-2 border-dashed rounded-2xl text-slate-500">
-            No active projects found.
+          <div className="col-span-full py-20 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 rounded-3xl text-slate-500">
+            <Folder className="w-12 h-12 text-slate-300 mb-4" />
+            <h3 className="text-lg font-bold">No active projects found.</h3>
+            <p className="text-sm font-medium">Create a new project to get started.</p>
           </div>
         )}
       </div>

@@ -40,7 +40,7 @@ export default function GatewayMonitorPage() {
   if (!metrics && !error) return <div className="p-12 text-center text-slate-500"><Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" /> Connecting to Gateway...</div>;
 
   return (
-    <div className="p-6 h-full flex flex-col space-y-6 overflow-y-auto bg-slate-50 dark:bg-slate-950">
+    <div className="relative p-6 h-[100dvh] flex flex-col space-y-6 overflow-x-hidden overflow-y-auto bg-background text-foreground font-body">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Gateway Monitor</h1>
         <p className="text-slate-500">Live statistics from your Local AI Server.</p>

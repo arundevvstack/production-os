@@ -20,7 +20,7 @@ export function WorkflowFooter({ workflowState }: { workflowState: WorkflowState
   const sequentialNextStage = pageStageIndex !== -1 && pageStageIndex < stages.length - 1 ? stages[pageStageIndex + 1] : null;
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-white z-10 sticky bottom-0">
+    <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-background/50 backdrop-blur-md z-10 sticky bottom-0">
       <div>
         {prevStage ? (
           <Button variant="ghost" onClick={() => router.push(prevStage.href)}>
@@ -35,12 +35,12 @@ export function WorkflowFooter({ workflowState }: { workflowState: WorkflowState
       <div className="flex items-center gap-3">
         {pageStage.status === "Completed" ? (
           <>
-            <span className="flex items-center text-sm font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full mr-2">
+            <span className="flex items-center text-sm font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full mr-2">
               <Check className="w-4 h-4 mr-1.5" />
               Stage Completed
             </span>
             {sequentialNextStage && (
-              <Button variant="default" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => {
+              <Button variant="default" className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-premium" onClick={() => {
                 router.push(sequentialNextStage.href);
               }}>
                 Continue to {sequentialNextStage.title}
@@ -48,7 +48,7 @@ export function WorkflowFooter({ workflowState }: { workflowState: WorkflowState
             )}
           </>
         ) : (
-          <span className="text-sm text-slate-500 font-medium mr-2">
+          <span className="text-sm text-muted-foreground font-medium mr-2">
             Complete tasks to unlock next stage
           </span>
         )}

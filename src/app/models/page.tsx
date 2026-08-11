@@ -46,7 +46,7 @@ export default function ModelsPage() {
   if (isLoading) return <div className="p-12 text-center text-slate-500"><Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" /> Loading Models...</div>;
 
   return (
-    <div className="p-6 h-full flex flex-col space-y-6 overflow-y-auto bg-slate-50 dark:bg-slate-950">
+    <div className="relative p-6 h-[100dvh] flex flex-col space-y-6 overflow-x-hidden overflow-y-auto bg-background text-foreground font-body">
       <div className="flex justify-between items-center flex-shrink-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Model Manager</h1>

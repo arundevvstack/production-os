@@ -126,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }
 
   return (
-    <Sidebar collapsible="icon" variant="sidebar" className="border-r border-white/20 dark:border-slate-700/20 bg-white dark:bg-slate-900 font-body">
+    <Sidebar collapsible="icon" variant="sidebar" className="border-r border-sidebar-border bg-sidebar font-body">
       <SidebarHeader className="p-6">
         <div className="flex items-center justify-start min-h-[40px]">
           <Logo variant={state === "collapsed" ? "icon" : "full"} />
@@ -141,11 +141,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isNavItemActive('/', true)} className={cn(
                 "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                isNavItemActive('/', true) ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+                isNavItemActive('/', true) ? "bg-primary/10 text-foreground" : "hover:bg-secondary/50 text-foreground/80"
               )}>
                 <Link href="/" className="flex items-center gap-3 w-full">
-                  {isNavItemActive('/', true) && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                  <Home className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/', true) ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  {isNavItemActive('/', true) && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(0,255,153,0.5)]" />}
+                  <Home className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/', true) ? "text-foreground" : "text-foreground/60")} />
                   <span className={cn("text-[13px] tracking-tight", isNavItemActive('/', true) ? "font-black" : "font-medium")}>Home</span>
                 </Link>
               </SidebarMenuButton>
@@ -154,11 +154,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isNavItemActive('/projects')} className={cn(
                 "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                isNavItemActive('/projects') ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+                isNavItemActive('/projects') ? "bg-primary/10 text-foreground" : "hover:bg-secondary/50 text-foreground/80"
               )}>
                 <Link href="/projects" className="flex items-center gap-3 w-full">
-                  {isNavItemActive('/projects') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                  <Folder className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/projects') ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  {isNavItemActive('/projects') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(0,255,153,0.5)]" />}
+                  <Folder className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/projects') ? "text-foreground" : "text-foreground/60")} />
                   <span className={cn("text-[13px] tracking-tight", isNavItemActive('/projects') ? "font-black" : "font-medium")}>Projects</span>
                 </Link>
               </SidebarMenuButton>
@@ -167,11 +167,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isNavItemActive('/models')} className={cn(
                 "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                isNavItemActive('/models') ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+                isNavItemActive('/models') ? "bg-primary/10 text-foreground" : "hover:bg-secondary/50 text-foreground/80"
               )}>
                 <Link href="/models" className="flex items-center gap-3 w-full">
-                  {isNavItemActive('/models') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                  <Package className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/models') ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  {isNavItemActive('/models') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(0,255,153,0.5)]" />}
+                  <Package className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/models') ? "text-foreground" : "text-foreground/60")} />
                   <span className={cn("text-[13px] tracking-tight", isNavItemActive('/models') ? "font-black" : "font-medium")}>Models</span>
                 </Link>
               </SidebarMenuButton>
@@ -180,11 +180,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isNavItemActive('/monitor')} className={cn(
                 "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                isNavItemActive('/monitor') ? "bg-primary/10 text-black dark:text-white" : "hover:bg-secondary/50 text-black dark:text-white/80"
+                isNavItemActive('/monitor') ? "bg-primary/10 text-foreground" : "hover:bg-secondary/50 text-foreground/80"
               )}>
                 <Link href="/monitor" className="flex items-center gap-3 w-full">
-                  {isNavItemActive('/monitor') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                  <Activity className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/monitor') ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                  {isNavItemActive('/monitor') && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(0,255,153,0.5)]" />}
+                  <Activity className={cn("size-4 transition-transform group-hover/btn:scale-110", isNavItemActive('/monitor') ? "text-foreground" : "text-foreground/60")} />
                   <span className={cn("text-[13px] tracking-tight", isNavItemActive('/monitor') ? "font-black" : "font-medium")}>Gateway Monitor</span>
                 </Link>
               </SidebarMenuButton>
@@ -250,14 +250,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           tooltip={item.title} 
                           className={cn(
                             "h-9 rounded-[10px] transition-all duration-300 px-3 relative overflow-hidden group/btn",
-                            isActive ? "bg-primary/10 text-black dark:text-white hover:bg-primary/15" : "hover:bg-secondary/50 text-black dark:text-white/80 hover:text-black dark:text-white",
+                            isActive ? "bg-primary/10 text-foreground hover:bg-primary/15" : "hover:bg-secondary/50 text-foreground/80 hover:text-foreground",
                             item.isLocked && "opacity-60 grayscale cursor-not-allowed"
                           )}
                         >
                           <Link href={item.isLocked ? "#" : item.url} className="flex items-center justify-between w-full">
                             <div className="flex items-center gap-3">
-                              {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(220,38,38,0.5)]" />}
-                              <IconComponent className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-black dark:text-white" : "text-black dark:text-white/60")} />
+                              {isActive && <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md shadow-[0_0_10px_rgba(0,255,153,0.5)]" />}
+                              <IconComponent className={cn("size-4 transition-transform group-hover/btn:scale-110", isActive ? "text-foreground" : "text-foreground/60")} />
                               <span className={cn("text-[13px] tracking-tight", isActive ? "font-black" : "font-medium")}>
                                 {item.title}
                               </span>
@@ -288,37 +288,50 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarFooter className="p-4">
         <div className="w-full h-px bg-border/50 mb-4" />
-        <SidebarMenu className="gap-0.5 mb-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="h-9 rounded-[10px] px-3 hover:bg-secondary/50 text-black dark:text-white/80">
-              <Link href="/settings" className="flex items-center gap-3 w-full">
-                <Settings className="size-4 text-black dark:text-white/60" />
-                <span className="text-[13px] font-medium tracking-tight">Workspace Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-
         <input type="file" ref={fileInputRef} onChange={handleAvatarUpload} accept="image/*" className="hidden" />
-        {/* Simplified User Profile */}
-        <div className={cn(
-          "flex items-center gap-3 p-3 rounded-[10px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/60 dark:border-slate-700/60 transition-all group shadow-premium relative overflow-hidden",
-          state === "collapsed" ? "justify-center p-2" : ""
-        )}>
-          <Avatar className="h-10 w-10 ring-2 ring-white dark:ring-slate-900/80 shrink-0 shadow-lg">
-            <AvatarFallback className="bg-primary text-white text-[10px] font-black">
-              US
-            </AvatarFallback>
-          </Avatar>
-          {state !== "collapsed" && (
-            <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-[13px] font-black tracking-tight truncate text-black dark:text-white leading-none">Local User</span>
-              <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-normal">
-                <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">Local OS</span>
-              </span>
+        {/* User Profile with Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className={cn(
+              "flex items-center gap-3 p-3 rounded-[10px] bg-secondary/30 border border-border/50 transition-all group relative overflow-hidden cursor-pointer hover:bg-secondary/50",
+              state === "collapsed" ? "justify-center p-2" : ""
+            )}>
+              <Avatar className="h-10 w-10 ring-2 ring-background shrink-0 shadow-lg">
+                <AvatarFallback className="bg-primary text-black text-[10px] font-black">
+                  {profile?.fullName?.substring(0, 2).toUpperCase() || 'US'}
+                </AvatarFallback>
+                {profile?.avatar && <AvatarImage src={profile.avatar} />}
+              </Avatar>
+              {state !== "collapsed" && (
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="text-[13px] font-black tracking-tight truncate text-foreground leading-none">
+                    {profile?.fullName || user?.email || 'Local User'}
+                  </span>
+                  <span className="text-[9px] font-black text-muted-foreground truncate leading-none mt-2 flex items-center gap-1.5 uppercase tracking-normal">
+                    <div className="h-1 w-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)] shrink-0" /> <span className="truncate">Active</span>
+                  </span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => fileInputRef.current?.click()} className="cursor-pointer">
+              <Icons.Image className="mr-2 h-4 w-4" />
+              <span>Change Avatar</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push('/settings')} className="cursor-pointer font-medium">
+              <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
+              <span>Workspace Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 cursor-pointer font-semibold">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
     </Sidebar>
   );

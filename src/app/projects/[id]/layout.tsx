@@ -37,15 +37,15 @@ export default async function ProjectLayout({
   const workflowState = await WorkflowEngine.getWorkflowState(id);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-200/50 font-sans">
+    <div className="flex h-screen overflow-hidden bg-background font-sans">
       <IdentityProvider>
         <WorkspaceProvider>
           <ProjectSidebar workflowState={workflowState} />
-          <div className="flex-1 flex flex-col h-[calc(100vh-2.5rem)] overflow-hidden relative ml-2 mr-2 my-5 bg-white rounded-3xl shadow-sm border border-slate-200">
+          <div className="flex-1 flex flex-col h-[calc(100vh-2.5rem)] overflow-hidden relative ml-2 mr-2 my-5 bg-secondary/10 rounded-3xl shadow-premium border border-white/10">
             <ProjectHeader project={project} workflowState={workflowState} />
             <GlobalWorkspaceToolbar />
             
-            <main className="flex-1 overflow-hidden bg-slate-50/50 rounded-b-3xl flex flex-col relative">
+            <main className="flex-1 overflow-hidden bg-transparent rounded-b-3xl flex flex-col relative">
               <GlobalPageHeader />
               <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
                 <div className="p-8 pb-32">

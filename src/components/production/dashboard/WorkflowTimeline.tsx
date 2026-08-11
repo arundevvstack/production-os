@@ -14,24 +14,24 @@ export function WorkflowTimeline({ workflowState, projectId }: WorkflowTimelineP
   if (!workflowState || !workflowState.stages) return null;
 
   return (
-    <Card className="bg-white shadow-sm border-slate-200">
-      <CardHeader className="py-4 border-b border-slate-100">
-        <CardTitle className="text-sm font-bold uppercase tracking-wider text-slate-700">Production Pipeline</CardTitle>
+    <Card className="bg-secondary/30 shadow-premium border-border">
+      <CardHeader className="py-4 border-b border-border">
+        <CardTitle className="text-sm font-bold uppercase tracking-wider text-foreground">Production Pipeline</CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        <div className="relative border-l-2 border-slate-100 ml-3 space-y-6">
+        <div className="relative border-l-2 border-border ml-3 space-y-6">
           {workflowState.stages.map((stage: any, idx: number) => {
-            const isCompleted = stage.status === 'COMPLETED';
-            const isActive = stage.id === workflowState.currentStage?.id;
-            const isLocked = stage.status === 'LOCKED';
+            const isCompleted = stage.status?.toUpperCase() === 'COMPLETED';
+            const isActive = stage.id === workflowState.currentStage?.id || stage.status?.toUpperCase() === 'ACTIVE';
+            const isLocked = stage.status?.toUpperCase() === 'LOCKED';
 
             return (
               <div key={stage.id} className="relative pl-6">
                 {/* Timeline Node */}
-                <div className={`absolute -left-[11px] top-1 w-5 h-5 rounded-full flex items-center justify-center border-2 bg-white transition-colors
-                  ${isCompleted ? 'border-emerald-500 text-emerald-500' : 
-                    isActive ? 'border-blue-500 text-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.1)]' : 
-                    'border-slate-200 text-slate-300'}`}
+                <div className={`absolute -left-[11px] top-1 w-5 h-5 rounded-full flex items-center justify-center border-2 transition-colors z-10
+                  ${isCompleted ? 'bg-primary/20 border-primary text-primary shadow-[0_0_10px_rgba(0,255,153,0.2)]' : 
+                    isActive ? 'bg-background border-primary text-primary shadow-[0_0_0_4px_rgba(0,255,153,0.1)]' : 
+                    'bg-background border-border text-muted-foreground'}`}
                 >
                   {isCompleted ? <Check className="w-3 h-3 stroke-[3]" /> : 
                    isLocked ? <Lock className="w-2.5 h-2.5" /> : 
@@ -41,15 +41,15 @@ export function WorkflowTimeline({ workflowState, projectId }: WorkflowTimelineP
                 <div className="group">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className={`text-sm font-bold transition-colors ${isActive ? 'text-blue-600' : isLocked ? 'text-slate-400' : 'text-slate-800'}`}>
+                      <h4 className={`text-sm font-bold transition-colors ${isActive ? 'text-primary' : isLocked ? 'text-muted-foreground/50' : 'text-foreground'}`}>
                         {stage.title}
                       </h4>
-                      {isActive && <p className="text-xs text-slate-500 mt-1">{stage.description}</p>}
+                      {isActive && <p className="text-xs text-muted-foreground mt-1">{stage.description}</p>}
                     </div>
                     {(!isLocked) && (
                       <button 
                         onClick={() => router.push(stage.href || `/projects/${projectId}`)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-blue-600 p-1 rounded-md hover:bg-blue-50"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary p-1 rounded-md hover:bg-primary/10"
                         title={`Open ${stage.title}`}
                       >
                         <ExternalLink className="w-4 h-4" />

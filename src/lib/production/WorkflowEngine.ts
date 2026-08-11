@@ -44,14 +44,23 @@ export class WorkflowEngine {
       };
     }
 
-    const characterCount = await prisma.productionCharacter.count({ where: { project_id: projectId } });
-    const locationCount = await prisma.productionLocation.count({ where: { project_id: projectId } });
-    const sceneCount = project.ProductionStoryboard ? await prisma.productionScene.count({ where: { storyboard_id: project.ProductionStoryboard.id } }) : 0;
-    const shotCount = project.ProductionStoryboard ? await prisma.productionShot.count({ where: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } }) : 0;
-    const promptCount = project.ProductionStoryboard ? await prisma.productionPrompt.count({ where: { ProductionShot: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } } }) : 0;
-    const packageCount = await prisma.productionPackage.count({ where: { project_id: projectId } });
-    // ONLY assets generated successfully for THIS project
-    const assetCount = await prisma.productionAsset.count({ where: { project_id: projectId, status: 'Completed' } });
+    const [
+      characterCount,
+      locationCount,
+      packageCount,
+      assetCount,
+      sceneCount,
+      shotCount,
+      promptCount
+    ] = await Promise.all([
+      prisma.productionCharacter.count({ where: { project_id: projectId } }),
+      prisma.productionLocation.count({ where: { project_id: projectId } }),
+      prisma.productionPackage.count({ where: { project_id: projectId } }),
+      prisma.productionAsset.count({ where: { project_id: projectId, status: 'Completed' } }),
+      project.ProductionStoryboard ? prisma.productionScene.count({ where: { storyboard_id: project.ProductionStoryboard.id } }) : Promise.resolve(0),
+      project.ProductionStoryboard ? prisma.productionShot.count({ where: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } }) : Promise.resolve(0),
+      project.ProductionStoryboard ? prisma.productionPrompt.count({ where: { ProductionShot: { ProductionScene: { storyboard_id: project.ProductionStoryboard.id } } } }) : Promise.resolve(0)
+    ]);
 
     // 1. Workspace
     let isWorkspaceComplete = false;
