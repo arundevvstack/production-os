@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 // Dynamically import GlobalCommandMenu so it doesn't block initial render
-const GlobalCommandMenu = dynamic(() => import("@/components/system/GlobalCommandMenu").then(m => m.GlobalCommandMenu), { ssr: false });
+const GlobalCommandMenu = dynamic(() => import("@/components/system/GlobalCommandMenu").then(m => m.GlobalCommandMenu));
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
 export const metadata: Metadata = {
