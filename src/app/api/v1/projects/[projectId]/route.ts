@@ -84,6 +84,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ projec
       where: { id: projectId },
       data: {
         ...(body.name !== undefined && { project_name: body.name }),
+        ...(body.project_name !== undefined && { project_name: body.project_name }),
+        ...(body.client_name !== undefined && { client_name: body.client_name }),
+        ...(body.project_type !== undefined && { project_type: body.project_type }),
+        ...(body.aspect_ratio !== undefined && { aspect_ratio: body.aspect_ratio }),
         ...(projectRef !== undefined && { project_ref: projectRef })
       }
     });

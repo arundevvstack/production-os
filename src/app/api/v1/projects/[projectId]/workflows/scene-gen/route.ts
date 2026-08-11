@@ -99,6 +99,14 @@ export async function POST(req: Request, { params }: { params: any }) {
     }
 
     const createdScenes = await prisma.$transaction(async (tx) => {
+      // Clear existing scenes to prevent duplication on multiple generations
+      await tx.productionSceneVersion.deleteMany({
+        where: { Scene: { storyboard_id: storyboard.id } }
+      });
+      await tx.productionScene.deleteMany({
+        where: { storyboard_id: storyboard.id }
+      });
+
       const results = [];
       for (const sData of scenesData) {
         // Create root scene

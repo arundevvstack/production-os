@@ -83,12 +83,13 @@ export default async function ScenesPage({ params }: { params: Promise<{ id: str
 
           <div className="grid grid-cols-1 gap-5">
             {scenes.map((scene) => (
-              <SceneCard
-                key={scene.id}
-                scene={scene}
-                projectId={project.id}
-                storyboardImageUrl={storyboardImageMap[scene.scene_number] ?? null}
-              />
+              <SceneCard 
+              key={scene.id} 
+              scene={scene} 
+              projectId={resolvedParams.id} 
+              storyboardImageUrl={storyboardImageMap[scene.scene_number] || null} 
+              aspectRatio={(project as any).aspect_ratio}
+            />
             ))}
           </div>
         </div>

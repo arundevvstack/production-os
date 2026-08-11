@@ -29,7 +29,7 @@ export default function ProductionBreakdownPage() {
       const [projRes, scriptRes, bdRes] = await Promise.all([
         fetch(`/api/v1/projects/${projectId}`),
         fetch(`/api/v1/projects/${projectId}/script`),
-        fetch(`/api/v1/projects/${projectId}/breakdown`)
+        fetch(`/api/v1/projects/${projectId}/breakdown?t=${Date.now()}`)
       ]);
 
       if (projRes.ok) setProject(await projRes.json());

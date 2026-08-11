@@ -350,6 +350,7 @@ model Project {
   project_category         String?
   project_type             String                        @default("Normal Production")
   client_name              String?
+  aspect_ratio             String                        @default("16:9")
   Milestone                Milestone[]
   ProductionAIJob          ProductionAIJob[]
   ProductionAnalysis       ProductionAnalysis[]

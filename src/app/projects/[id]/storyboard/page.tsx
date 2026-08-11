@@ -94,7 +94,7 @@ export default async function StoryboardPage({ params }: { params: Promise<{ id:
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {scenes.map((scene: any, i: number) => (
             <div key={i} className="border border-slate-200 bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-              <SceneImage scene={scene} projectId={resolvedParams.id} sceneIndex={i} />
+              <SceneImage scene={scene} projectId={resolvedParams.id} sceneIndex={i} aspectRatio={(project as any).aspect_ratio} />
               
               <div className="p-5 space-y-4">
                 <div>

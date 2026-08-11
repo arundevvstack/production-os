@@ -65,14 +65,16 @@ export class WorkflowEngine {
     // 2. Script
     const isScriptUnlocked = isWorkspaceComplete;
     const scriptExists = !!project.ProductionScript;
-    const isScriptComplete = !!project.ProductionScript?.is_locked;
+    const hasExtracted = characterCount > 0 || sceneCount > 0;
+    const isScriptComplete = !!project.ProductionScript?.is_locked || hasExtracted;
 
-    // 3. Breakdown — unlocks as soon as a script exists (user doesn't need to lock it first)
-    const isBreakdownUnlocked = scriptExists;
-    const isBreakdownComplete = (characterCount > 0 || sceneCount > 0);
+    // 3. Breakdown — unlocks after extraction
+    const isBreakdownUnlocked = hasExtracted;
+    // Breakdown is considered reviewed/completed when the user creates a Visual Bible
+    const isBreakdownComplete = !!project.ProductionVisualBible;
 
     // 4. Visual Bible
-    const isVisualBibleUnlocked = isBreakdownComplete;
+    const isVisualBibleUnlocked = isBreakdownUnlocked;
     let isVisualBibleComplete = false;
     if (project.ProductionVisualBible) {
       const v = project.ProductionVisualBible.Versions?.[0];
@@ -194,8 +196,8 @@ export class WorkflowEngine {
 
     const completionReasons: Record<string, string[]> = {};
     if (!isWorkspaceComplete) completionReasons['workspace'] = ["Project Brief, Notes or References required."];
-    if (!isScriptComplete) completionReasons['script'] = ["Upload or generate a script."];
-    if (!isBreakdownComplete) completionReasons['breakdown'] = ["Parse characters or scenes from the script."];
+    if (!isScriptComplete) completionReasons['script'] = ["Upload or generate a script, then extract the breakdown."];
+    if (!isBreakdownComplete) completionReasons['breakdown'] = ["Review extracted elements and create a Visual Bible."];
     if (!isVisualBibleComplete) completionReasons['visual_bible'] = ["Define Style, Lighting, Camera, and Mood."];
     if (!isCharComplete) completionReasons['characters'] = ["Add at least one character."];
     if (!isStoryboardComplete) completionReasons['storyboard'] = ["Add at least one storyboard frame."];

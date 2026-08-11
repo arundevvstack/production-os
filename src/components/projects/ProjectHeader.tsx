@@ -1,6 +1,7 @@
 import React from "react";
 import { WorkflowState } from "@/lib/production/WorkflowEngine";
 import { DeleteProjectButton } from "./DeleteProjectButton";
+import { EditProjectDialog } from "./EditProjectDialog";
 import { Briefcase, Hash, Activity, ChevronRight } from "lucide-react";
 
 export function ProjectHeader({ project, workflowState }: { project: any, workflowState: WorkflowState }) {
@@ -66,7 +67,8 @@ export function ProjectHeader({ project, workflowState }: { project: any, workfl
             </div>
           )}
         </div>
-        <div className="shrink-0">
+        <div className="shrink-0 flex items-center gap-2">
+          <EditProjectDialog project={project} />
           <DeleteProjectButton projectId={project.id} projectName={project.project_name} />
         </div>
       </div>

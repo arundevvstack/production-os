@@ -10,11 +10,13 @@ export function SceneImage({
   projectId,
   sceneIndex,
   readOnly = false,
+  aspectRatio,
 }: {
   scene: any;
   projectId: string;
   sceneIndex: number;
   readOnly?: boolean;
+  aspectRatio?: string;
 }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
@@ -89,6 +91,7 @@ export function SceneImage({
       badgeOverlay={badgeOverlay}
       hoverOverlay={hoverOverlay}
       className="border-0 shadow-none rounded-none"
+      aspectRatio={aspectRatio}
     />
   );
 }

@@ -10,9 +10,10 @@ interface SceneCardProps {
   projectId: string;
   /** image_url from the matching storyboard version scene. null = no image yet. */
   storyboardImageUrl: string | null;
+  aspectRatio?: string;
 }
 
-export function SceneCard({ scene, projectId, storyboardImageUrl }: SceneCardProps) {
+export function SceneCard({ scene, projectId, storyboardImageUrl, aspectRatio }: SceneCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
@@ -47,7 +48,7 @@ export function SceneCard({ scene, projectId, storyboardImageUrl }: SceneCardPro
           {/* 16:9 thumbnail placeholder in edit mode */}
           <div
             className="w-full md:w-64 lg:w-72 shrink-0 bg-slate-200 flex items-center justify-center"
-            style={{ aspectRatio: "16 / 9" }}
+            style={{ aspectRatio: aspectRatio ? (aspectRatio === "9:16" ? "9 / 16" : "16 / 9") : "16 / 9" }}
           >
             {storyboardImageUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -133,6 +134,7 @@ export function SceneCard({ scene, projectId, storyboardImageUrl }: SceneCardPro
         <AssetCard 
           assetUrl={storyboardImageUrl || undefined}
           className="w-full md:w-64 lg:w-72 shrink-0 border-b md:border-b-0 md:border-r border-slate-200 border-0 rounded-none shadow-none"
+          aspectRatio={aspectRatio}
           badgeOverlay={
             <>
               {/* Scene number badge */}

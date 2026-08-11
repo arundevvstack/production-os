@@ -16,6 +16,7 @@ export interface AssetCardProps {
   hoverOverlay?: React.ReactNode; // Custom overlay on hover (e.g. Generate button)
   className?: string; // Custom root styles
   children?: React.ReactNode; // Custom content below image
+  aspectRatio?: string; // Optional custom aspect ratio for the container
 }
 
 export function AssetCard({ 
@@ -29,7 +30,8 @@ export function AssetCard({
   badgeOverlay,
   hoverOverlay,
   className = "",
-  children
+  children,
+  aspectRatio
 }: AssetCardProps) {
 
   // Priority Asset URL Resolution if job is provided
@@ -55,7 +57,7 @@ export function AssetCard({
       onClick={handleClick}
       className={`flex flex-col bg-white dark:bg-slate-900 overflow-hidden group ${!className.includes('border') ? 'border rounded-xl shadow-sm' : ''} ${onClick ? 'cursor-pointer hover:border-indigo-400 hover:shadow-md transition-all' : ''} ${className}`}
     >
-      <div className="relative w-full bg-slate-100 flex items-center justify-center overflow-hidden shrink-0 border-b border-slate-100" style={{ aspectRatio: "16 / 9" }}>
+      <div className="relative w-full bg-slate-100 flex items-center justify-center overflow-hidden shrink-0 border-b border-slate-100" style={{ aspectRatio: aspectRatio ? (aspectRatio === "9:16" ? "9 / 16" : "16 / 9") : "16 / 9" }}>
         
         {isGenerating && (
           <LoadingSkeleton text="Rendering" />

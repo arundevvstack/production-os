@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { ProviderManager } from "@/lib/production/providers/ProviderManager";
 import { AssetResolutionEngine } from "@/lib/production/intelligence/AssetResolutionEngine";
@@ -98,10 +99,17 @@ export async function POST(req: Request, { params }: { params: any }) {
 
     if (!imageUrl) {
       // Use Pollinations AI (Free, no API key required)
+      let w = 1280;
+      let h = 720;
+      if (project?.aspect_ratio === "9:16") {
+        w = 720;
+        h = 1280;
+      }
+      
       // We add a random seed so that "Regenerate Image" always produces a fresh variant
       const seed = Math.floor(Math.random() * 1000000);
       const finalPrompt = `${prompt}, ${vbContext}masterpiece, best quality, highly detailed, perfect faces, anatomically correct, photorealistic, cinematic lighting, 8k`;
-      imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=1280&height=720&model=flux-realism&enhance=true&nologo=true&seed=${seed}`;
+      imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=${w}&height=${h}&model=flux-realism&enhance=true&nologo=true&seed=${seed}`;
     }
 
     // Update the scene object with the new image URL
@@ -118,6 +126,7 @@ export async function POST(req: Request, { params }: { params: any }) {
       }
     });
 
+    revalidatePath(`/projects/${projectId}/storyboard`);
     return NextResponse.json({ success: true, image_url: imageUrl });
 
   } catch (error: any) {

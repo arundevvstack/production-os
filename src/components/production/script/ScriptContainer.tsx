@@ -8,6 +8,7 @@ import { ScriptEditor } from "./ScriptEditor";
 import { ScriptEntryOptions } from "./ScriptEntryOptions";
 import { ScriptVersionManager } from "./ScriptVersionManager";
 import { AIGenerateScriptWizard } from "./AIGenerateScriptWizard";
+import { Progress } from "@/components/ui/progress";
 import { createScriptVersion, parseUploadedScript, generateScriptWithAI } from "@/app/projects/[id]/script/actions";
 
 interface ScriptContainerProps {
@@ -21,12 +22,23 @@ export function ScriptContainer({ projectId, scripts }: ScriptContainerProps) {
   const [activeScriptId, setActiveScriptId] = useState<string>(sortedScripts[0]?.id || "");
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progress, setProgress] = useState(0);
   const router = useRouter();
 
   
   const triggerAnalysis = async (scriptId: string) => {
     setIsAnalyzing(true);
+    setProgress(0);
     toast({ title: "Analysis Started", description: "AI is analyzing the script and extracting production breakdown..." });
+    
+    // Fake progress for UX
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 95) return prev;
+        return prev + Math.random() * 5;
+      });
+    }, 800);
+
     try {
       const res = await fetch(`/api/v1/projects/${projectId}/script/analyze`, {
         method: "POST",
@@ -48,7 +60,9 @@ export function ScriptContainer({ projectId, scripts }: ScriptContainerProps) {
     } catch (e: any) {
       toast({ title: "Analysis Failed", description: e.message, variant: "destructive" });
     } finally {
-      setIsAnalyzing(false);
+      clearInterval(interval);
+      setProgress(100);
+      setTimeout(() => setIsAnalyzing(false), 500); // Give the bar time to visually complete
     }
   };
 
@@ -109,6 +123,13 @@ export function ScriptContainer({ projectId, scripts }: ScriptContainerProps) {
           {isAnalyzing ? "Analyzing..." : "Extract Breakdown"}
         </button>
       </div>
+
+      {isAnalyzing && (
+        <div className="mb-4">
+          <Progress value={progress} indicatorColor="bg-emerald-500" className="h-2 w-full" />
+          <p className="text-xs text-emerald-700 font-medium mt-1 text-right">{Math.round(progress)}% Extracted</p>
+        </div>
+      )}
 
       <ScriptEditor 
         scriptId={activeScript.id}
